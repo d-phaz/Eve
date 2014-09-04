@@ -168,11 +168,6 @@ if( WIN32 )
 	if( PATH_TO_EXTERNAL STREQUAL "" )
 		message( "Please set PATH_TO_EXTERNAL to external dependencies directory." )
 	endif()
-
-	set( PATH_TO_QT "" CACHE PATH "PATH_TO_QT" )
-	if( PATH_TO_QT STREQUAL "" )
-		message( "Please set PATH_TO_QT to Qt installation directory." )
-	endif()
 	
 	message( "\n" )
 endif()

@@ -3,7 +3,7 @@
 ###################################################################################################
 
 set( PRODUCT_VENDOR_NAME "The Eve Project" )
-set( PRODUCT_PRODUCT_NAME "EVE" )
+set( PRODUCT_PRODUCT_NAME "Eve" )
 
 set( PRODUCT_ICON_INSTALL_NAME "eve" )
 set( PRODUCT_ICON_UNINSTALL_NAME "eve" )
