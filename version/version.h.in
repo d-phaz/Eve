@@ -1,0 +1,8 @@
+
+#pragma once
+#ifndef __VERSION_H__
+#define __VERSION_H__
+
+#define EVE_VERSIONNAME "@PRODUCT_VERSION@"
+
+#endif 	// __VERSION_H__
