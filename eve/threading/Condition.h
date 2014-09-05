@@ -21,7 +21,6 @@ namespace eve
 		* @class threading::Condition
 		*
 		* @brief locking condition class
-		*
 		* @note extends threading::Mutex
 		*/
 		class Condition
@@ -167,7 +166,7 @@ namespace eve
 			*/
 			void setValue(int32_t value);
 
-		};
+		}; // class Condition
 
 	} // namespace threading
 

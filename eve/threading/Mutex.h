@@ -52,11 +52,7 @@ namespace NativeT
 		*/
 		Mutex( void ) 
 		{
-#ifdef UNICODE
 			m_mutex = CreateMutexW( NULL, false, NULL );
-#else //UNICODE
-			m_mutex = CreateMutexA( NULL, false, NULL );
-#endif //UNICODE
 		}
 		/**
 		* @brief Mutex class destructor : destroy, making sure mutex is unlocked

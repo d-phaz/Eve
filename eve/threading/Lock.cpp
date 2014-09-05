@@ -1,85 +1,87 @@
 
-#include "Native_Lock.h"
-
-#include <string.h>
-
+// Main header
+#include "threading/Lock.h"
 
 #include <windows.h>
 
 
-namespace NativeT
+//=============================================================================================
+namespace eve
 {
-	//=============================================================================================
-	namespace detail
+	namespace threading
 	{
-		class Lock
+		namespace detail
 		{
-		public:
-			CRITICAL_SECTION cs; 
-			bool m_bIsLocked;
+			class Lock
+			{
+			public:
+				CRITICAL_SECTION cs;
+				bool m_bIsLocked;
 
 
-			Lock( void )
-				: m_bIsLocked	( false )
-			{}
-		};
-	} // namespace detail
+				Lock(void)
+					: m_bIsLocked(false)
+				{}
+
+			}; // class Lock
+
+		} // namespace detail
+	} // namespace threading
+} // namespace eve
 
 
-	//=============================================================================================
-	Lock::Lock( void )
-		: p_pImpl ( new detail::Lock )
-	{
 
-		memset(&p_pImpl->cs, 0, sizeof(CRITICAL_SECTION));
-		InitializeCriticalSection( &p_pImpl->cs );
-
-	}
+//=============================================================================================
+eve::threading::Lock::Lock(void)
+	: p_pImpl ( new detail::Lock )
+{
+	memset(&p_pImpl->cs, 0, sizeof(CRITICAL_SECTION));
+	InitializeCriticalSection( &p_pImpl->cs );
+}
 	
-	//=============================================================================================
-	Lock::~Lock( void )
-	{
-
-		DeleteCriticalSection( &p_pImpl->cs ); 
-
-		delete p_pImpl;
-	}
+//=============================================================================================
+eve::threading::Lock::~Lock(void)
+{
+	DeleteCriticalSection( &p_pImpl->cs ); 
+	delete p_pImpl;
+}
 
 
 	
-	//=============================================================================================
-	void Lock::set( void )
-	{
-		EnterCriticalSection( &p_pImpl->cs );
+//=============================================================================================
+void eve::threading::Lock::set(void)
+{
+	EnterCriticalSection( &p_pImpl->cs );
 
-		p_pImpl->m_bIsLocked = true;
-	}
+	p_pImpl->m_bIsLocked = true;
+}
 	
-	//=============================================================================================
-	void Lock::unset( void )
-	{
-		LeaveCriticalSection( &p_pImpl->cs );
+//=============================================================================================
+void eve::threading::Lock::unset(void)
+{
+	LeaveCriticalSection( &p_pImpl->cs );
         
-		p_pImpl->m_bIsLocked = false;
-	}
+	p_pImpl->m_bIsLocked = false;
+}
 	
-	//=============================================================================================
-	bool Lock::trySet( void )
-	{
+//=============================================================================================
+bool eve::threading::Lock::trySet(void)
+{
 
-		return (TryEnterCriticalSection( &p_pImpl->cs )?TRUE: true, false);
+	return (TryEnterCriticalSection( &p_pImpl->cs )?TRUE: true, false);
 
-	}
+}
 	
-	//=============================================================================================
-	bool Lock::isSet( void )
+//=============================================================================================
+bool eve::threading::Lock::isSet(void)
+{
+	bool bret = true;
+
+	if( trySet( ))
 	{
-		if( trySet( ))
-		{
-			unset();
-			return false;
-		}
-		return true;
+		unset();
+		bret = false;
 	}
 
-} //namespace NativeT
+	return bret;
+}
