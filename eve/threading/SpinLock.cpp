@@ -1,151 +1,63 @@
 
-#include "Native_SpinLock.h"
+/*
+ Copyright (c) 2014, The Eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
-#ifndef __NATIVE_ATOMIC_H__
-#include "Native_Atomic.h"
-#endif //__NATIVE_ATOMIC_H__
+// Main header
+#include "threading/SpinLock.h"
 
-#ifndef __NATIVE_THREADSIMPLE_H__
-#include "Native_ThreadSimple.h"
-#endif //__NATIVE_THREADSIMPLE_H__
 
-namespace NativeT
+//=================================================================================================
+eve::threading::SpinLock::SpinLock(void)
 {
-	namespace
+	m_state.clear();
+}
+
+//=================================================================================================
+eve::threading::SpinLock::~SpinLock(void)
+{
+	m_state.clear();
+}
+
+
+
+//=================================================================================================
+void eve::threading::SpinLock::lock(void)
+{
+	while (m_state.test_and_set(std::memory_order_acquire))
 	{
-		static const NATIVE_Sint32_t _writelocked = 0;
-		static const NATIVE_Sint32_t _unlocked = 1;
-	} // namespace anonymous
-
-	namespace detail
-	{
-		class SpinLock
-		{
-		public:
-			SpinLock() : _state( _unlocked ) {}
-			~SpinLock() { _state = _unlocked; }
-
-			inline void set()
-			{
-				while( true )
-				{
-					if( trySet( ))
-						return;
-					NativeT::ThreadSimple::yield();
-				}
-			}
-
-			inline void unset()
-			{
-				NATIVE_ASSERT(_state != _unlocked);
-				_state = _unlocked;
-			}
-
-			inline bool trySet()
-			{
-				if( !_state.compareAndSetBool(_writelocked, _unlocked))
-					return false;
-				NATIVE_ASSERT(_state == _writelocked );
-				return true;
-			}
-
-			inline void setRead()
-			{
-				while( true )
-				{
-					if( trySetRead( ))
-						return;
-					NativeT::ThreadSimple::yield();
-				}
-			}
-
-			inline void unsetRead()
-			{
-				while( true )
-				{
-					NATIVE_ASSERT( _state > _unlocked );
-					memoryBarrier();
-					const NATIVE_Sint32_t expected = _state;
-					if( _state.compareAndSetBool( expected-1, expected ))
-						return;
-				}
-			}
-
-			inline bool trySetRead()
-			{
-				memoryBarrier();
-				const NATIVE_Sint32_t state = _state;
-				// Note: 0 used here since using _locked unexplicably gives
-				//       'undefined reference to NativeT::SpinLock::_locked'
-				const NATIVE_Sint32_t expected = (state == _writelocked) ? _unlocked : state;
-
-				if( !_state.compareAndSetBool( expected+1, expected ))
-					return false;
-
-				NATIVE_ASSERT(_state > _unlocked);
-				return true;
-			}
-
-			inline bool isSet() { return ( _state != _unlocked ); }
-			inline bool isSetWrite() { return ( _state == _writelocked ); }
-			inline bool isSetRead() { return ( _state > _unlocked ); }
-
-		private:
-			a_uint32_t _state;
-		};
-	}// namespace detail
-
-	SpinLock::SpinLock()
-		: _impl( new detail::SpinLock ) {}
-
-	SpinLock::~SpinLock()
-	{
-		delete _impl;
+		SwitchToThread();
 	}
+}
 
-	void SpinLock::set()
-	{
-		_impl->set();
-	}
-
-	void SpinLock::unset()
-	{
-		_impl->unset();
-	}
-
-	bool SpinLock::trySet()
-	{
-		return _impl->trySet();
-	}
-
-	void SpinLock::setRead()
-	{
-		_impl->setRead();
-	}
-
-	void SpinLock::unsetRead()
-	{
-		_impl->unsetRead();
-	}
-
-	bool SpinLock::trySetRead()
-	{
-		return _impl->trySetRead();
-	}
-
-	bool SpinLock::isSet()
-	{
-		return _impl->isSet();
-	}
-
-	bool SpinLock::isSetWrite()
-	{
-		return _impl->isSetWrite();
-	}
-
-	bool SpinLock::isSetRead()
-	{
-		return _impl->isSetRead();
-	}
-
-} //namespace NativeT
+//=================================================================================================
+void eve::threading::SpinLock::unlock(void)
+{
+	m_state.clear(std::memory_order_release);
+}

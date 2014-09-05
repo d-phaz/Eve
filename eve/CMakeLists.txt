@@ -54,22 +54,16 @@ source_group( "Core" FILES ${CORE_SRCS} )
 # Thread.
 #################################################
 set( THREADING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Barrier.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Barrier.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lockable.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ScopedMutex.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadSimple.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadSimple.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )
@@ -90,14 +84,10 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
 # Windows 
 #################################################
-# if( WIN32 )
-	# set( LIBS		 
-		 # Mpr.lib 
-		 # wldap32.lib 
-		 # Ws2_32.lib
-		 # Crypt32.lib
-		 # kernel32.lib )
-# endif( WIN32 )
+if( WIN32 )
+	set( LIBS	
+		 kernel32.lib )
+endif( WIN32 )
 
 
 # OSX 

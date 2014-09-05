@@ -1,4 +1,34 @@
 
+/*
+ Copyright (c) 2014, The Eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 //  Main header
 #include "threading/Condition.h"
 
@@ -20,7 +50,7 @@ eve::threading::Condition::Condition(int32_t p_var)
 	// set all conditions to be broadcast
 	// unfortunately in Win32 you have to know at creation
 	// whether the signal is broadcast or not.
-	m_condition = CreateEventA(NULL, true, false, NULL);
+	m_condition = CreateEventW(NULL, true, false, NULL);
 }
 
 //=================================================================================================
@@ -57,13 +87,13 @@ void eve::threading::Condition::timedWaitMili(time_t p_inMiliSeconds)
 //=================================================================================================
 bool eve::threading::Condition::waitAndRetain(int32_t p_value)
 {
-	Lock();
+	lock();
 
 	while (m_conditionnedVar != p_value && m_isValid)
 	{
-		Unlock();
+		unlock();
 		WaitForSingleObject(m_condition, INFINITE);
-		Lock();
+		lock();
 	}
 
 	bool B_Return = false;
@@ -71,14 +101,14 @@ bool eve::threading::Condition::waitAndRetain(int32_t p_value)
 		B_Return = true;
 	}
 	else {
-		Unlock();
+		unlock();
 	}
 
 	return B_Return;
 }
 
 //=================================================================================================
-bool eve::threading::Condition::waitAndLock(int32_t p_awaitedValue, bool p_autorelease = false)
+bool eve::threading::Condition::waitAndLock(int32_t p_awaitedValue, bool p_autorelease)
 {
 	bool B_Return = this->waitAndRetain(p_awaitedValue);
 
@@ -109,8 +139,8 @@ void eve::threading::Condition::broadcast(void)
 void eve::threading::Condition::release(int32_t value)
 {
 	m_conditionnedVar = value;
-	Unlock();
-	this->Signal();
+	unlock();
+	this->signal();
 }
 
 
@@ -149,9 +179,9 @@ void eve::threading::Condition::restore(void)
 //=================================================================================================
 void eve::threading::Condition::setValue(int32_t value)
 {
-	Lock();
+	lock();
 	m_conditionnedVar = value;
-	Unlock();
+	unlock();
 
-	this->Signal();
+	this->signal();
 }
