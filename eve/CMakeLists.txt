@@ -69,6 +69,11 @@ set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )
 
 
+# Entry point
+#################################################
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp )
+
+
 # link source files for generation.
 ###################################################################################################
 set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )

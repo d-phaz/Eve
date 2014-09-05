@@ -34,43 +34,17 @@
 
 
 //=============================================================================================
-namespace eve
-{
-	namespace threading
-	{
-		namespace detail
-		{
-			class Lock
-			{
-			public:
-				CRITICAL_SECTION cs;
-				bool m_bIsLocked;
-
-
-				Lock(void)
-					: m_bIsLocked(false)
-				{}
-
-			}; // class Lock
-
-		} // namespace detail
-	} // namespace threading
-} // namespace eve
-
-
-
-//=============================================================================================
 eve::threading::Lock::Lock(void)
 	: m_criticalSections	()
 {
 	memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
-	InitializeCriticalSection(&m_criticalSections);
+	::InitializeCriticalSection(&m_criticalSections);
 }
 	
 //=============================================================================================
 eve::threading::Lock::~Lock(void)
 {
-	DeleteCriticalSection(&m_criticalSections);
+	::DeleteCriticalSection(&m_criticalSections);
 }
 
 
@@ -78,11 +52,11 @@ eve::threading::Lock::~Lock(void)
 //=============================================================================================
 void eve::threading::Lock::lock(void)
 {
-	EnterCriticalSection(&m_criticalSections);
+	::EnterCriticalSection(&m_criticalSections);
 }
 	
 //=============================================================================================
 void eve::threading::Lock::unlock(void)
 {
-	LeaveCriticalSection(&m_criticalSections);
+	::LeaveCriticalSection(&m_criticalSections);
 }

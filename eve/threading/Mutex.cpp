@@ -36,13 +36,13 @@
 //=============================================================================================
 eve::threading::Mutex::Mutex(void)
 {
-	m_mutex = CreateMutexW(NULL, false, NULL);
+	m_mutex = ::CreateMutexW(NULL, false, NULL);
 }
 
 //=============================================================================================
 eve::threading::Mutex::~Mutex(void)
 {
-	CloseHandle(m_mutex);
+	::CloseHandle(m_mutex);
 }
 
 
@@ -50,11 +50,11 @@ eve::threading::Mutex::~Mutex(void)
 //=============================================================================================
 void eve::threading::Mutex::lock(void)
 {
-	WaitForSingleObjectEx(m_mutex, INFINITE, FALSE);
+	::WaitForSingleObjectEx(m_mutex, INFINITE, FALSE);
 }
 
 //=============================================================================================
 void eve::threading::Mutex::unlock(void)
 {
-	ReleaseMutex(m_mutex);
+	::ReleaseMutex(m_mutex);
 }

@@ -1,26 +1,27 @@
 
-
 // Main header
-#include "Native_ThreadSimple.h"
+#include "threading/Thread.h"
 
+
+#include <process.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		Static
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-int32_t NativeT::Thread::m_thread_number = 0;
+int32_t eve::threading::Thread::m_thread_number = 0;
 
-NativeT::Condition NativeT::Thread::m_num_cond;
+eve::threading::Condition eve::threading::Thread::m_num_cond(0);
 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//		NativeT::Thread class
+//		eve::threading::Thread class
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-NativeT::Thread::Thread( int32_t p_runWait )
+eve::threading::Thread::Thread( int32_t p_runWait )
 
 	// Members init
 	: m_mutex			()
@@ -38,7 +39,7 @@ NativeT::Thread::Thread( int32_t p_runWait )
 {}
 
 //=================================================================================================
-NativeT::Thread::~Thread( void ) 
+eve::threading::Thread::~Thread( void ) 
 {
 	Stop();
 	::CloseHandle( m_hThread );
@@ -50,14 +51,14 @@ NativeT::Thread::~Thread( void )
 
 
 //=================================================================================================
-uint32_t NativeT::Thread::Run_Wrapper(void * p_pThread)
+uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 {
-	//#ifndef NDEBUG
-	//	assert( p_pThread!=NULL );
-	//#endif
+#ifndef NDEBUG
+	assert(p_pThread);
+#endif
 
 	// Grab and cast thread pointer
-	Thread * objectPtr = (Thread *)p_pThread;
+	eve::threading::Thread * objectPtr = (eve::threading::Thread *)p_pThread;
 
 	// Initialize object local data
 	objectPtr->init();
@@ -86,10 +87,10 @@ uint32_t NativeT::Thread::Run_Wrapper(void * p_pThread)
 
 	// decrement thread count and send condition signal
 	// do this after the object is destroyed, otherwise NT complains
-	m_num_cond.Lock();
+	m_num_cond.lock();
 	m_thread_number--;
-	m_num_cond.Signal();
-	m_num_cond.Unlock();
+	m_num_cond.signal();
+	m_num_cond.unlock();
 
 
 	return NULL;
@@ -97,50 +98,48 @@ uint32_t NativeT::Thread::Run_Wrapper(void * p_pThread)
 
 
 
-
 //=================================================================================================
-void NativeT::Thread::Start(void)
+void eve::threading::Thread::Start(void)
 {
 	if (equal_ID(m_threadID, zero_ID()))
 	{
 		// increment thread count
-		m_num_cond.Lock();
+		m_num_cond.lock();
 		m_thread_number++;
-		m_num_cond.Unlock();
+		m_num_cond.unlock();
 
 		Thread* ptr = this;
 
 		// Win32 threads -- spawn new thread
 		// Win32 has a thread handle in addition to the thread ID
 		m_hThread = (HANDLE)_beginthreadex(
-			NULL,							// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
-			0,								// DWORD dwStackSize,							// initial thread stack size
-			(THREAD_START_ROUTINE)
-			Run_Wrapper,					// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
-			static_cast<LPVOID>(ptr),		//LPVOID lpParameter,							// argument for new thread
-			0,								//DWORD dwCreationFlags,						// creation flags
-			(unsigned*)&m_threadID			// LPDWORD lpThreadId							// pointer to receive thread ID
+			NULL,								// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
+			0,									// DWORD dwStackSize,							// initial thread stack size
+			run_wrapper,						// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
+			static_cast<LPVOID>(ptr),			// LPVOID lpParameter,							// argument for new thread
+			0,									// DWORD dwCreationFlags,						// creation flags
+			(unsigned*)&m_threadID				// LPDWORD lpThreadId							// pointer to receive thread ID
 			);
-		//#ifndef NDEBUG	 
-		//		assert( m_hThread != 0 );
-		//#endif
+#ifndef NDEBUG	 
+		assert(m_hThread);
+#endif
 	}
 }
 
 
 
 //=================================================================================================
-void NativeT::Thread::Stop( void ) 
+void eve::threading::Thread::Stop( void ) 
 {
 	if( m_hThread )
 	{
 		if ( !equal_ID(m_threadID, zero_ID()) ) 
 		{
 			// decrement thread count
-			m_num_cond.Lock();
+			m_num_cond.lock();
 			m_thread_number--;
-			m_num_cond.Signal();
-			m_num_cond.Unlock();
+			m_num_cond.signal();
+			m_num_cond.unlock();
 
 			// Signal the thread to exit
 			::SetEvent( m_hShutdownEvent );
@@ -182,7 +181,7 @@ void NativeT::Thread::Stop( void )
 } // end Stop
 
 //=================================================================================================
-void NativeT::Thread::Pause( void )
+void eve::threading::Thread::Pause( void )
 {
 	Stop();
 }
@@ -191,7 +190,7 @@ void NativeT::Thread::Pause( void )
 
 
 //=================================================================================================
-bool NativeT::Thread::Join( void ) 
+bool eve::threading::Thread::Join( void ) 
 {
 	bool bReturn = false;
 
@@ -231,18 +230,18 @@ bool NativeT::Thread::Join( void )
 } 
 
 //=================================================================================================
-void NativeT::Thread::join_all( void ) 
+void eve::threading::Thread::join_all( void ) 
 {
-	m_num_cond.Lock();
+	m_num_cond.lock();
 	while ( m_thread_number > 0 ) 
 	{
-		m_num_cond.Wait();
+		m_num_cond.wait();
 	}
-	m_num_cond.Unlock();
+	m_num_cond.unlock();
 } 
 
 //=================================================================================================
-void NativeT::Thread::detach( void )
+void eve::threading::Thread::detach( void )
 {
 	if(m_hThread)
 	{
@@ -268,7 +267,7 @@ struct SleepEvent
 static SleepEvent sleepEvent;
 
 //=================================================================================================
-void NativeT::Thread::m_sleep( const int32_t p_milliseconds )
+void eve::threading::Thread::m_sleep( const int32_t p_milliseconds )
 {
 	if( p_milliseconds >= 10 ) 
 	{
@@ -284,7 +283,7 @@ void NativeT::Thread::m_sleep( const int32_t p_milliseconds )
 }
 
 //=================================================================================================
-void NativeT::Thread::u_sleep( uint32_t p_iters )
+void eve::threading::Thread::u_sleep( uint32_t p_iters )
 {
 	for( uint32_t i=0; i<p_iters; i++ ) {
 		::SwitchToThread();
@@ -292,7 +291,7 @@ void NativeT::Thread::u_sleep( uint32_t p_iters )
 }
 
 //=================================================================================================
-void NativeT::Thread::u_sleep( uint64_t p_ticks )
+void eve::threading::Thread::u_sleep( uint64_t p_ticks )
 {
 	LARGE_INTEGER frequency;
 	LARGE_INTEGER currentTime;
@@ -315,19 +314,19 @@ void NativeT::Thread::u_sleep( uint64_t p_ticks )
 
 
 //=================================================================================================
-DWORD NativeT::Thread::current_thread_ID( void )
+DWORD eve::threading::Thread::current_thread_ID( void )
 {
 	return ::GetCurrentThreadId();
 }
 
 //=================================================================================================
-bool NativeT::Thread::equal_ID( DWORD inLeft, DWORD inRight ) 
+bool eve::threading::Thread::equal_ID( DWORD inLeft, DWORD inRight ) 
 {
 	return(memcmp(&inLeft, &inRight, sizeof(inLeft)) == 0);
 }
 
 //=================================================================================================
-DWORD NativeT::Thread::zero_ID( void ) 
+DWORD eve::threading::Thread::zero_ID( void ) 
 {
 	DWORD a;
 	memset( &a, 0, sizeof(a));
@@ -341,7 +340,7 @@ DWORD NativeT::Thread::zero_ID( void )
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-int32_t NativeT::Thread::get_number_user_threads( void ) 
+int32_t eve::threading::Thread::get_number_user_threads( void ) 
 {
 	return m_thread_number;
 }
@@ -349,18 +348,18 @@ int32_t NativeT::Thread::get_number_user_threads( void )
 
 
 //=================================================================================================
-void NativeT::Thread::setDaemon( void ) 
+void eve::threading::Thread::setDaemon( void ) 
 {
-	m_num_cond.Lock();
+	m_num_cond.lock();
 	m_thread_number--;
-	m_num_cond.Signal();
-	m_num_cond.Unlock();
+	m_num_cond.signal();
+	m_num_cond.unlock();
 }
 
 
 
 //=================================================================================================
-bool NativeT::Thread::getPriority( priorities & p_priority ) 
+bool eve::threading::Thread::getPriority( priorities & p_priority ) 
 {
 
 	bool result = true;
@@ -402,7 +401,7 @@ bool NativeT::Thread::getPriority( priorities & p_priority )
 }
 
 //=================================================================================================
-bool NativeT::Thread::setPriority( priorities p_priority )
+bool eve::threading::Thread::setPriority( priorities p_priority )
 {
 	bool result;
 	// Convert
@@ -451,7 +450,7 @@ bool NativeT::Thread::setPriority( priorities p_priority )
 
 
 //=================================================================================================
-bool NativeT::Thread::running( void )
+bool eve::threading::Thread::running( void )
 {
 	bool b_return = false;
 	if( WAIT_TIMEOUT == ::WaitForSingleObject(m_hShutdownEvent, (DWORD)m_runWait) ) {
@@ -463,7 +462,7 @@ bool NativeT::Thread::running( void )
 
 
 //=================================================================================================
-bool NativeT::Thread::started( void )
+bool eve::threading::Thread::started( void )
 {
 	bool b_return = false;
 
@@ -475,13 +474,20 @@ bool NativeT::Thread::started( void )
 }
 
 //=================================================================================================
-void NativeT::Thread::setStarted( void )
+void eve::threading::Thread::setStarted( void )
 {
 	::SetEvent( m_StartEvent );
 }
 
 //=================================================================================================
-void NativeT::Thread::resetStarted( void )
+void eve::threading::Thread::resetStarted( void )
 {
 	::SetEvent( m_StartEvent );
+}
+
+
+//=================================================================================================
+void eve::threading::Thread::setDeleteSelfAfterRun(void)
+{
+	m_bDeleteSelf = true;
 }

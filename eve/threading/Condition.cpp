@@ -33,10 +33,6 @@
 #include "threading/Condition.h"
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		eve::threading::Condition class
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 //=================================================================================================
 eve::threading::Condition::Condition(int32_t p_var)
 	
@@ -50,13 +46,13 @@ eve::threading::Condition::Condition(int32_t p_var)
 	// set all conditions to be broadcast
 	// unfortunately in Win32 you have to know at creation
 	// whether the signal is broadcast or not.
-	m_condition = CreateEventW(NULL, true, false, NULL);
+	m_condition = ::CreateEventW(NULL, true, false, NULL);
 }
 
 //=================================================================================================
 eve::threading::Condition::~Condition(void)
 {
-	CloseHandle(m_condition);
+	::CloseHandle(m_condition);
 }
 
 
@@ -64,22 +60,22 @@ eve::threading::Condition::~Condition(void)
 //=================================================================================================
 void eve::threading::Condition::wait(void)
 {
-	SignalObjectAndWait(m_mutex, m_condition, INFINITE, false);
-	WaitForSingleObject(m_mutex, INFINITE);
+	::SignalObjectAndWait(m_mutex, m_condition, INFINITE, false);
+	::WaitForSingleObject(m_mutex, INFINITE);
 }
 
 //=================================================================================================
 void eve::threading::Condition::timedWait(time_t p_inSeconds)
 {
-	SignalObjectAndWait(m_mutex, m_condition, (DWORD)(p_inSeconds * 1000), false);
-	WaitForSingleObject(m_mutex, INFINITE);
+	::SignalObjectAndWait(m_mutex, m_condition, (DWORD)(p_inSeconds * 1000), false);
+	::WaitForSingleObject(m_mutex, INFINITE);
 }
 
 //=================================================================================================
 void eve::threading::Condition::timedWaitMili(time_t p_inMiliSeconds)
 {
-	SignalObjectAndWait(m_mutex, m_condition, (DWORD)(p_inMiliSeconds), false);
-	WaitForSingleObject(m_mutex, INFINITE);
+	::SignalObjectAndWait(m_mutex, m_condition, (DWORD)(p_inMiliSeconds), false);
+	::WaitForSingleObject(m_mutex, INFINITE);
 }
 
 
@@ -92,7 +88,7 @@ bool eve::threading::Condition::waitAndRetain(int32_t p_value)
 	while (m_conditionnedVar != p_value && m_isValid)
 	{
 		unlock();
-		WaitForSingleObject(m_condition, INFINITE);
+		::WaitForSingleObject(m_condition, INFINITE);
 		lock();
 	}
 
@@ -124,13 +120,13 @@ bool eve::threading::Condition::waitAndLock(int32_t p_awaitedValue, bool p_autor
 //=================================================================================================
 void eve::threading::Condition::signal(void)
 {
-	PulseEvent(m_condition);
+	::PulseEvent(m_condition);
 }
 
 //=================================================================================================
 void eve::threading::Condition::broadcast(void)
 {
-	PulseEvent(m_condition);
+	::PulseEvent(m_condition);
 }
 
 

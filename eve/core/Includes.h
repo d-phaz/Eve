@@ -43,6 +43,10 @@
 #endif
 
 
+// C standard lib
+#include <cstdlib>
+// standard input/output stream objects
+#include <iostream>
 // x64 compliant integers
 #include <stdint.h>
 // assertion

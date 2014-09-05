@@ -43,9 +43,6 @@ namespace eve
 	namespace threading
 	{
 
-		namespace detail { class Lock; }
-
-
 		/** 
 		* @class threading::Lock
 		* @brief lock using critical section
