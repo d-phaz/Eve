@@ -1,84 +1,52 @@
 
-
 #pragma once
-#ifndef __THREADING_MUTEX_H__
-#define __THREADING_MUTEX_H__
+#ifndef __EVE_THREADING_MUTEX_H__
+#define __EVE_THREADING_MUTEX_H__
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Headers
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-#ifndef __NATIVE_SYSTEM_H__
-#include "Native_System.h"
-#endif
-
-#ifndef _WINDOWS_
-#include <Windows.h>
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "core/Includes.h"
 #endif
 
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// NativeT namespace
-///////////////////////////////////////////////////////////////////////////////////////////////////
-namespace NativeT 
+namespace eve
 {
-
-	/**
-	* @class NativeT::Mutex
-	*
-	* @brief provides base native Mutex
-	*/
-	class Mutex 
+	namespace threading
 	{
-		//////////////////////////////////////
-		//				DATAS				//
-		//////////////////////////////////////
-
-	protected:
-		HANDLE					m_mutex;		//<! native Win32 Mutex handle
-
-
-
-		//////////////////////////////////////
-		//				METHOD				//
-		//////////////////////////////////////
-
-	public:
-		
-		/**
-		* @brief Mutex class constructor : initialise base mutex
-		*/
-		Mutex( void ) 
-		{
-			m_mutex = CreateMutexW( NULL, false, NULL );
-		}
-		/**
-		* @brief Mutex class destructor : destroy, making sure mutex is unlocked
-		*/
-		virtual ~Mutex( void ) 
-		{
-			CloseHandle( m_mutex );
-		}
-
 
 		/**
-		* @brief lock the mutex variable
+		* @class threading::Mutex
+		* @brief provides base native Mutex
 		*/
-		void Lock( void )
+		class Mutex 
 		{
-			WaitForSingleObject( m_mutex, INFINITE );
-		}
-		/**
-		* @brief unlock the mutex variable
-		*/
-		void Unlock( void ) 
-		{
-			ReleaseMutex( m_mutex );
-		}
-	}; 
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
 
-} // namespace NativeT
+		protected:
+			void *		m_mutex;		//<! Mutex handle
 
-#endif // __THREADING_MUTEX_H__
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+		public:		
+			/** Mutex class constructor : initialize base mutex. */
+			Mutex(void);
+			/** Mutex class destructor : destroy, making sure mutex is unlocked. */
+			virtual ~Mutex(void);
+
+
+			/** Lock the mutex variable. */
+			void lock(void);
+			/** Unlock the mutex variable. */
+			void unlock(void);
+
+		}; // class Mutex
+
+	} // namespace threading
+
+} // namespace eve
+
+#endif // __EVE_THREADING_MUTEX_H__

@@ -61,6 +61,7 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lockable.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ScopedMutex.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.cpp 
