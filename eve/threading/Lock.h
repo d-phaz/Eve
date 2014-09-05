@@ -1,5 +1,4 @@
 
-
 #pragma once
 #ifndef __NATIVE_LOCK_H__
 #define __NATIVE_LOCK_H__  

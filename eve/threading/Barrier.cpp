@@ -1,48 +1,50 @@
 
 // Main header
-#include "Native_Barrier.h"
+#include "threading/Barrier.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//		NativeT::Barrier class
+//		eve::threading::Barrier class
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-NativeT::Barrier::Barrier(int count)
+eve::threading::Barrier::Barrier(int32_t count)
 {
-    maxcnt = count;
-    CurrentSb = &sb[0];
-    for (int i = 0; i < 2; ++i)
-	{		// construct two subbarriers
-        _sb *CurrentSb = &sb[i];
-        CurrentSb->runners = count;
-    }
+    m_maxCnt = count;
+    m_pCurrentSb = &m_pSb[ 0 ];
+
+	// construct two sub-barriers
+	_sb *curSb = &m_pSb[ 0 ];
+	curSb->runners = count;
+
+	_sb *curSb = &m_pSb[1];
+	curSb->runners = count;
 }
 
 //=================================================================================================
-NativeT::Barrier::~Barrier( void ) 
+eve::threading::Barrier::~Barrier( void ) 
 {}
 
 
 
 //=================================================================================================
-void NativeT::Barrier::Wait( void ) 
+void eve::threading::Barrier::Wait( void ) 
 {
-    _sb *TempSb = CurrentSb;		// ptr to a subbarrier
+    _sb *TempSb = m_pCurrentSb;		// ptr to a sub-barrier
 	TempSb->wait_lk.Lock();
 
     if (TempSb->runners == 1) 
 	{  	
 		// last thread reaching barrier
-        if (maxcnt != 1)
+        if (m_maxCnt != 1)
 		{
 				// reset counter
-                TempSb->runners = maxcnt;
+                TempSb->runners = m_maxCnt;
 				// wake up all waiting threads
 				TempSb->wait_cv.Broadcast();
 				
-				// switch the current subbarrier
-                CurrentSb = (CurrentSb == &sb[0]) ? &sb[1] : &sb[0];
+				// switch the current sub-barrier
+                m_pCurrentSb = (m_pCurrentSb == &m_pSb[0]) ? &m_pSb[1] : &m_pSb[0];
         }
 		TempSb->wait_lk.Unlock();    // release lock
     } 
@@ -52,7 +54,7 @@ void NativeT::Barrier::Wait( void )
 		// not the last thread
         TempSb->runners--;       	// wait
 		   
-        // while (TempSb->runners != maxcnt)
+        // while (TempSb->runners != m_maxCnt)
                 TempSb->wait_cv.Wait();
 		TempSb->wait_lk.Unlock();    // release lock
     }
@@ -61,7 +63,7 @@ void NativeT::Barrier::Wait( void )
 
 
 //=================================================================================================
-void NativeT::Barrier::Signal( void ) 
+void eve::threading::Barrier::Signal( void ) 
 {
-	CurrentSb->wait_cv.Broadcast();
+	m_pCurrentSb->wait_cv.Broadcast();
 }

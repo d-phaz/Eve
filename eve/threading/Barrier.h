@@ -1,7 +1,7 @@
 
 #pragma once
-#ifndef __THREADING_BARRIER_H__
-#define __THREADING_BARRIER_H__
+#ifndef __EVE_THREADING_BARRIER_H__
+#define __EVE_THREADING_BARRIER_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "core/Includes.h"
@@ -45,9 +45,9 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			int		maxcnt;       //<! maximum number of runners
-			_sb		sb[2];        //<! two sub-barriers
-			_sb		*CurrentSb;   //<! pointer to current sub-barrier
+			int32_t	m_maxCnt;       //<! maximum number of runners
+			_sb		m_pSb[2];       //<! two sub-barriers
+			_sb	*	m_pCurrentSb;   //<! pointer to current sub-barrier
 
 
 			//////////////////////////////////////
@@ -59,7 +59,7 @@ namespace eve
 			* @brief Barrier class constructor : Initialize a barrier for given number of threads.
 			* @param "p_count" is the number of threads involved
 			*/
-			Barrier( int p_count );	
+			Barrier( int32_t p_count );	
 			/**
 			* @brief Barrier class destructor
 			*/
@@ -67,8 +67,8 @@ namespace eve
 
 
 			/**
-			* @brief Wait untill all threads reach this barrier. The last thread switches
-			* "CurrentSb" point to another sub barrier before waking up all waiting threads.
+			* @brief Wait untill all threads reach this barrier. 
+			* The last thread switches "CurrentSb" point to another sub barrier before waking up all waiting threads.
 			*/
 			void Wait( void );
 			/**
@@ -82,4 +82,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __THREADING_BARRIER_H__
+#endif // __EVE_THREADING_BARRIER_H__

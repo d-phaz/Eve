@@ -56,14 +56,15 @@ source_group( "Core" FILES ${CORE_SRCS} )
 set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Barrier.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Barrier.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/CriticalSectionLock.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/CriticalSectionLock.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lockable.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ScopedMutex.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ScopedMutex.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadSimple.cpp 
