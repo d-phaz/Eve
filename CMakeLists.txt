@@ -337,7 +337,8 @@ endif()
 
 # Include folders to build process
 ###################################################################################################
-add_subdirectory( eve )
+add_subdirectory( Eve )
+add_subdirectory( examples )
 
 
 # Include installer folder

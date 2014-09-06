@@ -50,8 +50,12 @@
 
 
 #if defined(EVE_OS_WIN)
-#include <Windows.h>
-#endif
+
+	#include <Windows.h>
+	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+
+#endif // defined(EVE_OS_WIN)
+
 
 #ifndef __EVE_CORE_MACRO_H__
 #include "core/Macro.h"

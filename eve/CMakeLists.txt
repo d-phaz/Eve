@@ -80,11 +80,6 @@ set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )
 
 
-# Entry point
-#################################################
-set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp )
-
-
 # link source files for generation.
 ###################################################################################################
 set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
@@ -134,10 +129,7 @@ endif()
 
 # Windows Resource file.
 ###################################################################################################
-if( USING_WINDOWS_MSVC )
-	# A custom target that is always built
-	# add_custom_target( ${PRODUCT_PRODUCT_NAME}_version ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ftopia.rc )
-	
+if( WIN32 )
 	# Generate rc files
 	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/${PRODUCT_PRODUCT_NAME}.rc.in ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT_PRODUCT_NAME}.rc @ONLY )
 	# Set properties to generated files
@@ -146,82 +138,30 @@ if( USING_WINDOWS_MSVC )
 endif()
 
 
-# Create main executables.
+# Create main library.
 ###################################################################################################
-set( exe_name "${PRODUCT_PRODUCT_NAME}_exe" )
+set( lib_name "${PRODUCT_PRODUCT_NAME}" )
+add_library( ${lib_name} STATIC ${SOURCE_FILES} )
+
 if( WIN32 )
-	add_executable( ${exe_name} WIN32 ${SOURCE_FILES} )
+	if( ${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+		set_target_properties( ${lib_name} PROPERTIES STATIC_LIBRARY_FLAGS "/machine:x64")
+	elseif( ${CMAKE_SIZEOF_VOID_P} EQUAL 4)
+		set_target_properties( ${lib_name} PROPERTIES STATIC_LIBRARY_FLAGS "/machine:x86")
+	endif()	
+	
+	configure_file( ${BASE_SOURCE_PATH}/CPack/${PRODUCT_ICON_INSTALL_NAME}.ico ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT_ICON_INSTALL_NAME}.ico COPYONLY )	
+	# install( FILES  ${BASE_SOURCE_PATH}/CPack/${PRODUCT_ICON_INSTALL_NAME}.ico DESTINATION . COMPONENT ${PRODUCT_NAME} )
 endif()
 
-if( APPLE )
-	# Info.plist content ----------
-	set( MACOSX_BUNDLE TRUE )
-	set( MACOSX_BUNDLE_INFO_STRING 			"${PRODUCT_PRODUCT_NAME}" )
-	set( MACOSX_BUNDLE_ICON_FILE 			"${PRODUCT_ICON_INSTALL_NAME}.icns" )
-	set( MACOSX_BUNDLE_GUI_IDENTIFIER 		"com.${PRODUCT_VENDOR_NAME}.${PRODUCT_PRODUCT_NAME}" )
-	set( MACOSX_BUNDLE_BUNDLE_NAME 			"${PRODUCT_PRODUCT_NAME}" )
-	set( MACOSX_BUNDLE_LONG_VERSION_STRING 	"${PRODUCT_VERSION}" )
-	set( MACOSX_BUNDLE_SHORT_VERSION_STRING "${PRODUCT_VERSION_MAJOR}" )
-	set( MACOSX_BUNDLE_BUNDLE_VERSION 		"${PRODUCT_VERSION_MAJOR}.${PRODUCT_VERSION_MINOR}" )
-	set( MACOSX_BUNDLE_COPYRIGHT 			"Copyright 2014 ${PRODUCT_VENDOR_NAME}. All rights reserved." )
-
-	# RPATH ---------- do not force RPATH in OSX 10.8 and above ---- RC
-	set( CMAKE_SKIP_BUILD_RPATH FALSE )
-	set( CMAKE_BUILD_WITH_INSTALL_RPATH FALSE )
-	set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE )
-	set( CMAKE_INSTALL_RPATH "Contents/MacOSX" )
-	set( INSTALL_NAME_DIR @rpath )
-
-	# Icone ----------
-	set( APP_ICNS_FILE "${BASE_SOURCE_PATH}/CPack/${PRODUCT_ICON_INSTALL_NAME}.icns" )
-	set_source_files_properties( "${APP_ICNS_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources )
-	set( SOURCE_FILES ${SOURCE_FILES} ${APP_ICNS_FILE} )
-
-	# CURL crt ----------
-	set( CURL_CRT_FILE "${BASE_SOURCE_PATH}/asset/data/curl-ca-bundle.crt" )
-	set_source_files_properties( "${CURL_CRT_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources )
-	set( SOURCE_FILES ${SOURCE_FILES} ${CURL_CRT_FILE} )
-
-	# qt.conf file ----------
-	set( QT_CONF_FILE "${BASE_SOURCE_PATH}/CPack/osx/qt.conf" )
-	set_source_files_properties( "${QT_CONF_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources )
-	set( SOURCE_FILES ${SOURCE_FILES} ${QT_CONF_FILE} )
-
-	add_executable( ${exe_name} MACOSX_BUNDLE ${SOURCE_FILES} )
-endif()
-
-# Link packages to executable.
+# Link packages to library.
 if( APPLE )
 	# Set executable properties.
-	set_target_properties( ${exe_name} PROPERTIES MACOSX_RPATH 0 )
-	set_target_properties( ${exe_name} PROPERTIES SKIP_BUILD_RPATH 1 INSTALL_RPATH "@executable_path" )
-	set_target_properties( ${exe_name} PROPERTIES LINK_FLAGS " -framework AppKit  -framework ApplicationServices -framework CoreFoundation -framework CoreServices -framework DiskArbitration -framework Security" )
-
-	# Info.plist
-	set( APP_ICNS "ftopia.icns" )
-	configure_file( ${BASE_SOURCE_PATH}/CPack/osx/Info.plist.in ${PROJECT_BINARY_DIR}/Info.plist @ONLY )
-	set_target_properties( ${exe_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_BINARY_DIR}/Info.plist )
+	set_target_properties( ${lib_name} PROPERTIES MACOSX_RPATH 0 )
+	set_target_properties( ${lib_name} PROPERTIES LINK_FLAGS " -framework AppKit  -framework ApplicationServices -framework CoreFoundation -framework CoreServices -framework DiskArbitration -framework Security" )
 endif()	
-
-set_target_properties( ${exe_name} PROPERTIES OUTPUT_NAME ${PRODUCT_PRODUCT_NAME} )
-
-# Link executable to libraries.
-target_link_libraries( ${exe_name} ${LIBS} )
-
-# Executable install target
-install( TARGETS ${exe_name} BUNDLE DESTINATION . COMPONENT ${PRODUCT_PRODUCT_NAME} 
-							 RUNTIME DESTINATION . COMPONENT ${PRODUCT_PRODUCT_NAME} )
-
-# Windows icon file.
-if( WIN32 )
-	configure_file( ${BASE_SOURCE_PATH}/CPack/${PRODUCT_ICON_INSTALL_NAME}.ico ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT_ICON_INSTALL_NAME}.ico COPYONLY )	
-	install( FILES  ${BASE_SOURCE_PATH}/CPack/${PRODUCT_ICON_INSTALL_NAME}.ico DESTINATION . COMPONENT ${PRODUCT_PRODUCT_NAME} )
 	
-	if( OPTION_BUILD_TYPE_DEBUG )  
-		install( FILES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/${exe_name}.pdb DESTINATION . COMPONENT ${PRODUCT_PRODUCT_NAME} )
-	endif() 
-endif()
-
+target_link_libraries( ${lib_name} ${LIBS} )
 
 
 

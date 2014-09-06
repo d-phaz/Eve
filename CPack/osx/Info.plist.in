@@ -5,21 +5,21 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>@PRODUCT_NAME@</string>
+	<string>@PRODUCT_PRODUCT_NAME@</string>
 	<key>CFBundleExecutable</key>
-	<string>@PRODUCT_NAME@</string>
+	<string>@PRODUCT_PRODUCT_NAME@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>@PRODUCT_NAME@ - Copyright 2014 @VENDOR_NAME@. All rights reserved.</string>
+	<string>@PRODUCT_PRODUCT_NAME@ - Copyright 2014 @VENDOR_NAME@. All rights reserved.</string>
 	<key>CFBundleIconFile</key>
 	<string>@APP_ICNS@</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.@VENDOR_NAME@.@PRODUCT_NAME@</string>
+	<string>com.@VENDOR_NAME@.@PRODUCT_PRODUCT_NAME@</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
 	<string>@PRODUCT_VERSION@</string>
 	<key>CFBundleName</key>
-	<string>@PRODUCT_NAME@</string>
+	<string>@PRODUCT_PRODUCT_NAME@</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
