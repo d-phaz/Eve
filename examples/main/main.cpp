@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
 #endif	
 
-
+	printf("EVE_VERSIONNAME: %s", EVE_VERSIONNAME);
 
 	return 0;
 }

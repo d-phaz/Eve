@@ -82,6 +82,13 @@ set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )
 
 
+# Version.
+#################################################
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version/Version.h.in
+                ${CMAKE_CURRENT_SOURCE_DIR}/version/Version.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/version/version.h )
+
+
 # link source files for generation.
 ###################################################################################################
 set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )

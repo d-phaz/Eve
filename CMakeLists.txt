@@ -196,9 +196,6 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/CMake/modules/GetGitRevisionDescription.cma
 git_describe( GIT_VERSION )
 message( "Git version: ${GIT_VERSION}" ) 
 
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version/version.h.in
-                ${CMAKE_CURRENT_BINARY_DIR}/version.h )
-
 
 # Platform configuration tests.
 ###################################################################################################

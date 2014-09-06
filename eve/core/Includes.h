@@ -61,6 +61,10 @@
 #endif // defined(EVE_OS_WIN)
 
 
+#ifndef __EVE_VERSION_H__
+#include "Eve/version/Version.h"
+#endif
+
 #ifndef __EVE_CORE_MACRO_H__
 #include "Eve/core/Macro.h"
 #endif
