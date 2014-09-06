@@ -29,46 +29,90 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "threading/SpinLock.h"
+#pragma once
+#ifndef __EVE_MEMORY_POINTER_H__
+#define __EVE_MEMORY_POINTER_H__
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "core/Includes.h"
+#endif
 
 
-//=================================================================================================
-eve::threading::SpinLock::SpinLock(void)
-	// Inheritance
-	: eve::memory::Pointer()
-	// Members init
-	, m_state()
-{}
-
-
-
-//=================================================================================================
-void eve::threading::SpinLock::init(void)
+namespace eve
 {
-	m_state.clear();
-}
-
-//=================================================================================================
-void eve::threading::SpinLock::release(void)
-{
-	m_state.clear();
-}
-
-
-
-//=================================================================================================
-void eve::threading::SpinLock::lock(void)
-{
-	while (m_state.test_and_set(std::memory_order_acquire))
+	namespace memory
 	{
-		//SwitchToThread();
-		std::this_thread::yield();
-	}
-}
+
+		/** 
+		 * @class memory::Pointer
+		 * Abstract base pointer class
+		 */
+		class Pointer
+		{
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY( Pointer )
+
+		protected:
+			/** Class constructor. */
+			Pointer(void);
+			/** Class destructor. */
+			EVE_PROTECT_DESTRUCTOR(Pointer)
+
+
+		protected:
+			/** Alloc and init class members. (pure virtual) */
+			virtual void init(void) = 0;
+			/** Release and delete class members. (pure virtual) */
+			virtual void release(void) = 0;
+
+
+		public:
+			/** Create and initialize new pointer. */
+			template<class T>
+			static T * create_ptr(void);
+
+			/** Release and delete target pointer. */
+			template<class T>
+			static void release_ptr(T * p_pPtr);
+
+		}; // class Pointer
+
+	} // namespace memory
+
+} // namespace eve
+
 
 //=================================================================================================
-void eve::threading::SpinLock::unlock(void)
+template<class T>
+T * eve::memory::Pointer::create_ptr(void)
 {
-	m_state.clear(std::memory_order_release);
+	T * ptr = new T();
+	ptr->init();
+	return ptr;
 }
+// Convenience MACRO.
+#define EVE_CREATE_PTR( T )	\
+	eve::memory::Pointer::create_ptr<T>();
+
+
+//=================================================================================================
+template<class T>
+void eve::memory::Pointer::release_ptr(T * p_pPtr)
+{
+#ifndef NDEBUG
+	assert(p_pPtr);
+#endif
+
+	p_pPtr->release();
+	delete p_pPtr;
+}
+// Convenience MACRO.
+#define EVE_RELEASE_PTR( PTR )	\
+	eve::memory::Pointer::release_ptr(PTR);	\
+	PTR = nullptr;
+
+#endif //__EVE_MEMORY_POINTER_H__

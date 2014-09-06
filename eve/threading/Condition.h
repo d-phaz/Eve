@@ -51,11 +51,13 @@ namespace eve
 		* @class threading::Condition
 		*
 		* @brief locking condition class
-		* @note extends threading::Mutex
+		* @note extends threading::Mutex, memory::Pointer
 		*/
 		class Condition
-			: public threading::Mutex
+			: public eve::threading::Mutex
 		{
+
+			friend class eve::memory::Pointer;
 
 			//////////////////////////////////////
 			//				DATAS				//
@@ -73,13 +75,22 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
+			EVE_DISABLE_COPY(Condition)
+			EVE_PROTECT_DESTRUCTOR(Condition)
+
+		protected:
+			/** Class constructor. */
+			Condition(void);
+
+
+		protected:
+			/** Alloc and init class members. (pure virtual) */
+			virtual void init(void);
+			/** Release and delete class members. (pure virtual) */
+			virtual void release(void);
+
+
 		public:
-			/** Condition class constructor : initialize base condition. */
-			Condition(int32_t p_var);
-			/** Condition class destructor : TODO -> make sure condition is unlocked. */
-			virtual ~Condition(void);
-
-
 			/** Sleep this thread, waiting for condition signal,
 			* atomically release mutex and wait on condition,
 			* then re-acquire the mutex.

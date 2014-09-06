@@ -1,9 +1,50 @@
 
+/*
+ Copyright (c) 2014, The Eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 // Main header
 #include "threading/Thread.h"
 
-
 #include <process.h>
+
+#ifndef __EVE_THREADING_MUTEX_H__
+#include "threading/Mutex.h"
+#endif
+
+#ifndef __EVE_THREADING_LOCK_H__
+#include "threading/Lock.h"
+#endif 
+
+#ifndef __EVE_THREADING_CONDITION_H__
+#include "threading/Condition.h"
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,7 +53,7 @@
 
 int32_t eve::threading::Thread::m_thread_number = 0;
 
-eve::threading::Condition eve::threading::Thread::m_num_cond(0);
+eve::threading::Condition * eve::threading::Thread::m_num_cond = EVE_CREATE_PTR( eve::threading::Condition );
 
 
 
@@ -21,15 +62,18 @@ eve::threading::Condition eve::threading::Thread::m_num_cond(0);
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-eve::threading::Thread::Thread( int32_t p_runWait )
+eve::threading::Thread::Thread( void )
+
+	// Inheritance
+	: eve::memory::Pointer()
 
 	// Members init
-	: m_mutex			()
-	, m_hThread			( NULL )
-	, m_hShutdownEvent	( ::CreateEvent(NULL, TRUE, FALSE, NULL) )
-	, m_StartEvent		( ::CreateEvent(NULL, TRUE, FALSE, NULL) ) 
+	, m_mutex			( nullptr )
+	, m_hThread			( 0 )
+	, m_hShutdownEvent(0)
+	, m_StartEvent(0)
 	, m_waiters			( 0 )
-	, m_runWait			( p_runWait )
+	, m_runWait			( 5 ) // milliseconds
 	, m_threadID		( zero_ID() )
 
 	, m_bRunning		( false )
@@ -38,14 +82,27 @@ eve::threading::Thread::Thread( int32_t p_runWait )
 	, m_priority		( Thread::InheritPriority )	
 {}
 
+
+
 //=================================================================================================
-eve::threading::Thread::~Thread( void ) 
+void eve::threading::Thread::init(void)
+{
+	m_mutex = EVE_CREATE_PTR( eve::threading::Mutex );
+
+	m_hShutdownEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
+	m_StartEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
+}
+
+//=================================================================================================
+void eve::threading::Thread::release(void)
 {
 	Stop();
-	::CloseHandle( m_hThread );
-	::CloseHandle( m_hShutdownEvent );
-	::CloseHandle( m_StartEvent );
+	::CloseHandle(m_hThread);
+	::CloseHandle(m_hShutdownEvent);
+	::CloseHandle(m_StartEvent);
 	m_threadID = zero_ID();
+
+	EVE_RELEASE_PTR(m_mutex);
 }
 
 
@@ -61,17 +118,17 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 	eve::threading::Thread * objectPtr = (eve::threading::Thread *)p_pThread;
 
 	// Initialize object local data
-	objectPtr->init();
+	objectPtr->inThreadInit();
 	// Since initialized, set status to started
 	objectPtr->setStarted();
 
 	// Run thread (pure virtual function)
 	objectPtr->Run();
 
-	// Uninitialize object local data
-	objectPtr->release();
 	// Since we're out of run loop set status to not started
 	objectPtr->resetStarted();
+	// Uninitialize object local data
+	objectPtr->inThreadRelease();
 
 
 	// set TID to zero, then delete it
@@ -87,10 +144,10 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 
 	// decrement thread count and send condition signal
 	// do this after the object is destroyed, otherwise NT complains
-	m_num_cond.lock();
+	m_num_cond->lock();
 	m_thread_number--;
-	m_num_cond.signal();
-	m_num_cond.unlock();
+	m_num_cond->signal();
+	m_num_cond->unlock();
 
 
 	return NULL;
@@ -104,9 +161,9 @@ void eve::threading::Thread::Start(void)
 	if (equal_ID(m_threadID, zero_ID()))
 	{
 		// increment thread count
-		m_num_cond.lock();
+		m_num_cond->lock();
 		m_thread_number++;
-		m_num_cond.unlock();
+		m_num_cond->unlock();
 
 		Thread* ptr = this;
 
@@ -136,10 +193,10 @@ void eve::threading::Thread::Stop( void )
 		if ( !equal_ID(m_threadID, zero_ID()) ) 
 		{
 			// decrement thread count
-			m_num_cond.lock();
+			m_num_cond->lock();
 			m_thread_number--;
-			m_num_cond.signal();
-			m_num_cond.unlock();
+			m_num_cond->signal();
+			m_num_cond->unlock();
 
 			// Signal the thread to exit
 			::SetEvent( m_hShutdownEvent );
@@ -232,12 +289,12 @@ bool eve::threading::Thread::Join( void )
 //=================================================================================================
 void eve::threading::Thread::join_all( void ) 
 {
-	m_num_cond.lock();
+	m_num_cond->lock();
 	while ( m_thread_number > 0 ) 
 	{
-		m_num_cond.wait();
+		m_num_cond->wait();
 	}
-	m_num_cond.unlock();
+	m_num_cond->unlock();
 } 
 
 //=================================================================================================
@@ -350,10 +407,10 @@ int32_t eve::threading::Thread::get_number_user_threads( void )
 //=================================================================================================
 void eve::threading::Thread::setDaemon( void ) 
 {
-	m_num_cond.lock();
+	m_num_cond->lock();
 	m_thread_number--;
-	m_num_cond.signal();
-	m_num_cond.unlock();
+	m_num_cond->signal();
+	m_num_cond->unlock();
 }
 
 

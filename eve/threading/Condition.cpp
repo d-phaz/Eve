@@ -34,14 +34,20 @@
 
 
 //=================================================================================================
-eve::threading::Condition::Condition(int32_t p_var)
+eve::threading::Condition::Condition(void)
 	
 	// Inheritance
-	: threading::Mutex()
+	: eve::threading::Mutex()
 	
 	// Members init
 	, m_isValid(true)
-	, m_conditionnedVar(p_var)
+	, m_conditionnedVar(0)
+{}
+
+
+
+//=================================================================================================
+void eve::threading::Condition::init(void)
 {
 	// set all conditions to be broadcast
 	// unfortunately in Win32 you have to know at creation
@@ -50,7 +56,7 @@ eve::threading::Condition::Condition(int32_t p_var)
 }
 
 //=================================================================================================
-eve::threading::Condition::~Condition(void)
+void eve::threading::Condition::release(void)
 {
 	::CloseHandle(m_condition);
 }

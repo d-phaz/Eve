@@ -37,7 +37,12 @@
 #include "core/Includes.h"
 #endif
 
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "memory/Includes.h"
+#endif
+
 #include <atomic>
+#include <thread>
 
 
 
@@ -48,9 +53,13 @@ namespace eve
 		/** 
 		 * A fast lock for non-contented memory access.
 		 * Readers or writers will starve on high contention.
+		 * @note extends memory::Pointer
 		 */
 		class SpinLock
+			: public eve::memory::Pointer
 		{
+
+			friend class eve::memory::Pointer;
 
 			//////////////////////////////////////
 			//				DATAS				//
@@ -64,13 +73,22 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
+			EVE_DISABLE_COPY(SpinLock)
+			EVE_PROTECT_DESTRUCTOR(SpinLock)
+			
 		public:
 			/** Construct a new lock. */
 			SpinLock(void);
-			/** Destruct the lock. */
-			virtual ~SpinLock(void);
 
 
+		protected:
+			/** Alloc and init class members. (pure virtual) */
+			virtual void init(void);
+			/** Release and delete class members. (pure virtual) */
+			virtual void release(void);
+
+
+		public:
 			/** Acquire the lock exclusively. */
 			void lock(void);
 			/** Release an exclusive lock. */

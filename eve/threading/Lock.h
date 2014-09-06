@@ -37,6 +37,10 @@
 #include "core/Includes.h"
 #endif
 
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "memory/Includes.h"
+#endif
+
 
 namespace eve
 {
@@ -46,9 +50,13 @@ namespace eve
 		/** 
 		* @class threading::Lock
 		* @brief lock using critical section
+		* @note extends memory::Pointer
 		*/
 		class Lock
+			: public eve::memory::Pointer
 		{
+
+			friend class eve::memory::Pointer;
 
 			//////////////////////////////////////
 			//				DATAS				//
@@ -61,14 +69,23 @@ namespace eve
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(Lock)
+			EVE_PROTECT_DESTRUCTOR(Lock)
         
-		public:
+		protected:
 			/** Construct a new lock. */
 			Lock(void);
-			/** Destruct the lock. */
-			virtual ~Lock(void);
 
 
+		protected:
+			/** Alloc and init class members. (pure virtual) */
+			virtual void init(void);
+			/** Release and delete class members. (pure virtual) */
+			virtual void release(void);
+
+
+		public:
 			/** Acquire the lock. */
 			void lock(void);
 			/** Release the lock. */

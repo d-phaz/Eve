@@ -40,8 +40,36 @@
 */
 #define EVE_DISABLE_COPY( targetClass )			\
 private:										\
-	targetClass(targetClass& arg);				\
-	void operator=(const targetClass& arg);
+	targetClass(targetClass& arg){};			\
+	void operator=(const targetClass& arg){};
+
+
+/**
+* \macro EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR
+* make default constructor and destructor protected.
+*/
+#define EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR( targetClass )		\
+protected:														\
+	targetClass(void){};										\
+	virtual ~targetClass(void){};
+
+
+/**
+* \macro EVE_PROTECT_CONSTRUCTOR
+* make default constructor protected.
+*/
+#define EVE_PROTECT_CONSTRUCTOR( targetClass )		\
+protected:											\
+	targetClass(void){};
+
+
+/**
+* \macro EVE_PROTECT_DESTRUCTOR
+* make destructor protected.
+*/
+#define EVE_PROTECT_DESTRUCTOR( targetClass )		\
+protected:											\
+	virtual ~targetClass(void){};
 
 
 #endif // __EVE_CORE_MACRO_H__

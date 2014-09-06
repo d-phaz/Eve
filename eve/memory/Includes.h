@@ -29,46 +29,17 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "threading/SpinLock.h"
+#pragma once
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#define __EVE_MEMORY_INCLUDES_H__
 
 
-//=================================================================================================
-eve::threading::SpinLock::SpinLock(void)
-	// Inheritance
-	: eve::memory::Pointer()
-	// Members init
-	, m_state()
-{}
+#include <cstddef>
 
 
-
-//=================================================================================================
-void eve::threading::SpinLock::init(void)
-{
-	m_state.clear();
-}
-
-//=================================================================================================
-void eve::threading::SpinLock::release(void)
-{
-	m_state.clear();
-}
+#ifndef __EVE_MEMORY_POINTER_H__
+#include "memory/Pointer.h"
+#endif
 
 
-
-//=================================================================================================
-void eve::threading::SpinLock::lock(void)
-{
-	while (m_state.test_and_set(std::memory_order_acquire))
-	{
-		//SwitchToThread();
-		std::this_thread::yield();
-	}
-}
-
-//=================================================================================================
-void eve::threading::SpinLock::unlock(void)
-{
-	m_state.clear(std::memory_order_release);
-}
+#endif //__EVE_MEMORY_INCLUDES_H__

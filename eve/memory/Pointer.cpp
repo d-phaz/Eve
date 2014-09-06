@@ -30,45 +30,9 @@
 */
 
 // Main header
-#include "threading/SpinLock.h"
+#include "memory/Pointer.h"
 
 
 //=================================================================================================
-eve::threading::SpinLock::SpinLock(void)
-	// Inheritance
-	: eve::memory::Pointer()
-	// Members init
-	, m_state()
+eve::memory::Pointer::Pointer(void)
 {}
-
-
-
-//=================================================================================================
-void eve::threading::SpinLock::init(void)
-{
-	m_state.clear();
-}
-
-//=================================================================================================
-void eve::threading::SpinLock::release(void)
-{
-	m_state.clear();
-}
-
-
-
-//=================================================================================================
-void eve::threading::SpinLock::lock(void)
-{
-	while (m_state.test_and_set(std::memory_order_acquire))
-	{
-		//SwitchToThread();
-		std::this_thread::yield();
-	}
-}
-
-//=================================================================================================
-void eve::threading::SpinLock::unlock(void)
-{
-	m_state.clear(std::memory_order_release);
-}

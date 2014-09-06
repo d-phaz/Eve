@@ -51,6 +51,17 @@ set( SOURCE_FILES ${CORE_SRCS} )
 source_group( "Core" FILES ${CORE_SRCS} )
 
 
+# Memory.
+#################################################
+set( MEMORY_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${MEMORY_SRCS} )
+source_group( "Memory" FILES ${MEMORY_SRCS} )
+
+
 # Thread.
 #################################################
 set( THREADING_SRCS

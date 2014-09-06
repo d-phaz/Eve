@@ -1,4 +1,33 @@
 
+/*
+ Copyright (c) 2014, The Eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #pragma once
 #ifndef __EVE_THREADING_THREAD_H__
 #define __EVE_THREADING_THREAD_H__
@@ -7,31 +36,32 @@
 #include "core/Includes.h"
 #endif
 
-#ifndef __EVE_THREADING_MUTEX_H__
-#include "threading/Mutex.h"
-#endif
-
-#ifndef __EVE_THREADING_LOCK_H__
-#include "threading/Lock.h"
-#endif 
-
-#ifndef __EVE_THREADING_CONDITION_H__
-#include "threading/Condition.h"
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "memory/Includes.h"
 #endif
 
 
 namespace eve
 {
 	namespace threading
-		{
+	{
+		class Condition;
+		class Lock;
+		class Mutex;
+
 		/**
 		* @class NativeT::Thread
 		*
 		* Abstract base thread class containing init and release abstract methods,
 		* each thread must inherit from this class to properly alloc/init and release/free its members.
+		*
+		* @note extends memory::Pointer
 		*/
-		class Thread 
+		class Thread
+			: public eve::memory::Pointer
 		{
+
+			friend class eve::memory::Pointer;
 
 		public:
 			enum priorities 
@@ -54,7 +84,7 @@ namespace eve
 			//////////////////////////////////////
 	
 		public:
-			mutable Mutex		m_mutex;
+			mutable Mutex *		m_mutex;
 			HANDLE				m_hThread;
 			HANDLE				m_hShutdownEvent;
 			HANDLE				m_StartEvent;
@@ -71,19 +101,25 @@ namespace eve
 
 		
 			static int32_t		m_thread_number;	//<! count of threads, used in joinall
-			static Condition	m_num_cond;			//<! count of conditions, used in joinall
+			static Condition *	m_num_cond;			//<! count of conditions, used in joinall
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
+			EVE_DISABLE_COPY(Thread)
+			EVE_PROTECT_DESTRUCTOR(Thread)
+
+
+		public:
+			/** Create new pointer. */
+			static Thread * create_ptr(void);
+			/** Release pointer. */
+			static void release_ptr(Thread * p_pPtr);
+
+
 		private:
-			// Suppress copying
-			Thread(const Thread &);
-			const Thread & operator=(const Thread &);
-
-
 			/**
 			* @brief Low level function which starts a new thread, called by
 			* Start(). The argument should be a pointer to a Thread object.
@@ -99,20 +135,22 @@ namespace eve
 			static uint32_t WINAPI run_wrapper(void * p_pThread);
 
 
+		protected:
+			/** Class constructor. */
+			Thread( void );
+
+
+		protected:
+			/** Alloc and init class members. (pure virtual) */
+			virtual void init(void);
+			/** 
+			* Release and delete class members. (pure virtual) 
+			* Stop this object's thread execution (if any) immediately
+			*/
+			virtual void release(void);
+
+
 		public:
-			/**
-			* @brief Thread class constructor
-			*
-			* @param p_runWait run wait time in milliseconds (default to 5)
-			*/
-			Thread( int32_t p_runWait=5 );
-			/**
-			* @brief Thread class destructor.
-			* Stop this object's thread execution (if any) immediately.
-			*/
-			virtual ~Thread( void );
-
-
 			/**
 			* @brief run is the main loop for this thread
 			* usually this is called by Start(), but may be called
@@ -148,12 +186,12 @@ namespace eve
 			* @brief initialization function
 			* @note pure virtual function
 			*/
-			virtual void init(void) = 0;
+			virtual void inThreadInit(void) = 0;
 			/**
 			* @brief release function
 			* @note pure virtual function
 			*/
-			virtual void release(void) = 0;
+			virtual void inThreadRelease(void) = 0;
 
 
 			/**

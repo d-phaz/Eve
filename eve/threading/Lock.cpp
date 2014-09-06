@@ -35,14 +35,23 @@
 
 //=============================================================================================
 eve::threading::Lock::Lock(void)
-	: m_criticalSections	()
+	// Inheritance
+	: eve::memory::Pointer()
+	// Members init
+	, m_criticalSections()
+{}
+
+
+
+//=================================================================================================
+void eve::threading::Lock::init(void)
 {
 	memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
 	::InitializeCriticalSection(&m_criticalSections);
 }
-	
-//=============================================================================================
-eve::threading::Lock::~Lock(void)
+
+//=================================================================================================
+void eve::threading::Lock::release(void)
 {
 	::DeleteCriticalSection(&m_criticalSections);
 }

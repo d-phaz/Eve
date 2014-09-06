@@ -37,6 +37,10 @@
 #include "core/Includes.h"
 #endif
 
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "memory/Includes.h"
+#endif
+
 
 namespace eve
 {
@@ -46,9 +50,14 @@ namespace eve
 		/**
 		* @class threading::Mutex
 		* @brief provides base native Mutex
+		* @note extends memory::Pointer
 		*/
-		class Mutex 
+		class Mutex
+			: public eve::memory::Pointer
 		{
+
+			friend class eve::memory::Pointer;
+
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -61,13 +70,22 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
+			EVE_DISABLE_COPY(Mutex)
+			EVE_PROTECT_DESTRUCTOR(Mutex)
+
 		public:		
-			/** Mutex class constructor : initialize base mutex. */
+			/** Mutex class constructor. */
 			Mutex(void);
-			/** Mutex class destructor : destroy, making sure mutex is unlocked. */
-			virtual ~Mutex(void);
 
 
+		protected:
+			/** Alloc and init class members, initialize base mutex. (pure virtual) */
+			virtual void init(void);
+			/** Release and delete class members, making sure mutex is unlocked. (pure virtual) */
+			virtual void release(void);
+
+
+		public:
 			/** Lock the mutex variable. */
 			void lock(void);
 			/** Unlock the mutex variable. */
