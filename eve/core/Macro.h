@@ -72,4 +72,15 @@ protected:											\
 	virtual ~targetClass(void){};
 
 
+/** 
+* \macro EVE_ASSERT
+* assertion called in DEBUG mode only
+*/
+#if !defined(NDEBUG)
+#define EVE_ASSERT( expression )	assert(expression);
+#else
+#define EVE_ASSERT( expression )	
+#endif
+
+
 #endif // __EVE_CORE_MACRO_H__

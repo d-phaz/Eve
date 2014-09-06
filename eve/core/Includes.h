@@ -35,12 +35,14 @@
 
 
 #ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "core/SystemDefinition.h"
+#include "Eve/core/SystemDefinition.h"
 #endif
 
 
 // C standard lib
 #include <cstdlib>
+// C standar definitions
+#include <cstddef>
 // standard input/output stream objects
 #include <iostream>
 // x64 compliant integers
@@ -52,17 +54,19 @@
 #if defined(EVE_OS_WIN)
 
 	#include <Windows.h>
+
+	// Set linker subsystem as Console
 	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
 
 #endif // defined(EVE_OS_WIN)
 
 
 #ifndef __EVE_CORE_MACRO_H__
-#include "core/Macro.h"
+#include "Eve/core/Macro.h"
 #endif
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
-#include "memory/Includes.h"
+#include "Eve/memory/Includes.h"
 #endif
 
 

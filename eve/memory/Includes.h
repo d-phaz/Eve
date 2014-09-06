@@ -34,11 +34,13 @@
 #define __EVE_MEMORY_INCLUDES_H__
 
 
-#include <cstddef>
-
-
 #ifndef __EVE_MEMORY_POINTER_H__
-#include "memory/Pointer.h"
+#include "Eve/memory/Pointer.h"
+#endif
+
+
+#ifndef __EVE_MEMORY_SCOPED_H__
+#include "Eve/memory/Scoped.h"
 #endif
 
 

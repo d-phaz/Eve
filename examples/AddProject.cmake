@@ -47,7 +47,7 @@ macro( add_project PROJECT_NAME_IN )
 	set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
 
 	# Include directories
-	include_directories( ${BASE_SOURCE_PATH}/${PRODUCT_PRODUCT_NAME} )
+	include_directories( ${BASE_SOURCE_PATH} )
 	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
 
 	# Windows resources file.

@@ -30,7 +30,7 @@
 */
 
 // Main header
-#include "threading/SpinLock.h"
+#include "Eve/threading/SpinLock.h"
 
 
 //=================================================================================================

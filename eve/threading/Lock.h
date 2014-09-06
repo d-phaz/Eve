@@ -34,7 +34,7 @@
 #define __EVE_THREADING_LOCK_H__  
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "core/Includes.h"
+#include "Eve/core/Includes.h"
 #endif
 
 

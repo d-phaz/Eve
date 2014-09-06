@@ -34,11 +34,11 @@
 #define __EVE_THREADING_CONDITION_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "core/Includes.h"
+#include "Eve/core/Includes.h"
 #endif
 
 #ifndef __EVE_THREADING_MUTEX_H__
-#include "threading/Mutex.h"
+#include "Eve/threading/Mutex.h"
 #endif
 
 

@@ -34,7 +34,7 @@
 #define __EVE_MEMORY_POINTER_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "core/Includes.h"
+#include "Eve/core/Includes.h"
 #endif
 
 
@@ -103,9 +103,7 @@ T * eve::memory::Pointer::create_ptr(void)
 template<class T>
 void eve::memory::Pointer::release_ptr(T * p_pPtr)
 {
-#ifndef NDEBUG
-	assert(p_pPtr);
-#endif
+	EVE_ASSERT(p_pPtr)
 
 	p_pPtr->release();
 	delete p_pPtr;

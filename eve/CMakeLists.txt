@@ -56,7 +56,8 @@ source_group( "Core" FILES ${CORE_SRCS} )
 set( MEMORY_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Scoped.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MEMORY_SRCS} )
 source_group( "Memory" FILES ${MEMORY_SRCS} )
@@ -87,7 +88,7 @@ set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
 
 # Include directories.
 ###################################################################################################		
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )	
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../ )	
 
 
 # Libraries.

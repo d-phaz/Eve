@@ -30,20 +30,20 @@
 */
 
 // Main header
-#include "threading/Thread.h"
+#include "Eve/threading/Thread.h"
 
 #include <process.h>
 
 #ifndef __EVE_THREADING_MUTEX_H__
-#include "threading/Mutex.h"
+#include "Eve/threading/Mutex.h"
 #endif
 
 #ifndef __EVE_THREADING_LOCK_H__
-#include "threading/Lock.h"
+#include "Eve/threading/Lock.h"
 #endif 
 
 #ifndef __EVE_THREADING_CONDITION_H__
-#include "threading/Condition.h"
+#include "Eve/threading/Condition.h"
 #endif
 
 
@@ -110,9 +110,7 @@ void eve::threading::Thread::release(void)
 //=================================================================================================
 uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 {
-#ifndef NDEBUG
-	assert(p_pThread);
-#endif
+	EVE_ASSERT(p_pThread)
 
 	// Grab and cast thread pointer
 	eve::threading::Thread * objectPtr = (eve::threading::Thread *)p_pThread;
@@ -177,9 +175,8 @@ void eve::threading::Thread::Start(void)
 			0,									// DWORD dwCreationFlags,						// creation flags
 			(unsigned*)&m_threadID				// LPDWORD lpThreadId							// pointer to receive thread ID
 			);
-#ifndef NDEBUG	 
-		assert(m_hThread);
-#endif
+
+		EVE_ASSERT(m_hThread);
 	}
 }
 

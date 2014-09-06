@@ -30,7 +30,7 @@
 */
 
 //  Main header
-#include "threading/Condition.h"
+#include "Eve/threading/Condition.h"
 
 
 //=================================================================================================
