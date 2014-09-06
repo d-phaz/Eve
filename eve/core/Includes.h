@@ -38,10 +38,6 @@
 #include "core/SystemDefinition.h"
 #endif
 
-#ifndef __EVE_CORE_MACRO_H__
-#include "core/Macro.h"
-#endif
-
 
 // C standard lib
 #include <cstdlib>
@@ -55,6 +51,14 @@
 
 #if defined(EVE_OS_WIN)
 #include <Windows.h>
+#endif
+
+#ifndef __EVE_CORE_MACRO_H__
+#include "core/Macro.h"
+#endif
+
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "memory/Includes.h"
 #endif
 
 

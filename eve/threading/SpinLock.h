@@ -37,10 +37,6 @@
 #include "core/Includes.h"
 #endif
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "memory/Includes.h"
-#endif
-
 #include <atomic>
 #include <thread>
 
