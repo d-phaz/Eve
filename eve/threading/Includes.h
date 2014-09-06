@@ -30,70 +30,29 @@
 */
 
 #pragma once
-#ifndef __EVE_THREADING_SPIN_LOCK_H__
-#define __EVE_THREADING_SPIN_LOCK_H__
+#ifndef __EVE_THREADING_INCLUDES_H__
+#define __EVE_THREADING_INCLUDES_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
+
+#ifndef __EVE_THREADING_CONDITION_H__
+#include "Eve/threading/Condition.h"
 #endif
 
-#include <atomic>
-#include <thread>
+#ifndef __EVE_THREADING_LOCK_H__
+#include "Eve/threading/Lock.h"
+#endif 
+
+#ifndef __EVE_THREADING_MUTEX_H__
+#include "Eve/threading/Mutex.h"
+#endif
+
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "Eve/threading/SpinLock.h"
+#endif 
+
+#ifndef __EVE_THREADING_THREAD_H__
+#include "Eve/threading/Thread.h"
+#endif 
 
 
-
-namespace eve
-{
-	namespace threading
-	{
-		/** 
-		 * A fast lock for non-contented memory access.
-		 * Readers or writers will starve on high contention.
-		 * @note extends memory::Pointer
-		 */
-		class SpinLock
-			: public eve::memory::Pointer
-		{
-
-			friend class eve::memory::Pointer;
-
-			//////////////////////////////////////
-			//				DATAS				//
-			//////////////////////////////////////
-
-		private:
-			std::atomic_flag	m_state;
-
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(SpinLock)
-			EVE_PROTECT_DESTRUCTOR(SpinLock)
-			
-		public:
-			/** Construct a new lock. */
-			SpinLock(void);
-
-
-		protected:
-			/** Alloc and init class members. (pure virtual) */
-			virtual void init(void) override;
-			/** Release and delete class members. (pure virtual) */
-			virtual void release(void) override;
-
-
-		public:
-			/** Acquire the lock exclusively. */
-			void lock(void);
-			/** Release an exclusive lock. */
-			void unlock(void);
-
-		}; // class SpinLock
-
-	} // namespace threading
-
-} // namespace eve
-
-#endif //__EVE_THREADING_SPIN_LOCK_H__
+#endif // __EVE_THREADING_INCLUDES_H__

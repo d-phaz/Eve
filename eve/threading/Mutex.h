@@ -76,9 +76,9 @@ namespace eve
 
 		protected:
 			/** Alloc and init class members, initialize base mutex. (pure virtual) */
-			virtual void init(void);
+			virtual void init(void) override;
 			/** Release and delete class members, making sure mutex is unlocked. (pure virtual) */
-			virtual void release(void);
+			virtual void release(void) override;
 
 
 		public:

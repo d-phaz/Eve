@@ -183,7 +183,19 @@ void eve::threading::Thread::Start(void)
 
 
 //=================================================================================================
-void eve::threading::Thread::Stop( void ) 
+void eve::threading::Thread::Stop(void)
+{
+	EVE_ASSERT( m_hThread )
+	
+	this->terminate();
+	this->complete();
+	this->close();
+}
+
+
+
+//=================================================================================================
+void eve::threading::Thread::terminate(void)
 {
 	if( m_hThread )
 	{
@@ -234,17 +246,11 @@ void eve::threading::Thread::Stop( void )
 	}
 } // end Stop
 
-//=================================================================================================
-void eve::threading::Thread::Pause( void )
-{
-	Stop();
-}
-
 
 
 
 //=================================================================================================
-bool eve::threading::Thread::Join( void ) 
+bool eve::threading::Thread::complete(void)
 {
 	bool bReturn = false;
 
@@ -295,14 +301,14 @@ void eve::threading::Thread::join_all( void )
 } 
 
 //=================================================================================================
-void eve::threading::Thread::detach( void )
+void eve::threading::Thread::close( void )
 {
 	if(m_hThread)
 	{
 		::CloseHandle(m_hThread);
 		m_hThread = 0;
 	}
-	m_threadID = 0;
+	m_threadID = zero_ID();
 }
 
 

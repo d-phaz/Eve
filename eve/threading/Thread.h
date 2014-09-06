@@ -28,6 +28,7 @@
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #pragma once
 #ifndef __EVE_THREADING_THREAD_H__
 #define __EVE_THREADING_THREAD_H__
@@ -115,6 +116,28 @@ namespace eve
 			static void release_ptr(Thread * p_pPtr);
 
 
+		protected:
+			/** Class constructor. */
+			Thread( void );
+
+
+		protected:
+			/** Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** 
+			* Release and delete class members. (pure virtual) 
+			* Stop this object's thread execution (if any) immediately
+			*/
+			virtual void release(void) override;
+
+
+		protected:
+			/** In thread initialization function. (pure virtual) */
+			virtual void inThreadInit(void) = 0;
+			/** In thread release function. (pure virtual) */
+			virtual void inThreadRelease(void) = 0;
+
+
 		private:
 			/**
 			* @brief Low level function which starts a new thread, called by
@@ -131,72 +154,36 @@ namespace eve
 			static uint32_t WINAPI run_wrapper(void * p_pThread);
 
 
-		protected:
-			/** Class constructor. */
-			Thread( void );
-
-
-		protected:
-			/** Alloc and init class members. (pure virtual) */
-			virtual void init(void);
-			/** 
-			* Release and delete class members. (pure virtual) 
-			* Stop this object's thread execution (if any) immediately
-			*/
-			virtual void release(void);
-
-
 		public:
 			/**
-			* @brief run is the main loop for this thread
-			* usually this is called by Start(), but may be called
-			* directly for single-threaded applications.
-			*
-			* @note pure virtual function
+			* Run is the main loop for this thread. (pure virtual)
+			* Usually this is called by Start(), but may be called directly for single-threaded applications.
 			*/
-			virtual void Run( void ) = 0;
+			virtual void Run(void) = 0;
 
-		
+
 			/**
 			* @brief Start the object's thread execution. Increments thread
 			* count, spawns new thread, and stores thread m_threadID.
-			*
-			* @note pure virtual function
 			*/
 			virtual void Start( void );
 			/**
-			* @brief Stop the thread immediately. Decrements thread count and
-			* resets the thread m_threadID.
-			* @note virtual function
+			* Stop the thread. 
+			* Decrements thread count and resets the thread m_threadID.
 			*/
 			virtual void Stop( void );
-			/**
-			* @brief pause thread execution
-			* @note OSX compatibility compliance (calls Stop)
-			*/
-			void Pause(void);
 
 
 		protected:
-			/**
-			* @brief initialization function
-			* @note pure virtual function
-			*/
-			virtual void inThreadInit(void) = 0;
-			/**
-			* @brief release function
-			* @note pure virtual function
-			*/
-			virtual void inThreadRelease(void) = 0;
+			/** Terminate thread. */
+			void terminate(void);
+			/** Wait for thread execution (if any) to complete. */
+			bool complete(void);
+			/** Close thread. */
+			void close(void);
 
 
-			/**
-			* @brief Wait for this object's thread execution (if any) to complete.
-			*/
-			virtual bool Join( void );
-			/**
-			* @brief wait for all threads to complete
-			*/
+		public:
 			/**
 			* @brief Wait for all thread object's execution to complete. Depends on the
 			* thread count being accurate and the threads sending a condition
@@ -205,11 +192,6 @@ namespace eve
 			* @note static function
 			*/
 			static void join_all( void );
-			/**
-			* @brief guarantees resources consumed by thread are released when thread terminates,
-			* after this join can no-longer be used
-			*/
-			virtual void detach( void );
 		
 
 			/**

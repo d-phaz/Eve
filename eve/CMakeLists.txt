@@ -68,6 +68,7 @@ source_group( "Memory" FILES ${MEMORY_SRCS} )
 set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.cpp 

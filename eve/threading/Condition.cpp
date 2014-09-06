@@ -49,6 +49,9 @@ eve::threading::Condition::Condition(void)
 //=================================================================================================
 void eve::threading::Condition::init(void)
 {
+	// Call parent class
+	eve::threading::Mutex::init();
+
 	// set all conditions to be broadcast
 	// unfortunately in Win32 you have to know at creation
 	// whether the signal is broadcast or not.
@@ -59,6 +62,9 @@ void eve::threading::Condition::init(void)
 void eve::threading::Condition::release(void)
 {
 	::CloseHandle(m_condition);
+
+	// Call parent class
+	eve::threading::Mutex::release();
 }
 
 
