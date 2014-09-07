@@ -33,6 +33,233 @@
 #include "Eve/messaging/Server.h"
 
 
+eve::messaging::Server * eve::messaging::Server::m_p_server = nullptr;
+
+
+//=================================================================================================
+eve::messaging::Server * eve::messaging::Server::create_instance(const std::string & p_logFilePath)
+{
+	EVE_ASSERT(!m_p_server);
+
+	m_p_server = new eve::messaging::Server();
+	m_p_server->init();
+
+	if (p_logFilePath.size() > 0)
+	{
+
+	}
+
+	return m_p_server;
+}
+
+//=================================================================================================
+void eve::messaging::Server::release_instance(void)
+{
+	EVE_ASSERT(m_p_server);
+	EVE_RELEASE_PTR(m_p_server);
+}
+
+
+
+//=================================================================================================
+eve::messaging::Server::Server(void)
+	
+	// Inheritance
+	: eve::memory::Pointer()
+
+	// Members init
+	, m_pFile(nullptr)
+
+	, m_pBuff(nullptr)
+	, m_buffSize(0)
+	, m_currentMsgType(EVE_MSG_NULL)
+
+	, m_pHandlerError(nullptr)
+	, m_pHandlerWarning(nullptr)
+	, m_pHandlerInfo(nullptr)
+	, m_pHandlerProgress(nullptr)
+	, m_pHandlerDebug(nullptr)
+
+	, m_pStreamError(nullptr)
+	, m_pStreamWarning(nullptr)
+	, m_pStreamInfo(nullptr)
+	, m_pStreamProgress(nullptr)
+	, m_pStreamDebug(nullptr)
+{}
+
+
+
+//=================================================================================================
+void eve::messaging::Server::init(void)
+{
+	// Default mode -> log in console if not in Release mode, else do nothing.
+	m_pHandlerError		= &eve::messaging::Server::default_log_error;
+	m_pHandlerWarning	= &eve::messaging::Server::default_log_error;
+	m_pHandlerInfo		= &eve::messaging::Server::default_log_error;
+	m_pHandlerProgress	= &eve::messaging::Server::default_log_error;
+	m_pHandlerDebug		= &eve::messaging::Server::default_log_error;
+
+
+
+
+	// Allocate standard buffer.
+	if ((m_pBuff = (char*)calloc(EVE_DEFAULT_STDBUFF_SIZE, sizeof(char))) == NULL)
+	{
+		exit(0);
+	}
+	/* Set the related values */
+	m_buffSize = EVE_DEFAULT_STDBUFF_SIZE;
+	m_currentMsgType = EVE_MSG_NULL;
+
+	/* Set the default handler */
+	m_pHandlerError = m_pHandlerWarning = m_pHandlerInfo = m_pHandlerProgress = EVE_FLUSH;
+#ifndef NDEBUG
+	/* Initialize the debug mask to "all messages" */
+	m_pHandlerDebug = EVE_FLUSH;
+	debugMask = EVE_DEBUG_ALL;
+#else
+	/* Initialize the debug mask to "none" */
+	m_pHandlerDebug = EVE_IGNORE;
+	debugMask = EVE_DEBUG_NONE;
+#endif
+
+	/* Initialize the stack */
+	msgStack = NULL;
+	msgTypeStack = NULL;
+	stackSize = 0;
+	maxStackSize = 0;
+}
+
+
+#if defined (OPTION_BUILD_LOG_IN_FILE)
+bool Server::init_log_in_file(bool p_bUseDefaultFile, std::string p_sLogPath)
+{
+	bool bReturn = true;
+
+	if (p_bUseDefaultFile)
+	{
+		log_file_rep_path = p_sLogPath.c_str();
+		initLogFilePath();
+	}
+	else
+	{
+		log_file_path = (EVE_char8_t *)realloc(log_file_path, p_sLogPath.size() + 1);
+		strcpy(log_file_path, p_sLogPath.c_str());
+	}
+
+
+	fid = fopen(log_file_path, "wt");
+	if (fid != NULL)
+	{
+		p_my_msg_server->errorStream = fid;
+		p_my_msg_server->warningStream = fid;
+		p_my_msg_server->infoStream = fid;
+		p_my_msg_server->progressStream = fid;
+		p_my_msg_server->debugStream = fid;
+
+		p_my_msg_server->register_display_function("info_message_display", &Server::default_display_in_file_info_function);
+		p_my_msg_server->register_display_function("error_message_display", &Server::default_display_in_file_info_function);
+		p_my_msg_server->register_display_function("warning_message_display", &Server::default_display_in_file_info_function);
+		p_my_msg_server->register_display_function("progress_message_display", &Server::default_display_in_file_info_function);
+		p_my_msg_server->register_display_function("debug_message_display", &Server::default_display_in_file_info_function);
+
+	}
+	else bReturn = false;
+
+
+	return bReturn;
+}
+#endif //OPTION_BUILD_LOG_IN_FILE
+
+//=================================================================================================
+void eve::messaging::Server::release(void)
+{
+
+	if (log_file_path) free(log_file_path);
+
+	// Free the standard buffer.
+	if (m_pBuff) free(m_pBuff);
+
+	// Free the message stack.
+	if (stackSize != 0) {
+		unsigned long int i;
+		for (i = 0; i < stackSize; i++) {
+			if (msgStack[i]) free(msgStack[i]);
+		}
+	}
+	if (msgStack) free(msgStack);
+	if (msgTypeStack) free(msgTypeStack);
+}
+
+
+
+//=================================================================================================
+void eve::messaging::Server::default_log_error(const char *format, ...)
+{
+#if !defined(NDEBUG)
+	va_list arg;
+	va_start(arg, format);
+
+	fprintf(stderr, format, arg);
+	fflush(stderr);
+#endif
+}
+
+//=================================================================================================
+void eve::messaging::Server::default_log_in_file_error(const char *format, ...)
+{
+	va_list arg;
+
+	va_start(arg, format);
+	fprintf((FILE*)get_error_stream(), format, arg);
+	fflush((FILE*)get_error_stream());
+}
+
+//=================================================================================================
+void eve::messaging::Server::default_log_in_file_info(const char *format, ...)
+{
+	va_list arg;
+
+	va_start(arg, format);
+	fprintf((FILE*)get_info_stream(), format, arg);
+	fflush((FILE*)get_info_stream());
+}
+
+//=================================================================================================
+void eve::messaging::Server::default_log_in_file_warning(const char *format, ...)
+{
+	va_list arg;
+
+	va_start(arg, format);
+	fprintf((FILE*)get_warning_stream(), format, arg);
+	fflush((FILE*)get_warning_stream());
+}
+
+//=================================================================================================
+void eve::messaging::Server::default_log_in_file_debug(const char *format, ...)
+{
+	va_list arg;
+
+	va_start(arg, format);
+	fprintf((FILE*)get_debug_stream(), format, arg);
+	fflush((FILE*)get_debug_stream());
+}
+
+//=================================================================================================
+void eve::messaging::Server::default_log_in_file_progress(const char *format, ...)
+{
+	va_list arg;
+
+	va_start(arg, format);
+	fprintf((FILE*)get_progress_stream(), format, arg);
+	fflush((FILE*)get_progress_stream());
+}
+
+
+
+
+
+
 
 
 
@@ -179,7 +406,7 @@ static void initLogFilePath()
 	}
 
 
-	log_file_path = (EVE_char8_t *)realloc(log_file_path, strlen(log_file_rep_path) + strlen("native_yyyymmddhhmm_n.txt") + 1 );
+	log_file_path = (char *)realloc(log_file_path, strlen(log_file_rep_path) + strlen("native_yyyymmddhhmm_n.txt") + 1 );
 
 	strcpy(log_file_path, log_file_rep_path);
 	strcat(log_file_path, "log_");
@@ -187,133 +414,14 @@ static void initLogFilePath()
 	strcat(log_file_path, "_1.txt");
 }
 
-#if defined(_MSC_VER)
-std::string getErrorMsg()
-{ 
-
-	return getErrorMsg(GetLastError());
-
-}
-
-std::string getErrorMsg(DWORD err)
-{
-
-	std::string returnString;
-
-	char buffer[2048]; 
-	try
-	{
-		DWORD len = 0;
-		LPWSTR msg = NULL;
-
-		len = FormatMessageW(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL,
-			err,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPWSTR)&msg, 0, NULL);
-		if (len > 0)
-		{
-			snprintf(buffer, 2048 , "error (%d): %s\n",  err, msg);
-		}
-		else
-		{
-			snprintf(buffer, 2048 , "error code: %d.\n",  err);
-		}
-
-		returnString = std::string(buffer);
-
-		if (msg != NULL) LocalFree(msg);
-
-	} 
-	catch(...)
-	{
-		returnString = "Can't get Win32 error message";
-	}
-	return returnString;
-}
-#endif //defined(_MSC_VER)
-
 /*************************************/
 /* DECLARATION OF A MESSAGING SERVER */
 /* WITH GLOBAL SCOPE                 */
 /*************************************/
 
-/*Initialise pointer to MsgServer instance */
-Server * Server::p_my_msg_server = NULL;
-
 /*Initialise FILE * for MsgServer instance */
 FILE * Server::fid = NULL;
 
-/***************************/
-/* CONSTRUCTORS/DESTRUCTOR */
-/***************************/
-
-/********************/
-/* Void constructor */
-Server::Server( void )
-{
-
-	/* Allocate the standard std::string buffer */
-	if ( ( stdBuff = (char*) calloc( EVE_DEFAULT_STDBUFF_SIZE, sizeof(char) ) ) == NULL )
-	{
-		exit( 0 );
-	}
-	/* Set the related values */
-	stdBuffSize = EVE_DEFAULT_STDBUFF_SIZE;
-	currentMsgType = EVE_MSG_NULL;
-
-	/* Set the default handler */
-	errorHandler = warningHandler = infoHandler = progressHandler = EVE_FLUSH;
-#ifndef NDEBUG
- 	/* Initialize the debug mask to "all messages" */
-	debugHandler = EVE_FLUSH;
-	debugMask = EVE_DEBUG_ALL;
-#else
-	 /* Initialize the debug mask to "none" */
-	debugHandler = EVE_IGNORE;
-	debugMask = EVE_DEBUG_NONE;
-#endif
-	/* Initialize the stack */
-	msgStack = NULL;
-	msgTypeStack = NULL;
-	stackSize = 0;
-	maxStackSize = 0;
-}
-
-/**************/
-/* destructor */
-Server::~Server() 
-{
-
-	if (log_file_path) free ( log_file_path );
-
-	/* Free the standard std::string buffer */
-	if ( stdBuff ) free( stdBuff );
-
-	/* Free the msg stack */
-	if ( stackSize != 0 ) {
-		unsigned long int i;
-		for ( i = 0; i < stackSize; i++ ) {
-			if ( msgStack[i] ) free ( msgStack[i] );
-		}
-	}
-	if ( msgStack ) free( msgStack );
-	if ( msgTypeStack ) free( msgTypeStack );
-
-	displayFunction.clear();
-}
-
-/**************/
-/* release msg server */
-void Server::release_msg_server()
-{
-	if (Server::p_my_msg_server!=NULL)
-	{
-		delete Server::p_my_msg_server;
-		Server::p_my_msg_server = NULL;
-	}
-}
 
 
 /***********/
@@ -322,84 +430,10 @@ void Server::release_msg_server()
 
 /* TODO: push/pop messages to/from the stack. */
 
-void Server::register_display_function(const char* functionType, void (*displayFunctionPointer)(const char *format, ...))
-{
-	if (functionType)
-		Server::displayFunction[functionType]=displayFunctionPointer;
-}
-
-void (*Server::get_display_function( const char* functionType )) (const char *format, ...) 
-{
-
-	return Server::get_msg_server()->displayFunction[functionType];
-
-}
-
 void Server::set_print_timing_status(bool p_bValue)
 {
 	m_b_print_timing = p_bValue;
 }
-
-Server * Server::get_msg_server(bool p_bUseDefaultFile, std::string p_sLogPath)
-{
-	if (!Server::p_my_msg_server)
-	{
-		Server::p_my_msg_server = new Server();
-
-#if defined (OPTION_BUILD_LOG_IN_FILE)
-		if (p_sLogPath == "")
-			init_log_in_file(p_bUseDefaultFile, NATIVESYSTEM::getPathLogDedicated());
-		else
-			init_log_in_file(p_bUseDefaultFile, p_sLogPath);
-#else //OPTION_BUILD_LOG_IN_FILE
-		p_my_msg_server->register_display_function("info_message_display",&Server::default_display_error_function);
-		p_my_msg_server->register_display_function("error_message_display",&Server::default_display_error_function);
-		p_my_msg_server->register_display_function("warning_message_display",&Server::default_display_error_function);
-		p_my_msg_server->register_display_function("progress_message_display",&Server::default_display_error_function);
-		p_my_msg_server->register_display_function("debug_message_display",&Server::default_display_error_function);
-#endif //OPTION_BUILD_LOG_IN_FILE      
-	}
-	return  Server::p_my_msg_server;
-}
-
-#if defined (OPTION_BUILD_LOG_IN_FILE)
-bool Server::init_log_in_file(bool p_bUseDefaultFile, std::string p_sLogPath )
-{
-	bool bReturn = true;
-
-	if(p_bUseDefaultFile)
-	{
-		log_file_rep_path = p_sLogPath.c_str();
-		initLogFilePath();
-	}
-	else
-	{
-		log_file_path = (EVE_char8_t *)realloc(log_file_path, p_sLogPath.size() + 1 );
-		strcpy(log_file_path, p_sLogPath.c_str());
-	}
-
-
-	fid = fopen( log_file_path, "wt" );
-	if (fid!=NULL)
-	{		
-		p_my_msg_server->errorStream = fid;
-		p_my_msg_server->warningStream = fid;
-		p_my_msg_server->infoStream = fid;
-		p_my_msg_server->progressStream = fid;
-		p_my_msg_server->debugStream = fid;
-
-		p_my_msg_server->register_display_function("info_message_display",&Server::default_display_in_file_info_function);
-		p_my_msg_server->register_display_function("error_message_display",&Server::default_display_in_file_info_function);
-		p_my_msg_server->register_display_function("warning_message_display",&Server::default_display_in_file_info_function);
-		p_my_msg_server->register_display_function("progress_message_display",&Server::default_display_in_file_info_function);
-		p_my_msg_server->register_display_function("debug_message_display",&Server::default_display_in_file_info_function);
-
-	} else bReturn = false;
-
-
-	return bReturn;
-}
-#endif //OPTION_BUILD_LOG_IN_FILE
 /***********************/
 /* MESSAGE HANDLERS    */
 /***********************/
@@ -557,7 +591,7 @@ size_t native_error_msg( const char *funcName, const char *format, ...  )
 	s_mutex.Lock();
 
 	/* If the handler is EVE_IGNORE, stop here and do nothing. */
-	if ( Server::get_msg_server()->errorHandler != EVE_IGNORE )
+	if ( Server::get_msg_server()->m_pHandlerError != EVE_IGNORE )
 	{
 		/* Store the message type in the server */
 		Server::get_msg_server()->currentMsgType = EVE_ERROR;
@@ -566,7 +600,7 @@ size_t native_error_msg( const char *funcName, const char *format, ...  )
 		done = make_msg_str( "ERROR", funcName, format, arg );
 		va_end ( arg );
 		/* Launch the message handler */
-		(Server::get_msg_server()->errorHandler)();
+		(Server::get_msg_server()->m_pHandlerError)();
 	}
 
 	s_mutex.Unlock();
@@ -614,7 +648,7 @@ size_t native_warning_msg( const char *funcName, const char *format, ...  )
 	s_mutex.Lock();
 
 	/* If the handler is EVE_IGNORE, stop here and do nothing. */
-	if ( Server::get_msg_server()->warningHandler != EVE_IGNORE )
+	if ( Server::get_msg_server()->m_pHandlerWarning != EVE_IGNORE )
 	{
 		/* Store the message type in the server */
 		Server::get_msg_server()->currentMsgType = EVE_WARNING;
@@ -623,7 +657,7 @@ size_t native_warning_msg( const char *funcName, const char *format, ...  )
 		done = make_msg_str( "WARNING", funcName, format, arg );
 		va_end ( arg );
 		/* Launch the message handler */
-		(Server::get_msg_server()->warningHandler)();
+		(Server::get_msg_server()->m_pHandlerWarning)();
 	}
 
 	s_mutex.Unlock();
@@ -671,7 +705,7 @@ size_t native_info_msg( const char *funcName, const char *format, ...  )
 	s_mutex.Lock();
 
 	/* If the handler is EVE_IGNORE, stop here and do nothing. */
-	if ( Server::get_msg_server()->infoHandler != EVE_IGNORE )
+	if ( Server::get_msg_server()->m_pHandlerInfo != EVE_IGNORE )
 	{
 		/* Store the message type in the server */
 		Server::get_msg_server()->currentMsgType = EVE_INFO;
@@ -680,7 +714,7 @@ size_t native_info_msg( const char *funcName, const char *format, ...  )
 		done = make_msg_str( "INFO", funcName, format, arg );
 		va_end ( arg );
 		/* Launch the message handler */
-		(Server::get_msg_server()->infoHandler)();
+		(Server::get_msg_server()->m_pHandlerInfo)();
 	}
 
 	s_mutex.Unlock();
@@ -728,7 +762,7 @@ size_t native_progress_msg( const char *funcName, const char *format, ...  )
 	s_mutex.Lock();
 
 	/* If the handler is EVE_IGNORE, stop here and do nothing. */
-	if ( Server::get_msg_server()->progressHandler != EVE_IGNORE )
+	if ( Server::get_msg_server()->m_pHandlerProgress != EVE_IGNORE )
 	{
 		/* Store the message type in the server */
 		Server::get_msg_server()->currentMsgType = EVE_PROGRESS;
@@ -737,7 +771,7 @@ size_t native_progress_msg( const char *funcName, const char *format, ...  )
 		done = make_msg_str( "PROGRESS", funcName, format, arg );
 		va_end ( arg );
 		/* Launch the message handler */
-		(Server::get_msg_server()->progressHandler)();
+		(Server::get_msg_server()->m_pHandlerProgress)();
 	}
 
 	s_mutex.Unlock();
@@ -788,7 +822,7 @@ size_t native_debug_msg( const unsigned long int msgType, const char *funcName, 
 	s_mutex.Lock();
 
 	/* If the handler is EVE_IGNORE, stop here and do nothing. */
-	if ( Server::get_msg_server()->debugHandler != EVE_IGNORE )
+	if ( Server::get_msg_server()->m_pHandlerDebug != EVE_IGNORE )
 	{
 		/* If the message type does not fit the mask, stop here and do nothing. */
 		if ( (msgType & Server::get_msg_server()->debugMask) )
@@ -800,7 +834,7 @@ size_t native_debug_msg( const unsigned long int msgType, const char *funcName, 
 			done = make_msg_str( "DEBUG", funcName, format, arg );
 			va_end ( arg );
 			/* Launch the message handler */
-			(Server::get_msg_server()->debugHandler)();
+			(Server::get_msg_server()->m_pHandlerDebug)();
 		}
 	}
 
@@ -852,7 +886,7 @@ size_t native_debug_msg_forced( const unsigned long int msgType, const char *fun
 	s_mutex.Lock();
 
 	/* If the handler is EVE_IGNORE, stop here and do nothing. */
-	if ( Server::get_msg_server()->debugHandler != EVE_IGNORE )
+	if ( Server::get_msg_server()->m_pHandlerDebug != EVE_IGNORE )
 	{
 		/* NOTE: In this version, the mask is ignored, the message is output in any case. */
 		/* Store the message type in the server */
@@ -862,7 +896,7 @@ size_t native_debug_msg_forced( const unsigned long int msgType, const char *fun
 		done = make_msg_str( "DEBUG", funcName, format, arg );
 		va_end ( arg );
 		/* Launch the message handler */
-		(Server::get_msg_server()->debugHandler)();
+		(Server::get_msg_server()->m_pHandlerDebug)();
 	}
 
 	s_mutex.Unlock();
@@ -893,60 +927,5 @@ size_t native_debug_msg_forced( FILE *fid, const unsigned long int /* msgType */
 	s_mutex.Unlock();
 
 	return( done );
-}
-
-void Server::default_display_error_function(const char *format, ...)
-{
-	va_list arg;
-
-	va_start ( arg, format );
-
-	fprintf( stderr, format, arg );
-	fflush( stderr );
-}
-
-void Server::default_display_in_file_error_function(const char *format, ...)
-{
-	va_list arg;
-
-	va_start ( arg, format );
-	fprintf( (FILE*)get_error_stream(), format, arg );
-	fflush(  (FILE*)get_error_stream() );
-}
-
-void Server::default_display_in_file_info_function(const char *format, ...)
-{
-	va_list arg;
-
-	va_start ( arg, format );
-	fprintf( (FILE*)get_info_stream(), format, arg  );
-	fflush(  (FILE*)get_info_stream() );
-}
-
-void Server::default_display_in_file_warning_function(const char *format, ...)
-{
-	va_list arg;
-
-	va_start ( arg, format );
-	fprintf( (FILE*)get_warning_stream(), format, arg );
-	fflush(  (FILE*)get_warning_stream() );
-}
-
-void Server::default_display_in_file_debug_function(const char *format, ...)
-{
-	va_list arg;
-
-	va_start ( arg, format );
-	fprintf( (FILE*)get_debug_stream(), format, arg  );
-	fflush(  (FILE*)get_debug_stream() );
-}
-
-void Server::default_display_in_file_progress_function(const char *format, ...)
-{
-	va_list arg;
-
-	va_start ( arg, format );
-	fprintf( (FILE*)get_progress_stream(), format, arg  );
-	fflush(  (FILE*)get_progress_stream() );
 }
 

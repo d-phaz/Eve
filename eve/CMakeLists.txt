@@ -66,6 +66,8 @@ source_group( "Memory" FILES ${MEMORY_SRCS} )
 # Messaging.
 #################################################
 set( MESSAGING_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Error.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Error.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Server.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Server.cpp )
 

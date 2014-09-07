@@ -38,6 +38,9 @@
 #endif
 
 
+#define EVE_DEFAULT_STDBUFF_SIZE 2048
+
+
 namespace eve
 {
 	namespace messaging
@@ -49,18 +52,41 @@ namespace eve
 		*
 		* \note extends memory::Pointer
 		*/
-		class Server
+		class Server final
 			: public eve::memory::Pointer
 		{
 
 			friend class eve::memory::Pointer;
 
+		public:
+			typedef void(*handlerMethod)(const char *format, ...);
+
+
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
 
-		protected:
-			static Server *			m_p_server;			//<! Unique instance.
+		private:
+			static Server *			m_p_server;				///< Unique instance.
+
+
+			FILE *					m_pFile;				///< Log file reference.
+
+			char *					m_pBuff;				///< Default buffer, to store the current message.		
+			size_t					m_buffSize;				///< Size of the default message-storing buffer.						
+			uint32_t				m_currentMsgType;		///< Type of the current message.
+
+			handlerMethod			m_pHandlerError;		///< Error messages method pointer.
+			handlerMethod			m_pHandlerWarning;		///< Warning messages method pointer.
+			handlerMethod			m_pHandlerInfo;			///< Information messages method pointer.
+			handlerMethod			m_pHandlerProgress;		///< Progress messages method pointer.
+			handlerMethod			m_pHandlerDebug;		///< Debug messages method pointer.
+
+			void *					m_pStreamError;			///< Error message stream.
+			void *					m_pStreamWarning;		///< Warning message stream.
+			void *					m_pStreamInfo;			///< Info message stream.
+			void *					m_pStreamProgress;		///< Progress message stream.
+			void *					m_pStreamDebug;			///< Debug message stream.
 
 
 			//////////////////////////////////////
@@ -72,69 +98,162 @@ namespace eve
 
 		public:
 			/** \brief Create unique instance. */
-			static Server * create_instance(void);
+			static Server * create_instance(const std::string & p_logFilePath="");
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
 
-		protected:
+		private:
 			/** \brief Class constructor. */
 			Server(void);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
 
 
-
-
-
-
 		private:
-			/** \brief mutex set lock when a instance of the message server is used */
-			static FILE *fid;
+			/** \brief Default error log method (in console). */
+			static void default_log_error(const char *format, ...);
+
+			/** \brief Default in file error log method. */
+			static void default_log_in_file_error(const char *format, ...);
+			/** \brief Default in file info log method. */
+			static void default_log_in_file_info(const char *format, ...);
+			/** \brief Default in file warning log method. */
+			static void default_log_in_file_warning(const char *format, ...);
+			/** \brief Default in file debug log method. */
+			static void default_log_in_file_debug(const char *format, ...);
+			/** \brief Default in file progress log method. */
+			static void default_log_in_file_progress(const char *format, ...);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set the error msg handler. */
+			static void set_error_handler(handlerMethod p_method);
+			/** \brief Set the warning msg handler. */
+			static void set_warning_handler(handlerMethod p_method);
+			/** \brief Set the info msg handler. */
+			static void set_info_handler(handlerMethod p_method);
+			/** \brief Set the progress msg handler. */
+			static void set_progress_handler(handlerMethod p_method);
+			/** \brief Set the debug msg handler. */
+			static void set_debug_handler(handlerMethod p_method);
+			/** \brief Set all the msg handlers. */
+			static void set_msg_handler(handlerMethod p_method);
+
+			/** \brief Get the error msg handler. */
+			static handlerMethod get_error_handler(void);
+			/** \brief Get the warning msg handler. */
+			static handlerMethod get_warning_handler(void);
+			/** \brief Get the info msg handler. */
+			static handlerMethod get_info_handler(void);
+			/** \brief Get the progress msg handler. */
+			static handlerMethod get_progress_handler(void);
+			/** \brief Get the debug msg handler. */
+			static handlerMethod get_debug_handler(void);
+
+
+
+			/** \brief Redirect the error messages to target file \p_pFile. */
+			static void set_error_stream(FILE * p_pFile);
+			/** \brief Redirect the warning messages to target file \p_pFile. */
+			static void set_warning_stream(FILE * p_pFile);
+			/** \brief Redirect the info messages to target file \p_pFile. */
+			static void set_info_stream(FILE * p_pFile);
+			/** \brief Redirect the progress messages to target file \p_pFile. */
+			static void set_progress_stream(FILE * p_pFile);
+			/** \brief Redirect the debug messages to target file \p_pFile. */
+			static void set_debug_stream(FILE * p_pFile);
+			/** \brief Redirect all the messages target file \p_pFile. */
+			static void set_msg_stream(FILE * p_pFile);
+
+			/** \brief Get the current (FILE*) error stream. */
+			static FILE * get_error_stream(void);
+			/** \brief Get the current (FILE*) warning stream. */
+			static FILE * get_warning_stream(void);
+			/** \brief Get the current (FILE*) info stream. */
+			static FILE * get_info_stream(void);
+			/** \brief Get the current (FILE*) progress stream. */
+			static FILE * get_progress_stream(void);
+			/** \brief Get the current (FILE*) debug stream. */
+			static FILE * get_debug_stream(void);
+
+		}; // class Server
+
+	} // namespace messaging
+
+} // namespace eve
+
+
+//=================================================================================================
+inline void eve::messaging::Server::set_error_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerError		= p_method; }
+inline void eve::messaging::Server::set_warning_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerWarning		= p_method; }
+inline void eve::messaging::Server::set_info_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerInfo		= p_method; }
+inline void eve::messaging::Server::set_progress_handler(handlerMethod p_method)	{ m_p_server->m_pHandlerProgress	= p_method; }
+inline void eve::messaging::Server::set_debug_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerDebug		= p_method; }
+inline void eve::messaging::Server::set_msg_handler(handlerMethod p_method)
+{ 
+	m_p_server->m_pHandlerError		= p_method; 
+	m_p_server->m_pHandlerWarning	= p_method;
+	m_p_server->m_pHandlerInfo		= p_method;
+	m_p_server->m_pHandlerProgress	= p_method;
+	m_p_server->m_pHandlerDebug		= p_method;
+}
+
+//=================================================================================================
+inline eve::messaging::Server::handlerMethod eve::messaging::Server::get_error_handler(void)		{ return m_p_server->m_pHandlerError;		}
+inline eve::messaging::Server::handlerMethod eve::messaging::Server::get_warning_handler(void)		{ return m_p_server->m_pHandlerWarning;		}
+inline eve::messaging::Server::handlerMethod eve::messaging::Server::get_info_handler(void)			{ return m_p_server->m_pHandlerInfo;		}
+inline eve::messaging::Server::handlerMethod eve::messaging::Server::get_progress_handler(void)		{ return m_p_server->m_pHandlerProgress;	}
+inline eve::messaging::Server::handlerMethod eve::messaging::Server::get_debug_handler(void)		{ return m_p_server->m_pHandlerDebug;		}
+
+
+
+//=================================================================================================
+inline void eve::messaging::Server::set_error_stream(FILE * p_pFile)		{ m_p_server->m_pStreamError	= p_pFile; }
+inline void eve::messaging::Server::set_warning_stream(FILE * p_pFile)		{ m_p_server->m_pStreamWarning	= p_pFile; }
+inline void eve::messaging::Server::set_info_stream(FILE * p_pFile)			{ m_p_server->m_pStreamInfo		= p_pFile; }
+inline void eve::messaging::Server::set_progress_stream(FILE * p_pFile)		{ m_p_server->m_pStreamProgress = p_pFile; }
+inline void eve::messaging::Server::set_debug_stream(FILE * p_pFile)		{ m_p_server->m_pStreamDebug	= p_pFile; }
+inline void eve::messaging::Server::set_msg_stream(FILE * p_pFile)			
+{ 
+	m_p_server->m_pStreamError		= p_pFile;
+	m_p_server->m_pStreamWarning	= p_pFile;
+	m_p_server->m_pStreamInfo		= p_pFile;
+	m_p_server->m_pStreamProgress	= p_pFile;
+	m_p_server->m_pStreamDebug		= p_pFile;
+}
+
+//=================================================================================================
+inline FILE * eve::messaging::Server::get_error_stream(void)		{ return reinterpret_cast<FILE*>(m_p_server->m_pStreamError);		}
+inline FILE * eve::messaging::Server::get_warning_stream(void)		{ return reinterpret_cast<FILE*>(m_p_server->m_pStreamWarning);		}
+inline FILE * eve::messaging::Server::get_info_stream(void)			{ return reinterpret_cast<FILE*>(m_p_server->m_pStreamInfo);		}
+inline FILE * eve::messaging::Server::get_progress_stream(void)		{ return reinterpret_cast<FILE*>(m_p_server->m_pStreamProgress);	}
+inline FILE * eve::messaging::Server::get_debug_stream(void)		{ return reinterpret_cast<FILE*>(m_p_server->m_pStreamDebug);		}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 		public:
-
-			static bool m_b_print_timing;
-
-			std::map<const char*, void(*)(const char *format, ...), EVE_ltstring> displayFunction;
-
-			/** \brief A default buffer, to store the current message std::string. */
-			char *stdBuff;
-
-			/** \brief The size of the default message-storing buffer. */
-			size_t stdBuffSize;
-			/** \brief The type of the current message (see constants above). */
-			unsigned long int currentMsgType;
-
-			/** \brief The handler function associated with the error messages. */
-			void(*errorHandler)(void);
-			/** \brief The handler function associated with the warning messages. */
-			void(*warningHandler)(void);
-			/** \brief The handler function associated with the info messages. */
-			void(*infoHandler)(void);
-			/** \brief The handler function associated with the progress messages. */
-			void(*progressHandler)(void);
-			/** \brief The handler function associated with the debug messages. */
-			void(*debugHandler)(void);
-
-			/** \brief The output stream associated with error messages. */
-			void * errorStream;
-			/** \brief The output stream associated with warning messages. */
-			void * warningStream;
-			/** \brief The output stream associated with info messages. */
-			void *infoStream;
-			/** \brief The output stream associated with progress messages. */
-			void *progressStream;
-			/** \brief The output stream associated with debug messages. */
-			void *debugStream;
-
 			/** \brief A binary mask to sort the DEBUG messages */
 			unsigned long int debugMask;
 
@@ -145,42 +264,14 @@ namespace eve
 			unsigned long int maxStackSize;
 			/** \brief Granularity before a realloc of the msg stack occurs */
 
-
-
-
-			/***********/
-			/* METHODS */
-			/***********/
-
-			/***************************/
-			/* CONSTRUCTORS/DESTRUCTOR */
-			/***************************/
-
-
-		public:
-			static void default_display_error_function(const char *format, ...);
-			static void default_display_in_file_error_function(const char *format, ...);
-			static void default_display_in_file_info_function(const char *format, ...);
-			static void default_display_in_file_warning_function(const char *format, ...);
-			static void default_display_in_file_debug_function(const char *format, ...);
-			static void default_display_in_file_progress_function(const char *format, ...);
-			/** \brief Method to get the EVE_Atom_Factory_c */
-			static Server * get_msg_server(bool p_bUseDefaultFile = true, std::string p_sLogPath = "");
-
+			
 			static void set_print_timing_status(bool p_bValue);
 
-			/** \brief A plain constructor **/
-			static void release_msg_server();
 
 #if defined OPTION_BUILD_LOG_IN_FILE
 			static bool init_log_in_file(bool p_bUseDefaultFile, std::string p_sLogPath);
 #endif //OPTION_BUILD_LOG_IN_FILE
-			/** \brief A plain destructor **/
-			virtual ~Server(void);
 
-			/** \brief display function **/
-			void register_display_function(const char* functionType, void(*displayFunctionPointer)(const char *format, ...));
-			void(*get_display_function(const char* functionType))(const char *format, ...);
 
 #if defined(_MSC_VER)
 
@@ -275,7 +366,6 @@ namespace eve
 #define EVE_DEBUG_NONE 0
 
 #define EVE_MSG_STACK_GRANULARITY 128
-#define EVE_DEFAULT_STDBUFF_SIZE 2048
 
 
 
@@ -292,12 +382,6 @@ namespace eve
 * @return path as char pointer
 */
 static char * native_get_log_file_path( void );
-
-
-#if defined(_MSC_VER)
-std::string getErrorMsg(DWORD err);
-std::string getErrorMsg();
-#endif
 
 /***************************************/
 /* DEFINITION OF SOME MESSAGE HANDLERS */
@@ -316,66 +400,6 @@ void native_msg_handler_ignore( void );
 
 /* TODO: EVE_QUEUE, EVE_RELEASE_QUEUE_AFTER_NEXT */
 
-/**********************************/
-/* MESSAGE HANDLER SETTING MACROS */
-/**********************************/
-/** \brief Set the error msg handler. */
-#define set_error_handler( H )   ( Server::get_msg_server()->errorHandler = H )
-/** \brief Set the warning msg handler. */
-#define set_warning_handler( H ) ( Server::get_msg_server()->warningHandler = H )
-/** \brief Set the info msg handler. */
-#define set_info_handler( H )    ( Server::get_msg_server()->infoHandler = H )
-/** \brief Set the progress msg handler. */
-#define set_progress_handler( H )    ( Server::get_msg_server()->progressHandler = H )
-/** \brief Set the debug msg handler. */
-#define set_debug_handler( H )   ( Server::get_msg_server()->debugHandler = H )
-/** \brief Set all the msg handlers (except debug). */
-#define set_msg_handler( H )		\
-	set_error_handler( H );			\
-	set_warning_handler( H );		\
-	set_info_handler( H );			\
-	set_progress_handler( H );
-
-/** \brief Get the error msg handler. */
-#define get_error_handler()   ( Server::get_msg_server()->errorHandler )
-/** \brief Get the warning msg handler. */
-#define get_warning_handler() ( Server::get_msg_server()->warningHandler )
-/** \brief Get the info msg handler. */
-#define get_info_handler()    ( Server::get_msg_server()->infoHandler )
-/** \brief Get the progress msg handler. */
-#define get_progress_handler()    ( Server::get_msg_server()->progressHandler )
-/** \brief Get the debug msg handler. */
-#define get_debug_handler()   ( Server::get_msg_server()->debugHandler )
-
-
-/*************************/
-/* STREAM SETTING MACROS */
-/*************************/
-/** \brief Redirect the error messages to (FILE*) F. */
-#define set_error_stream( F )   ( Server::get_msg_server()->errorStream = F )
-/** \brief Redirect the warning messages to (FILE*) F. */
-#define set_warning_stream( F ) ( Server::get_msg_server()->warningStream = F )
-/** \brief Redirect the info messages to (FILE*) F. */
-#define set_info_stream( F )    ( Server::get_msg_server()->infoStream = F )
-/** \brief Redirect the progress messages to (FILE*) F. */
-#define set_progress_stream( F )    ( Server::get_msg_server()->progressStream = F )
-/** \brief Redirect the debug messages to (FILE*) F. */
-#define set_debug_stream( F )   ( Server::get_msg_server()->debugStream = F )
-/** \brief Redirect all the messages (except the debug messages) to (FILE*) F. */
-#define set_msg_stream( F )   set_error_stream( F );   \
-                              set_warning_stream( F ); \
-                              set_info_stream( F )
-
-/** \brief Get the current (FILE*) error stream. */
-#define get_error_stream()   ( Server::get_msg_server()->errorStream )
-/** \brief Get the current (FILE*) warning stream. */
-#define get_warning_stream() ( Server::get_msg_server()->warningStream )
-/** \brief Get the current (FILE*) info stream. */
-#define get_info_stream()    ( (FILE*)Server::get_msg_server()->infoStream )
-/** \brief Get the current (FILE*) progress stream. */
-#define get_progress_stream()    ( Server::get_msg_server()->progressStream )
-/** \brief Get the current (FILE*) debug stream. */
-#define get_debug_stream()   ( Server::get_msg_server()->debugStream )
 
 
 /***********************/

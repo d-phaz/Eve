@@ -53,14 +53,14 @@ namespace eve
 		 * \brief Scoped pointer template
 		 */
 		template<class T>
-		class Scoped
+		class Scoped final
 		{
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-		protected:
+		private:
 			T *			m_pData;		///< Contained pointer.
 
 			//////////////////////////////////////

@@ -30,57 +30,33 @@
 */
 
 #pragma once
+#ifndef __EVE_MESSAGING_ERROR_H__
+#define __EVE_MESSAGING_ERROR_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "Eve/core/SystemDefinition.h"
+#include "Eve/core/Includes.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-// x64 compliant integers
-#include <stdint.h>
-// assertion
-#include <cassert>
-// standard string
-#include <string.h>
-// List types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-
-
+namespace eve
+{
+	namespace messaging
+	{
 #if defined(EVE_OS_WIN)
 
-	#include <Windows.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "Eve/version/Version.h"
+		/** 
+		 * \brief get Windows error message based on error code.
+		 * \param p_err error code.
+		 */
+		std::string get_error_msg(DWORD p_err);
+		/**
+		* \brief get Windows error message using GetLastError().
+		*/
+		std::string get_error_msg(void);
 #endif
 
-#ifndef __EVE_CORE_MACRO_H__
-#include "Eve/core/Macro.h"
-#endif
+	} // namespace messaging
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "Eve/memory/Includes.h"
-#endif
+} // namespace eve
 
-
-#endif // __EVE_CORE_INCLUDES_H__
+#endif // __EVE_MESSAGING_ERROR_H__
