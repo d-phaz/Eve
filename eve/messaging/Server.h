@@ -70,6 +70,13 @@ namespace eve
 			EVE_DISABLE_COPY(Server)
 			EVE_PROTECT_DESTRUCTOR(Server)
 
+		public:
+			/** \brief Create unique instance. */
+			static Server * create_instance(void);
+			/** \brief Release unique instance */
+			static void release_instance(void);
+
+
 		protected:
 			/** \brief Class constructor. */
 			Server(void);
