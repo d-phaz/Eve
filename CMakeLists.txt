@@ -192,11 +192,6 @@ git_describe( GIT_VERSION )
 message( "Git version: ${GIT_VERSION}" ) 
 
 
-# Platform configuration tests.
-###################################################################################################
-include( ${BASE_SOURCE_PATH}/CMake/CheckAtomicOps.cmake )
-
-
 # Setting compilation options.
 ###################################################################################################
 
