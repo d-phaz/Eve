@@ -63,6 +63,16 @@ set( SOURCE_FILES ${SOURCE_FILES} ${MEMORY_SRCS} )
 source_group( "Memory" FILES ${MEMORY_SRCS} )
 
 
+# Messaging.
+#################################################
+set( MESSAGING_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Server.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Server.cpp )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${MESSAGING_SRCS} )
+source_group( "Messaging" FILES ${MESSAGING_SRCS} )
+
+
 # Thread.
 #################################################
 set( THREADING_SRCS

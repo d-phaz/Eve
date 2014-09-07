@@ -36,7 +36,7 @@
 
 /**
 * \macro EVE_DISABLE_COPY
-* disable copy constructor and assignation operator for target class making them private
+* \brief Disable copy constructor and assignation operator for target class making them private.
 */
 #define EVE_DISABLE_COPY( targetClass )			\
 private:										\
@@ -46,7 +46,7 @@ private:										\
 
 /**
 * \macro EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR
-* make default constructor and destructor protected.
+* \brief Make default constructor and destructor protected.
 */
 #define EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR( targetClass )		\
 protected:														\
@@ -56,7 +56,7 @@ protected:														\
 
 /**
 * \macro EVE_PROTECT_CONSTRUCTOR
-* make default constructor protected.
+* \brief Make default constructor protected.
 */
 #define EVE_PROTECT_CONSTRUCTOR( targetClass )		\
 protected:											\
@@ -65,7 +65,7 @@ protected:											\
 
 /**
 * \macro EVE_PROTECT_DESTRUCTOR
-* make destructor protected.
+* \brief Make destructor protected.
 */
 #define EVE_PROTECT_DESTRUCTOR( targetClass )		\
 protected:											\
@@ -74,7 +74,7 @@ protected:											\
 
 /** 
 * \macro EVE_ASSERT
-* assertion called in DEBUG mode only
+* \brief Assertion called in DEBUG mode only.
 */
 #if !defined(NDEBUG)
 #define EVE_ASSERT( expression )	assert(expression);
@@ -85,7 +85,7 @@ protected:											\
 
 /**
 * \macro EVE_ASSERT_FAILURE
-* failure assertion called in DEBUG mode only
+* \brief Failure assertion called in DEBUG mode only.
 */
 #if !defined(NDEBUG)
 #define EVE_ASSERT_FAILURE	assert(0);

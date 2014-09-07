@@ -42,35 +42,34 @@ namespace eve
 	namespace threading
 	{
 		/**
-		* @brief Sleep thread for given amount of milliseconds
-		* @param p_milliseconds milliseconds amount to sleep.
+		* \brief Sleep thread for given amount of milliseconds.
+		* \param p_milliseconds milliseconds amount to sleep.
 		*/
 		void sleep_milli(const int32_t p_milliseconds);
 		/**
-		* @brief Sleep thread for given amount of iterations, switch hand to other threads
-		* @param p_iters iterations amount.
+		* \brief Sleep thread for given amount of iterations, switch hand to other threads.
+		* \param p_iters iterations amount.
 		*/
 		void sleep_iter(uint32_t p_iters);
 		/**
-		* @brief Sleep thread for given amount of micro seconds, switch hand to other threads
-		* @param p_ticks target ticks amount.
+		* \brief Sleep thread for given amount of micro seconds, switch hand to other threads.
+		* \param p_ticks target ticks amount.
 		*/
 		void sleep_micro(uint64_t p_ticks);
 
 
 		/**
-		* @brief Get current thread ID
-		* @return id as DWORD
+		* \brief Get current thread ID.
+		* \return id as DWORD.
 		*/
 		DWORD current_thread_ID(void);
 		/**
-		* @brief Compare the thread m_threadID's (inLeft == inRight); return true if they
-		* are equal. On some OS's DWORD is a struct so == will not work.
+		* \brief Compare the thread m_threadID's (inLeft == inRight); return true if they are equal. 
+		* On some OS's DWORD is a struct so == will not work.
 		*/
 		bool equal_ID(DWORD inLeft, DWORD inRight);
 		/**
-		* @brief Return a zeroed out thread ID. On some OS's DWORD is a struct
-		* so == 0 will not work.
+		* \brief Return a zeroed out thread ID. On some OS's DWORD is a struct so == 0 will not work.
 		*/
 		DWORD zero_ID(void);
 

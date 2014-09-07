@@ -46,11 +46,31 @@ int main(int argc, char **argv)
 
 	printf("Eve Version: %s", EVE_VERSIONNAME);
 
+
+	// Pointer example //
+
+	// Create thread pointer.
 	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
+	// Start thread.
+	thr->start();
+	// Sleep using microseconds.
+	eve::threading::sleep_micro(1000ULL * 1000ULL);
+	// Release pointer.
+	EVE_RELEASE_PTR(thr);
+
+
+	//-------------------------------------------
+
+
+	// Scoped pointer example //
+
+	// Create scoped thread pointer.
+	eve::memory::Scoped<eve::threading::ThreadDummy> thr;
+	// Start thread.
 	thr->start();
 
+	// Sleep using milliseconds.
 	eve::threading::sleep_milli(1000);
-	EVE_RELEASE_PTR(thr);
-	
+
 	return 0;
 }

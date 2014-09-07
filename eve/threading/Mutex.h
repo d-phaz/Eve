@@ -44,9 +44,9 @@ namespace eve
 	{
 
 		/**
-		* @class threading::Mutex
-		* @brief provides base native Mutex
-		* @note extends memory::Pointer
+		* \class threading::Mutex
+		* \brief provides base native Mutex
+		* \note extends memory::Pointer
 		*/
 		class Mutex
 			: public eve::memory::Pointer
@@ -59,7 +59,7 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			void *		m_mutex;		//<! Mutex handle
+			void *		m_mutex;		///< Mutex handle
 
 
 			//////////////////////////////////////
@@ -69,22 +69,22 @@ namespace eve
 			EVE_DISABLE_COPY(Mutex)
 			EVE_PROTECT_DESTRUCTOR(Mutex)
 
-		public:		
-			/** Mutex class constructor. */
+		protected:
+			/** \brief Class constructor. */
 			Mutex(void);
 
 
 		protected:
-			/** Alloc and init class members, initialize base mutex. (pure virtual) */
+			/** \brief Alloc and init class members, initialize base mutex. (pure virtual) */
 			virtual void init(void) override;
-			/** Release and delete class members, making sure mutex is unlocked. (pure virtual) */
+			/** \brief Release and delete class members, making sure mutex is unlocked. (pure virtual) */
 			virtual void release(void) override;
 
 
 		public:
-			/** Lock the mutex variable. */
+			/** \brief Lock the mutex variable. */
 			void lock(void);
-			/** Unlock the mutex variable. */
+			/** \brief Unlock the mutex variable. */
 			void unlock(void);
 
 		}; // class Mutex

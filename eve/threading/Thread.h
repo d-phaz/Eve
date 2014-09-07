@@ -44,12 +44,12 @@ namespace eve
 	namespace threading
 	{
 		/**
-		* @class threading::Thread
+		* \class threading::Thread
 		*
-		* Abstract base thread class containing init and release abstract methods,
+		* \brief Abstract base thread class containing init and release abstract methods,
 		* each thread must inherit from this class to properly alloc/init and release/free its members.
 		*
-		* @note extends memory::Pointer
+		* \note extends memory::Pointer
 		*/
 		class Thread
 			: public eve::memory::Pointer
@@ -74,7 +74,7 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 	
-		public:
+		protected:
 			//std::thread *		m_hThread;
 			//std::thread::id		m_threadID;
 			HANDLE				m_hThread;
@@ -95,60 +95,61 @@ namespace eve
 
 
 		protected:
-			/** Class constructor. */
+			/** \brief Class constructor. */
 			Thread(void);
 
 
 		protected:
-			/** Alloc and init class members. (pure virtual) */
+			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** 
-			* Release and delete class members. (pure virtual) 
+			* \brief Release and delete class members. (pure virtual) 
 			* Stop this object's thread execution (if any) immediately
 			*/
 			virtual void release(void) override;
 
 
 		protected:
-			/** In thread initialization function. (pure virtual) */
+			/** \brief In thread initialization function. (pure virtual) */
 			virtual void inThreadInit(void) = 0;
-			/** In thread release function. (pure virtual) */
+			/** \brief In thread release function. (pure virtual) */
 			virtual void inThreadRelease(void) = 0;
 
 
 		public:
 			/**
-			* Run is the main loop for this thread. (pure virtual)
+			* \brief Run is the main loop for this thread. (pure virtual)
 			* Usually this is called by Start(), but may be called directly for single-threaded applications.
 			*/
 			virtual void run(void) = 0;
 
 
 			/**
-			* @brief Start the object's thread execution. Increments thread
+			* \brief Start the object's thread execution. Increments thread
 			* count, spawns new thread, and stores thread m_threadID.
-			* @param p_priority thread desired priority.
+			*
+			* \param p_priority thread desired priority.
 			*/
 			void start(priorities p_priority=InheritPriority);
 			/**
-			* Stop the thread. 
+			* \brief Stop the thread. 
 			* Decrements thread count and resets the thread m_threadID.
 			*/
 			void stop( void );
 
 
 		protected:
-			/** Terminate thread. */
+			/** \brief Terminate thread. */
 			void terminate(void);
-			/** Wait for thread execution (if any) to complete. */
+			/** \brief Wait for thread execution (if any) to complete. */
 			bool complete(void);
-			/** Close thread. */
+			/** \brief Close thread. */
 			void close(void);
 
 
 		private:
 			/**
-			* Low level function which starts a new thread, called by start(). 
+			* \brief Low level function which starts a new thread, called by start(). 
 			*
 			* The argument should be a pointer to a Thread object.
 			* Calls the virtual run() function for that object.
@@ -169,37 +170,37 @@ namespace eve
 
 		public:
 			/**
-			* @brief Get thread priority
+			* \brief Get thread priority.
 			*
-			* @param p_priority target reference to stock thread priority value
-			* @return true if successful, false otherwise
+			* \param p_priority target reference to stock thread priority value.
+			* \return true if successful, false otherwise.
 			*/
 			bool getPriority( priorities & p_priority );
 			/**
-			* @brief Set the m_priority for the native thread if supported by the system.
+			* \brief Set the m_priority for the native thread if supported by the system.
 			*
-			* @param p_priority target priority as priorities enum
-			* @return true if successful, false otherwise
+			* \param p_priority target priority as priorities enum.
+			* \return true if successful, false otherwise.
 			*/
 			bool setPriority( priorities p_priority );
 
 
 			/**
-			* @brief get thread running state
-			* @return true if thread is running, false otherwise
+			* \brief get thread running state.
+			* \return true if thread is running, false otherwise.
 			*/
 			bool running( void );
 			/**
-			* @brief get thread started state
-			* @return true if thread started, false otherwise
+			* \brief get thread started state.
+			* \return true if thread started, false otherwise.
 			*/
 			bool started( void );
 
 
 		protected:
-			/** Set thread started state. */
+			/** \brief Set thread started state. */
 			virtual void setStarted ( void );
-			/** Reset thread started state. */
+			/** \brief Reset thread started state. */
 			virtual void resetStarted ( void );
 
 		}; // class Thread

@@ -44,9 +44,9 @@ namespace eve
 	{
 
 		/** 
-		* @class threading::Lock
-		* @brief lock using critical section
-		* @note extends memory::Pointer
+		* \class threading::Lock
+		* \brief lock using critical section
+		* \note extends memory::Pointer
 		*/
 		class Lock
 			: public eve::memory::Pointer
@@ -70,21 +70,21 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(Lock)
         
 		protected:
-			/** Construct a new lock. */
+			/** \brief Class constructor. */
 			Lock(void);
 
 
 		protected:
-			/** Alloc and init class members. (pure virtual) */
+			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
-			/** Release and delete class members. (pure virtual) */
+			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
 
 
 		public:
-			/** Acquire the lock. */
+			/** \brief Acquire the lock. */
 			void lock(void);
-			/** Release the lock. */
+			/** \brief Release the lock. */
 			void unlock(void);
 
 		}; // class Lock

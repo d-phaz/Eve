@@ -49,8 +49,8 @@ namespace eve
 	{
 
 		/** 
-		 * @class memory::Scoped
-		 * Scoped pointer template
+		 * \class memory::Scoped
+		 * \brief Scoped pointer template
 		 */
 		template<class T>
 		class Scoped
@@ -61,7 +61,7 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			T *			m_pData;		//<! Contained pointer.
+			T *			m_pData;		///< Contained pointer.
 
 			//////////////////////////////////////
 			//				METHOD				//
@@ -70,37 +70,37 @@ namespace eve
 			EVE_DISABLE_COPY(Scoped)
 
 		public:
-			/** Class constructor. */
+			/** \brief Class constructor. */
 			explicit Scoped(void);
-			/** Class destructor. */
+			/** \brief Class destructor. */
 			virtual ~Scoped(void);
 
 
-			/** Get contained pointer content using '*' operator. */
+			/** \brief Get contained pointer content using '*' operator. */
 			T &operator*(void) const;
-			/** Retrieve contained pointer using '->' operator. */
+			/** \brief Retrieve contained pointer using '->' operator. */
 			T * operator->(void) const;
 
 
-			/** Null comparison operator. */
+			/** \brief Null comparison operator. */
 			bool operator!(void) const;
-			/** Equal comparison operator. */
+			/** \brief Equal comparison operator. */
 			inline bool operator==(const Scoped<T> & p_other) const;
-			/** Different comparison operator. */
+			/** \brief Different comparison operator. */
 			inline bool operator!=(const Scoped<T> & p_other) const;
 
 
-			/** Retrieve contained pointer. */
+			/** \brief Retrieve contained pointer. */
 			T * data(void) const;
 
 			
-			/** Release contained pointer and take ownership of new one. */
+			/** \brief Release contained pointer and take ownership of new one. */
 			void take( T * p_pPtr );
-			/** Give ownership of contained pointer. */
+			/** \brief Give ownership of contained pointer. */
 			T * give(void);
 
 
-			/** Give ownership of contained pointer and take ownership of new one. */
+			/** \brief Give ownership of contained pointer and take ownership of new one. */
 			T * reset(T * p_pPtr);
 
 		}; // class Pointer

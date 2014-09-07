@@ -44,8 +44,8 @@ namespace eve
 	{
 
 		/** 
-		 * @class memory::Pointer
-		 * Abstract base pointer class
+		 * \class memory::Pointer
+		 * \brief Abstract base pointer class
 		 */
 		class Pointer
 		{
@@ -57,25 +57,25 @@ namespace eve
 			EVE_DISABLE_COPY( Pointer )
 
 		protected:
-			/** Class constructor. */
+			/** \brief Class constructor. */
 			Pointer(void);
-			/** Class destructor. */
+			/** \brief Class destructor. */
 			EVE_PROTECT_DESTRUCTOR(Pointer)
 
 
 		protected:
-			/** Alloc and init class members. (pure virtual) */
+			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) = 0;
-			/** Release and delete class members. (pure virtual) */
+			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) = 0;
 
 
 		public:
-			/** Create and initialize new pointer. */
+			/** \brief Create and initialize new pointer. */
 			template<class T>
 			static T * create_ptr(void);
 
-			/** Release and delete target pointer. */
+			/** \brief Release and delete target pointer. */
 			template<class T>
 			static void release_ptr(T * p_pPtr);
 

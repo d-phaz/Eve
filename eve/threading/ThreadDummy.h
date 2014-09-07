@@ -45,11 +45,11 @@ namespace eve
 		class SpinLock;
 
 		/**
-		* @class threading::ThreadDummy
+		* \class threading::ThreadDummy
 		*
-		* This class is used for testing purpose only.
+		* \brief This class is used for testing purpose only.
 		*
-		* @note extends threading::Thread
+		* \note extends threading::Thread
 		*/
 		class ThreadDummy
 			: public eve::threading::Thread
@@ -72,20 +72,20 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
 
 		protected:
-			/** Class constructor. */
+			/** \brief Class constructor. */
 			ThreadDummy(void);
 
 
 		protected:
-			/** In thread initialization function. (pure virtual) */
+			/** \brief In thread initialization function. (pure virtual) */
 			virtual void inThreadInit(void) override;
-			/** In thread release function. (pure virtual) */
+			/** \brief In thread release function. (pure virtual) */
 			virtual void inThreadRelease(void) override;
 
 
 		public:
 			/**
-			* Run is the main loop for this thread. (pure virtual)
+			* \brief Run is the main loop for this thread. (pure virtual)
 			* Usually this is called by Start(), but may be called directly for single-threaded applications.
 			*/
 			virtual void run(void) override;

@@ -47,9 +47,12 @@ namespace eve
 	namespace threading
 	{
 		/** 
-		 * A fast lock for non-contented memory access.
+		 * \class threading::SpinLock
+		 *
+		 * \brief A fast lock for non-contented memory access.
 		 * Readers or writers will starve on high contention.
-		 * @note extends memory::Pointer
+		 *
+		 * \note extends memory::Pointer
 		 */
 		class SpinLock
 			: public eve::memory::Pointer
@@ -72,22 +75,22 @@ namespace eve
 			EVE_DISABLE_COPY(SpinLock)
 			EVE_PROTECT_DESTRUCTOR(SpinLock)
 			
-		public:
-			/** Construct a new lock. */
+		protected:
+			/** \brief Class constructor. */
 			SpinLock(void);
 
 
 		protected:
-			/** Alloc and init class members. (pure virtual) */
+			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
-			/** Release and delete class members. (pure virtual) */
+			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
 
 
 		public:
-			/** Acquire the lock exclusively. */
+			/** \brief Acquire the lock exclusively. */
 			void lock(void);
-			/** Release an exclusive lock. */
+			/** \brief Release an exclusive lock. */
 			void unlock(void);
 
 		}; // class SpinLock
