@@ -51,6 +51,7 @@ namespace eve
 		* \class threading::Condition
 		*
 		* \brief locking condition class
+		*
 		* \note extends threading::Mutex, memory::Pointer
 		*/
 		class Condition
@@ -127,17 +128,17 @@ namespace eve
 			* The Condition locking guarantees that the condition remains true until
 			* you unlock it and that you are the only one that acquired the Condition.
 			*
-			* @p_awaitedValue: the value that should unlock the Condition
+			* \p_awaitedValue the value that should unlock the Condition
 			*
-			* @autoUnlock: Condition::AutoUnlock (true) to automatically unlock the Condition
+			* \p_autorelease Condition::AutoUnlock (true) to automatically unlock the Condition
 			* protection after it has been validated, or ManualUnlock (false) to
 			* manually choose when the Condition should be unlocked. While a Condition
 			* is locked, both WaitAndLock() and operator=() will block
 			* until the Condition is unlocked or invalidated. When a Condition is
 			* *automatically* unlocked, its value is not updated.
 			*
-			* @return: true if the @p_awaitedValue has been reached, false otherwise.
-			* WaitAndLock() may return even if @p_awaitedValue has not been
+			* \return true if the \p_awaitedValue has been reached, false otherwise.
+			* WaitAndLock() may return even if \p_awaitedValue has not been
 			* reached if the Condition has been disabled through Invalidate(). An
 			* invalidated Condition always returns in an unlocked state.
 			*/
@@ -161,14 +162,14 @@ namespace eve
 
 			/** 
 			* \brief Performs an assignement followed by a signal() call.
-			* The internal Condition value is updated to @value and the Condition is
+			* The internal Condition value is updated to \value and the Condition is
 			* signaled. Note that the Condition must be unlocked in order
 			* to be updated, otherwise it'll block until the Condition
 			* is unlocked.
 			*
-			* @value: the value to be assigned to the Condition.
+			* \value the value to be assigned to the Condition.
 			*
-			* @return: @value.
+			* \return value assigned by the Condition.
 			*/
 			int32_t operator=(int32_t value);
 
@@ -192,7 +193,7 @@ namespace eve
 			* \brief Get the current internal Condition value.
 			* This is a non-blocking call.
 			*
-			* @return the current internal state.
+			* \return the current internal state.
 			*/
 			const int32_t getValue(void) const;
 

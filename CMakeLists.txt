@@ -143,11 +143,6 @@ if( WIN32 AND ${CMAKE_SIZEOF_VOID_P} EQUAL 4 )
 endif()
 
 
-# Doxygen documentation.
-###################################################################################################
-option( OPTION_BUILD_DOCUMENTATION "Generating the doxygen documentation." OFF )
-
-
 # Visual Leak Detector.
 ###################################################################################################
 if( USING_WINDOWS_MSVC )  
@@ -290,10 +285,32 @@ endif()
 
 
 # Doxygen documentation.
-#################################################
+###################################################################################################
+option( OPTION_BUILD_DOCUMENTATION "Generating the doxygen documentation." ON )
 if( OPTION_BUILD_DOCUMENTATION )
-	find_package(Doxygen)
-	add_subdirectory( ${BASE_SOURCE_PATH}/doc )
+	find_package( Doxygen )
+	
+	if( DOXYGEN_FOUND )
+		if( NOT DOXY_IN_FILE_UPDATED )
+			if( DOXYGEN_DOT_PATH )
+				CONFIGURE_FILE(${BASE_SOURCE_PATH}/doc/refman/doxygen_configSTDWITHDOT.in ${CMAKE_CURRENT_BINARY_DIR}/doc/refman/doxygen_config.in @ONLY)    
+			else()
+				CONFIGURE_FILE(${BASE_SOURCE_PATH}/doc/refman/doxygen_configSTD.in ${CMAKE_CURRENT_BINARY_DIR}/doc/refman/doxygen_config.in @ONLY) 
+			endif()
+			
+			set( DOXY_IN_FILE_UPDATED 1 INTERNAL ) 
+		endif()
+		
+		set( DOXYGEN_PROJECT_NAME "Refman_Doxygen" )
+		add_custom_target(${DOXYGEN_PROJECT_NAME} ALL echo DEPENDS EVE_PROJECT)
+		add_custom_command(
+			TARGET ${DOXYGEN_PROJECT_NAME}
+			COMMAND ${DOXYGEN}
+			ARGS "${CMAKE_CURRENT_BINARY_DIR}/doc/refman/doxygen_config.in"
+			COMMENT   "Doxygen generate the documentation")
+	else()
+		message( STATUS "Doxygen not found, cannot generate the documentation." )
+	endif()
 endif()
 
 
