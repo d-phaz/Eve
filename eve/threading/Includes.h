@@ -54,5 +54,13 @@
 #include "Eve/threading/Thread.h"
 #endif 
 
+#ifndef __EVE_THREADING_THREAD_DUMMY_H__
+#include "Eve/threading/ThreadDummy.h"
+#endif 
+
+#ifndef __EVE_THREADING_UTILS_H__
+#include "Eve/threading/Utils.h"
+#endif
+
 
 #endif // __EVE_THREADING_INCLUDES_H__

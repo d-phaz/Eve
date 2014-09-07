@@ -29,28 +29,52 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
-#endif
+// Main header
+#include "Eve/threading/ThreadDummy.h"
 
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "Eve/threading/Includes.h"
-#endif
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "Eve/threading/SpinLock.h"
+#endif 
 
-int main(int argc, char **argv)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		eve::threading::ThreadDummy class
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+eve::threading::ThreadDummy::ThreadDummy(void)
+
+	// Inheritance
+	: eve::threading::Thread()
+{}
+
+
+
+//=================================================================================================
+void eve::threading::ThreadDummy::inThreadInit(void)
 {
-	// Hide console window in release mode.
-#if defined(NDEBUG)
-	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
-#endif	
+	m_pLock = EVE_CREATE_PTR(eve::threading::SpinLock);
+}
 
-	printf("Eve Version: %s", EVE_VERSIONNAME);
+//=================================================================================================
+void eve::threading::ThreadDummy::inThreadRelease(void)
+{
+	EVE_RELEASE_PTR(m_pLock);
+}
 
-	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
-	thr->start();
+//=================================================================================================
+void eve::threading::ThreadDummy::run(void)
+{
+	static int32_t id = 0;
+	++id;
 
-	eve::threading::sleep_milli(1000);
-	EVE_RELEASE_PTR(thr);
-	
-	return 0;
+	int32_t i = 0;
+	while ( i < 1000/*running()*/ )
+	{
+		m_pLock->lock();
+
+		printf("thread: %i value: %i\n", id, i);
+		++i;
+
+		m_pLock->unlock();
+	}
 }

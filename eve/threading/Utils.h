@@ -29,28 +29,53 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#pragma once
+#ifndef __EVE_THREADING_UTILS_H__
+#define __EVE_THREADING_UTILS_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "Eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "Eve/threading/Includes.h"
-#endif
-
-int main(int argc, char **argv)
+namespace eve
 {
-	// Hide console window in release mode.
-#if defined(NDEBUG)
-	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
-#endif	
+	namespace threading
+	{
+		/**
+		* @brief Sleep thread for given amount of milliseconds
+		* @param p_milliseconds milliseconds amount to sleep.
+		*/
+		void sleep_milli(const int32_t p_milliseconds);
+		/**
+		* @brief Sleep thread for given amount of iterations, switch hand to other threads
+		* @param p_iters iterations amount.
+		*/
+		void sleep_iter(uint32_t p_iters);
+		/**
+		* @brief Sleep thread for given amount of micro seconds, switch hand to other threads
+		* @param p_ticks target ticks amount.
+		*/
+		void sleep_micro(uint64_t p_ticks);
 
-	printf("Eve Version: %s", EVE_VERSIONNAME);
 
-	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
-	thr->start();
+		/**
+		* @brief Get current thread ID
+		* @return id as DWORD
+		*/
+		DWORD current_thread_ID(void);
+		/**
+		* @brief Compare the thread m_threadID's (inLeft == inRight); return true if they
+		* are equal. On some OS's DWORD is a struct so == will not work.
+		*/
+		bool equal_ID(DWORD inLeft, DWORD inRight);
+		/**
+		* @brief Return a zeroed out thread ID. On some OS's DWORD is a struct
+		* so == 0 will not work.
+		*/
+		DWORD zero_ID(void);
 
-	eve::threading::sleep_milli(1000);
-	EVE_RELEASE_PTR(thr);
-	
-	return 0;
-}
+	} // namespace threading
+
+} // namespace eve
+
+#endif // __EVE_THREADING_UTILS_H__

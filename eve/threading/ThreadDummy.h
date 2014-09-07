@@ -29,28 +29,71 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
-#endif
+#pragma once
+#ifndef __EVE_THREADING_THREAD_DUMMY_H__
+#define __EVE_THREADING_THREAD_DUMMY_H__
 
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "Eve/threading/Includes.h"
-#endif
 
-int main(int argc, char **argv)
+#ifndef __EVE_THREADING_THREAD_H__
+#include "Eve/threading/Thread.h"
+#endif 
+
+namespace eve
 {
-	// Hide console window in release mode.
-#if defined(NDEBUG)
-	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
-#endif	
+	namespace threading
+	{
+		class SpinLock;
 
-	printf("Eve Version: %s", EVE_VERSIONNAME);
+		/**
+		* @class threading::ThreadDummy
+		*
+		* This class is used for testing purpose only.
+		*
+		* @note extends threading::Thread
+		*/
+		class ThreadDummy
+			: public eve::threading::Thread
+		{
 
-	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
-	thr->start();
+			friend class eve::memory::Pointer;
 
-	eve::threading::sleep_milli(1000);
-	EVE_RELEASE_PTR(thr);
-	
-	return 0;
-}
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			eve::threading::SpinLock *		m_pLock;
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(ThreadDummy)
+			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
+
+		protected:
+			/** Class constructor. */
+			ThreadDummy(void);
+
+
+		protected:
+			/** In thread initialization function. (pure virtual) */
+			virtual void inThreadInit(void) override;
+			/** In thread release function. (pure virtual) */
+			virtual void inThreadRelease(void) override;
+
+
+		public:
+			/**
+			* Run is the main loop for this thread. (pure virtual)
+			* Usually this is called by Start(), but may be called directly for single-threaded applications.
+			*/
+			virtual void run(void) override;
+
+		}; // class ThreadDummy
+
+	} // namespace threading
+
+} // namespace eve
+
+#endif // __EVE_THREADING_THREAD_DUMMY_H__

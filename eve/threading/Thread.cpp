@@ -34,17 +34,10 @@
 
 #include <process.h>
 
-#ifndef __EVE_THREADING_MUTEX_H__
-#include "Eve/threading/Mutex.h"
+#ifndef __EVE_THREADING_UTILS_H__
+#include "Eve/threading/Utils.h"
 #endif
 
-#ifndef __EVE_THREADING_LOCK_H__
-#include "Eve/threading/Lock.h"
-#endif 
-
-#ifndef __EVE_THREADING_CONDITION_H__
-#include "Eve/threading/Condition.h"
-#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,9 +55,7 @@ eve::threading::Thread::Thread( void )
 	, m_hShutdownEvent	( 0 )
 	, m_StartEvent		( 0 )
 	, m_runWait			( 5 ) // milliseconds
-	, m_threadID		( zero_ID() )
-
-	, m_bRunning		( false )
+	, m_threadID		( eve::threading::zero_ID() )
 {}
 
 
@@ -117,7 +108,7 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 //=================================================================================================
 void eve::threading::Thread::start(priorities p_priority)
 {
-	if (equal_ID(m_threadID, zero_ID()))
+	if (eve::threading::equal_ID(m_threadID, eve::threading::zero_ID()))
 	{
 		// Spawn new thread. Thread is suspended until priority is set.
 		m_hThread = (std::thread*)_beginthreadex(
@@ -169,7 +160,7 @@ void eve::threading::Thread::terminate(void)
 {
 	if( m_hThread )
 	{
-		if ( !equal_ID(m_threadID, zero_ID()) ) 
+		if (!eve::threading::equal_ID(m_threadID, eve::threading::zero_ID()))
 		{
 			// Signal the thread to exit
 			::SetEvent( m_hShutdownEvent );
@@ -179,7 +170,7 @@ void eve::threading::Thread::terminate(void)
 			DWORD oldTID = m_threadID;
 
 			// exit thread
-			if( equal_ID(current_thread_ID(), oldTID) ) 
+			if (eve::threading::equal_ID(eve::threading::current_thread_ID(), oldTID))
 			{
 				// Wait for the thread to exit. If it doesn't shut down
 				// on its own, force it closed with Terminate thread
@@ -205,7 +196,7 @@ void eve::threading::Thread::terminate(void)
 			//// Close the handle and NULL it out
 			//::CloseHandle( m_hThread );
 			//m_hThread = NULL;
-			//m_threadID = zero_ID();
+			//m_threadID = eve::threading::zero_ID();
 
 			// Reset the shutdown event
 			::ResetEvent( m_hShutdownEvent );
@@ -221,7 +212,7 @@ bool eve::threading::Thread::complete(void)
 {
 	bool bReturn = false;
 
-	if( !equal_ID(m_threadID, zero_ID()) ) 
+	if (!eve::threading::equal_ID(m_threadID, eve::threading::zero_ID()))
 	{
 		DWORD exitCode;
 
@@ -268,95 +259,7 @@ void eve::threading::Thread::close( void )
 		//delete m_hThread;
 		//m_hThread = nullptr;
 	}
-	m_threadID = zero_ID();
-}
-
-
-
-
-//=================================================================================================
-struct SleepEvent
-{
-	SleepEvent()
-		: handle ( ::CreateEventW(0, 0, 0, 0) )
-		// #endif
-	{
-		EVE_ASSERT( handle )
-	}
-
-	HANDLE handle;
-};
-static SleepEvent sleepEvent;
-
-//=================================================================================================
-void eve::threading::Thread::sleep_milli( const int32_t p_milliseconds )
-{
-	if( p_milliseconds >= 10 ) 
-	{
-		::Sleep( p_milliseconds );
-	}
-	else 
-	{
-		// unlike Sleep() this is guaranteed to return to the current thread after
-		// the time expires, so we'll use this for short waits, which are more likely
-		// to need to be accurate
-		::WaitForSingleObject( sleepEvent.handle, p_milliseconds );
-	}
-}
-
-//=================================================================================================
-void eve::threading::Thread::sleep_iter(uint32_t p_iters)
-{
-	for( uint32_t i=0; i<p_iters; i++ ) 
-	{
-		::SwitchToThread();
-		//std::this_thread::yield();
-	}
-}
-
-//=================================================================================================
-void eve::threading::Thread::sleep_micro(uint64_t p_ticks)
-{
-	LARGE_INTEGER frequency;
-	LARGE_INTEGER currentTime;
-	LARGE_INTEGER endTime;
-
-	::QueryPerformanceCounter( &endTime );
-
-	// Ticks in microseconds (1/1000 ms)
-	::QueryPerformanceFrequency(&frequency);
-	endTime.QuadPart += (p_ticks * frequency.QuadPart) / (1000ULL * 1000ULL);
-
-	do
-	{
-		::SwitchToThread();
-		//std::this_thread::yield();
-
-		::QueryPerformanceCounter( &currentTime );
-
-	} while( currentTime.QuadPart < endTime.QuadPart );
-}
-
-
-
-//=================================================================================================
-DWORD eve::threading::Thread::current_thread_ID( void )
-{
-	return ::GetCurrentThreadId();
-}
-
-//=================================================================================================
-bool eve::threading::Thread::equal_ID( DWORD inLeft, DWORD inRight ) 
-{
-	return(memcmp(&inLeft, &inRight, sizeof(inLeft)) == 0);
-}
-
-//=================================================================================================
-DWORD eve::threading::Thread::zero_ID( void ) 
-{
-	DWORD a;
-	memset( &a, 0, sizeof(a));
-	return a;
+	m_threadID = eve::threading::zero_ID();
 }
 
 

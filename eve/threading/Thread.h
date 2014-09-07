@@ -43,11 +43,8 @@ namespace eve
 {
 	namespace threading
 	{
-		class Condition;
-		class Mutex;
-
 		/**
-		* @class NativeT::Thread
+		* @class threading::Thread
 		*
 		* Abstract base thread class containing init and release abstract methods,
 		* each thread must inherit from this class to properly alloc/init and release/free its members.
@@ -88,8 +85,6 @@ namespace eve
 			
 			uint32_t			m_runWait;
 
-			bool				m_bRunning;
-
 
 			//////////////////////////////////////
 			//				METHOD				//
@@ -99,16 +94,9 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(Thread)
 
 
-		public:
-			/** Create new pointer. */
-			static Thread * create_ptr(void);
-			/** Release pointer. */
-			static void release_ptr(Thread * p_pPtr);
-
-
 		protected:
 			/** Class constructor. */
-			Thread( void );
+			Thread(void);
 
 
 		protected:
@@ -175,86 +163,46 @@ namespace eve
 			static uint32_t __stdcall run_wrapper(void * p_pThread);
 
 
-		public:
-			/**
-			* @brief sleep thread for given amount of milliseconds
-			* @param p_milliseconds milliseconds amount to sleep.
-			*/
-			static void sleep_milli(const int32_t p_milliseconds);
-			/**
-			* @brief (micro)sleep thread for given amount of iterations, switch hand to other threads
-			* @param p_iters iterations amount.
-			*/
-			static void sleep_iter( uint32_t p_iters );
-			/**
-			* @brief (micro)sleep thread for given amount of micro seconds, switch hand to other threads
-			* @param p_ticks target ticks amount.
-			*/
-			static void sleep_micro( uint64_t p_ticks );
-
-		
-			/**
-			* @brief get current thread ID
-			* @return id as DWORD
-			*/
-			static DWORD current_thread_ID( void );
-			/**
-			* @brief Compare the thread m_threadID's (inLeft == inRight); return true if they
-			* are equal. On some OS's DWORD is a struct so == will not work.
-			*/
-			static bool equal_ID( DWORD inLeft, DWORD inRight );
-			/**
-			* @brief Return a zeroed out thread ID. On some OS's DWORD is a struct
-			* so == 0 will not work.
-			*/
-			static DWORD zero_ID( void );
-
-
 			///////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
 			/**
-			* @brief get thread priority
+			* @brief Get thread priority
 			*
 			* @param p_priority target reference to stock thread priority value
 			* @return true if successful, false otherwise
 			*/
-			virtual bool getPriority( priorities & p_priority );
+			bool getPriority( priorities & p_priority );
 			/**
 			* @brief Set the m_priority for the native thread if supported by the system.
 			*
 			* @param p_priority target priority as priorities enum
 			* @return true if successful, false otherwise
 			*/
-			virtual bool setPriority( priorities p_priority );
+			bool setPriority( priorities p_priority );
 
 
 			/**
 			* @brief get thread running state
 			* @return true if thread is running, false otherwise
 			*/
-			virtual bool running( void );
-
-
+			bool running( void );
 			/**
 			* @brief get thread started state
 			* @return true if thread started, false otherwise
 			*/
-			virtual bool started( void );
+			bool started( void );
+
 
 		protected:
-			/**
-			* @brief set thread started state
-			*/
+			/** Set thread started state. */
 			virtual void setStarted ( void );
-			/**
-			* @brief reset thread started state
-			*/
+			/** Reset thread started state. */
 			virtual void resetStarted ( void );
 
-		}; // Class Thread
+		}; // class Thread
 
 	} // namespace threading
 
