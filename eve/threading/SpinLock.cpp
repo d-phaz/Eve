@@ -62,8 +62,8 @@ void eve::threading::SpinLock::lock(void)
 {
 	while (m_state.test_and_set(std::memory_order_acquire))
 	{
-		//SwitchToThread();
-		std::this_thread::yield();
+		::SwitchToThread();
+		//std::this_thread::yield();
 	}
 }
 

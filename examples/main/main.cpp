@@ -33,6 +33,8 @@
 #include "Eve/core/Includes.h"
 #endif
 
+#include "Eve/threading/Includes.h"
+
 int main(int argc, char **argv)
 {
 	// Hide console window in release mode.
@@ -40,7 +42,7 @@ int main(int argc, char **argv)
 	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
 #endif	
 
-	printf("EVE_VERSIONNAME: %s", EVE_VERSIONNAME);
+	printf("Eve Version: %s", EVE_VERSIONNAME);
 
 	return 0;
 }

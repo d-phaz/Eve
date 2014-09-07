@@ -33,11 +33,10 @@
 #ifndef __EVE_THREADING_THREAD_H__
 #define __EVE_THREADING_THREAD_H__
 
-#include <thread>
-
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "Eve/core/Includes.h"
 #endif
+
 
 namespace eve
 {
@@ -78,17 +77,23 @@ namespace eve
 			//////////////////////////////////////
 	
 		public:
-			//std::thread *		m_hThread;
-			//std::thread::id		m_threadID;
+			mutable Mutex *		m_mutex;
 			HANDLE				m_hThread;
-			DWORD				m_threadID;
-
 			HANDLE				m_hShutdownEvent;
 			HANDLE				m_StartEvent;
-			
+			int32_t				m_waiters;
 			uint32_t			m_runWait;
 
+		protected:
+			DWORD				m_threadID;
 			bool				m_bRunning;
+
+			int32_t				m_returnCode;
+			priorities			m_priority;
+
+		
+			static int32_t		m_thread_number;	//<! count of threads, used in joinall
+			static Condition *	m_num_cond;			//<! count of conditions, used in joinall
 
 
 			//////////////////////////////////////
@@ -139,9 +144,8 @@ namespace eve
 			/**
 			* @brief Start the object's thread execution. Increments thread
 			* count, spawns new thread, and stores thread m_threadID.
-			* @param p_priority thread desired priority.
 			*/
-			void start(priorities p_priority=InheritPriority);
+			void start( void );
 			/**
 			* Stop the thread. 
 			* Decrements thread count and resets the thread m_threadID.
@@ -177,18 +181,34 @@ namespace eve
 
 		public:
 			/**
+			* @brief Wait for all thread object's execution to complete. Depends on the
+			* thread count being accurate and the threads sending a condition
+			* signal when they terminate.
+			*
+			* @note static function
+			*/
+			static void join_all( void );
+		
+
+			/**
 			* @brief sleep thread for given amount of milliseconds
-			* @param p_milliseconds milliseconds amount to sleep.
+			* @param p_milliseconds milliseconds amount to sleep
+			*
+			* @note static function
 			*/
 			static void sleep_milli(const int32_t p_milliseconds);
 			/**
 			* @brief (micro)sleep thread for given amount of iterations, switch hand to other threads
-			* @param p_iters iterations amount.
+			* @param p_iters iterations amount
+			*
+			* @note static function
 			*/
 			static void sleep_iter( uint32_t p_iters );
 			/**
 			* @brief (micro)sleep thread for given amount of micro seconds, switch hand to other threads
-			* @param p_ticks target ticks amount.
+			* @param p_ticks target ticks amount
+			*
+			* @note static function
 			*/
 			static void sleep_micro( uint64_t p_ticks );
 
@@ -201,11 +221,15 @@ namespace eve
 			/**
 			* @brief Compare the thread m_threadID's (inLeft == inRight); return true if they
 			* are equal. On some OS's DWORD is a struct so == will not work.
+			*
+			* @note static function
 			*/
 			static bool equal_ID( DWORD inLeft, DWORD inRight );
 			/**
-			* @brief Return a zeroed out thread ID. On some OS's DWORD is a struct
+			* @brief Return a zero'd out thread m_threadID. On some OS's DWORD is a struct
 			* so == 0 will not work.
+			*
+			* @note static function
 			*/
 			static DWORD zero_ID( void );
 
@@ -215,6 +239,17 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
+			/** Get the number of user (i.e. not daemon) threads as int32_t. */
+			static int32_t get_number_user_threads( void );
+
+
+			/** Set a thread to be daemon, so joinall won't wait on it
+			* this simply decrements the thread count that joinall uses,
+			* which is not a thorough solution, but works for the moment
+			*/
+			virtual void setDaemon( void );
+
+
 			/**
 			* @brief get thread priority
 			*

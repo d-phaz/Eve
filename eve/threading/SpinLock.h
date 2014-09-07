@@ -33,12 +33,12 @@
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
 #define __EVE_THREADING_SPIN_LOCK_H__
 
+#include <atomic>
+#include <thread>
+
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "Eve/core/Includes.h"
 #endif
-
-#include <atomic>
-#include <thread>
 
 
 

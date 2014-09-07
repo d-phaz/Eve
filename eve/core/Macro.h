@@ -83,4 +83,15 @@ protected:											\
 #endif
 
 
+/**
+* \macro EVE_ASSERT_FAILURE
+* failure assertion called in DEBUG mode only
+*/
+#if !defined(NDEBUG)
+#define EVE_ASSERT_FAILURE	assert(0);
+#else
+#define EVE_ASSERT_FAILURE	
+#endif
+
+
 #endif // __EVE_CORE_MACRO_H__

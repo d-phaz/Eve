@@ -48,6 +48,16 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+//		Static
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+int32_t eve::threading::Thread::m_thread_number = 0;
+
+eve::threading::Condition * eve::threading::Thread::m_num_cond = EVE_CREATE_PTR( eve::threading::Condition );
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 //		eve::threading::Thread class
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,13 +68,17 @@ eve::threading::Thread::Thread( void )
 	: eve::memory::Pointer()
 
 	// Members init
-	, m_hThread			( nullptr )
-	, m_hShutdownEvent	( 0 )
-	, m_StartEvent		( 0 )
+	, m_mutex			( nullptr )
+	, m_hThread			( 0 )
+	, m_hShutdownEvent(0)
+	, m_StartEvent(0)
+	, m_waiters			( 0 )
 	, m_runWait			( 5 ) // milliseconds
 	, m_threadID		( zero_ID() )
 
 	, m_bRunning		( false )
+	, m_returnCode		( -1 )
+	, m_priority		( Thread::InheritPriority )	
 {}
 
 
@@ -72,17 +86,22 @@ eve::threading::Thread::Thread( void )
 //=================================================================================================
 void eve::threading::Thread::init(void)
 {
-	m_hShutdownEvent	= ::CreateEvent(NULL, TRUE, FALSE, NULL);
-	m_StartEvent		= ::CreateEvent(NULL, TRUE, FALSE, NULL);
+	m_mutex = EVE_CREATE_PTR( eve::threading::Mutex );
+
+	m_hShutdownEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
+	m_StartEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
 }
 
 //=================================================================================================
 void eve::threading::Thread::release(void)
 {
 	this->stop();
-	
+	::CloseHandle(m_hThread);
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
+	m_threadID = zero_ID();
+
+	EVE_RELEASE_PTR(m_mutex);
 }
 
 
@@ -92,61 +111,71 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 {
 	EVE_ASSERT(p_pThread)
 
-	// Grab and cast thread pointer.
-	eve::threading::Thread * objectPtr = reinterpret_cast<eve::threading::Thread*>(p_pThread);
+	// Grab and cast thread pointer
+	eve::threading::Thread * objectPtr = (eve::threading::Thread *)p_pThread;
 
-	// Initialize object local data.
+	// Initialize object local data
 	objectPtr->inThreadInit();
-	// Since initialized, set status to started.
+	// Since initialized, set status to started
 	objectPtr->setStarted();
 
-	// Run thread (pure virtual function).
+	// Run thread (pure virtual function)
 	objectPtr->run();
 
-	// Uninitialize object local data.
-	objectPtr->inThreadRelease();
-	// Since we're out of run loop set status to not started.
+	// Since we're out of run loop set status to not started
 	objectPtr->resetStarted();
+	// Uninitialize object local data
+	objectPtr->inThreadRelease();
 
-	// No error occurred so return 0 (zero).
-	return 0;
+
+	// set TID to zero, then delete it
+	// the zero TID causes Stop() in the destructor not to do anything
+	objectPtr->m_threadID = zero_ID();
+	// Delete pointer if asked for
+	//if (objectPtr->m_bDeleteSelf)
+	//{
+	//	delete objectPtr;
+	//	objectPtr = NULL;
+	//}
+
+
+	// decrement thread count and send condition signal
+	// do this after the object is destroyed, otherwise NT complains
+	m_num_cond->lock();
+	m_thread_number--;
+	m_num_cond->signal();
+	m_num_cond->unlock();
+
+
+	return NULL;
 }
 
 
 
 //=================================================================================================
-void eve::threading::Thread::start(priorities p_priority)
+void eve::threading::Thread::start(void)
 {
 	if (equal_ID(m_threadID, zero_ID()))
 	{
-		// Spawn new thread. Thread is suspended until priority is set.
-		m_hThread = (std::thread*)_beginthreadex(
-			NULL,							// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
-			0,								// DWORD dwStackSize,							// initial thread stack size
-			run_wrapper,					// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
-			this,							// LPVOID lpParameter,							// argument for new thread
-			CREATE_SUSPENDED,				// DWORD dwCreationFlags,						// creation flags
-			(unsigned*)&m_threadID			// LPDWORD lpThreadId							// pointer to receive thread ID
+		// increment thread count
+		m_num_cond->lock();
+		m_thread_number++;
+		m_num_cond->unlock();
+
+		Thread* ptr = this;
+
+		// Win32 threads -- spawn new thread
+		// Win32 has a thread handle in addition to the thread ID
+		m_hThread = (HANDLE)_beginthreadex(
+			NULL,								// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
+			0,									// DWORD dwStackSize,							// initial thread stack size
+			run_wrapper,						// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
+			static_cast<LPVOID>(ptr),			// LPVOID lpParameter,							// argument for new thread
+			0,									// DWORD dwCreationFlags,						// creation flags
+			(unsigned*)&m_threadID				// LPDWORD lpThreadId							// pointer to receive thread ID
 			);
+
 		EVE_ASSERT(m_hThread);
-
-		// Set thread priority
-		if (!setPriority(p_priority))
-		{
-			// LOG GetLastError
-			EVE_ASSERT_FAILURE
-		}
-
-		if (::ResumeThread(m_hThread) == (DWORD)-1)
-		{
-			// LOG GetLastError.
-			EVE_ASSERT_FAILURE
-		}
-
-
-		//m_hThread = new std::thread(run_wrapper, this);
-		//m_threadID = m_hThread->get_id();
-		//EVE_ASSERT(m_hThread);
 	}
 }
 
@@ -171,8 +200,15 @@ void eve::threading::Thread::terminate(void)
 	{
 		if ( !equal_ID(m_threadID, zero_ID()) ) 
 		{
+			// decrement thread count
+			m_num_cond->lock();
+			m_thread_number--;
+			m_num_cond->signal();
+			m_num_cond->unlock();
+
 			// Signal the thread to exit
 			::SetEvent( m_hShutdownEvent );
+
 			// thread may be suspended, so resume before shutting down
 			::ResumeThread( m_hThread );
 
@@ -194,18 +230,14 @@ void eve::threading::Thread::terminate(void)
 				// suggested to Stop() threads a lot.
 				if( WAIT_TIMEOUT == ::WaitForSingleObject(m_hThread, 1000) ) 
 				{
-					if (::TerminateThread(m_hThread, 0) == 0)
-					{
-						// LOG GetLastError
-						EVE_ASSERT_FAILURE
-					}
+					::TerminateThread( m_hThread, 0 );
 				}
 			}
 
-			//// Close the handle and NULL it out
-			//::CloseHandle( m_hThread );
-			//m_hThread = NULL;
-			//m_threadID = zero_ID();
+			// Close the handle and NULL it out
+			::CloseHandle( m_hThread );
+			m_hThread = NULL;
+			m_threadID = zero_ID();
 
 			// Reset the shutdown event
 			::ResetEvent( m_hShutdownEvent );
@@ -257,16 +289,23 @@ bool eve::threading::Thread::complete(void)
 } 
 
 //=================================================================================================
+void eve::threading::Thread::join_all( void ) 
+{
+	m_num_cond->lock();
+	while ( m_thread_number > 0 ) 
+	{
+		m_num_cond->wait();
+	}
+	m_num_cond->unlock();
+} 
+
+//=================================================================================================
 void eve::threading::Thread::close( void )
 {
 	if(m_hThread)
 	{
 		::CloseHandle(m_hThread);
 		m_hThread = 0;
-		
-		//m_hThread->detach();
-		//delete m_hThread;
-		//m_hThread = nullptr;
 	}
 	m_threadID = zero_ID();
 }
@@ -278,11 +317,9 @@ void eve::threading::Thread::close( void )
 struct SleepEvent
 {
 	SleepEvent()
-		: handle ( ::CreateEventW(0, 0, 0, 0) )
+		: handle ( ::CreateEvent(0, 0, 0, 0) )
 		// #endif
-	{
-		EVE_ASSERT( handle )
-	}
+	{}
 
 	HANDLE handle;
 };
@@ -307,10 +344,8 @@ void eve::threading::Thread::sleep_milli( const int32_t p_milliseconds )
 //=================================================================================================
 void eve::threading::Thread::sleep_iter(uint32_t p_iters)
 {
-	for( uint32_t i=0; i<p_iters; i++ ) 
-	{
+	for( uint32_t i=0; i<p_iters; i++ ) {
 		::SwitchToThread();
-		//std::this_thread::yield();
 	}
 }
 
@@ -330,8 +365,6 @@ void eve::threading::Thread::sleep_micro(uint64_t p_ticks)
 	do
 	{
 		::SwitchToThread();
-		//std::this_thread::yield();
-
 		::QueryPerformanceCounter( &currentTime );
 
 	} while( currentTime.QuadPart < endTime.QuadPart );
@@ -366,52 +399,111 @@ DWORD eve::threading::Thread::zero_ID( void )
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
+int32_t eve::threading::Thread::get_number_user_threads( void ) 
+{
+	return m_thread_number;
+}
+
+
+
+//=================================================================================================
+void eve::threading::Thread::setDaemon( void ) 
+{
+	m_num_cond->lock();
+	m_thread_number--;
+	m_num_cond->signal();
+	m_num_cond->unlock();
+}
+
+
+
+//=================================================================================================
 bool eve::threading::Thread::getPriority( priorities & p_priority ) 
 {
 
 	bool result = true;
 
-	// Convert to one of the priority values
+	// Convert to one of the m_priority values
 	switch( ::GetThreadPriority(m_hThread) ) 
 	{
-		case THREAD_PRIORITY_ERROR_RETURN:		result = false;
+	case THREAD_PRIORITY_ERROR_RETURN:
+		result = false;
+	case THREAD_PRIORITY_IDLE : 
+		p_priority =  IdlePriority;
+		break;
 
-		case THREAD_PRIORITY_IDLE:				p_priority = IdlePriority;			break;
-		case THREAD_PRIORITY_LOWEST:			p_priority = LowestPriority;		break;
-		case THREAD_PRIORITY_BELOW_NORMAL:		p_priority = LowPriority;			break;
-		case THREAD_PRIORITY_NORMAL:			p_priority = NormalPriority;		break;
-		case THREAD_PRIORITY_ABOVE_NORMAL:		p_priority = HighPriority;			break;
-		case THREAD_PRIORITY_HIGHEST:			p_priority = HighestPriority;		break;
-		case THREAD_PRIORITY_TIME_CRITICAL:		p_priority = TimeCriticalPriority;	break;
+	case THREAD_PRIORITY_LOWEST :
+		p_priority = LowestPriority;
+		break;
+
+	case THREAD_PRIORITY_BELOW_NORMAL :
+		p_priority = LowPriority ;
+		break;
+
+	case THREAD_PRIORITY_NORMAL :
+		p_priority = NormalPriority;
+		break;
+
+	case THREAD_PRIORITY_ABOVE_NORMAL :
+		p_priority = HighPriority;
+		break;
+
+	case THREAD_PRIORITY_HIGHEST :
+		p_priority = HighestPriority ;
+		break;
+
+	case THREAD_PRIORITY_TIME_CRITICAL :
+		p_priority = TimeCriticalPriority;
+		break;
 	}
-
 	return result;
 }
 
 //=================================================================================================
 bool eve::threading::Thread::setPriority( priorities p_priority )
 {
-	bool ret = false;
-
+	bool result;
+	// Convert
 	int32_t prio;
-	switch( p_priority )
+	switch (p_priority) 
 	{
-		case IdlePriority:			prio = THREAD_PRIORITY_IDLE;						break;
-		case LowestPriority:		prio = THREAD_PRIORITY_LOWEST;						break;
-		case LowPriority:			prio = THREAD_PRIORITY_BELOW_NORMAL;				break;
-		case NormalPriority:		prio = THREAD_PRIORITY_NORMAL;						break;
-		case HighPriority:			prio = THREAD_PRIORITY_ABOVE_NORMAL;				break;
-		case HighestPriority:		prio = THREAD_PRIORITY_HIGHEST;						break;
-		case TimeCriticalPriority:	prio = THREAD_PRIORITY_TIME_CRITICAL;				break;
+	case IdlePriority:
+		prio = THREAD_PRIORITY_IDLE;
+		break;
 
-		case InheritPriority:
-		default:					prio = ::GetThreadPriority(::GetCurrentThread());	break;
+	case LowestPriority:
+		prio = THREAD_PRIORITY_LOWEST;
+		break;
+
+	case LowPriority:
+		prio = THREAD_PRIORITY_BELOW_NORMAL;
+		break;
+
+	case NormalPriority:
+		prio = THREAD_PRIORITY_NORMAL;
+		break;
+
+	case HighPriority:
+		prio = THREAD_PRIORITY_ABOVE_NORMAL;
+		break;
+
+	case HighestPriority:
+		prio = THREAD_PRIORITY_HIGHEST;
+		break;
+
+	case TimeCriticalPriority:
+		prio = THREAD_PRIORITY_TIME_CRITICAL;
+		break;
+
+	case InheritPriority:
+	default:
+		prio = ::GetThreadPriority( ::GetCurrentThread() );
+		break;
 	}
-	
-	ret = (::SetThreadPriority(m_hThread, prio) != THREAD_PRIORITY_ERROR_RETURN);
-	EVE_ASSERT(ret)
 
-	return ret;
+	
+	result = (::SetThreadPriority(m_hThread, prio) != THREAD_PRIORITY_ERROR_RETURN);
+	return result;
 }
 
 
@@ -419,14 +511,11 @@ bool eve::threading::Thread::setPriority( priorities p_priority )
 //=================================================================================================
 bool eve::threading::Thread::running( void )
 {
-	bool bret = false;
-	
-	if( WAIT_TIMEOUT == ::WaitForSingleObject(m_hShutdownEvent, m_runWait) ) 
-	{
-		bret = true;
+	bool b_return = false;
+	if( WAIT_TIMEOUT == ::WaitForSingleObject(m_hShutdownEvent, m_runWait) ) {
+		b_return = true;
 	}
-	
-	return bret;
+	return b_return;
 }
 
 
@@ -434,14 +523,13 @@ bool eve::threading::Thread::running( void )
 //=================================================================================================
 bool eve::threading::Thread::started( void )
 {
-	bool bret = false;
+	bool b_return = false;
 
-	if( WAIT_OBJECT_0 == ::WaitForSingleObject( m_StartEvent, 200000 ) ) 
-	{
-		bret = true;
+	if( WAIT_OBJECT_0 == ::WaitForSingleObject( m_StartEvent, 200000 ) ) {
+		b_return = true;
 	}
 
-	return bret;
+	return b_return;
 }
 
 //=================================================================================================
