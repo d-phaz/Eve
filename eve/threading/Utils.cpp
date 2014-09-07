@@ -36,17 +36,27 @@
 
 
 //=================================================================================================
-struct SleepEvent
+namespace eve 
 {
-	SleepEvent()
-		: handle(::CreateEventW(0, 0, 0, 0))
+	namespace threading
 	{
-		EVE_ASSERT(handle)
-	}
+		/** 
+		 * \struct eve::threading::SleepEvent
+		 * \brief simple system event HANDLE used by sleep method.
+		 */
+		struct SleepEvent
+		{
+			SleepEvent()
+			: handle(::CreateEventW(0, 0, 0, 0))
+			{
+				EVE_ASSERT(handle)
+			}
 
-	HANDLE handle;
-};
-static SleepEvent sleepEvent;
+			HANDLE handle;
+		};
+	}
+}
+static eve::threading::SleepEvent sleepEvent;
 
 //=================================================================================================
 void eve::threading::sleep_milli(const int32_t p_milliseconds)

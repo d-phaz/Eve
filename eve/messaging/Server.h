@@ -43,7 +43,7 @@ namespace eve
 	namespace messaging
 	{
 		/**
-		* \class messaging::Server
+		* \class eve::messaging::Server
 		*
 		* \brief holds and manages creation and redirection of error/warning/info/debug messages.
 		*

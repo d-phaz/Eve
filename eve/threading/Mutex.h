@@ -44,7 +44,7 @@ namespace eve
 	{
 
 		/**
-		* \class threading::Mutex
+		* \class eve::threading::Mutex
 		* \brief provides base native Mutex
 		* \note extends memory::Pointer
 		*/

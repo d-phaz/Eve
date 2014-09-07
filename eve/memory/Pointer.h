@@ -44,7 +44,7 @@ namespace eve
 	{
 
 		/** 
-		 * \class memory::Pointer
+		 * \class eve::memory::Pointer
 		 * \brief Abstract base pointer class
 		 */
 		class Pointer

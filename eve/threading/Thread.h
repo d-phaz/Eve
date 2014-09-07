@@ -44,7 +44,7 @@ namespace eve
 	namespace threading
 	{
 		/**
-		* \class threading::Thread
+		* \class eve::threading::Thread
 		*
 		* \brief Abstract base thread class containing init and release abstract methods,
 		* each thread must inherit from this class to properly alloc/init and release/free its members.

@@ -45,7 +45,7 @@ namespace eve
 		class SpinLock;
 
 		/**
-		* \class threading::ThreadDummy
+		* \class eve::threading::ThreadDummy
 		*
 		* \brief This class is used for testing purpose only.
 		*

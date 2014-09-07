@@ -48,7 +48,7 @@ namespace eve
 	{
 
 		/**
-		* \class threading::Condition
+		* \class eve::threading::Condition
 		*
 		* \brief locking condition class
 		*

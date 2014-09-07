@@ -65,9 +65,9 @@ int main(int argc, char **argv)
 	// Scoped pointer example //
 
 	// Create scoped thread pointer.
-	eve::memory::Scoped<eve::threading::ThreadDummy> thr;
+	eve::memory::Scoped<eve::threading::ThreadDummy> scThr;
 	// Start thread.
-	thr->start();
+	scThr->start();
 
 	// Sleep using milliseconds.
 	eve::threading::sleep_milli(1000);

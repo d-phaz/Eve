@@ -47,7 +47,7 @@ namespace eve
 	namespace threading
 	{
 		/** 
-		 * \class threading::SpinLock
+		 * \class eve::threading::SpinLock
 		 *
 		 * \brief A fast lock for non-contented memory access.
 		 * Readers or writers will starve on high contention.

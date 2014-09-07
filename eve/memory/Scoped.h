@@ -49,7 +49,7 @@ namespace eve
 	{
 
 		/** 
-		 * \class memory::Scoped
+		 * \class eve::memory::Scoped
 		 * \brief Scoped pointer template
 		 */
 		template<class T>

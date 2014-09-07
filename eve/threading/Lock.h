@@ -44,7 +44,7 @@ namespace eve
 	{
 
 		/** 
-		* \class threading::Lock
+		* \class eve::threading::Lock
 		* \brief lock using critical section
 		* \note extends memory::Pointer
 		*/
