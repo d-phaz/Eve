@@ -29,54 +29,19 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
-#endif
-
+#pragma once
 #ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "Eve/messaging/Includes.h"
+#define __EVE_MESSAGING_INCLUDES_H__
+
+
+#ifndef __EVE_MESSAGING_ERROR_H__
+#include "Eve/messaging/Error.h"
 #endif
 
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "Eve/threading/Includes.h"
+
+#ifndef __EVE_MESSAGING_SERVER_H__
+#include "Eve/messaging/Server.h"
 #endif
 
-int main(int argc, char **argv)
-{
-	// Hide console window in release mode.
-#if defined(NDEBUG)
-	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
-#endif	
 
-	eve::messaging::Server::create_instance();
-	EVE_LOG_INFO("Eve Version: %s", EVE_VERSIONNAME);
-	eve::messaging::Server::release_instance();
-
-
-	// Pointer example //
-
-	// Create thread pointer.
-	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
-	// Start thread.
-	thr->start();
-	// Sleep using microseconds.
-	eve::threading::sleep_micro(1000ULL * 1000ULL);
-	// Release pointer.
-	EVE_RELEASE_PTR(thr);
-
-
-	//-------------------------------------------
-
-
-	// Scoped pointer example //
-
-	// Create scoped thread pointer.
-	eve::memory::Scoped<eve::threading::ThreadDummy> scThr;
-	// Start thread.
-	scThr->start();
-
-	// Sleep using milliseconds.
-	eve::threading::sleep_milli(1000);
-
-	return 0;
-}
+#endif //__EVE_MEMORY_INCLUDES_H__
