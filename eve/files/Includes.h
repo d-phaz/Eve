@@ -30,62 +30,13 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#ifndef __EVE_FILES_INCLUDES_H__
+#define __EVE_FILES_INCLUDES_H__
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "Eve/core/SystemDefinition.h"
+#ifndef __EVE_FILES_UTILS_H__
+#include "Eve/files/Utils.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// assertion
-#include <cassert>
-// standard string
-#include <string.h>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
-
-
-#if defined(EVE_OS_WIN)
-
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "Eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "Eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "Eve/memory/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+#endif // __EVE_FILES_INCLUDES_H__

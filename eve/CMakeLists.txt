@@ -51,6 +51,17 @@ set( SOURCE_FILES ${CORE_SRCS} )
 source_group( "Core" FILES ${CORE_SRCS} )
 
 
+# Files.
+#################################################
+set( FILES_SRCS 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/files/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/files/Utils.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/files/Utils.h  )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
+source_group( "Files" FILES ${FILES_SRCS} )
+
+
 # Memory.
 #################################################
 set( MEMORY_SRCS

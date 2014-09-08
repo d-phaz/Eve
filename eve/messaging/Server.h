@@ -37,8 +37,9 @@
 #include "Eve/core/Includes.h"
 #endif
 
-
-#define EVE_DEFAULT_STDBUFF_SIZE 2048
+#ifndef __EVE_FILES_INCLUDES_H__
+#include "Eve/files/Includes.h"
+#endif
 
 
 namespace eve
@@ -67,26 +68,26 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			static Server *			m_p_server;				///< Unique instance.
+			static Server *			m_p_server;				//!< Unique instance.
 
 
-			FILE *					m_pFile;				///< Log file reference.
+			FILE *					m_pFile;				//!< Log file reference.
 
-			char *					m_pBuff;				///< Default buffer, to store the current message.		
-			size_t					m_buffSize;				///< Size of the default message-storing buffer.						
-			uint32_t				m_currentMsgType;		///< Type of the current message.
+			char *					m_pBuff;				//!< Default buffer, to store the current message.		
+			size_t					m_buffSize;				//!< Size of the default message-storing buffer.						
+			uint32_t				m_currentMsgType;		//!< Type of the current message.
 
-			handlerMethod			m_pHandlerError;		///< Error messages method pointer.
-			handlerMethod			m_pHandlerWarning;		///< Warning messages method pointer.
-			handlerMethod			m_pHandlerInfo;			///< Information messages method pointer.
-			handlerMethod			m_pHandlerProgress;		///< Progress messages method pointer.
-			handlerMethod			m_pHandlerDebug;		///< Debug messages method pointer.
+			handlerMethod			m_pHandlerError;		//!< Error messages method pointer.
+			handlerMethod			m_pHandlerWarning;		//!< Warning messages method pointer.
+			handlerMethod			m_pHandlerInfo;			//!< Information messages method pointer.
+			handlerMethod			m_pHandlerProgress;		//!< Progress messages method pointer.
+			handlerMethod			m_pHandlerDebug;		//!< Debug messages method pointer.
 
-			void *					m_pStreamError;			///< Error message stream.
-			void *					m_pStreamWarning;		///< Warning message stream.
-			void *					m_pStreamInfo;			///< Info message stream.
-			void *					m_pStreamProgress;		///< Progress message stream.
-			void *					m_pStreamDebug;			///< Debug message stream.
+			void *					m_pStreamError;			//!< Error message stream.
+			void *					m_pStreamWarning;		//!< Warning message stream.
+			void *					m_pStreamInfo;			//!< Info message stream.
+			void *					m_pStreamProgress;		//!< Progress message stream.
+			void *					m_pStreamDebug;			//!< Debug message stream.
 
 
 			//////////////////////////////////////
@@ -125,10 +126,10 @@ namespace eve
 			static void default_log_in_file_info(const char *format, ...);
 			/** \brief Default in file warning log method. */
 			static void default_log_in_file_warning(const char *format, ...);
-			/** \brief Default in file debug log method. */
-			static void default_log_in_file_debug(const char *format, ...);
 			/** \brief Default in file progress log method. */
 			static void default_log_in_file_progress(const char *format, ...);
+			/** \brief Default in file debug log method. */
+			static void default_log_in_file_debug(const char *format, ...);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -136,6 +137,10 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////
 
 		public:
+			/** \brief Set log in file or not, if not than log in console if in DEBUG mode. */
+			static void set_log_in_file(bool p_bLogInFile);
+
+
 			/** \brief Set the error msg handler. */
 			static void set_error_handler(handlerMethod p_method);
 			/** \brief Set the warning msg handler. */
@@ -175,6 +180,19 @@ namespace eve
 			/** \brief Redirect all the messages target file \p_pFile. */
 			static void set_msg_stream(FILE * p_pFile);
 
+			/** \brief Redirect the error messages to target file path \p_path. */
+			static bool set_error_stream_path(const std::string & p_path);
+			/** \brief Redirect the warning messages to target file path \p_path. */
+			static bool set_warning_stream_path(const std::string & p_path);
+			/** \brief Redirect the info messages to target file path \p_path. */
+			static bool set_info_stream_path(const std::string & p_path);
+			/** \brief Redirect the progress messages to target file path \p_path. */
+			static bool set_progress_stream_path(const std::string & p_path);
+			/** \brief Redirect the debug messages to target file path \p_path. */
+			static bool set_debug_stream_path(const std::string & p_path);
+			/** \brief Redirect all the messages target file path \p_path. */
+			static bool set_msg_stream_path(const std::string & p_path);
+
 			/** \brief Get the current (FILE*) error stream. */
 			static FILE * get_error_stream(void);
 			/** \brief Get the current (FILE*) warning stream. */
@@ -185,7 +203,7 @@ namespace eve
 			static FILE * get_progress_stream(void);
 			/** \brief Get the current (FILE*) debug stream. */
 			static FILE * get_debug_stream(void);
-
+			
 		}; // class Server
 
 	} // namespace messaging
@@ -392,11 +410,6 @@ static char * native_get_log_file_path( void );
 #define EVE_FLUSH native_msg_handler_flush
 /** \brief Instanciation of the EVE_FLUSH handler. */
 void native_msg_handler_flush( void );
-
-/** \brief A message handler which ignores the incoming message. */
-#define EVE_IGNORE native_msg_handler_ignore
-/** \brief Instanciation of the EVE_IGNORE handler. */
-void native_msg_handler_ignore( void );
 
 /* TODO: EVE_QUEUE, EVE_RELEASE_QUEUE_AFTER_NEXT */
 

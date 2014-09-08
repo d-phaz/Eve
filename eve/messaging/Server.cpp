@@ -32,6 +32,8 @@
 // Main header
 #include "Eve/messaging/Server.h"
 
+#define EVE_DEFAULT_STDBUFF_SIZE 2048
+
 
 eve::messaging::Server * eve::messaging::Server::m_p_server = nullptr;
 
@@ -46,7 +48,7 @@ eve::messaging::Server * eve::messaging::Server::create_instance(const std::stri
 
 	if (p_logFilePath.size() > 0)
 	{
-
+		set_log_in_file(set_msg_stream_path(p_logFilePath));
 	}
 
 	return m_p_server;
@@ -100,28 +102,23 @@ void eve::messaging::Server::init(void)
 	m_pHandlerDebug		= &eve::messaging::Server::default_log_error;
 
 
+	// Allocate default buffer
+	m_pBuff				= (char*)calloc(EVE_DEFAULT_STDBUFF_SIZE, sizeof(char));
+	// Set related values.
+	m_buffSize			= EVE_DEFAULT_STDBUFF_SIZE;
+	m_currentMsgType	= EVE_MSG_NULL;
 
-
-	// Allocate standard buffer.
-	if ((m_pBuff = (char*)calloc(EVE_DEFAULT_STDBUFF_SIZE, sizeof(char))) == NULL)
-	{
-		exit(0);
-	}
-	/* Set the related values */
-	m_buffSize = EVE_DEFAULT_STDBUFF_SIZE;
-	m_currentMsgType = EVE_MSG_NULL;
-
-	/* Set the default handler */
-	m_pHandlerError = m_pHandlerWarning = m_pHandlerInfo = m_pHandlerProgress = EVE_FLUSH;
-#ifndef NDEBUG
-	/* Initialize the debug mask to "all messages" */
-	m_pHandlerDebug = EVE_FLUSH;
-	debugMask = EVE_DEBUG_ALL;
-#else
-	/* Initialize the debug mask to "none" */
-	m_pHandlerDebug = EVE_IGNORE;
-	debugMask = EVE_DEBUG_NONE;
-#endif
+//	/* Set the default handler */
+//	m_pHandlerError = m_pHandlerWarning = m_pHandlerInfo = m_pHandlerProgress = EVE_FLUSH;
+//#ifndef NDEBUG
+//	/* Initialize the debug mask to "all messages" */
+//	m_pHandlerDebug = EVE_FLUSH;
+//	debugMask = EVE_DEBUG_ALL;
+//#else
+//	/* Initialize the debug mask to "none" */
+//	m_pHandlerDebug = EVE_IGNORE;
+//	debugMask = EVE_DEBUG_NONE;
+//#endif
 
 	/* Initialize the stack */
 	msgStack = NULL;
@@ -211,8 +208,8 @@ void eve::messaging::Server::default_log_in_file_error(const char *format, ...)
 	va_list arg;
 
 	va_start(arg, format);
-	fprintf((FILE*)get_error_stream(), format, arg);
-	fflush((FILE*)get_error_stream());
+	fprintf(get_error_stream(), format, arg);
+	fflush(get_error_stream());
 }
 
 //=================================================================================================
@@ -221,8 +218,8 @@ void eve::messaging::Server::default_log_in_file_info(const char *format, ...)
 	va_list arg;
 
 	va_start(arg, format);
-	fprintf((FILE*)get_info_stream(), format, arg);
-	fflush((FILE*)get_info_stream());
+	fprintf(get_info_stream(), format, arg);
+	fflush(get_info_stream());
 }
 
 //=================================================================================================
@@ -231,8 +228,8 @@ void eve::messaging::Server::default_log_in_file_warning(const char *format, ...
 	va_list arg;
 
 	va_start(arg, format);
-	fprintf((FILE*)get_warning_stream(), format, arg);
-	fflush((FILE*)get_warning_stream());
+	fprintf(get_warning_stream(), format, arg);
+	fflush(get_warning_stream());
 }
 
 //=================================================================================================
@@ -241,8 +238,8 @@ void eve::messaging::Server::default_log_in_file_debug(const char *format, ...)
 	va_list arg;
 
 	va_start(arg, format);
-	fprintf((FILE*)get_debug_stream(), format, arg);
-	fflush((FILE*)get_debug_stream());
+	fprintf(get_debug_stream(), format, arg);
+	fflush(get_debug_stream());
 }
 
 //=================================================================================================
@@ -251,8 +248,146 @@ void eve::messaging::Server::default_log_in_file_progress(const char *format, ..
 	va_list arg;
 
 	va_start(arg, format);
-	fprintf((FILE*)get_progress_stream(), format, arg);
-	fflush((FILE*)get_progress_stream());
+	fprintf(get_progress_stream(), format, arg);
+	fflush(get_progress_stream());
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::messaging::Server::set_log_in_file(bool p_bLogInFile)
+{
+#if !defined(NDEBUG)
+	EVE_ASSERT(!p_bLogInFile);
+
+	// Default mode -> log in console if not in Release mode, else do nothing.
+	m_p_server->m_pHandlerError		= &eve::messaging::Server::default_log_error;
+	m_p_server->m_pHandlerWarning	= &eve::messaging::Server::default_log_error;
+	m_p_server->m_pHandlerInfo		= &eve::messaging::Server::default_log_error;
+	m_p_server->m_pHandlerProgress	= &eve::messaging::Server::default_log_error;
+	m_p_server->m_pHandlerDebug		= &eve::messaging::Server::default_log_error;
+#else
+
+	if (p_bLogInFile)
+	{
+		m_p_server->m_pHandlerError		= &eve::messaging::Server::default_log_in_file_error;
+		m_p_server->m_pHandlerWarning	= &eve::messaging::Server::default_log_in_file_info;
+		m_p_server->m_pHandlerInfo		= &eve::messaging::Server::default_log_in_file_warning;
+		m_p_server->m_pHandlerProgress	= &eve::messaging::Server::default_log_in_file_progress;
+		m_p_server->m_pHandlerDebug		= &eve::messaging::Server::default_log_in_file_debug;
+	}
+	else
+	{
+		m_p_server->m_pHandlerError		= &eve::messaging::Server::default_log_error;
+		m_p_server->m_pHandlerWarning	= &eve::messaging::Server::default_log_error;
+		m_p_server->m_pHandlerInfo		= &eve::messaging::Server::default_log_error;
+		m_p_server->m_pHandlerProgress	= &eve::messaging::Server::default_log_error;
+		m_p_server->m_pHandlerDebug		= &eve::messaging::Server::default_log_error;
+	}
+
+#endif
+}
+
+
+
+//=================================================================================================
+bool eve::messaging::Server::set_error_stream_path(const std::string & p_path)
+{
+	bool bret = false;
+
+	if (eve::files::exists(p_path))
+	{
+		FILE * file = fopen(p_path.c_str(), "w+");
+		set_error_stream(file);
+
+		bret = true;
+	}
+
+	return bret;
+}
+
+//=================================================================================================
+bool eve::messaging::Server::set_warning_stream_path(const std::string & p_path)
+{
+	bool bret = false;
+
+	if (eve::files::exists(p_path))
+	{
+		FILE * file = fopen(p_path.c_str(), "w+");
+		set_warning_stream(file);
+
+		bret = true;
+	}
+
+	return bret;
+}
+
+//=================================================================================================
+bool eve::messaging::Server::set_info_stream_path(const std::string & p_path)
+{
+	bool bret = false;
+
+	if (eve::files::exists(p_path))
+	{
+		FILE * file = fopen(p_path.c_str(), "w+");
+		set_info_stream(file);
+
+		bret = true;
+	}
+
+	return bret;
+}
+
+//=================================================================================================
+bool eve::messaging::Server::set_progress_stream_path(const std::string & p_path)
+{
+	bool bret = false;
+
+	if (eve::files::exists(p_path))
+	{
+		FILE * file = fopen(p_path.c_str(), "w+");
+		set_progress_stream(file);
+
+		bret = true;
+	}
+
+	return bret;
+}
+
+//=================================================================================================
+bool eve::messaging::Server::set_debug_stream_path(const std::string & p_path)
+{
+	bool bret = false;
+
+	if (eve::files::exists(p_path))
+	{
+		FILE * file = fopen(p_path.c_str(), "w+");
+		set_debug_stream(file);
+
+		bret = true;
+	}
+
+	return bret;
+}
+
+//=================================================================================================
+bool eve::messaging::Server::set_msg_stream_path(const std::string & p_path)
+{
+	bool bret = false;
+
+	if (eve::files::exists(p_path))
+	{
+		FILE * file = fopen(p_path.c_str(), "w+");
+		set_msg_stream(file);
+
+		bret = true;
+	}
+
+	return bret;
 }
 
 
@@ -343,7 +478,7 @@ static char *GetCurrentTimeCustom()
 	_ftime64_s( &timebuffer );
 	ctime_s( timeline, 26, & ( timebuffer.time ) );
 	memset(strCurrTime, 0, sizeof(strCurrTime));
-	sprintf_s(strCurrTime, sizeof(strCurrTime), "%.8s.%02hu", &timeline[11], timebuffer.millitm);
+	sprintf(strCurrTime, sizeof(strCurrTime), "%.8s.%02hu", &timeline[11], timebuffer.millitm);
 	//strftime(strCurrTime, sizeof(strCurrTime), "%Y-%m-%d %H:%M:%S", &timestamp);
 
 
@@ -442,11 +577,12 @@ void Server::set_print_timing_status(bool p_bValue)
 /* Handler which flushes the output to the relevant stream */
 void native_msg_handler_flush( void )
 {
-	void (*errorDisplay)( const char *format, ...) = NULL;
-	void (*infoDisplay)( const char *format, ...) = NULL;
-	void (*warningDisplay)( const char *format, ...) = NULL;
-	void (*progressDisplay)( const char *format, ...) = NULL;
-	void (*debugDisplay)( const char *format, ...) = NULL;
+	void (*errorDisplay)( const char *format, ...)		= 0;
+	void (*infoDisplay)( const char *format, ...)		= 0;
+	void (*warningDisplay)( const char *format, ...)	= 0;
+	void (*progressDisplay)( const char *format, ...)	= 0;
+	void (*debugDisplay)( const char *format, ...)		= 0;
+
 	switch ( Server::get_msg_server()->currentMsgType )
 	{
 
@@ -509,13 +645,6 @@ void native_msg_handler_flush( void )
 
 		}
 	}
-	return;
-}
-
-/*********************************************/
-/* Handler which ignores the current message */
-void native_msg_handler_ignore( void )
-{
 	return;
 }
 
