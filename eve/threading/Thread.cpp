@@ -38,6 +38,10 @@
 #include "Eve/threading/Utils.h"
 #endif
 
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "Eve/messaging/Includes.h"
+#endif
+
 
 //=================================================================================================
 eve::threading::Thread::Thread( void )
@@ -119,13 +123,13 @@ void eve::threading::Thread::start(priorities p_priority)
 		// Set thread priority
 		if (!setPriority(p_priority))
 		{
-			// LOG GetLastError
+			EVE_LOG_ERROR("Unable to set thread priority, error is %s", eve::messaging::get_error_msg());
 			EVE_ASSERT_FAILURE
 		}
 
 		if (::ResumeThread(m_hThread) == (DWORD)-1)
 		{
-			// LOG GetLastError.
+			EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::messaging::get_error_msg());
 			EVE_ASSERT_FAILURE
 		}
 
@@ -229,7 +233,7 @@ bool eve::threading::Thread::complete(void)
 			else
 			{
 				bReturn = false;
-				// log something here
+				EVE_LOG_ERROR("Thread ID is non-zero but its exit code is 0, strange behavior!");
 				break;
 			}
 		} //while (true)
