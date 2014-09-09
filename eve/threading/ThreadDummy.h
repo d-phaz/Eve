@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 
 
 #ifndef __EVE_THREADING_THREAD_H__
-#include "Eve/threading/Thread.h"
+#include "eve/threading/Thread.h"
 #endif 
 
 namespace eve

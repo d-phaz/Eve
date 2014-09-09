@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -34,11 +34,11 @@
 #define __EVE_THREADING_CONDITION_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
+#include "eve/core/Includes.h"
 #endif
 
 #ifndef __EVE_THREADING_MUTEX_H__
-#include "Eve/threading/Mutex.h"
+#include "eve/threading/Mutex.h"
 #endif
 
 

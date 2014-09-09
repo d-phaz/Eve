@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -35,31 +35,31 @@
 
 
 #ifndef __EVE_THREADING_CONDITION_H__
-#include "Eve/threading/Condition.h"
+#include "eve/threading/Condition.h"
 #endif
 
 #ifndef __EVE_THREADING_LOCK_H__
-#include "Eve/threading/Lock.h"
+#include "eve/threading/Lock.h"
 #endif 
 
 #ifndef __EVE_THREADING_MUTEX_H__
-#include "Eve/threading/Mutex.h"
+#include "eve/threading/Mutex.h"
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
-#include "Eve/threading/SpinLock.h"
+#include "eve/threading/SpinLock.h"
 #endif 
 
 #ifndef __EVE_THREADING_THREAD_H__
-#include "Eve/threading/Thread.h"
+#include "eve/threading/Thread.h"
 #endif 
 
 #ifndef __EVE_THREADING_THREAD_DUMMY_H__
-#include "Eve/threading/ThreadDummy.h"
+#include "eve/threading/ThreadDummy.h"
 #endif 
 
 #ifndef __EVE_THREADING_UTILS_H__
-#include "Eve/threading/Utils.h"
+#include "eve/threading/Utils.h"
 #endif
 
 

@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,15 @@
 */
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
+#include "eve/core/Includes.h"
 #endif
 
 #ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "Eve/messaging/Includes.h"
+#include "eve/messaging/Includes.h"
 #endif
 
 #ifndef __EVE_THREADING_INCLUDES_H__
-#include "Eve/threading/Includes.h"
+#include "eve/threading/Includes.h"
 #endif
 
 int main(int argc, char **argv)
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 #endif	
 
 	eve::messaging::Server::create_instance();
-	EVE_LOG_INFO("Eve Version: %s", EVE_VERSIONNAME);
+	EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
 	EVE_LOG_INFO("pouet");
 	eve::messaging::Server::release_instance();
 

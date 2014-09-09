@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 
 
 #ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "Eve/core/SystemDefinition.h"
+#include "eve/core/SystemDefinition.h"
 #endif
 
 
@@ -50,6 +50,8 @@
 #include <sstream>
 // x64 compliant integers
 #include <stdint.h>
+// pointers and memory
+#include <memory>
 // assertion
 #include <cassert>
 // standard string
@@ -76,15 +78,15 @@
 
 
 #ifndef __EVE_VERSION_H__
-#include "Eve/version/Version.h"
+#include "eve/version/Version.h"
 #endif
 
 #ifndef __EVE_CORE_MACRO_H__
-#include "Eve/core/Macro.h"
+#include "eve/core/Macro.h"
 #endif
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
-#include "Eve/memory/Includes.h"
+#include "eve/memory/Includes.h"
 #endif
 
 

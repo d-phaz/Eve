@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -35,12 +35,12 @@
 
 
 #ifndef __EVE_MEMORY_POINTER_H__
-#include "Eve/memory/Pointer.h"
+#include "eve/memory/Pointer.h"
 #endif
 
 
 #ifndef __EVE_MEMORY_SCOPED_H__
-#include "Eve/memory/Scoped.h"
+#include "eve/memory/Scoped.h"
 #endif
 
 

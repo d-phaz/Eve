@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -35,12 +35,12 @@
 
 
 #ifndef __EVE_MESSAGING_ERROR_H__
-#include "Eve/messaging/Error.h"
+#include "eve/messaging/Error.h"
 #endif
 
 
 #ifndef __EVE_MESSAGING_SERVER_H__
-#include "Eve/messaging/Server.h"
+#include "eve/messaging/Server.h"
 #endif
 
 

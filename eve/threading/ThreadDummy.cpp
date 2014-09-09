@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,10 @@
 */
 
 // Main header
-#include "Eve/threading/ThreadDummy.h"
+#include "eve/threading/ThreadDummy.h"
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
-#include "Eve/threading/SpinLock.h"
+#include "eve/threading/SpinLock.h"
 #endif 
 
 

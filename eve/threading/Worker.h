@@ -29,43 +29,55 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "eve/threading/Lock.h"
+#pragma once
+#ifndef __EVE_THREADING_WORKER_H__
+#define __EVE_THREADING_WORKER_H__
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
 
-//=============================================================================================
-eve::threading::Lock::Lock(void)
-	// Inheritance
-	: eve::memory::Pointer()
-	// Members init
-	, m_criticalSections()
-{}
-
-
-
-//=================================================================================================
-void eve::threading::Lock::init(void)
+namespace eve
 {
-	memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
-	::InitializeCriticalSection(&m_criticalSections);
-}
+	namespace threading
+	{
 
-//=================================================================================================
-void eve::threading::Lock::release(void)
-{
-	::DeleteCriticalSection(&m_criticalSections);
-}
+		/**
+		* @class eve::threading::Worker
+		*
+		* Abstract base thread worker class.
+		* Workers are the ONLY thread level stored data and should be the basis for any engine.
+		*
+		* @note extends memory::Pointer
+		*/
+		class Worker
+			: public eve::memory::Pointer
+		{
+
+			friend class eve::memory::Pointer;
 
 
-	
-//=============================================================================================
-void eve::threading::Lock::lock(void)
-{
-	::EnterCriticalSection(&m_criticalSections);
-}
-	
-//=============================================================================================
-void eve::threading::Lock::unlock(void)
-{
-	::LeaveCriticalSection(&m_criticalSections);
-}
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(Worker);
+			EVE_PROTECT_DESTRUCTOR(Worker);
+
+		protected:
+			/** Class constructor. */
+			Worker(void);
+
+
+		public:
+			/** Main schedule work method (pure virtual).*/
+			virtual void work(void) = 0;
+
+		}; // Class Worker
+
+	} // namespace threading
+
+} // namespace eve
+
+#endif // __EVE_THREADING_WORKER_H__

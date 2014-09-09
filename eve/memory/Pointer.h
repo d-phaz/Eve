@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 #define __EVE_MEMORY_POINTER_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
+#include "eve/core/Includes.h"
 #endif
 
 
@@ -111,6 +111,24 @@ void eve::memory::Pointer::release_ptr(T * p_pPtr)
 // Convenience MACRO.
 #define EVE_RELEASE_PTR( PTR )	\
 	eve::memory::Pointer::release_ptr(PTR);	\
+	PTR = nullptr;
+
+
+/**
+* \macro EVE_RELEASE_PTR_C
+* \brief Release and nullify standard C++ pointer.
+*/
+#define EVE_RELEASE_PTR_C( PTR )	\
+	free( PTR );					\
+	PTR = 0;
+
+
+/**
+* \macro EVE_RELEASE_PTR_CPP
+* \brief Release and nullify standard C++ pointer.
+*/
+#define EVE_RELEASE_PTR_CPP( PTR )  \
+	delete PTR;						\
 	PTR = nullptr;
 
 #endif //__EVE_MEMORY_POINTER_H__

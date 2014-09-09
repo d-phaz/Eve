@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 #define __EVE_THREADING_UTILS_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
+#include "eve/core/Includes.h"
 #endif
 
 namespace eve
@@ -63,6 +63,11 @@ namespace eve
 		* \return id as DWORD.
 		*/
 		DWORD current_thread_ID(void);
+		/** 
+		* \brief Get current thread handle (void*).
+		* \return handle as HANDLE (void*).
+		*/
+		HANDLE current_thread_handle(void);
 		/**
 		* \brief Compare the thread m_threadID's (inLeft == inRight); return true if they are equal. 
 		* On some OS's DWORD is a struct so == will not work.

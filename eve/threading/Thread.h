@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -36,13 +36,19 @@
 #include <thread>
 
 #ifndef __EVE_CORE_INCLUDES_H__
-#include "Eve/core/Includes.h"
+#include "eve/core/Includes.h"
 #endif
+
+
+namespace eve { namespace threading { class Worker; } }
+namespace eve { namespace threading { class SpinLock; } }
+
 
 namespace eve
 {
 	namespace threading
 	{
+
 		/**
 		* \class eve::threading::Thread
 		*
@@ -51,7 +57,7 @@ namespace eve
 		*
 		* \note extends memory::Pointer
 		*/
-		class Thread
+		class Thread final
 			: public eve::memory::Pointer
 		{
 
@@ -74,16 +80,21 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 	
-		protected:
-			//std::thread *		m_hThread;
-			//std::thread::id		m_threadID;
-			HANDLE				m_hThread;
-			DWORD				m_threadID;
+		private:
+			//std::thread *			m_hThread;					//!< Thread handle (void*).
+			//std::thread::id		m_threadID;					//!< Thread ID (DWORD)
+			HANDLE					m_hThread;					//!< Thread handle (void*).
+			DWORD					m_threadID;					//!< Thread ID (DWORD)
 
-			HANDLE				m_hShutdownEvent;
-			HANDLE				m_StartEvent;
+			HANDLE					m_hShutdownEvent;			//!< Thread shut down event.
+			HANDLE					m_StartEvent;				//!< Thread start event.
 			
-			uint32_t			m_runWait;
+			uint32_t				m_runWait;					//!< Sleep time when testing running() in milliseconds. \sa running()
+
+
+		private:
+			SpinLock *								m_pSpinLock;	//!< Spin lock protecting workers and run loop.
+			std::deque<std::shared_ptr<Worker>> *	m_pWorkers;		//!< Thread workers called in run loop. Workers are added and deleted threw event system.
 
 
 			//////////////////////////////////////
@@ -94,12 +105,12 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(Thread)
 
 
-		protected:
+		private:
 			/** \brief Class constructor. */
 			Thread(void);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** 
@@ -109,21 +120,32 @@ namespace eve
 			virtual void release(void) override;
 
 
-		protected:
-			/** \brief In thread initialization function. (pure virtual) */
-			virtual void inThreadInit(void) = 0;
-			/** \brief In thread release function. (pure virtual) */
-			virtual void inThreadRelease(void) = 0;
+		private:
+			/**
+			* \brief Run is the main loop for this thread. 
+			* \sa start()
+			*/
+			void run(void);
+
+
+		private:
+			/**
+			* \brief Low level function which starts a new thread, called by start().
+			*
+			* The argument should be a pointer to a Thread object.
+			* Calls the virtual run() function for that object.
+			* Upon completing, decrements thread count and resets thread m_threadID.
+			*
+			* If the object is deallocated immediately after calling start(),
+			* such as an object created on the stack that has since gone
+			* out-of-scope, this will obviously fail.
+			*
+			* This must be static in order to work with _beginthread / _beginthreadex / ...
+			*/
+			static uint32_t __stdcall run_wrapper(void * p_pThread);
 
 
 		public:
-			/**
-			* \brief Run is the main loop for this thread. (pure virtual)
-			* Usually this is called by Start(), but may be called directly for single-threaded applications.
-			*/
-			virtual void run(void) = 0;
-
-
 			/**
 			* \brief Start the object's thread execution. Increments thread
 			* count, spawns new thread, and stores thread m_threadID.
@@ -138,30 +160,13 @@ namespace eve
 			void stop( void );
 
 
-		protected:
+		private:
 			/** \brief Terminate thread. */
 			void terminate(void);
 			/** \brief Wait for thread execution (if any) to complete. */
 			bool complete(void);
 			/** \brief Close thread. */
 			void close(void);
-
-
-		private:
-			/**
-			* \brief Low level function which starts a new thread, called by start(). 
-			*
-			* The argument should be a pointer to a Thread object.
-			* Calls the virtual run() function for that object.
-			* Upon completing, decrements thread count and resets thread m_threadID.
-			*
-			* If the object is deallocated immediately after calling start(),
-			* such as an object created on the stack that has since gone
-			* out-of-scope, this will obviously fail.
-			*
-			* This must be static in order to work with _beginthread / _beginthreadex / ...
-			*/
-			static uint32_t __stdcall run_wrapper(void * p_pThread);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -197,7 +202,7 @@ namespace eve
 			bool started( void );
 
 
-		protected:
+		private:
 			/** \brief Set thread started state. */
 			virtual void setStarted ( void );
 			/** \brief Reset thread started state. */

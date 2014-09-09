@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,12 @@
 */
 
 // Main header
-#include "Eve/messaging/Server.h"
+#include "eve/messaging/Server.h"
 
 #include <sys/timeb.h>
 
 #ifndef __EVE_THREADING_INCLUDES_H__
-#include "Eve/threading/Includes.h"
+#include "eve/threading/Includes.h"
 #endif
 
 

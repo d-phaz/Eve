@@ -30,42 +30,12 @@
 */
 
 // Main header
-#include "eve/threading/Lock.h"
+#include "eve/threading/Worker.h"
 
 
-//=============================================================================================
-eve::threading::Lock::Lock(void)
+//=================================================================================================
+eve::threading::Worker::Worker(void)
+
 	// Inheritance
 	: eve::memory::Pointer()
-	// Members init
-	, m_criticalSections()
 {}
-
-
-
-//=================================================================================================
-void eve::threading::Lock::init(void)
-{
-	memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
-	::InitializeCriticalSection(&m_criticalSections);
-}
-
-//=================================================================================================
-void eve::threading::Lock::release(void)
-{
-	::DeleteCriticalSection(&m_criticalSections);
-}
-
-
-	
-//=============================================================================================
-void eve::threading::Lock::lock(void)
-{
-	::EnterCriticalSection(&m_criticalSections);
-}
-	
-//=============================================================================================
-void eve::threading::Lock::unlock(void)
-{
-	::LeaveCriticalSection(&m_criticalSections);
-}

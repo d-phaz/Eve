@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The Eve Project
+ Copyright (c) 2014, The eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -30,16 +30,24 @@
 */
 
 // Main header
-#include "Eve/threading/Thread.h"
+#include "eve/threading/Thread.h"
 
 #include <process.h>
 
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "eve/threading/SpinLock.h"
+#endif 
+
 #ifndef __EVE_THREADING_UTILS_H__
-#include "Eve/threading/Utils.h"
+#include "eve/threading/Utils.h"
+#endif
+
+#ifndef __EVE_THREADING_WORKER_H__
+#include "eve/threading/Worker.h"
 #endif
 
 #ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "Eve/messaging/Includes.h"
+#include "eve/messaging/Includes.h"
 #endif
 
 
@@ -53,8 +61,11 @@ eve::threading::Thread::Thread( void )
 	, m_hThread			( nullptr )
 	, m_hShutdownEvent	( 0 )
 	, m_StartEvent		( 0 )
-	, m_runWait			( 5 ) // milliseconds
+	, m_runWait			( 10 ) // milliseconds
 	, m_threadID		( eve::threading::zero_ID() )
+
+	, m_pSpinLock		( nullptr )
+	, m_pWorkers		( nullptr )
 {}
 
 
@@ -62,6 +73,9 @@ eve::threading::Thread::Thread( void )
 //=================================================================================================
 void eve::threading::Thread::init(void)
 {
+	m_pSpinLock		= EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pWorkers		= new std::deque<std::shared_ptr<eve::threading::Worker>>();
+
 	m_hShutdownEvent	= ::CreateEvent(NULL, TRUE, FALSE, NULL);
 	m_StartEvent		= ::CreateEvent(NULL, TRUE, FALSE, NULL);
 }
@@ -73,6 +87,31 @@ void eve::threading::Thread::release(void)
 	
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
+
+	m_pWorkers->clear();
+	EVE_RELEASE_PTR_CPP(m_pWorkers);
+	
+	EVE_RELEASE_PTR(m_pSpinLock);
+}
+
+
+
+//=================================================================================================
+void eve::threading::Thread::run(void)
+{
+	do 
+	{
+		m_pSpinLock->lock();
+
+		for (auto& it : (*m_pWorkers))
+		{
+			it->work();
+		}
+
+		m_pSpinLock->unlock();
+
+	} while (running());
+
 }
 
 
@@ -80,13 +119,13 @@ void eve::threading::Thread::release(void)
 //=================================================================================================
 uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 {
-	EVE_ASSERT(p_pThread)
+	EVE_ASSERT(p_pThread);
 
 	// Grab and cast thread pointer.
 	eve::threading::Thread * objectPtr = reinterpret_cast<eve::threading::Thread*>(p_pThread);
 
 	// Initialize object local data.
-	objectPtr->inThreadInit();
+	objectPtr->init();
 	// Since initialized, set status to started.
 	objectPtr->setStarted();
 
@@ -94,7 +133,7 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 	objectPtr->run();
 
 	// Uninitialize object local data.
-	objectPtr->inThreadRelease();
+	objectPtr->release();
 	// Since we're out of run loop set status to not started.
 	objectPtr->resetStarted();
 
