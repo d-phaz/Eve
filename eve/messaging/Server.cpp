@@ -34,10 +34,6 @@
 
 #include <sys/timeb.h>
 
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "eve/threading/Includes.h"
-#endif
-
 
 
 //=================================================================================================

@@ -41,7 +41,9 @@
 #include "eve/files/Includes.h"
 #endif
 
-namespace eve { namespace threading { class Mutex; } }
+#ifndef __EVE_THREADING_INCLUDES_H__
+#include "eve/threading/Includes.h"
+#endif
 
 namespace eve
 {
@@ -215,18 +217,20 @@ namespace eve
 
 
 //=================================================================================================
-inline void eve::messaging::Server::set_error_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerError		= p_method; }
-inline void eve::messaging::Server::set_warning_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerWarning		= p_method; }
-inline void eve::messaging::Server::set_info_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerInfo		= p_method; }
-inline void eve::messaging::Server::set_progress_handler(handlerMethod p_method)	{ m_p_server->m_pHandlerProgress	= p_method; }
-inline void eve::messaging::Server::set_debug_handler(handlerMethod p_method)		{ m_p_server->m_pHandlerDebug		= p_method; }
+inline void eve::messaging::Server::set_error_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerError	= p_method; 	m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_warning_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerWarning	= p_method; 	m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_info_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerInfo		= p_method; 	m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_progress_handler(handlerMethod p_method)	{ m_p_mutex->lock(); m_p_server->m_pHandlerProgress = p_method;		m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_debug_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerDebug	= p_method; 	m_p_mutex->unlock(); }
 inline void eve::messaging::Server::set_msg_handler(handlerMethod p_method)
-{ 
+{
+	m_p_mutex->lock();
 	m_p_server->m_pHandlerError		= p_method; 
 	m_p_server->m_pHandlerWarning	= p_method;
 	m_p_server->m_pHandlerInfo		= p_method;
 	m_p_server->m_pHandlerProgress	= p_method;
 	m_p_server->m_pHandlerDebug		= p_method;
+	m_p_mutex->unlock();
 }
 
 //=================================================================================================
@@ -239,18 +243,20 @@ inline eve::messaging::Server::handlerMethod eve::messaging::Server::get_debug_h
 
 
 //=================================================================================================
-inline void eve::messaging::Server::set_error_stream(FILE * p_pFile)		{ m_p_server->m_pStreamError	= p_pFile; }
-inline void eve::messaging::Server::set_warning_stream(FILE * p_pFile)		{ m_p_server->m_pStreamWarning	= p_pFile; }
-inline void eve::messaging::Server::set_info_stream(FILE * p_pFile)			{ m_p_server->m_pStreamInfo		= p_pFile; }
-inline void eve::messaging::Server::set_progress_stream(FILE * p_pFile)		{ m_p_server->m_pStreamProgress = p_pFile; }
-inline void eve::messaging::Server::set_debug_stream(FILE * p_pFile)		{ m_p_server->m_pStreamDebug	= p_pFile; }
+inline void eve::messaging::Server::set_error_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamError		= p_pFile;		m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_warning_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamWarning	= p_pFile; 		m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_info_stream(FILE * p_pFile)			{ m_p_mutex->lock(); m_p_server->m_pStreamInfo		= p_pFile;		m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_progress_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamProgress	= p_pFile; 		m_p_mutex->unlock(); }
+inline void eve::messaging::Server::set_debug_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamDebug		= p_pFile;		m_p_mutex->unlock(); }
 inline void eve::messaging::Server::set_msg_stream(FILE * p_pFile)			
 { 
+	m_p_mutex->lock();
 	m_p_server->m_pStreamError		= p_pFile;
 	m_p_server->m_pStreamWarning	= p_pFile;
 	m_p_server->m_pStreamInfo		= p_pFile;
 	m_p_server->m_pStreamProgress	= p_pFile;
 	m_p_server->m_pStreamDebug		= p_pFile;
+	m_p_mutex->unlock();
 }
 
 //=================================================================================================

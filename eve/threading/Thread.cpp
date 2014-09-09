@@ -122,16 +122,12 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 	// Grab and cast thread pointer.
 	eve::threading::Thread * objectPtr = reinterpret_cast<eve::threading::Thread*>(p_pThread);
 
-	// Initialize object local data.
-	//objectPtr->init();
 	// Since initialized, set status to started.
 	objectPtr->setStarted();
 
 	// Run thread (pure virtual function).
 	objectPtr->run();
 
-	// Uninitialize object local data.
-	//objectPtr->release();
 	// Since we're out of run loop set status to not started.
 	objectPtr->resetStarted();
 
