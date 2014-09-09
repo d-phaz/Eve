@@ -50,7 +50,7 @@ namespace eve
 		/**
 		* \class eve::messaging::Server
 		*
-		* \brief holds and manages creation and redirection of error/warning/info/debug messages.
+		* \brief Holds and manages creation and redirection of error/warning/info/debug messages.
 		*
 		* \note extends memory::Pointer
 		*/

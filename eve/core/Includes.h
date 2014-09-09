@@ -53,7 +53,7 @@
 // assertion
 #include <cassert>
 // standard string
-#include <string.h>
+#include <string>
 // list types
 #include <list>
 #include <queue>

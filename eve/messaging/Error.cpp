@@ -36,7 +36,7 @@
 #if defined(EVE_OS_WIN)
 
 	//=================================================================================================
-	std::string getErrorMsg(DWORD p_err)
+	std::string eve::messaging::get_error_msg(DWORD p_err)
 	{
 		std::string returnString;
 
@@ -76,9 +76,9 @@
 	}
 
 	//=================================================================================================
-	std::string getErrorMsg(void)
+	std::string eve::messaging::get_error_msg(void)
 	{
-		return getErrorMsg( ::GetLastError() );
+		return eve::messaging::get_error_msg(::GetLastError());
 	}
 
 #endif // defined(EVE_OS_WIN)
