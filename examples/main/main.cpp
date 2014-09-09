@@ -50,7 +50,6 @@ int main(int argc, char **argv)
 
 	eve::messaging::Server::create_instance();
 	EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
-	EVE_LOG_INFO("pouet");
 	eve::messaging::Server::release_instance();
 
 

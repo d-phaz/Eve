@@ -47,15 +47,21 @@ eve::threading::ThreadDummy::ThreadDummy(void)
 
 
 //=================================================================================================
-void eve::threading::ThreadDummy::inThreadInit(void)
+void eve::threading::ThreadDummy::init(void)
 {
+	// Call parent class
+	eve::threading::Thread::init();
+
 	m_pLock = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
 
 //=================================================================================================
-void eve::threading::ThreadDummy::inThreadRelease(void)
+void eve::threading::ThreadDummy::release(void)
 {
 	EVE_RELEASE_PTR(m_pLock);
+
+	// Call parent class
+	eve::threading::Thread::release();
 }
 
 //=================================================================================================

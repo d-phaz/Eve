@@ -77,10 +77,13 @@ namespace eve
 
 
 		protected:
-			/** \brief In thread initialization function. (pure virtual) */
-			virtual void inThreadInit(void) override;
-			/** \brief In thread release function. (pure virtual) */
-			virtual void inThreadRelease(void) override;
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/**
+			* \brief Release and delete class members. (pure virtual)
+			* Stop this object's thread execution (if any) immediately
+			*/
+			virtual void release(void) override;
 
 
 		public:

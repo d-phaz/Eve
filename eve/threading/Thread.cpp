@@ -82,9 +82,7 @@ void eve::threading::Thread::init(void)
 
 //=================================================================================================
 void eve::threading::Thread::release(void)
-{
-	this->stop();
-	
+{	
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
 
@@ -125,7 +123,7 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 	eve::threading::Thread * objectPtr = reinterpret_cast<eve::threading::Thread*>(p_pThread);
 
 	// Initialize object local data.
-	objectPtr->init();
+	//objectPtr->init();
 	// Since initialized, set status to started.
 	objectPtr->setStarted();
 
@@ -133,7 +131,7 @@ uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
 	objectPtr->run();
 
 	// Uninitialize object local data.
-	objectPtr->release();
+	//objectPtr->release();
 	// Since we're out of run loop set status to not started.
 	objectPtr->resetStarted();
 

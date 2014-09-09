@@ -57,7 +57,7 @@ namespace eve
 		*
 		* \note extends memory::Pointer
 		*/
-		class Thread final
+		class Thread
 			: public eve::memory::Pointer
 		{
 
@@ -105,12 +105,12 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(Thread)
 
 
-		private:
+		protected:
 			/** \brief Class constructor. */
 			Thread(void);
 
 
-		private:
+		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** 
@@ -120,12 +120,12 @@ namespace eve
 			virtual void release(void) override;
 
 
-		private:
+		protected:
 			/**
 			* \brief Run is the main loop for this thread. 
 			* \sa start()
 			*/
-			void run(void);
+			virtual void run(void);
 
 
 		private:
