@@ -34,6 +34,10 @@
 #define __EVE_EVT_INCLUDES_H__
 
 
+#ifndef __EVE_EVT_EVENT_H__
+#include "eve/evt/Event.h"
+#endif
+
 #ifndef __EVE_EVT_TEVENT_H__
 #include "eve/evt/TEvent.h"
 #endif
