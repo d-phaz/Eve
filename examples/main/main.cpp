@@ -48,12 +48,25 @@ int main(int argc, char **argv)
 	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
 #endif	
 
+
+	//-------------------------------------------
+
+
+	// Messaging example //
+
 	eve::messaging::Server::create_instance();
 	EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
+	EVE_LOG_WARNING("Warning level %i.", 3);
+	EVE_LOG_PROGRESS("App execution in progress.");
+	EVE_LOG_DEBUG("Woups... debug log info.");
+	EVE_LOG_ERROR("Any error occured?");
 	eve::messaging::Server::release_instance();
 
 
-	// Pointer example //
+	//-------------------------------------------
+
+
+	// Thread Pointer example //
 
 	// Create thread pointer.
 	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
@@ -68,7 +81,7 @@ int main(int argc, char **argv)
 	//-------------------------------------------
 
 
-	// Scoped pointer example //
+	// Thread Scoped pointer example //
 
 	// Create scoped thread pointer.
 	eve::memory::Scoped<eve::threading::ThreadDummy> scThr;

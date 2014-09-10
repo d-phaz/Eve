@@ -208,6 +208,7 @@ void eve::messaging::Server::default_log_info(const char *funcName, const char *
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(stderr, mess.c_str(), arg);
@@ -234,6 +235,7 @@ void eve::messaging::Server::default_log_warning(const char *funcName, const cha
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(stderr, mess.c_str(), arg);
@@ -260,6 +262,7 @@ void eve::messaging::Server::default_log_progress(const char *funcName, const ch
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(stderr, mess.c_str(), arg);
@@ -286,6 +289,7 @@ void eve::messaging::Server::default_log_debug(const char *funcName, const char 
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(stderr, mess.c_str(), arg);
@@ -312,6 +316,7 @@ void eve::messaging::Server::default_log_in_file_error(const char *funcName, con
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(get_error_stream(), mess.c_str(), arg);
@@ -334,6 +339,7 @@ void eve::messaging::Server::default_log_in_file_info(const char *funcName, cons
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(get_info_stream(), mess.c_str(), arg);
@@ -356,6 +362,7 @@ void eve::messaging::Server::default_log_in_file_warning(const char *funcName, c
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(get_warning_stream(), mess.c_str(), arg);
@@ -378,6 +385,7 @@ void eve::messaging::Server::default_log_in_file_progress(const char *funcName, 
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(get_progress_stream(), mess.c_str(), arg);
@@ -400,6 +408,7 @@ void eve::messaging::Server::default_log_in_file_debug(const char *funcName, con
 	mess += funcName;
 	mess += " ";
 	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
 	vfprintf(get_debug_stream(), mess.c_str(), arg);
