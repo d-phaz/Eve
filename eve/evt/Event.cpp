@@ -3,181 +3,113 @@
 #include "evt/Event.h"
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//		eve::evt::CoreEvents class
+//		KEY EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-eve::evt::TEvent<eve::evt::KeyEventArgs> 			eve::evt::CoreEvents::keyPressed;
-eve::evt::TEvent<eve::evt::KeyEventArgs> 			eve::evt::CoreEvents::keyReleased;
-eve::evt::TEvent<eve::evt::KeyEventArgs> 			eve::evt::CoreEvents::textInput;
-
-eve::evt::TEvent<eve::evt::MouseEventArgs> 			eve::evt::CoreEvents::mousePassiveMotion;
-eve::evt::TEvent<eve::evt::MouseEventArgs> 			eve::evt::CoreEvents::mouseMotion;
-eve::evt::TEvent<eve::evt::MouseEventArgs> 			eve::evt::CoreEvents::mouseDown;
-eve::evt::TEvent<eve::evt::MouseEventArgs>			eve::evt::CoreEvents::mouseDoubleClick;
-eve::evt::TEvent<eve::evt::MouseEventArgs> 			eve::evt::CoreEvents::mouseUp;
-eve::evt::TEvent<eve::evt::Args>					eve::evt::CoreEvents::mouseEnter;
-eve::evt::TEvent<eve::evt::Args>					eve::evt::CoreEvents::mouseLeave;
-
-eve::evt::TEvent<eve::evt::TouchEventArgs>			eve::evt::CoreEvents::touchDown;
-eve::evt::TEvent<eve::evt::TouchEventArgs>			eve::evt::CoreEvents::touchUp;
-eve::evt::TEvent<eve::evt::TouchEventArgs>			eve::evt::CoreEvents::touchMoved;
-eve::evt::TEvent<eve::evt::TouchEventArgs>			eve::evt::CoreEvents::touchDoubleTap;
-eve::evt::TEvent<eve::evt::TouchEventArgs>			eve::evt::CoreEvents::touchCancelled;
-
-eve::evt::TEvent<eve::evt::ResizeEventArgs> 		eve::evt::CoreEvents::windowResized;
-
-eve::evt::TEvent<void>								eve::evt::CoreEvents::focusGot;
-eve::evt::TEvent<void>								eve::evt::CoreEvents::focusLost;
-
-eve::evt::TEvent<void>								eve::evt::CoreEvents::idle;
-eve::evt::TEvent<void>								eve::evt::CoreEvents::display;
-
-eve::evt::TEvent<void>								eve::evt::CoreEvents::close;
-
-eve::evt::TEvent<void>								eve::evt::CoreEvents::applicationExit;
-
 
 //=================================================================================================
-void eve::evt::CoreEvents::disable( void )
+void eve::evt::enable_events_key(void)
 {
-	keyPressed.disable();
-	keyReleased.disable();
-	textInput.disable();
-	mouseEnter.disable();
-	mouseLeave.disable();
-	mouseMotion.disable();
-	mouseUp.disable();
-	mouseDown.disable();
-	mousePassiveMotion.disable();
-	touchDown.disable();
-	touchUp.disable();
-	touchMoved.disable();
-	touchDoubleTap.disable();
-	touchCancelled.disable();
-	windowResized.disable();
-	focusGot.disable();
-	focusLost.disable();
-	idle.disable();
-	display.disable();
-	close.disable();
-	applicationExit.disable();
+	eve::evt::keyPressed.enable();
+	eve::evt::keyReleased.enable();
+	eve::evt::keyInput.enable();
 }
 
 //=================================================================================================
-void eve::evt::CoreEvents::enable( void )
+void disable_events_key(void)
 {
-	keyPressed.enable();
-	keyReleased.enable();
-	textInput.enable();
-	mouseEnter.enable();
-	mouseLeave.enable();
-	mouseMotion.enable();
-	mouseUp.enable();
-	mouseDown.enable();
-	mousePassiveMotion.enable();
-	touchDown.enable();
-	touchUp.enable();
-	touchMoved.enable();
-	touchDoubleTap.enable();
-	touchCancelled.enable();
-	focusGot.enable();
-	focusLost.enable();
-	idle.enable();
-	display.enable();
-	close.enable();
-	applicationExit.enable();
+	eve::evt::keyPressed.disable();
+	eve::evt::keyReleased.disable();
+	eve::evt::keyInput.disable();
 }
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		Event notification
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 //=================================================================================================
-void eve::evt::notify_key_pressed( uint8_t key )
+void eve::evt::notify_key_pressed(uint8_t p_key)
 {
 	static eve::evt::KeyEventArgs keyEventArgs;
 
-	keyEventArgs.key = key;
-	eve::evt::notify_event( CoreEvents::keyPressed, keyEventArgs );
+	keyEventArgs.key = p_key;
+	eve::evt::notify_event(eve::evt::keyPressed, keyEventArgs);
 }
 
 //=================================================================================================
-void eve::evt::notify_key_released( uint8_t key )
+void eve::evt::notify_key_released(uint8_t p_key)
 {
 	static eve::evt::KeyEventArgs keyEventArgs;
 
-	keyEventArgs.key = key;
-	eve::evt::notify_event( CoreEvents::keyReleased, keyEventArgs );
+	keyEventArgs.key = p_key;
+	eve::evt::notify_event(eve::evt::keyReleased, keyEventArgs);
 }
 
 //=================================================================================================
-void eve::evt::notify_text_input( uint8_t key )
+void eve::evt::notify_key_input( uint8_t p_key )
 {
 	static eve::evt::KeyEventArgs keyEventArgs;
 
-	keyEventArgs.key = key;
-	eve::evt::notify_event( CoreEvents::textInput, keyEventArgs );
+	keyEventArgs.key = p_key;
+	eve::evt::notify_event(eve::evt::keyInput, keyEventArgs);
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		MOUSE EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 //=================================================================================================
-void eve::evt::notify_key_event( const eve::evt::KeyEventArgs & p_args )
+void eve::evt::enable_events_mouse(void)
 {
-	switch( p_args.type )
-	{
-	case eve::evt::KeyEventArgs::TextInput:
-		eve::evt::notify_text_input( p_args.key );
-		break;
-
-	case eve::evt::KeyEventArgs::Pressed:
-		eve::evt::notify_key_pressed( p_args.key );
-		break;
-
-	case eve::evt::KeyEventArgs::Released:
-		eve::evt::notify_key_released( p_args.key );
-		break;
-	}
+	eve::evt::mousePassiveMotion.enable();		
+	eve::evt::mouseMotion.enable();
+	eve::evt::mouseDown.enable();
+	eve::evt::mouseDoubleClick.enable();
+	eve::evt::mouseUp.enable();
 }
 
-
-
 //=================================================================================================
-void eve::evt::notify_mouse_down( int32_t button, int32_t x, int32_t y )
+void eve::evt::disable_events_mouse(void)
 {
-	static eve::evt::MouseEventArgs mouseEventArgs;
-
-	mouseEventArgs.button	= button;
-	mouseEventArgs.x		= x;
-	mouseEventArgs.y		= y;
-	mouseEventArgs.type		= eve::evt::MouseEventArgs::Pressed;
-	eve::evt::notify_event( CoreEvents::mouseDown, mouseEventArgs );
+	eve::evt::mousePassiveMotion.disable();
+	eve::evt::mouseMotion.disable();
+	eve::evt::mouseDown.disable();
+	eve::evt::mouseDoubleClick.disable();
+	eve::evt::mouseUp.disable();
 }
 
+
+
 //=================================================================================================
-void eve::evt::notify_mouse_up( int32_t button, int32_t x, int32_t y )
+void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
 
-	mouseEventArgs.button	= button;
+	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	mouseEventArgs.type		= eve::evt::MouseEventArgs::Pressed;
-	eve::evt::notify_event( CoreEvents::mouseUp, mouseEventArgs );
+	eve::evt::notify_event(eve::evt::mouseDown, mouseEventArgs);
 }
 
 //=================================================================================================
-void eve::evt::notify_mouse_double_click( int32_t button, int32_t x, int32_t y )
+void eve::evt::notify_mouse_up( int32_t p_button, int32_t x, int32_t y )
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
 
-	mouseEventArgs.button	= button;
+	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	mouseEventArgs.type		= eve::evt::MouseEventArgs::DoubleClick;
-	eve::evt::notify_event( CoreEvents::mouseDoubleClick, mouseEventArgs );
+	eve::evt::notify_event(eve::evt::mouseUp, mouseEventArgs);
+}
+
+//=================================================================================================
+void eve::evt::notify_mouse_double_click( int32_t p_button, int32_t x, int32_t y )
+{
+	static eve::evt::MouseEventArgs mouseEventArgs;
+
+	mouseEventArgs.button	= p_button;
+	mouseEventArgs.x		= x;
+	mouseEventArgs.y		= y;
+	eve::evt::notify_event(eve::evt::mouseDoubleClick, mouseEventArgs);
 }
 
 //=================================================================================================
@@ -187,8 +119,7 @@ void eve::evt::notify_mouse_motion( int32_t x, int32_t y )
 
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	mouseEventArgs.type = eve::evt::MouseEventArgs::Motion;
-	eve::evt::notify_event( CoreEvents::mouseMotion, mouseEventArgs );
+	eve::evt::notify_event(eve::evt::mouseMotion, mouseEventArgs);
 }
 
 //=================================================================================================
@@ -198,116 +129,111 @@ void eve::evt::notify_mouse_passive_motion( int32_t x, int32_t y )
 
 	mouseEventArgs.x = x;
 	mouseEventArgs.y = y;
-	mouseEventArgs.type = eve::evt::MouseEventArgs::PassiveMotion;
-	eve::evt::notify_event( CoreEvents::mousePassiveMotion, mouseEventArgs );
+	eve::evt::notify_event(eve::evt::mousePassiveMotion, mouseEventArgs);
 }
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		TOUCH EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 //=================================================================================================
-void eve::evt::notify_mouse_event( const eve::evt::MouseEventArgs & p_args )
+void eve::evt::enable_events_touch(void)
 {
-	switch( p_args.type )
-	{
-	case eve::evt::MouseEventArgs::PassiveMotion:
-		eve::evt::notify_mouse_passive_motion( p_args.x, p_args.y );
-		break;
+	eve::evt::touchDown.enable();
+	eve::evt::touchUp.enable();
+	eve::evt::touchDoubleTap.enable();
+	eve::evt::touchMoved.enable();
+	eve::evt::touchCanceled.enable();
+}
 
-	case eve::evt::MouseEventArgs::Motion:
-		eve::evt::notify_mouse_motion( p_args.x, p_args.y );
-		break;
+//=================================================================================================
+void eve::evt::disable_events_touch(void)
+{
+	eve::evt::touchDown.disable();
+	eve::evt::touchUp.disable();
+	eve::evt::touchDoubleTap.disable();
+	eve::evt::touchMoved.disable();
+	eve::evt::touchCanceled.disable();
+}
 
-	case eve::evt::MouseEventArgs::Pressed:
-		eve::evt::notify_mouse_down( p_args.button, p_args.x, p_args.y );
-		break;
 
-	case eve::evt::MouseEventArgs::Released:
-		eve::evt::notify_mouse_up( p_args.button, p_args.x, p_args.y );
-		break;
 
-	case eve::evt::MouseEventArgs::DoubleClick:
-		eve::evt::notify_mouse_double_click( p_args.button, p_args.x, p_args.y );
-		break;
-	}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		WINDOW EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::evt::enable_events_window(void)
+{
+	eve::evt::windowResized.enable();
+	eve::evt::windowFocusGot.enable();
+	eve::evt::windowFocusLost.enable();
+	eve::evt::windowClose.enable();
+}
+
+//=================================================================================================
+void eve::evt::disable_events_window(void)
+{
+	eve::evt::windowResized.disable();
+	eve::evt::windowFocusGot.disable();
+	eve::evt::windowFocusLost.disable();
+	eve::evt::windowClose.disable();
 }
 
 
 
 //=================================================================================================
-void eve::evt::notify_window_resize( uint32_t p_width, uint32_t p_height )
+void eve::evt::notify_window_resize(uint32_t p_width, uint32_t p_height)
 {
 	static eve::evt::ResizeEventArgs resizeEventArgs;
 
 	resizeEventArgs.width  = p_width;
 	resizeEventArgs.height = p_height;
-	eve::evt::notify_event( CoreEvents::windowResized, resizeEventArgs );
+	eve::evt::notify_event(eve::evt::windowResized, resizeEventArgs);
 }
 
 //=================================================================================================
-void eve::evt::notify_window_resize_event( const eve::evt::ResizeEventArgs & p_args )
+void eve::evt::notify_window_focus_got(void)
 {
-	eve::evt::notify_window_resize( p_args.width, p_args.height );
-}
-
-
-
-//=================================================================================================
-void eve::evt::notify_focus_got( void )
-{
-	static eve::evt::Args args;
-	eve::evt::notify_event( CoreEvents::focusGot );
+	eve::evt::notify_event(eve::evt::windowFocusGot);
 }
 
 //=================================================================================================
-void eve::evt::notify_focus_lost( void )
+void eve::evt::notify_window_focus_lost(void)
 {
-	eve::evt::notify_event( CoreEvents::focusLost );
+	eve::evt::notify_event(eve::evt::windowFocusLost);
 }
 
-
-
 //=================================================================================================
-void eve::evt::notify_idle( void )
+void eve::evt::notify_window_close(void)
 {
-	eve::evt::notify_event( CoreEvents::idle );
-}
-
-
-
-//=================================================================================================
-void eve::evt::notify_display( void )
-{
-	eve::evt::notify_event( CoreEvents::display );
-}
-
-
-
-//=================================================================================================
-void eve::evt::notify_close( void )
-{
-	eve::evt::notify_event( CoreEvents::close );
-}
-
-
-
-//=================================================================================================
-void eve::evt::notify_app_exit( void )
-{
-	eve::evt::notify_event( CoreEvents::applicationExit );
+	eve::evt::notify_event(eve::evt::windowClose);
 }
 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//		EventListenner class
+//		APPLICATION EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-eve::evt::EventListenner::EventListenner(void)
-{}
+void eve::evt::enable_events_application(void)
+{
+	eve::evt::appExit.enable();
+}
 
 //=================================================================================================
-eve::evt::EventListenner::~EventListenner(void)
-{}
+void eve::evt::disable_events_application(void)
+{
+	eve::evt::appExit.disable();
+}
+
+
 
 //=================================================================================================
-void eve::evt::EventListenner::newControlEventMessage( eve::evt::controlEventArgs & p_eventArgs)
-{}
+void eve::evt::notify_application_exit(void)
+{
+	eve::evt::notify_event(eve::evt::appExit);
+}
