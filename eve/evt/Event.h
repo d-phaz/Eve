@@ -1,25 +1,44 @@
 
 #pragma once
-#ifndef __EVT_EVENT_H__ 
-#define __EVT_EVENT_H__
+#ifndef __EVE_EVT_EVENT_H__ 
+#define __EVE_EVT_EVENT_H__
 
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
-// External header
-#include <cstdint>
+#ifndef __EVE_EVT_TEVENT_H__
+#include "eve/evt/TEvent.h"
+#endif
 
-// Event header
-#ifndef __EVT_UTILS_H__
-#include "evt/Utils.h"
+#ifndef __EVE_EVT_SERVER_H__
+#include "eve/evt/Server.h"
 #endif
 
 
-namespace evt
+namespace eve
 {
+	namespace evt
+	{
+
+
+	} // namespace evt
+
+} // namespace eve
+
+
+
+
+
+
+
+namespace eve {
+namespace evt{
 
 
 	class EventListenner;
 
-	/** @class evt::Args
+	/** @class eve::evt::Args
 	* This is used to pass the data when notifying events.
 	*/
 	class Args 
@@ -27,7 +46,7 @@ namespace evt
 
 
 	class KeyEventArgs 
-		: public evt::Args 
+		: public eve::evt::Args 
 	{
 	public:
 		enum Type{
@@ -41,7 +60,7 @@ namespace evt
 
 
 	class MouseEventArgs 
-		: public evt::Args 
+		: public eve::evt::Args 
 	{
 	public:
 		enum Type{
@@ -59,7 +78,7 @@ namespace evt
 
 
 	class ResizeEventArgs 
-		: public evt::Args 
+		: public eve::evt::Args 
 	{
 	public:
 		int32_t width;
@@ -68,7 +87,7 @@ namespace evt
 
 
 	class TouchEventArgs 
-		: public evt::Args 
+		: public eve::evt::Args 
 	{
 	public:
 		enum Type{
@@ -98,39 +117,35 @@ namespace evt
 	class CoreEvents
 	{
 	public:
-		static evt::TEvent<evt::KeyEventArgs> 		keyPressed;
-		static evt::TEvent<evt::KeyEventArgs> 		keyReleased;
-		static evt::TEvent<evt::KeyEventArgs> 		textInput;
+		static eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyPressed;
+		static eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyReleased;
+		static eve::evt::TEvent<eve::evt::KeyEventArgs> 		textInput;
 
-		static evt::TEvent<evt::MouseEventArgs> 	mousePassiveMotion;
-		static evt::TEvent<evt::MouseEventArgs> 	mouseMotion;
-		static evt::TEvent<evt::MouseEventArgs> 	mouseDown;
-		static evt::TEvent<evt::MouseEventArgs>		mouseDoubleClick;
-		static evt::TEvent<evt::MouseEventArgs> 	mouseUp;
-		static evt::TEvent<evt::Args>				mouseEnter;
-		static evt::TEvent<evt::Args>				mouseLeave;
+		static eve::evt::TEvent<eve::evt::MouseEventArgs> 	mousePassiveMotion;
+		static eve::evt::TEvent<eve::evt::MouseEventArgs> 	mouseMotion;
+		static eve::evt::TEvent<eve::evt::MouseEventArgs> 	mouseDown;
+		static eve::evt::TEvent<eve::evt::MouseEventArgs>		mouseDoubleClick;
+		static eve::evt::TEvent<eve::evt::MouseEventArgs> 	mouseUp;
+		static eve::evt::TEvent<eve::evt::Args>				mouseEnter;
+		static eve::evt::TEvent<eve::evt::Args>				mouseLeave;
 
-		static evt::TEvent<evt::TouchEventArgs>		touchDown;
-		static evt::TEvent<evt::TouchEventArgs>		touchUp;
-		static evt::TEvent<evt::TouchEventArgs>		touchMoved;
-		static evt::TEvent<evt::TouchEventArgs>		touchDoubleTap;
-		static evt::TEvent<evt::TouchEventArgs>		touchCancelled;
+		static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDown;
+		static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchUp;
+		static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchMoved;
+		static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDoubleTap;
+		static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchCancelled;
 
-		static evt::TEvent<evt::ResizeEventArgs> 	windowResized;
+		static eve::evt::TEvent<eve::evt::ResizeEventArgs> 	windowResized;
 
-		static evt::TEvent<void>					focusGot;
-		static evt::TEvent<void>					focusLost;
+		static eve::evt::TEvent<void>					focusGot;
+		static eve::evt::TEvent<void>					focusLost;
 
-		static evt::TEvent<void>					idle;
-		static evt::TEvent<void>					display;
+		static eve::evt::TEvent<void>					idle;
+		static eve::evt::TEvent<void>					display;
 
-		static evt::TEvent<void>					close;
+		static eve::evt::TEvent<void>					close;
 
-		static evt::TEvent<void>					applicationExit;
-
-
-		static evt::TEvent<evt::ResizeEventArgs> 	pluginResized;
-		static evt::TEvent<evt::ResizeEventArgs> 	setSizeDashboard;
+		static eve::evt::TEvent<void>					applicationExit;
 
 
 		/** \! Disable core events dispatch. */
@@ -146,91 +161,75 @@ namespace evt
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_key_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_key_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::keyPressed,	listener, &ListenerClass::cb_evtKeyboardDown, prio );
-		evt::add_listener( CoreEvents::keyReleased,	listener, &ListenerClass::cb_evtKeyboardUp, prio );
-		evt::add_listener( CoreEvents::textInput,	listener, &ListenerClass::cb_evtTextInput, prio );
+		eve::evt::add_listener( CoreEvents::keyPressed,	listener, &ListenerClass::cb_evtKeyboardDown, prio );
+		eve::evt::add_listener( CoreEvents::keyReleased,	listener, &ListenerClass::cb_evtKeyboardUp, prio );
+		eve::evt::add_listener( CoreEvents::textInput,	listener, &ListenerClass::cb_evtTextInput, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_mouse_events(ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_mouse_events(ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::mouseDown,			listener, &ListenerClass::cb_evtMouseDown, prio );
-		evt::add_listener( CoreEvents::mouseUp,				listener, &ListenerClass::cb_evtMouseUp, prio );
-		evt::add_listener( CoreEvents::mouseDoubleClick,	listener, &ListenerClass::cb_evtMouseDoubleClick, prio );
-		evt::add_listener( CoreEvents::mouseMotion,			listener, &ListenerClass::cb_evtMotion, prio );
-		evt::add_listener( CoreEvents::mousePassiveMotion,	listener, &ListenerClass::cb_evtPassiveMotion, prio );
+		eve::evt::add_listener( CoreEvents::mouseDown,			listener, &ListenerClass::cb_evtMouseDown, prio );
+		eve::evt::add_listener( CoreEvents::mouseUp,				listener, &ListenerClass::cb_evtMouseUp, prio );
+		eve::evt::add_listener( CoreEvents::mouseDoubleClick,	listener, &ListenerClass::cb_evtMouseDoubleClick, prio );
+		eve::evt::add_listener( CoreEvents::mouseMotion,			listener, &ListenerClass::cb_evtMotion, prio );
+		eve::evt::add_listener( CoreEvents::mousePassiveMotion,	listener, &ListenerClass::cb_evtPassiveMotion, prio );
 	}
 
 	////=============================================================================================
 	//template<class ListenerClass>
-	//void register_touch_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	//void register_touch_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	//{
-	//	evt::add_listener( CoreEvents::touchDoubleTap,	listener, &ListenerClass::cb_evtTouchDoubleTap, prio );
-	//	evt::add_listener( CoreEvents::touchDown,		listener, &ListenerClass::cb_evtTouchDown, prio );
-	//	evt::add_listener( CoreEvents::touchMoved,		listener, &ListenerClass::cb_evtTouchMoved, prio );
-	//	evt::add_listener( CoreEvents::touchUp,			listener, &ListenerClass::cb_evtTouchUp, prio );
+	//	eve::evt::add_listener( CoreEvents::touchDoubleTap,	listener, &ListenerClass::cb_evtTouchDoubleTap, prio );
+	//	eve::evt::add_listener( CoreEvents::touchDown,		listener, &ListenerClass::cb_evtTouchDown, prio );
+	//	eve::evt::add_listener( CoreEvents::touchMoved,		listener, &ListenerClass::cb_evtTouchMoved, prio );
+	//	eve::evt::add_listener( CoreEvents::touchUp,			listener, &ListenerClass::cb_evtTouchUp, prio );
 	//}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_window_resize_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_window_resize_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::windowResized, listener, &ListenerClass::cb_evtReshape, prio );
+		eve::evt::add_listener( CoreEvents::windowResized, listener, &ListenerClass::cb_evtReshape, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_focus_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_focus_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::focusGot, listener, &ListenerClass::cb_evtFocusGot, prio );
-		evt::add_listener( CoreEvents::focusLost, listener, &ListenerClass::cb_evtFocusLost, prio );
+		eve::evt::add_listener( CoreEvents::focusGot, listener, &ListenerClass::cb_evtFocusGot, prio );
+		eve::evt::add_listener( CoreEvents::focusLost, listener, &ListenerClass::cb_evtFocusLost, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_close_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_close_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::close, listener, &ListenerClass::cb_evtClose, prio );
+		eve::evt::add_listener( CoreEvents::close, listener, &ListenerClass::cb_evtClose, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_idle_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_idle_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::idle, listener, &ListenerClass::cb_evtIdle, prio );
+		eve::evt::add_listener( CoreEvents::idle, listener, &ListenerClass::cb_evtIdle, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_display_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_display_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::display, listener, &ListenerClass::cb_evtDisplay, prio );
+		eve::evt::add_listener( CoreEvents::display, listener, &ListenerClass::cb_evtDisplay, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void register_application_exit_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void register_application_exit_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::add_listener( CoreEvents::applicationExit, listener, &ListenerClass::cb_evtAppExit, prio );
-	}
-
-
-
-
-	//=============================================================================================
-	template<class ListenerClass>
-	void register_plugin_resize_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
-	{
-		evt::add_listener( CoreEvents::pluginResized, listener, &ListenerClass::cb_evtResizePlugin, prio );
-	}
-	//=============================================================================================
-	template<class ListenerClass>
-	void register_set_size_dashboard_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
-	{
-		evt::add_listener( CoreEvents::setSizeDashboard, listener, &ListenerClass::cb_evtSetSize, prio );
+		eve::evt::add_listener( CoreEvents::applicationExit, listener, &ListenerClass::cb_evtAppExit, prio );
 	}
 
 
@@ -241,91 +240,75 @@ namespace evt
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_key_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_key_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::keyPressed,	listener, &ListenerClass::cb_evtKeyboardDown, prio );
-		evt::remove_listener( CoreEvents::keyReleased,	listener, &ListenerClass::cb_evtKeyboardUp, prio );
-		evt::remove_listener( CoreEvents::textInput,	listener, &ListenerClass::cb_evtTextInput, prio );
+		eve::evt::remove_listener( CoreEvents::keyPressed,	listener, &ListenerClass::cb_evtKeyboardDown, prio );
+		eve::evt::remove_listener( CoreEvents::keyReleased,	listener, &ListenerClass::cb_evtKeyboardUp, prio );
+		eve::evt::remove_listener( CoreEvents::textInput,	listener, &ListenerClass::cb_evtTextInput, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_mouse_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_mouse_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::mouseDown,			listener, &ListenerClass::cb_evtMouseDown, prio );
-		evt::remove_listener( CoreEvents::mouseUp,				listener, &ListenerClass::cb_evtMouseUp, prio );
-		evt::remove_listener( CoreEvents::mouseDoubleClick,		listener, &ListenerClass::cb_evtMouseDoubleClick, prio );
-		evt::remove_listener( CoreEvents::mouseMotion,			listener, &ListenerClass::cb_evtMotion, prio );
-		evt::remove_listener( CoreEvents::mousePassiveMotion,	listener, &ListenerClass::cb_evtPassiveMotion, prio );
+		eve::evt::remove_listener( CoreEvents::mouseDown,			listener, &ListenerClass::cb_evtMouseDown, prio );
+		eve::evt::remove_listener( CoreEvents::mouseUp,				listener, &ListenerClass::cb_evtMouseUp, prio );
+		eve::evt::remove_listener( CoreEvents::mouseDoubleClick,		listener, &ListenerClass::cb_evtMouseDoubleClick, prio );
+		eve::evt::remove_listener( CoreEvents::mouseMotion,			listener, &ListenerClass::cb_evtMotion, prio );
+		eve::evt::remove_listener( CoreEvents::mousePassiveMotion,	listener, &ListenerClass::cb_evtPassiveMotion, prio );
 	}
 
 	////=============================================================================================
 	//template<class ListenerClass>
-	//void unregister_touch_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	//void unregister_touch_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	//{
-	//	evt::remove_listener( CoreEvents::touchDoubleTap,	listener, &ListenerClass::cb_evtTouchDoubleTap, prio );
-	//	evt::remove_listener( CoreEvents::touchDown,		listener, &ListenerClass::cb_evtTouchDown, prio );
-	//	evt::remove_listener( CoreEvents::touchMoved,		listener, &ListenerClass::cb_evtTouchMoved, prio );
-	//	evt::remove_listener( CoreEvents::touchUp,			listener, &ListenerClass::cb_evtTouchUp, prio );
+	//	eve::evt::remove_listener( CoreEvents::touchDoubleTap,	listener, &ListenerClass::cb_evtTouchDoubleTap, prio );
+	//	eve::evt::remove_listener( CoreEvents::touchDown,		listener, &ListenerClass::cb_evtTouchDown, prio );
+	//	eve::evt::remove_listener( CoreEvents::touchMoved,		listener, &ListenerClass::cb_evtTouchMoved, prio );
+	//	eve::evt::remove_listener( CoreEvents::touchUp,			listener, &ListenerClass::cb_evtTouchUp, prio );
 	//}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_window_resize_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_window_resize_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::windowResized, listener, &ListenerClass::cb_evtReshape, prio );
+		eve::evt::remove_listener( CoreEvents::windowResized, listener, &ListenerClass::cb_evtReshape, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_focus_events( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_focus_events( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::focusGot, listener, &ListenerClass::cb_evtFocusGot, prio );
-		evt::remove_listener( CoreEvents::focusLost, listener, &ListenerClass::cb_evtFocusLost, prio );
+		eve::evt::remove_listener( CoreEvents::focusGot, listener, &ListenerClass::cb_evtFocusGot, prio );
+		eve::evt::remove_listener( CoreEvents::focusLost, listener, &ListenerClass::cb_evtFocusLost, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_close_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_close_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::close, listener, &ListenerClass::cb_evtClose, prio );
+		eve::evt::remove_listener( CoreEvents::close, listener, &ListenerClass::cb_evtClose, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_idle_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_idle_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::idle, listener, &ListenerClass::cb_evtIdle, prio );
+		eve::evt::remove_listener( CoreEvents::idle, listener, &ListenerClass::cb_evtIdle, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_display_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_display_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::display, listener, &ListenerClass::cb_evtDisplay, prio );
+		eve::evt::remove_listener( CoreEvents::display, listener, &ListenerClass::cb_evtDisplay, prio );
 	}
 
 	//=============================================================================================
 	template<class ListenerClass>
-	void unregister_application_exit_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
+	void unregister_application_exit_event( ListenerClass * listener, int32_t prio=orderAfterApp  )
 	{
-		evt::remove_listener( CoreEvents::applicationExit, listener, &ListenerClass::cb_evtAppExit, prio );
-	}
-
-
-
-
-	//=============================================================================================
-	template<class ListenerClass>
-	void unregister_plugin_resize_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
-	{
-		evt::remove_listener( CoreEvents::pluginResized, listener, &ListenerClass::cb_evtResizePlugin, prio );
-	}
-	//=============================================================================================
-	template<class ListenerClass>
-	void unregister_set_size_dashboard_event( ListenerClass * listener, int32_t prio=EVENT_ORDER_AFTER_APP  )
-	{
-		evt::remove_listener( CoreEvents::setSizeDashboard, listener, &ListenerClass::cb_evtSetSize, prio );
+		eve::evt::remove_listener( CoreEvents::applicationExit, listener, &ListenerClass::cb_evtAppExit, prio );
 	}
 
 
@@ -336,17 +319,17 @@ namespace evt
 	void notify_key_pressed( uint8_t key );
 	void notify_key_released( uint8_t key );
 	void notify_text_input( uint8_t key );
-	void notify_key_event( const evt::KeyEventArgs & p_args );
+	void notify_key_event( const eve::evt::KeyEventArgs & p_args );
 
 	void notify_mouse_down( int32_t button, int32_t x, int32_t y );
 	void notify_mouse_up( int32_t button, int32_t x, int32_t y );
 	void notify_mouse_double_click( int32_t button, int32_t x, int32_t y );
 	void notify_mouse_motion( int32_t x, int32_t y );
 	void notify_mouse_passive_motion( int32_t x, int32_t y );
-	void notify_mouse_event( const evt::MouseEventArgs & p_args );
+	void notify_mouse_event( const eve::evt::MouseEventArgs & p_args );
 
 	void notify_window_resize( uint32_t p_width, uint32_t p_height );
-	void notify_window_resize_event( const evt::ResizeEventArgs & p_args );
+	void notify_window_resize_event( const eve::evt::ResizeEventArgs & p_args );
 
 	void notify_focus_got( void );
 	void notify_focus_lost( void );
@@ -358,14 +341,6 @@ namespace evt
 	void notify_close( void );
 
 	void notify_app_exit( void );
-
-
-
-	void notify_plugin_resize( int32_t p_width, int32_t p_height );
-	void notify_plugin_resize_event( const evt::ResizeEventArgs & p_args );
-
-	void notify_set_size_dashboard( int32_t p_width, int32_t p_height );
-	void notify_set_size_dashboard_event( const evt::ResizeEventArgs & p_args );
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,6 +521,7 @@ namespace evt
 	};
 
 } // namespace evt
+}
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -555,6 +531,7 @@ namespace evt
 	class VideoPlayer;
 	namespace gl { class TextureData; }
 
+namespace eve {
 namespace evt
 {
 
@@ -563,9 +540,9 @@ namespace evt
 	*
 	* @brief base UIControl event args class
 	*
-	* @note extends evt::Args
+	* @note extends eve::evt::Args
 	*/
-	class controlEventArgs : public evt::Args
+	class controlEventArgs : public eve::evt::Args
 	{
 	public:
 		controlEventType	m_eventType;
@@ -588,28 +565,9 @@ namespace evt
 		uint32_t			m_windowPositionY;
 		uint32_t			m_windowWidth;
 		uint32_t			m_windowHeight;
-
-		// Texture args
-		std::string			m_path;
-		std::string			m_pathSecond;
-		VideoPlayer *		m_pPlayer;
-		gl::TextureData *		m_pTextureData;
 	};
 
-	typedef evt::TEvent<controlEventArgs> controlEvent;
-
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	//		VideoEventArgs class
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-
-	class VideoEventArgs 
-		: public evt::Args 
-	{
-	public:
-		int64_t		Numframe;
-		int64_t		TotalNumframe;
-	};
+	typedef eve::evt::TEvent<controlEventArgs> controlEvent;
 
 
 
@@ -623,11 +581,10 @@ namespace evt
 		EventListenner( void );
 		virtual ~EventListenner( void );
 
-		virtual void newVideoEventMessage( evt::VideoEventArgs & p_eventArgs );
-		virtual void newControlEventMessage( evt::controlEventArgs & p_eventArgs );
+		virtual void newControlEventMessage( eve::evt::controlEventArgs & p_eventArgs );
 	};
 
 
 } // namespace evt
-
-#endif // __EVT_EVENT_H__
+}
+#endif // __EVE_EVT_EVENT_H__

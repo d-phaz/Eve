@@ -51,6 +51,19 @@ set( SOURCE_FILES ${CORE_SRCS} )
 source_group( "Core" FILES ${CORE_SRCS} )
 
 
+# Event.
+#################################################
+set( EVENT_SRCS 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h  )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${EVENT_SRCS} )
+source_group( "Event" FILES ${EVENT_SRCS} )
+
+
 # Files.
 #################################################
 set( FILES_SRCS 
@@ -126,24 +139,53 @@ set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
 
 # Include directories.
 ###################################################################################################		
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../ )	
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../ )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/include )	
 
 
 # Libraries.
-###################################################################################################
+###################################################################################################	 
+link_directories( ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
 
 # Windows 
 #################################################
 if( WIN32 )
 	set( LIBS	
-		 kernel32.lib )
+		 kernel32.lib ) 	 
+
+	if( OPTION_BUILD_TYPE_DEBUG )
+		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x64/Debug )
+		endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+		
+		if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x86/Debug )
+		endif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	endif( OPTION_BUILD_TYPE_DEBUG )	 
+
+	if( OPTION_BUILD_TYPE_RELEASE )
+		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x64/Release )
+		endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+		
+		if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x86/Release )
+		endif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	endif( OPTION_BUILD_TYPE_RELEASE )
 endif( WIN32 )
 
 
 # OSX 
 #################################################
 if( APPLE )		 
-	link_directories( ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
+	# External library directory
+	if( OPTION_BUILD_TYPE_DEBUG )
+		link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_osx/Debug )
+	endif( OPTION_BUILD_TYPE_DEBUG )	 
+
+	if( OPTION_BUILD_TYPE_RELEASE )
+		link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_osx/Release )
+	endif( OPTION_BUILD_TYPE_RELEASE )
 
 	macro( find_required_library TARGET_LIB )
         find_library( FOUND_LIB ${TARGET_LIB} )
@@ -163,6 +205,26 @@ if( APPLE )
     find_required_library( CoreFoundation )
     find_required_library( CoreServices )
     find_required_library( Security )
+endif()
+
+
+# POCO
+#################################################
+add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS )
+if( WIN32 )
+	if( OPTION_BUILD_TYPE_DEBUG )
+		set( LIBS ${LIBS} PocoFoundationmdd.lib ) 
+	else()
+		set( LIBS ${LIBS} PocoFoundationmd.lib )
+	endif()
+endif()
+
+if( APPLE )
+	if( OPTION_BUILD_TYPE_DEBUG )
+		set( LIBS ${LIBS} libPocoFoundationmdd.a ) 
+	else()
+		set( LIBS ${LIBS} libPocoFoundationmd.a )
+	endif()
 endif()
 
 
