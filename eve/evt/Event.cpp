@@ -7,6 +7,10 @@
 //		KEY EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyPressed;			
+eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyReleased;		
+eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyInput;			
+
 //=================================================================================================
 void eve::evt::enable_events_key(void)
 {
@@ -56,6 +60,12 @@ void eve::evt::notify_key_input( uint8_t p_key )
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		MOUSE EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		mousePassiveMotion;	
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseMotion;		
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseDown;			
+eve::evt::TEvent<eve::evt::MouseEventArgs>		mouseDoubleClick;	
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseUp;			
 
 //=================================================================================================
 void eve::evt::enable_events_mouse(void)
@@ -138,6 +148,12 @@ void eve::evt::notify_mouse_passive_motion( int32_t x, int32_t y )
 //		TOUCH EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDown;			
+eve::evt::TEvent<eve::evt::TouchEventArgs>		touchUp;			
+eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDoubleTap;		
+eve::evt::TEvent<eve::evt::TouchEventArgs>		touchMoved;			
+eve::evt::TEvent<eve::evt::TouchEventArgs>		touchCanceled;		
+
 //=================================================================================================
 void eve::evt::enable_events_touch(void)
 {
@@ -163,6 +179,11 @@ void eve::evt::disable_events_touch(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		WINDOW EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+eve::evt::TEvent<eve::evt::ResizeEventArgs> 	windowResized;		
+eve::evt::TEvent<void>							windowFocusGot;		
+eve::evt::TEvent<void>							windowFocusLost;	
+eve::evt::TEvent<void>							windowClose;		
 
 //=================================================================================================
 void eve::evt::enable_events_window(void)
@@ -217,6 +238,8 @@ void eve::evt::notify_window_close(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		APPLICATION EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+eve::evt::TEvent<void>							appExit;			
 
 //=================================================================================================
 void eve::evt::enable_events_application(void)
