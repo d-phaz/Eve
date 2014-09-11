@@ -34,8 +34,6 @@
 #define __EVE_EVT_TDELEGATE_H__
 
 
-#include <Poco/PriorityExpire.h>
-#include <Poco/FunctionPriorityDelegate.h>
 #include <Poco/Mutex.h>
 
 #ifndef __EVE_EVT_TDELEGATE_ABSTRACT_H__
@@ -207,65 +205,6 @@ namespace eve
 		}
 
 
-		template <class TObj, class TArgs>
-		static Poco::PriorityExpire<TArgs> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*, TArgs&), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<TArgs>(TDelegate<TObj, TArgs, true>(pObj, NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		template <class TObj, class TArgs>
-		static Poco::PriorityExpire<TArgs> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(TArgs&), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<TArgs>(TDelegate<TObj, TArgs, false>(pObj, NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		template <class TArgs>
-		static Poco::PriorityExpire<TArgs> priorityDelegate(void(*NotifyMethod)(const void*, TArgs&), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<TArgs>(FunctionPriorityDelegate<TArgs, true, true>(NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		template <class TArgs>
-		static Poco::PriorityExpire<TArgs> priorityDelegate(void(*NotifyMethod)(void*, TArgs&), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return PriorityExpire<TArgs>(FunctionPriorityDelegate<TArgs, true, false>(NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		template <class TArgs>
-		static Poco::PriorityExpire<TArgs> priorityDelegate(void(*NotifyMethod)(TArgs&), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<TArgs>(FunctionPriorityDelegate<TArgs, false>(NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		template <class TArgs>
-		static Poco::FunctionPriorityDelegate<TArgs, true, true> priorityDelegate(void(*NotifyMethod)(const void*, TArgs&), int prio)
-		{
-			return Poco::FunctionPriorityDelegate<TArgs, true, true>(NotifyMethod, prio);
-		}
-
-
-		template <class TArgs>
-		static Poco::FunctionPriorityDelegate<TArgs, true, false> priorityDelegate(void(*NotifyMethod)(void*, TArgs&), int prio)
-		{
-			return Poco::FunctionPriorityDelegate<TArgs, true, false>(NotifyMethod, prio);
-		}
-
-
-		template <class TArgs>
-		static Poco::FunctionPriorityDelegate<TArgs, false> priorityDelegate(void(*NotifyMethod)(TArgs&), int prio)
-		{
-			return Poco::FunctionPriorityDelegate<TArgs, false>(NotifyMethod, prio);
-		}
-
-
-
-
-
 		template <class TObj>
 		static TDelegate<TObj, void> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*), int prio)
 		{
@@ -277,56 +216,6 @@ namespace eve
 		static TDelegate<TObj, void> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(), int prio)
 		{
 			return TDelegate<TObj, void>(pObj, NotifyMethod, prio);
-		}
-
-
-		template <class TObj>
-		static Poco::PriorityExpire<void> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<void>(TDelegate<TObj, void, true>(pObj, NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		template <class TObj>
-		static Poco::PriorityExpire<void> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<void>(TDelegate<TObj, void, false>(pObj, NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		inline Poco::PriorityExpire<void> priorityDelegate(void(*NotifyMethod)(const void*), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<void>(Poco::FunctionPriorityDelegate<void, true, true>(NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		inline Poco::PriorityExpire<void> priorityDelegate(void(*NotifyMethod)(void*), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<void>(Poco::FunctionPriorityDelegate<void, true, false>(NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		inline Poco::PriorityExpire<void> priorityDelegate(void(*NotifyMethod)(), int prio, Poco::Timestamp::TimeDiff expireMilliSec)
-		{
-			return Poco::PriorityExpire<void>(Poco::FunctionPriorityDelegate<void, false>(NotifyMethod, prio), expireMilliSec);
-		}
-
-
-		inline Poco::FunctionPriorityDelegate<void, true, true> priorityDelegate(void(*NotifyMethod)(const void*), int prio)
-		{
-			return Poco::FunctionPriorityDelegate<void, true, true>(NotifyMethod, prio);
-		}
-
-
-		inline Poco::FunctionPriorityDelegate<void, true, false> priorityDelegate(void(*NotifyMethod)(void*), int prio)
-		{
-			return Poco::FunctionPriorityDelegate<void, true, false>(NotifyMethod, prio);
-		}
-
-
-		inline Poco::FunctionPriorityDelegate<void, false> priorityDelegate(void(*NotifyMethod)(), int prio)
-		{
-			return Poco::FunctionPriorityDelegate<void, false>(NotifyMethod, prio);
 		}
 
 	} // namespace evt
