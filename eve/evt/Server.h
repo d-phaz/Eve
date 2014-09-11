@@ -1,10 +1,39 @@
 
+/*
+ Copyright (c) 2014, The eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 #pragma once
 #ifndef __EVE_EVT_SERVER_H__
 #define __EVE_EVT_SERVER_H__
 
 
-#include <Poco/PriorityEvent.h>
 #include <Poco/PriorityDelegate.h>
 
 #ifndef __EVE_CORE_INCLUDES_H__
@@ -170,48 +199,48 @@ namespace eve
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::add_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const void*, ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
-	p_event += Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event += eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::add_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const void*, const ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
-	p_event += Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event += eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::add_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
-	p_event += Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event += eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::add_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
-	p_event += Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event += eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class ListenerClass>
 void eve::evt::add_listener(evt::TEvent<void> & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const void*), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
-	p_event += Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event += eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class ListenerClass>
 void eve::evt::add_listener(evt::TEvent<void> & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(void), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
-	p_event += Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event += eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,42 +251,42 @@ void eve::evt::add_listener(evt::TEvent<void> & p_event, ListenerClass  * p_pLis
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::remove_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const void*, ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::remove_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const void*, const ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::remove_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class EventType, class ArgumentsType, class ListenerClass>
 void eve::evt::remove_listener(EventType & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const ArgumentsType&), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class ListenerClass>
 void eve::evt::remove_listener(evt::TEvent<void> & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(const void*), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 //=================================================================================================
 template <class ListenerClass>
 void eve::evt::remove_listener(evt::TEvent<void> & p_event, ListenerClass  * p_pListener, void (ListenerClass::*listenerMethod)(void), int32_t prio)
 {
-	p_event -= Poco::priorityDelegate(p_pListener, listenerMethod, prio);
+	p_event -= eve::evt::priorityDelegate(p_pListener, listenerMethod, prio);
 }
 
 

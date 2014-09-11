@@ -57,6 +57,9 @@ set( EVENT_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegate.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEventAbstract.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TStrategy.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h  )
 
@@ -130,17 +133,13 @@ source_group( "Threading" FILES ${THREADING_SRCS} )
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version/Version.h.in
                 ${CMAKE_CURRENT_SOURCE_DIR}/version/Version.h )
 set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/version/version.h )
-
-
-# link source files for generation.
-###################################################################################################
-set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
+set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/version/version.h PROPERTIES GENERATED true )
 
 
 # Include directories.
-###################################################################################################		
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../ )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/include )	
+###################################################################################################	
+include_directories( ${BASE_SOURCE_PATH} )
+include_directories( ${BASE_SOURCE_PATH}/external/include )	
 
 
 # Libraries.
@@ -153,25 +152,13 @@ if( WIN32 )
 	set( LIBS	
 		 kernel32.lib ) 	 
 
-	if( OPTION_BUILD_TYPE_DEBUG )
-		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x64/Debug )
-		endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+	if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+		link_directories( ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR} )
+	endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 		
-		if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x86/Debug )
-		endif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-	endif( OPTION_BUILD_TYPE_DEBUG )	 
-
-	if( OPTION_BUILD_TYPE_RELEASE )
-		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x64/Release )
-		endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-		
-		if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-			link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_x86/Release )
-		endif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-	endif( OPTION_BUILD_TYPE_RELEASE )
+	if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+		link_directories( ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR} )
+	endif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
 endif( WIN32 )
 
 
@@ -180,11 +167,11 @@ endif( WIN32 )
 if( APPLE )		 
 	# External library directory
 	if( OPTION_BUILD_TYPE_DEBUG )
-		link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_osx/Debug )
+		link_directories( ${BASE_SOURCE_PATH}/external/lib_osx/Debug )
 	endif( OPTION_BUILD_TYPE_DEBUG )	 
 
 	if( OPTION_BUILD_TYPE_RELEASE )
-		link_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../external/lib_osx/Release )
+		link_directories( ${BASE_SOURCE_PATH}/external/lib_osx/Release )
 	endif( OPTION_BUILD_TYPE_RELEASE )
 
 	macro( find_required_library TARGET_LIB )

@@ -41,6 +41,46 @@
 #include "eve/threading/Includes.h"
 #endif
 
+#ifndef __EVE_EVT_INCLUDES_H__
+#include "eve/evt/Includes.h"
+#endif
+
+
+class Example
+{
+	//////////////////////////////////////
+	//				METHOD				//
+	//////////////////////////////////////
+
+	EVE_DISABLE_COPY(Example);
+
+public:
+	Example(void)
+	{
+		eve::messaging::Server::create_instance();
+		eve::evt::register_events_mouse(this);
+	}
+	virtual ~Example(void)
+	{
+		eve::evt::unregister_events_mouse(this);
+		eve::messaging::Server::release_instance();
+	}
+
+public:
+	void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+	{
+		EVE_LOG_INFO("Mouse Event, button is %i, X is %i, Y is %i.", p_args.button, p_args.x, p_args.y);
+	}
+
+	void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args){}
+	void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args){}
+	void cb_evtMotion(eve::evt::MouseEventArgs & p_args){}
+	void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args){}
+
+};
+
+
+
 int main(int argc, char **argv)
 {
 	// Hide console window in release mode.
@@ -54,13 +94,13 @@ int main(int argc, char **argv)
 
 	// Messaging example //
 
-	eve::messaging::Server::create_instance();
-	EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
-	EVE_LOG_WARNING("Warning level %i.", 3);
-	EVE_LOG_PROGRESS("App execution in progress.");
-	EVE_LOG_DEBUG("Woups... debug log info.");
-	EVE_LOG_ERROR("Any error occured?");
-	eve::messaging::Server::release_instance();
+	//eve::messaging::Server::create_instance();
+	//EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
+	//EVE_LOG_WARNING("Warning level %i.", 3);
+	//EVE_LOG_PROGRESS("App execution in progress.");
+	//EVE_LOG_DEBUG("Woups... debug log info.");
+	//EVE_LOG_ERROR("Any error occured?");
+	//eve::messaging::Server::release_instance();
 
 
 	//-------------------------------------------
@@ -68,14 +108,14 @@ int main(int argc, char **argv)
 
 	// Thread Pointer example //
 
-	// Create thread pointer.
-	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
-	// Start thread.
-	thr->start();
-	// Sleep using microseconds.
-	eve::threading::sleep_micro(1000ULL * 1000ULL);
-	// Release pointer.
-	EVE_RELEASE_PTR(thr);
+	//// Create thread pointer.
+	//eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
+	//// Start thread.
+	//thr->start();
+	//// Sleep using microseconds.
+	//eve::threading::sleep_micro(1000ULL * 1000ULL);
+	//// Release pointer.
+	//EVE_RELEASE_PTR(thr);
 
 
 	//-------------------------------------------
@@ -83,13 +123,22 @@ int main(int argc, char **argv)
 
 	// Thread Scoped pointer example //
 
-	// Create scoped thread pointer.
-	eve::memory::Scoped<eve::threading::ThreadDummy> scThr;
-	// Start thread.
-	scThr->start();
+	//// Create scoped thread pointer.
+	//eve::memory::Scoped<eve::threading::ThreadDummy> scThr;
+	//// Start thread.
+	//scThr->start();
 
-	// Sleep using milliseconds.
-	eve::threading::sleep_milli(1000);
+	//// Sleep using milliseconds.
+	//eve::threading::sleep_milli(1000);
+
+
+	//-------------------------------------------
+
+
+	// Event example //
+
+	Example ex;
+	eve::evt::notify_mouse_down(0, 10, 20);
 
 	return 0;
 }

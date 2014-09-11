@@ -156,16 +156,16 @@ endif( USING_WINDOWS_MSVC )
 
 # External dependencies path.
 ###################################################################################################
-if( WIN32 )
-	message( "\n" )
+# if( WIN32 )
+	# message( "\n" )
 
-	set( PATH_TO_EXTERNAL "" CACHE PATH "PATH_TO_EXTERNAL" )
-	if( PATH_TO_EXTERNAL STREQUAL "" )
-		message( "Please set PATH_TO_EXTERNAL to external dependencies directory." )
-	endif()
+	# set( PATH_TO_EXTERNAL "" CACHE PATH "PATH_TO_EXTERNAL" )
+	# if( PATH_TO_EXTERNAL STREQUAL "" )
+		# message( "Please set PATH_TO_EXTERNAL to external dependencies directory." )
+	# endif()
 	
-	message( "\n" )
-endif()
+	# message( "\n" )
+# endif()
 
 ###################################################################################################
 # NOTE:
@@ -281,7 +281,7 @@ endif()
 
 # Doxygen documentation.
 ###################################################################################################
-option( OPTION_BUILD_DOCUMENTATION "Generating the doxygen documentation." ON )
+option( OPTION_BUILD_DOCUMENTATION "Generating the doxygen documentation." OFF )
 if( OPTION_BUILD_DOCUMENTATION )
 	find_package( Doxygen )
 	

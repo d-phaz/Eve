@@ -48,6 +48,7 @@ macro( add_project PROJECT_NAME_IN )
 
 	# Include directories
 	include_directories( ${BASE_SOURCE_PATH} )
+	include_directories( ${BASE_SOURCE_PATH}/external/include )	
 	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
 
 	# Windows resources file.
@@ -115,12 +116,72 @@ macro( add_project PROJECT_NAME_IN )
 		set_target_properties( ${exe_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_BINARY_DIR}/Info.plist )
 	endif()	
 
-	# Link executable to libraries.
+	# Libraries.
+	###################################################################################################	 
+	link_directories( ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
+
+	# Windows 
+	#################################################
 	if( WIN32 )
-		set( LIBS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${PRODUCT_PRODUCT_NAME}.lib )
-	elseif( APPLE )
+		set( LIBS	
+			 kernel32.lib
+			 ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${PRODUCT_PRODUCT_NAME}.lib ) 
+	endif( WIN32 )
+	
+	# OSX 
+	#################################################
+	if( APPLE )	
 		set( LIBS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${PRODUCT_PRODUCT_NAME}.a )
+		
+		macro( find_required_library TARGET_LIB )
+			find_library( FOUND_LIB ${TARGET_LIB} )
+
+			if( NOT FOUND_LIB )
+				message( FATAL_ERROR "${TARGET_LIB} not found" )
+			else()
+				message( "\n ${TARGET_LIB} found at ${FOUND_LIB} \n adding ${TARGET_LIB} to link. \n")
+			endif()
+			mark_as_advanced( FOUND_LIB )
+			
+			set( LIBS ${LIBS} ${FOUND_LIB} )
+		endmacro()
+
+		find_required_library( AppKit )
+		find_required_library( CFNetwork )
+		find_required_library( CoreFoundation )
+		find_required_library( CoreServices )
+		find_required_library( Security )
 	endif()
+
+	# POCO
+	#################################################
+	add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS )
+	if( WIN32 )
+		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+			if( OPTION_BUILD_TYPE_DEBUG )
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x64/Debug/PocoFoundationmdd.lib )
+			else()
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x64/Debug/PocoFoundationmd.lib )
+			endif()
+		endif()
+		
+		if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+			if( OPTION_BUILD_TYPE_DEBUG )
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x86/Release/PocoFoundationmdd.lib )
+			else()
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x86/Release/PocoFoundationmd.lib )
+			endif()
+		endif()
+	endif()
+
+	if( APPLE )
+		if( OPTION_BUILD_TYPE_DEBUG )
+			set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_osx/Debug/libPocoFoundationmdd.a ) 
+		else()
+			set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_osx/Release/libPocoFoundationmd.a )
+		endif()
+	endif()
+	
 	target_link_libraries( ${exe_name} ${LIBS} )
 
 	# Executable properties
