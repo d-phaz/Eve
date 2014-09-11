@@ -7,24 +7,24 @@
 //		KEY EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyPressed;			
-eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyReleased;		
-eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyInput;			
+eve::evt::TEvent<eve::evt::KeyEventArgs> 		eve::evt::EvtKey::keyPressed;
+eve::evt::TEvent<eve::evt::KeyEventArgs> 		eve::evt::EvtKey::keyReleased;
+eve::evt::TEvent<eve::evt::KeyEventArgs> 		eve::evt::EvtKey::keyInput;
 
 //=================================================================================================
 void eve::evt::enable_events_key(void)
 {
-	eve::evt::keyPressed.enable();
-	eve::evt::keyReleased.enable();
-	eve::evt::keyInput.enable();
+	eve::evt::EvtKey::keyPressed.enable();
+	eve::evt::EvtKey::keyReleased.enable();
+	eve::evt::EvtKey::keyInput.enable();
 }
 
 //=================================================================================================
 void disable_events_key(void)
 {
-	eve::evt::keyPressed.disable();
-	eve::evt::keyReleased.disable();
-	eve::evt::keyInput.disable();
+	eve::evt::EvtKey::keyPressed.disable();
+	eve::evt::EvtKey::keyReleased.disable();
+	eve::evt::EvtKey::keyInput.disable();
 }
 
 
@@ -35,7 +35,7 @@ void eve::evt::notify_key_pressed(uint8_t p_key)
 	static eve::evt::KeyEventArgs keyEventArgs;
 
 	keyEventArgs.key = p_key;
-	eve::evt::notify_event(eve::evt::keyPressed, keyEventArgs);
+	eve::evt::notify_event(eve::evt::EvtKey::keyPressed, keyEventArgs);
 }
 
 //=================================================================================================
@@ -44,7 +44,7 @@ void eve::evt::notify_key_released(uint8_t p_key)
 	static eve::evt::KeyEventArgs keyEventArgs;
 
 	keyEventArgs.key = p_key;
-	eve::evt::notify_event(eve::evt::keyReleased, keyEventArgs);
+	eve::evt::notify_event(eve::evt::EvtKey::keyReleased, keyEventArgs);
 }
 
 //=================================================================================================
@@ -53,7 +53,7 @@ void eve::evt::notify_key_input( uint8_t p_key )
 	static eve::evt::KeyEventArgs keyEventArgs;
 
 	keyEventArgs.key = p_key;
-	eve::evt::notify_event(eve::evt::keyInput, keyEventArgs);
+	eve::evt::notify_event(eve::evt::EvtKey::keyInput, keyEventArgs);
 }
 
 
@@ -61,30 +61,30 @@ void eve::evt::notify_key_input( uint8_t p_key )
 //		MOUSE EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		mousePassiveMotion;	
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseMotion;		
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseDown;			
-eve::evt::TEvent<eve::evt::MouseEventArgs>		mouseDoubleClick;	
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseUp;			
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mousePassiveMotion;
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mouseMotion;
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mouseDown;
+eve::evt::TEvent<eve::evt::MouseEventArgs>		eve::evt::EvtMouse::mouseDoubleClick;
+eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mouseUp;
 
 //=================================================================================================
 void eve::evt::enable_events_mouse(void)
 {
-	eve::evt::mousePassiveMotion.enable();		
-	eve::evt::mouseMotion.enable();
-	eve::evt::mouseDown.enable();
-	eve::evt::mouseDoubleClick.enable();
-	eve::evt::mouseUp.enable();
+	eve::evt::EvtMouse::mousePassiveMotion.enable();
+	eve::evt::EvtMouse::mouseMotion.enable();
+	eve::evt::EvtMouse::mouseDown.enable();
+	eve::evt::EvtMouse::mouseDoubleClick.enable();
+	eve::evt::EvtMouse::mouseUp.enable();
 }
 
 //=================================================================================================
 void eve::evt::disable_events_mouse(void)
 {
-	eve::evt::mousePassiveMotion.disable();
-	eve::evt::mouseMotion.disable();
-	eve::evt::mouseDown.disable();
-	eve::evt::mouseDoubleClick.disable();
-	eve::evt::mouseUp.disable();
+	eve::evt::EvtMouse::mousePassiveMotion.disable();
+	eve::evt::EvtMouse::mouseMotion.disable();
+	eve::evt::EvtMouse::mouseDown.disable();
+	eve::evt::EvtMouse::mouseDoubleClick.disable();
+	eve::evt::EvtMouse::mouseUp.disable();
 }
 
 
@@ -97,7 +97,7 @@ void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	eve::evt::notify_event(eve::evt::mouseDown, mouseEventArgs);
+	eve::evt::notify_event(eve::evt::EvtMouse::mouseDown, mouseEventArgs);
 }
 
 //=================================================================================================
@@ -108,7 +108,7 @@ void eve::evt::notify_mouse_up( int32_t p_button, int32_t x, int32_t y )
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	eve::evt::notify_event(eve::evt::mouseUp, mouseEventArgs);
+	eve::evt::notify_event(eve::evt::EvtMouse::mouseUp, mouseEventArgs);
 }
 
 //=================================================================================================
@@ -119,7 +119,7 @@ void eve::evt::notify_mouse_double_click( int32_t p_button, int32_t x, int32_t y
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	eve::evt::notify_event(eve::evt::mouseDoubleClick, mouseEventArgs);
+	eve::evt::notify_event(eve::evt::EvtMouse::mouseDoubleClick, mouseEventArgs);
 }
 
 //=================================================================================================
@@ -129,7 +129,7 @@ void eve::evt::notify_mouse_motion( int32_t x, int32_t y )
 
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
-	eve::evt::notify_event(eve::evt::mouseMotion, mouseEventArgs);
+	eve::evt::notify_event(eve::evt::EvtMouse::mouseMotion, mouseEventArgs);
 }
 
 //=================================================================================================
@@ -139,7 +139,7 @@ void eve::evt::notify_mouse_passive_motion( int32_t x, int32_t y )
 
 	mouseEventArgs.x = x;
 	mouseEventArgs.y = y;
-	eve::evt::notify_event(eve::evt::mousePassiveMotion, mouseEventArgs);
+	eve::evt::notify_event(eve::evt::EvtMouse::mousePassiveMotion, mouseEventArgs);
 }
 
 
@@ -148,30 +148,30 @@ void eve::evt::notify_mouse_passive_motion( int32_t x, int32_t y )
 //		TOUCH EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDown;			
-eve::evt::TEvent<eve::evt::TouchEventArgs>		touchUp;			
-eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDoubleTap;		
-eve::evt::TEvent<eve::evt::TouchEventArgs>		touchMoved;			
-eve::evt::TEvent<eve::evt::TouchEventArgs>		touchCanceled;		
+eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchDown;
+eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchUp;
+eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchDoubleTap;
+eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchMoved;
+eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchCanceled;
 
 //=================================================================================================
 void eve::evt::enable_events_touch(void)
 {
-	eve::evt::touchDown.enable();
-	eve::evt::touchUp.enable();
-	eve::evt::touchDoubleTap.enable();
-	eve::evt::touchMoved.enable();
-	eve::evt::touchCanceled.enable();
+	eve::evt::EvtTouch::touchDown.enable();
+	eve::evt::EvtTouch::touchUp.enable();
+	eve::evt::EvtTouch::touchDoubleTap.enable();
+	eve::evt::EvtTouch::touchMoved.enable();
+	eve::evt::EvtTouch::touchCanceled.enable();
 }
 
 //=================================================================================================
 void eve::evt::disable_events_touch(void)
 {
-	eve::evt::touchDown.disable();
-	eve::evt::touchUp.disable();
-	eve::evt::touchDoubleTap.disable();
-	eve::evt::touchMoved.disable();
-	eve::evt::touchCanceled.disable();
+	eve::evt::EvtTouch::touchDown.disable();
+	eve::evt::EvtTouch::touchUp.disable();
+	eve::evt::EvtTouch::touchDoubleTap.disable();
+	eve::evt::EvtTouch::touchMoved.disable();
+	eve::evt::EvtTouch::touchCanceled.disable();
 }
 
 
@@ -180,27 +180,27 @@ void eve::evt::disable_events_touch(void)
 //		WINDOW EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::ResizeEventArgs> 	windowResized;		
-eve::evt::TEvent<void>							windowFocusGot;		
-eve::evt::TEvent<void>							windowFocusLost;	
-eve::evt::TEvent<void>							windowClose;		
+eve::evt::TEvent<eve::evt::ResizeEventArgs> 	eve::evt::EvtWindow::windowResized;
+eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusGot;
+eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusLost;
+eve::evt::TEvent<void>							eve::evt::EvtWindow::windowClose;
 
 //=================================================================================================
 void eve::evt::enable_events_window(void)
 {
-	eve::evt::windowResized.enable();
-	eve::evt::windowFocusGot.enable();
-	eve::evt::windowFocusLost.enable();
-	eve::evt::windowClose.enable();
+	eve::evt::EvtWindow::windowResized.enable();
+	eve::evt::EvtWindow::windowFocusGot.enable();
+	eve::evt::EvtWindow::windowFocusLost.enable();
+	eve::evt::EvtWindow::windowClose.enable();
 }
 
 //=================================================================================================
 void eve::evt::disable_events_window(void)
 {
-	eve::evt::windowResized.disable();
-	eve::evt::windowFocusGot.disable();
-	eve::evt::windowFocusLost.disable();
-	eve::evt::windowClose.disable();
+	eve::evt::EvtWindow::windowResized.disable();
+	eve::evt::EvtWindow::windowFocusGot.disable();
+	eve::evt::EvtWindow::windowFocusLost.disable();
+	eve::evt::EvtWindow::windowClose.disable();
 }
 
 
@@ -212,25 +212,25 @@ void eve::evt::notify_window_resize(uint32_t p_width, uint32_t p_height)
 
 	resizeEventArgs.width  = p_width;
 	resizeEventArgs.height = p_height;
-	eve::evt::notify_event(eve::evt::windowResized, resizeEventArgs);
+	eve::evt::notify_event(eve::evt::EvtWindow::windowResized, resizeEventArgs);
 }
 
 //=================================================================================================
 void eve::evt::notify_window_focus_got(void)
 {
-	eve::evt::notify_event(eve::evt::windowFocusGot);
+	eve::evt::notify_event(eve::evt::EvtWindow::windowFocusGot);
 }
 
 //=================================================================================================
 void eve::evt::notify_window_focus_lost(void)
 {
-	eve::evt::notify_event(eve::evt::windowFocusLost);
+	eve::evt::notify_event(eve::evt::EvtWindow::windowFocusLost);
 }
 
 //=================================================================================================
 void eve::evt::notify_window_close(void)
 {
-	eve::evt::notify_event(eve::evt::windowClose);
+	eve::evt::notify_event(eve::evt::EvtWindow::windowClose);
 }
 
 
@@ -239,18 +239,18 @@ void eve::evt::notify_window_close(void)
 //		APPLICATION EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<void>							appExit;			
+eve::evt::TEvent<void>							eve::evt::EvtApp::appExit;
 
 //=================================================================================================
 void eve::evt::enable_events_application(void)
 {
-	eve::evt::appExit.enable();
+	eve::evt::EvtApp::appExit.enable();
 }
 
 //=================================================================================================
 void eve::evt::disable_events_application(void)
 {
-	eve::evt::appExit.disable();
+	eve::evt::EvtApp::appExit.disable();
 }
 
 
@@ -258,5 +258,5 @@ void eve::evt::disable_events_application(void)
 //=================================================================================================
 void eve::evt::notify_application_exit(void)
 {
-	eve::evt::notify_event(eve::evt::appExit);
+	eve::evt::notify_event(eve::evt::EvtApp::appExit);
 }
