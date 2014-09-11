@@ -64,18 +64,18 @@ namespace eve
 		/**
 		* \brief Register listener class to key events.
 		* Listener class must provide key event handler methods using the following signatures:
-		*		void cb_evtKeyDown(void)
-		*		void cb_evtKeyUp(void)
-		*		void cb_evtKeyInput(void)
+		*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+		*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
+		*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 		*/
 		template<class ListenerClass>
 		void register_events_key(ListenerClass * listener, int32_t prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class from key events.
 		* Listener class must provide key event handler methods using the following signatures:
-		*		void cb_evtKeyDown(void)
-		*		void cb_evtKeyUp(void)
-		*		void cb_evtKeyInput(void)
+		*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+		*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
+		*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 		*/
 		template<class ListenerClass>
 		void unregister_events_key(ListenerClass * listener, int32_t prio = orderAfterApp);
@@ -125,22 +125,22 @@ namespace eve
 		/**
 		* \brief Register listener class to mouse events.
 		* Listener class must provide mouse event handler methods using the following signatures:
-		*		void cb_evtMouseDown(void)
-		*		void cb_evtMouseUp(void)
-		*		void cb_evtMouseDoubleClick(void)
-		*		void cb_evtMotion(void)
-		*		void cb_evtPassiveMotion(void)
+		*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 		*/
 		template<class ListenerClass>
 		void register_events_mouse(ListenerClass * listener, int32_t prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class from mouse events.
 		* Listener class must provide mouse event handler methods using the following signatures:
-		*		void cb_evtMouseDown(void)
-		*		void cb_evtMouseUp(void)
-		*		void cb_evtMouseDoubleClick(void)
-		*		void cb_evtMotion(void)
-		*		void cb_evtPassiveMotion(void)
+		*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+		*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 		*/
 		template<class ListenerClass>
 		void unregister_events_mouse(ListenerClass * listener, int32_t prio = orderAfterApp);
@@ -198,21 +198,21 @@ namespace eve
 		/**
 		* \brief Register listener class to touch events.
 		* Listener class must provide touch event handler methods using the following signatures:
-		*		void cb_evtTouchDown(void)
-		*		void cb_evtTouchUp(void)
-		*		void cb_evtTouchDoubleTap(void)
-		*		void cb_evtTouchMoved(void)
+		*		void cb_evtTouchDown(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchUp(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchDoubleTap(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchMoved(eve::evt::TouchEventArgs & p_args)
 		*/
 		template<class ListenerClass>
 		void register_events_touch(ListenerClass * listener, int32_t prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class to touch events.
 		* Listener class must provide touch event handler methods using the following signatures:
-		*		void cb_evtTouchDown(void)
-		*		void cb_evtTouchUp(void)
-		*		void cb_evtTouchDoubleTap(void)
-		*		void cb_evtTouchMoved(void)
-		*		void cb_evtTouchCanceled(void)
+		*		void cb_evtTouchDown(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchUp(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchDoubleTap(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchMoved(eve::evt::TouchEventArgs & p_args)
+		*		void cb_evtTouchCanceled(eve::evt::TouchEventArgs & p_args)
 		*/
 		template<class ListenerClass>
 		void unregister_events_touch(ListenerClass * listener, int32_t prio = orderAfterApp);
@@ -258,7 +258,7 @@ namespace eve
 		/**
 		* \brief Register listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
-		*		void cb_evtWindowReshape(void)
+		*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
 		*		void cb_evtWindowFocusGot(void)
 		*		void cb_evtWindowFocusLost(void)
 		*		void cb_evtWindowClose(void)
@@ -268,7 +268,7 @@ namespace eve
 		/**
 		* \brief Unregister listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
-		*		void cb_evtWindowReshape(void)
+		*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
 		*		void cb_evtWindowFocusGot(void)
 		*		void cb_evtWindowFocusLost(void)
 		*		void cb_evtWindowClose(void)
