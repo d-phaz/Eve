@@ -282,9 +282,9 @@ namespace eve
 		{
 		public:
 			static eve::evt::TEvent<eve::evt::ResizeEventArgs> 		windowResized;			//!< Window resized event.
-			static eve::evt::TEvent<eve::evt::Args>					windowFocusGot;			//!< Window gain focus event.
-			static eve::evt::TEvent<eve::evt::Args>					windowFocusLost;		//!< Window lost focus event.
-			static eve::evt::TEvent<eve::evt::Args>					windowClose;			//!< Window closed event.
+			static eve::evt::TEvent<void>							windowFocusGot;			//!< Window gain focus event.
+			static eve::evt::TEvent<void>							windowFocusLost;		//!< Window lost focus event.
+			static eve::evt::TEvent<void>							windowClose;			//!< Window closed event.
 		};
 
 		/** \! Enable window events dispatch. */
@@ -331,7 +331,7 @@ namespace eve
 		class EvtApp
 		{
 		public:
-			static eve::evt::TEvent<eve::evt::Args>					appExit;				//!< Application exit event.
+			static eve::evt::TEvent<void>							appExit;				//!< Application exit event.
 		};
 
 		/** \! Enable application events dispatch. */

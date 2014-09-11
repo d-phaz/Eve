@@ -45,8 +45,7 @@ namespace eve
 	namespace evt
 	{
 		template <class TObj, class TArgs, bool useSender = true>
-		class TDelegate final
-			: public Poco::AbstractPriorityDelegate<TArgs>
+		class TDelegate : public Poco::AbstractPriorityDelegate<TArgs>
 		{
 
 		public:
@@ -69,21 +68,20 @@ namespace eve
 
 			virtual ~TDelegate(void);
 
-			bool notify(const void* sender, TArgs& arguments);
+			virtual bool notify(const void* sender, TArgs& arguments) override;
 
-			bool equals(const Poco::AbstractPriorityDelegate<TArgs>& p_other) const;
+			virtual bool equals(const Poco::AbstractDelegate<TArgs>& p_other) const override;
 
-			Poco::AbstractPriorityDelegate<TArgs>* clone() const;
+			virtual Poco::AbstractPriorityDelegate<TArgs>* clone() const;
 
-			void disable();
+			virtual void disable() override;
 
 		}; // class TDelegate
 
 
 
 		template <class TObj, class TArgs>
-		class TDelegate<TObj, TArgs, false> final
-			: public Poco::AbstractPriorityDelegate<TArgs>
+		class TDelegate<TObj, TArgs, false> : public Poco::AbstractPriorityDelegate<TArgs>
 		{
 
 		public:
@@ -106,21 +104,20 @@ namespace eve
 
 			virtual ~TDelegate(void);
 
-			bool notify(const void* sender, TArgs& arguments);
+			virtual bool notify(const void* sender, TArgs& arguments) override;
 
-			bool equals(const Poco::AbstractPriorityDelegate<TArgs>& p_other) const;
+			virtual bool equals(const Poco::AbstractDelegate<TArgs>& p_other) const override;
 
-			Poco::AbstractPriorityDelegate<TArgs>* clone() const;
+			virtual Poco::AbstractPriorityDelegate<TArgs>* clone() const override;
 
-			void disable();
+			virtual void disable() override;
 
 		}; // class TDelegate
 
 
 
 		template <class TObj>
-		class TDelegate<TObj, void, true> final
-			: public Poco::AbstractPriorityDelegate<void>
+		class TDelegate<TObj, void, true> : public Poco::AbstractPriorityDelegate<void>
 		{
 
 		public:
@@ -143,21 +140,20 @@ namespace eve
 
 			virtual ~TDelegate(void);
 
-			bool notify(const void* sender);
+			virtual bool notify(const void* sender) override;
 
-			bool equals(const Poco::AbstractPriorityDelegate<void>& p_other) const;
+			virtual bool equals(const Poco::AbstractDelegate<void>& p_other) const override;
 
-			Poco::AbstractPriorityDelegate<void>* clone() const;
+			virtual Poco::AbstractPriorityDelegate<void>* clone() const override;
 
-			void disable();
+			virtual void disable() override;
 
 		}; // class TDelegate
 
 
 
 		template <class TObj>
-		class TDelegate<TObj, void, false> final
-			: public Poco::AbstractPriorityDelegate<void>
+		class TDelegate<TObj, void, false> : public Poco::AbstractPriorityDelegate<void>
 		{
 
 		public:
@@ -180,28 +176,28 @@ namespace eve
 
 			virtual ~TDelegate(void);
 
-			bool notify(const void* sender);
+			virtual bool notify(const void* sender) override;
 
-			bool equals(const Poco::AbstractPriorityDelegate<void>& p_other) const;
+			virtual bool equals(const Poco::AbstractDelegate<void>& p_other) const override;
 
-			Poco::AbstractPriorityDelegate<void>* clone() const;
+			virtual Poco::AbstractPriorityDelegate<void>* clone() const override;
 
-			void disable();
+			virtual void disable() override;
 
 		}; // class TDelegate
 
 
 		template <class TObj, class TArgs>
-		static TDelegate<TObj, TArgs> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*, TArgs&), int prio)
+		static TDelegate<TObj, TArgs, true> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*, TArgs&), int prio)
 		{
-			return TDelegate<TObj, TArgs>(pObj, NotifyMethod, prio);
+			return TDelegate<TObj, TArgs, true>(pObj, NotifyMethod, prio);
 		}
 
 
 		template <class TObj, class TArgs>
-		static TDelegate<TObj, TArgs> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(TArgs&), int prio)
+		static TDelegate<TObj, TArgs, false> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(TArgs&), int prio)
 		{
-			return TDelegate<TObj, TArgs>(pObj, NotifyMethod, prio);
+			return TDelegate<TObj, TArgs, false>(pObj, NotifyMethod, prio);
 		}
 
 
@@ -379,7 +375,7 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::~TDelegate(void)
 template <class TObj, class TArgs, bool useSender>
 bool eve::evt::TDelegate<TObj, TArgs, useSender>::notify(const void* sender, TArgs& arguments)
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	if (_receiverObject)
 	{
 		(_receiverObject->*_receiverMethod)(sender, arguments);
@@ -390,7 +386,7 @@ bool eve::evt::TDelegate<TObj, TArgs, useSender>::notify(const void* sender, TAr
 
 //=================================================================================================
 template <class TObj, class TArgs, bool useSender>
-bool eve::evt::TDelegate<TObj, TArgs, useSender>::equals(const Poco::AbstractPriorityDelegate<TArgs>& other) const
+bool eve::evt::TDelegate<TObj, TArgs, useSender>::equals(const Poco::AbstractDelegate<TArgs>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
 	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
@@ -407,7 +403,7 @@ Poco::AbstractPriorityDelegate<TArgs>* eve::evt::TDelegate<TObj, TArgs, useSende
 template <class TObj, class TArgs, bool useSender>
 void eve::evt::TDelegate<TObj, TArgs, useSender>::disable()
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	_receiverObject = 0;
 }
 
@@ -436,7 +432,7 @@ eve::evt::TDelegate<TObj, TArgs, false>::TDelegate(const TDelegate<TObj, TArgs, 
 	// Inheritance
 	: Poco::AbstractPriorityDelegate<TArgs>(p_other)
 	// Members init
-	, _receiverObject(p_other._receiverObject),
+	, _receiverObject(p_other._receiverObject)
 	, _receiverMethod(p_other._receiverMethod)
 {}
 
@@ -463,10 +459,10 @@ eve::evt::TDelegate<TObj, TArgs, false>::~TDelegate(void)
 template <class TObj, class TArgs>
 bool eve::evt::TDelegate<TObj, TArgs, false>::notify(const void* sender, TArgs& arguments)
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	if (_receiverObject)
 	{
-		(_receiverObject->*_receiverMethod)(sender, arguments);
+		(_receiverObject->*_receiverMethod)(arguments);
 		return true;
 	}
 	else return false;
@@ -474,7 +470,7 @@ bool eve::evt::TDelegate<TObj, TArgs, false>::notify(const void* sender, TArgs& 
 
 //=================================================================================================
 template <class TObj, class TArgs>
-bool eve::evt::TDelegate<TObj, TArgs, false>::equals(const Poco::AbstractPriorityDelegate<TArgs>& other) const
+bool eve::evt::TDelegate<TObj, TArgs, false>::equals(const Poco::AbstractDelegate<TArgs>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
 	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
@@ -491,7 +487,7 @@ Poco::AbstractPriorityDelegate<TArgs>* eve::evt::TDelegate<TObj, TArgs, false>::
 template <class TObj, class TArgs>
 void eve::evt::TDelegate<TObj, TArgs, false>::disable()
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	_receiverObject = 0;
 }
 
@@ -547,7 +543,7 @@ eve::evt::TDelegate<TObj, void, true>::~TDelegate(void)
 template <class TObj>
 bool eve::evt::TDelegate<TObj, void, true>::notify(const void* sender)
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	if (_receiverObject)
 	{
 		(_receiverObject->*_receiverMethod)(sender, arguments);
@@ -558,7 +554,7 @@ bool eve::evt::TDelegate<TObj, void, true>::notify(const void* sender)
 
 //=================================================================================================
 template <class TObj>
-bool eve::evt::TDelegate<TObj, void, true>::equals(const Poco::AbstractPriorityDelegate<void>& other) const
+bool eve::evt::TDelegate<TObj, void, true>::equals(const Poco::AbstractDelegate<void>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
 	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
@@ -575,7 +571,7 @@ Poco::AbstractPriorityDelegate<void>* eve::evt::TDelegate<TObj, void, true>::clo
 template <class TObj>
 void eve::evt::TDelegate<TObj, void, true>::disable()
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	_receiverObject = 0;
 }
 
@@ -631,7 +627,7 @@ eve::evt::TDelegate<TObj, void, false>::~TDelegate(void)
 template <class TObj>
 bool eve::evt::TDelegate<TObj, void, false>::notify(const void* sender)
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	if (_receiverObject)
 	{
 		(_receiverObject->*_receiverMethod)(sender, arguments);
@@ -642,7 +638,7 @@ bool eve::evt::TDelegate<TObj, void, false>::notify(const void* sender)
 
 //=================================================================================================
 template <class TObj>
-bool eve::evt::TDelegate<TObj, void, false>::equals(const Poco::AbstractPriorityDelegate<void>& other) const
+bool eve::evt::TDelegate<TObj, void, false>::equals(const Poco::AbstractDelegate<void>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
 	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
@@ -659,7 +655,7 @@ Poco::AbstractPriorityDelegate<void>* eve::evt::TDelegate<TObj, void, false>::cl
 template <class TObj>
 void eve::evt::TDelegate<TObj, void, false>::disable()
 {
-	Mutex::ScopedLock lock(_mutex);
+	Poco::Mutex::ScopedLock lock(_mutex);
 	_receiverObject = 0;
 }
 

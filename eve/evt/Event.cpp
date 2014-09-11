@@ -211,9 +211,9 @@ void eve::evt::disable_events_touch(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 eve::evt::TEvent<eve::evt::ResizeEventArgs> 	eve::evt::EvtWindow::windowResized;
-eve::evt::TEvent<eve::evt::Args>				eve::evt::EvtWindow::windowFocusGot;
-eve::evt::TEvent<eve::evt::Args>				eve::evt::EvtWindow::windowFocusLost;
-eve::evt::TEvent<eve::evt::Args>				eve::evt::EvtWindow::windowClose;
+eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusGot;
+eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusLost;
+eve::evt::TEvent<void>							eve::evt::EvtWindow::windowClose;
 
 //=================================================================================================
 void eve::evt::enable_events_window(void)
@@ -269,7 +269,7 @@ void eve::evt::notify_window_close(void)
 //		APPLICATION EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::Args>					eve::evt::EvtApp::appExit;
+eve::evt::TEvent<void>							eve::evt::EvtApp::appExit;
 
 //=================================================================================================
 void eve::evt::enable_events_application(void)

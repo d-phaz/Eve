@@ -346,16 +346,8 @@ namespace eve
 			mutable Poco::FastMutex _mutex;
 		};
 
-	} // namespace evt
-
-} // namespace eve
 
 
-
-namespace eve
-{
-	namespace evt
-	{
 		/// An TEventAbstract is the base class of all events. 
 		/// It works similar to the way C# handles notifications (aka events in C#).
 		///
