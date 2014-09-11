@@ -34,8 +34,6 @@
 #define __EVE_EVT_TABSTRACT_EVENT_H__
 
 
-#include <Poco/Foundation.h>
-#include <Poco/SharedPtr.h>
 #include <Poco/ActiveResult.h>
 #include <Poco/ActiveMethod.h>
 #include <Poco/Mutex.h>
@@ -269,7 +267,7 @@ namespace eve
 					// make a copy of the strategy here to guarantee that
 					// between notifyAsync and the execution of the method no changes can occur
 
-					params.ptrStrat = SharedPtr<TStrategy>(new TStrategy(_strategy));
+					params.ptrStrat = std::shared_ptr<TStrategy>(new TStrategy(_strategy));
 					params.enabled = _enabled;
 				}
 				ActiveResult<TArgs> result = _executeAsync(params);
@@ -314,7 +312,7 @@ namespace eve
 		protected:
 			struct NotifyAsyncParams
 			{
-				Poco::SharedPtr<TStrategy> ptrStrat;
+				std::shared_ptr<TStrategy> ptrStrat;
 				const void* pSender;
 				TArgs       args;
 				bool        enabled;
@@ -558,7 +556,7 @@ namespace eve
 					// make a copy of the strategy here to guarantee that.
 					// between notifyAsync and the execution of the method no changes can occur.
 
-					params.ptrStrat = SharedPtr<TStrategy>(new TStrategy(_strategy));
+					params.ptrStrat = std::shared_ptr<TStrategy>(new TStrategy(_strategy));
 					params.enabled = _enabled;
 				}
 				ActiveResult<void> result = _executeAsync(params);
@@ -603,7 +601,7 @@ namespace eve
 		protected:
 			struct NotifyAsyncParams
 			{
-				Poco::SharedPtr<TStrategy> ptrStrat;
+				std::shared_ptr<TStrategy> ptrStrat;
 				const void* pSender;
 				bool        enabled;
 

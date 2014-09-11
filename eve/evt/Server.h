@@ -33,9 +33,6 @@
 #ifndef __EVE_EVT_SERVER_H__
 #define __EVE_EVT_SERVER_H__
 
-
-#include <Poco/PriorityDelegate.h>
-
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif

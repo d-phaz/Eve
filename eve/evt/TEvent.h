@@ -68,8 +68,8 @@ namespace eve
 		template <class TArgs>
 		class TEvent
 			: public eve::evt::TEventAbstract<TArgs,
-											  eve::evt::TStrategy<TArgs, Poco::AbstractPriorityDelegate<TArgs>>, 
-											  Poco::AbstractPriorityDelegate<TArgs >>
+											  eve::evt::TStrategy<TArgs, eve::evt::TDelegateAbstract<TArgs>>, 
+											  eve::evt::TDelegateAbstract<TArgs >>
 		{
 
 			//////////////////////////////////////
@@ -106,8 +106,8 @@ template <class TArgs>
 eve::evt::TEvent<TArgs>::TEvent(void)
 	// Inheritance
 	: eve::evt::TEventAbstract<TArgs,
-							   eve::evt::TStrategy<TArgs, Poco::AbstractPriorityDelegate<TArgs>>,
-							   Poco::AbstractPriorityDelegate<TArgs >> ()
+							   eve::evt::TStrategy<TArgs, eve::evt::TDelegateAbstract<TArgs>>,
+							   eve::evt::TDelegateAbstract<TArgs >> ()
 {}
 
 //=================================================================================================
@@ -120,8 +120,8 @@ template <class TArgs>
 eve::evt::TEvent<TArgs>::TEvent(const TEvent<TArgs> & p_ref)
 	// Inheritance
 	: eve::evt::TEventAbstract<TArgs,
-							   eve::evt::TStrategy<TArgs, Poco::AbstractPriorityDelegate<TArgs>>,
-							   Poco::AbstractPriorityDelegate<TArgs >> ()
+							   eve::evt::TStrategy<TArgs, eve::evt::TDelegateAbstract<TArgs>>,
+							   eve::evt::TDelegateAbstract<TArgs >> ()
 {
 	p_ref._mutex.lock();
 	this->_mutex.lock();

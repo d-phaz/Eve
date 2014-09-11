@@ -58,10 +58,11 @@ set( EVENT_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegate.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegateAbstract.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEventAbstract.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TStrategy.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${EVENT_SRCS} )
 source_group( "Event" FILES ${EVENT_SRCS} )

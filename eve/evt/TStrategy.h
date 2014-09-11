@@ -34,8 +34,6 @@
 #define __EVE_EVT_TSTRATEGY_H__
 
 
-#include <Poco/SharedPtr.h>
-
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
@@ -51,7 +49,7 @@ namespace eve
 		class TStrategy
 		{
 		public:
-			typedef Poco::SharedPtr<TDelegate>   DelegatePtr;
+			typedef std::shared_ptr<TDelegate>   DelegatePtr;
 			typedef std::vector<DelegatePtr>     Delegates;
 			typedef typename Delegates::iterator Iterator;
 
@@ -90,11 +88,11 @@ namespace eve
 				_delegates.push_back(DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
 			}
 
-			void remove(const TDelegate& delegate)
+			void remove(const TDelegate& p_delegate)
 			{
 				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
 				{
-					if (delegate.equals(**it))
+					if (p_delegate.equals(**it))
 					{
 						(*it)->disable();
 						_delegates.erase(it);
@@ -141,7 +139,7 @@ namespace eve
 			/// by their priority.
 		{
 		public:
-			typedef Poco::SharedPtr<TDelegate>   DelegatePtr;
+			typedef std::shared_ptr<TDelegate>   DelegatePtr;
 			typedef std::vector<DelegatePtr>     Delegates;
 			typedef typename Delegates::iterator Iterator;
 
@@ -168,11 +166,11 @@ namespace eve
 				_delegates.push_back(DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
 			}
 
-			void remove(const TDelegate& delegate)
+			void remove(const TDelegate& p_delegate)
 			{
 				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
 				{
-					if (delegate.equals(**it))
+					if (p_delegate.equals(**it))
 					{
 						(*it)->disable();
 						_delegates.erase(it);
