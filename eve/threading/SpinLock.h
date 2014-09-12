@@ -40,6 +40,9 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_THREADING_FENCE_H__
+#include "eve/threading/Fence.h"
+#endif
 
 
 namespace eve
@@ -52,10 +55,10 @@ namespace eve
 		 * \brief A fast lock for non-contented memory access.
 		 * Readers or writers will starve on high contention.
 		 *
-		 * \note extends memory::Pointer
+		 * \note extends eve::threading::Fence
 		 */
 		class SpinLock
-			: public eve::memory::Pointer
+			: public eve::threading::Fence
 		{
 
 			friend class eve::memory::Pointer;
@@ -89,9 +92,9 @@ namespace eve
 
 		public:
 			/** \brief Acquire the lock exclusively. */
-			void lock(void);
+			virtual void lock(void) override;
 			/** \brief Release an exclusive lock. */
-			void unlock(void);
+			virtual void unlock(void) override;
 
 		}; // class SpinLock
 

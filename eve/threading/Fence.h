@@ -30,15 +30,11 @@
 */
 
 #pragma once
-#ifndef __EVE_THREADING_LOCK_H__
-#define __EVE_THREADING_LOCK_H__  
+#ifndef __EVE_THREADING_FENCE_H__
+#define __EVE_THREADING_FENCE_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
-#endif
-
-#ifndef __EVE_THREADING_FENCE_H__
-#include "eve/threading/Fence.h"
 #endif
 
 
@@ -47,54 +43,39 @@ namespace eve
 	namespace threading
 	{
 
-		/** 
-		* \class eve::threading::Lock
-		* \brief lock using critical section
-		* \note extends eve::threading::Fence
+		/**
+		* \class eve::threading::Fence
+		* \brief Abstract base fence class (lock/mutex/...)
+		* \note extends memory::Pointer
 		*/
-		class Lock
-			: public eve::threading::Fence
+		class Fence
+			: public eve::memory::Pointer
 		{
 
 			friend class eve::memory::Pointer;
 
 			//////////////////////////////////////
-			//				DATAS				//
-			//////////////////////////////////////
-
-		private:
-			CRITICAL_SECTION		m_criticalSections;
-
-
-			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Lock)
-			EVE_PROTECT_DESTRUCTOR(Lock)
-        
+			EVE_DISABLE_COPY(Fence);
+			EVE_PROTECT_DESTRUCTOR(Fence);
+
 		protected:
 			/** \brief Class constructor. */
-			Lock(void);
-
-
-		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) override;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) override;
+			Fence(void);
 
 
 		public:
-			/** \brief Acquire the lock. */
-			virtual void lock(void) override;
-			/** \brief Release the lock. */
-			virtual void unlock(void) override;
+			/** \brief Lock the fence. (pure virtual) */
+			virtual void lock(void) = 0;
+			/** \brief Unlock the fence. (pure virtual)*/
+			virtual void unlock(void) = 0;
 
-		}; // class Lock
+		}; // class Mutex
 
 	} // namespace threading
 
 } // namespace eve
 
-#endif // __EVE_THREADING_LOCK_H__
+#endif // __EVE_THREADING_FENCE_H__

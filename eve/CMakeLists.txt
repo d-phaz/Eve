@@ -110,6 +110,8 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Fence.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Fence.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.cpp 

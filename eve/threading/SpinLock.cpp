@@ -36,7 +36,7 @@
 //=================================================================================================
 eve::threading::SpinLock::SpinLock(void)
 	// Inheritance
-	: eve::memory::Pointer()
+	: eve::threading::Fence()
 	// Members init
 	, m_state()
 {}

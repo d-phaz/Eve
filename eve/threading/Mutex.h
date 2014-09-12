@@ -37,6 +37,9 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_THREADING_FENCE_H__
+#include "eve/threading/Fence.h"
+#endif
 
 namespace eve
 {
@@ -46,10 +49,10 @@ namespace eve
 		/**
 		* \class eve::threading::Mutex
 		* \brief provides base native Mutex
-		* \note extends memory::Pointer
+		* \note extends eve::threading::Fence
 		*/
 		class Mutex
-			: public eve::memory::Pointer
+			: public eve::threading::Fence
 		{
 
 			friend class eve::memory::Pointer;
@@ -83,9 +86,9 @@ namespace eve
 
 		public:
 			/** \brief Lock the mutex variable. */
-			void lock(void);
+			virtual void lock(void) override;
 			/** \brief Unlock the mutex variable. */
-			void unlock(void);
+			virtual void unlock(void) override;
 
 		}; // class Mutex
 

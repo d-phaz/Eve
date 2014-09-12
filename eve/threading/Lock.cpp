@@ -36,7 +36,7 @@
 //=============================================================================================
 eve::threading::Lock::Lock(void)
 	// Inheritance
-	: eve::memory::Pointer()
+	: eve::threading::Fence()
 	// Members init
 	, m_criticalSections()
 {}
