@@ -33,10 +33,10 @@
 #ifndef __EVE_MEMORY_SCOPED_H__
 #define __EVE_MEMORY_SCOPED_H__
 
+
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
-
 
 #ifndef __EVE_MEMORY_POINTER_H__
 #include "eve/memory/Pointer.h"
