@@ -61,6 +61,7 @@ set( EVENT_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegateAbstract.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEventAbstract.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TQueue.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TStrategy.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h  )
 
@@ -122,11 +123,10 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadDummy.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadDummy.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadDummy.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/TWorker.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Utils.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Utils.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Worker.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Worker.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Utils.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )

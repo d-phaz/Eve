@@ -38,12 +38,16 @@
 #include "eve/evt/Event.h"
 #endif
 
+#ifndef __EVE_EVT_SERVER_H__
+#include "eve/evt/Server.h"
+#endif
+
 #ifndef __EVE_EVT_TEVENT_H__
 #include "eve/evt/TEvent.h"
 #endif
 
-#ifndef __EVE_EVT_SERVER_H__
-#include "eve/evt/Server.h"
+#ifndef __EVE_EVT_TQUEUE_H__
+#include "eve/evt/TQueue.h"
 #endif
 
 

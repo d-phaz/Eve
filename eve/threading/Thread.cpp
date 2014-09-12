@@ -42,10 +42,6 @@
 #include "eve/threading/Utils.h"
 #endif
 
-#ifndef __EVE_THREADING_WORKER_H__
-#include "eve/threading/Worker.h"
-#endif
-
 #ifndef __EVE_MESSAGING_INCLUDES_H__
 #include "eve/messaging/Includes.h"
 #endif
@@ -65,7 +61,7 @@ eve::threading::Thread::Thread( void )
 	, m_threadID		( eve::threading::zero_ID() )
 
 	, m_pSpinLock		( nullptr )
-	, m_pWorkers		( nullptr )
+	, m_pWorker			( nullptr )
 {}
 
 
@@ -74,7 +70,7 @@ eve::threading::Thread::Thread( void )
 void eve::threading::Thread::init(void)
 {
 	m_pSpinLock		= EVE_CREATE_PTR(eve::threading::SpinLock);
-	m_pWorkers		= new std::deque<std::shared_ptr<eve::threading::Worker>>();
+	//m_pWorker		= EVE_CREATE_PTR(eve::threading::TWorker<int>);
 
 	m_hShutdownEvent	= ::CreateEvent(NULL, TRUE, FALSE, NULL);
 	m_StartEvent		= ::CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -86,9 +82,7 @@ void eve::threading::Thread::release(void)
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
 
-	m_pWorkers->clear();
-	EVE_RELEASE_PTR_CPP(m_pWorkers);
-	
+	EVE_RELEASE_PTR(m_pWorker);	
 	EVE_RELEASE_PTR(m_pSpinLock);
 }
 
@@ -101,10 +95,8 @@ void eve::threading::Thread::run(void)
 	{
 		m_pSpinLock->lock();
 
-		for (auto& it : (*m_pWorkers))
-		{
-			it->work();
-		}
+		m_pWorker->consumeEvents();
+		m_pWorker->work();
 
 		m_pSpinLock->unlock();
 

@@ -39,8 +39,11 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_THREADING_TWORKER_H__
+#include "eve/threading/TWorker.h"
+#endif
 
-namespace eve { namespace threading { class Worker; } }
+
 namespace eve { namespace threading { class SpinLock; } }
 
 
@@ -81,20 +84,20 @@ namespace eve
 			//////////////////////////////////////
 	
 		private:
-			//std::thread *			m_hThread;					//!< Thread handle (void*).
-			//std::thread::id		m_threadID;					//!< Thread ID (DWORD)
-			HANDLE					m_hThread;					//!< Thread handle (void*).
-			DWORD					m_threadID;					//!< Thread ID (DWORD)
+			//std::thread *				m_hThread;					//!< Thread handle (void*).
+			//std::thread::id			m_threadID;					//!< Thread ID (DWORD)
+			HANDLE						m_hThread;					//!< Thread handle (void*).
+			DWORD						m_threadID;					//!< Thread ID (DWORD)
 
-			HANDLE					m_hShutdownEvent;			//!< Thread shut down event.
-			HANDLE					m_StartEvent;				//!< Thread start event.
+			HANDLE						m_hShutdownEvent;			//!< Thread shut down event.
+			HANDLE						m_StartEvent;				//!< Thread start event.
 			
-			uint32_t				m_runWait;					//!< Sleep time when testing running() in milliseconds. \sa running()
+			uint32_t					m_runWait;					//!< Sleep time when testing running() in milliseconds. \sa running()
 
 
 		private:
-			SpinLock *								m_pSpinLock;	//!< Spin lock protecting workers and run loop.
-			std::deque<std::shared_ptr<Worker>> *	m_pWorkers;		//!< Thread workers called in run loop. Workers are added and deleted threw event system.
+			SpinLock *						m_pSpinLock;			//!< Spin lock protecting workers and run loop.
+			eve::threading::TWorker<int> *	m_pWorker;				//!< Thread worker called in run loop.
 
 
 			//////////////////////////////////////
