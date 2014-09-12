@@ -60,13 +60,27 @@ namespace eve
 			: public eve::evt::TDelegateAbstract<TArgs>
 		{
 
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
 			typedef void (TObj::*NotifyMethod)(const void*, TArgs&);
+
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
 
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
 		private:
 			/** \brief Default class constructor. (private) */
@@ -112,13 +126,27 @@ namespace eve
 			: public eve::evt::TDelegateAbstract<TArgs>
 		{
 
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
 			typedef void (TObj::*NotifyMethod)(TArgs&);
+
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
 
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
 		private:
 			/** \brief Default class constructor. (private) */
@@ -164,13 +192,27 @@ namespace eve
 			: public eve::evt::TDelegateAbstract<void>
 		{
 
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
 			typedef void (TObj::*NotifyMethod)(const void*);
+
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
 
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
 		private:
 			/** \brief Default class constructor. (private) */
@@ -216,13 +258,27 @@ namespace eve
 			: public eve::evt::TDelegateAbstract<void>
 		{
 
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
 			typedef void (TObj::*NotifyMethod)(void);
+
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
 
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
 		private:
 			/** \brief Default class constructor. (private) */

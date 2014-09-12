@@ -36,11 +36,18 @@
 
 #include <Poco/ActiveResult.h>
 #include <Poco/ActiveMethod.h>
-#include <Poco/Mutex.h>
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
+
+#ifndef __EVE_THREADING_SCOPED_FENCE_H__
+#include "eve/threading/ScopedFence.h"
+#endif
+
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "eve/threading/SpinLock.h"
+#endif 
 
 #ifndef __EVE_EVT_TDELEGATE_H__
 #include "eve/evt/TDelegate.h"
@@ -169,81 +176,76 @@ namespace eve
 		template <class TArgs, class TStrategy, class TDelegate>
 		class TEventAbstract
 		{
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			struct NotifyAsyncParams
+			{
+				std::shared_ptr<TStrategy>	ptrStrat;
+				const void *				pSender;
+				TArgs						args;
+				bool						enabled;
+
+				/// Default constructor reduces the need for TArgs to have an empty constructor, only copy constructor is needed.
+				NotifyAsyncParams(const void* pSend, const TArgs& a) 
+					: ptrStrat()
+					, pSender(pSend)
+					, args(a)
+					, enabled(true)
+				{}
+			};
+
+			Poco::ActiveMethod<TArgs, NotifyAsyncParams, TEventAbstract> _executeAsync;
+
+		protected:
+			TStrategy							_strategy;  /// The strategy used to notify observers.
+			bool								_enabled;   /// Stores if an event is enabled. Notifies on disabled events have no effect
+															/// but it is possible to change the observers.
+			mutable eve::threading::SpinLock *	m_pFence;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 			
 			EVE_DISABLE_COPY(TEventAbstract);
 
 		public:
-			typedef TArgs Args;
+			TEventAbstract(void);
 
-			TEventAbstract() :
-				_executeAsync(this, &TEventAbstract::executeAsyncImpl),
-				_enabled(true)
-			{
-			}
+			TEventAbstract(const TStrategy& strat);
 
-			TEventAbstract(const TStrategy& strat) :
-				_executeAsync(this, &TEventAbstract::executeAsyncImpl),
-				_strategy(strat),
-				_enabled(true)
-			{
-			}
+			virtual ~TEventAbstract(void);
 
-			virtual ~TEventAbstract()
-			{
-			}
+			/// Adds a delegate to the event. 
+			///
+			/// Exact behavior is determined by the TStrategy.
+			void operator += (const TDelegate& aDelegate);
 
-			void operator += (const TDelegate& aDelegate)
-				/// Adds a delegate to the event. 
-				///
-				/// Exact behavior is determined by the TStrategy.
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_strategy.add(aDelegate);
-			}
+			/// Removes a delegate from the event.
+			///
+			/// If the delegate is not found, this function does nothing.
+			void operator -= (const TDelegate& aDelegate);
 
-			void operator -= (const TDelegate& aDelegate)
-				/// Removes a delegate from the event.
-				///
-				/// If the delegate is not found, this function does nothing.
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_strategy.remove(aDelegate);
-			}
+			/// Shortcut for notify(pSender, args);
+			void operator () (const void* pSender, TArgs& args);
 
-			void operator () (const void* pSender, TArgs& args)
-				/// Shortcut for notify(pSender, args);
-			{
-				notify(pSender, args);
-			}
+			/// Shortcut for notify(args).
+			void operator () (TArgs& args);
 
-			void operator () (TArgs& args)
-				/// Shortcut for notify(args).
-			{
-				notify(0, args);
-			}
-
-			void notify(const void* pSender, TArgs& args)
-				/// Sends a notification to all registered delegates. The order is 
-				/// determined by the TStrategy. This method is blocking. While executing,
-				/// the list of delegates may be modified. These changes don't
-				/// influence the current active notifications but are activated with
-				/// the next notify. If a delegate is removed during a notify(), the
-				/// delegate will no longer be invoked (unless it has already been
-				/// invoked prior to removal). If one of the delegates throws an exception, 
-				/// the notify method is immediately aborted and the exception is propagated
-				/// to the caller.
-			{
-				Poco::ScopedLockWithUnlock<Poco::FastMutex> lock(_mutex);
-
-				if (!_enabled) return;
-
-				// thread-safeness: 
-				// copy should be faster and safer than blocking until
-				// execution ends
-				TStrategy strategy(_strategy);
-				lock.unlock();
-				strategy.notify(pSender, args);
-			}
+			/// Sends a notification to all registered delegates. The order is 
+			/// determined by the TStrategy. This method is blocking. While executing,
+			/// the list of delegates may be modified. These changes don't
+			/// influence the current active notifications but are activated with
+			/// the next notify. If a delegate is removed during a notify(), the
+			/// delegate will no longer be invoked (unless it has already been
+			/// invoked prior to removal). If one of the delegates throws an exception, 
+			/// the notify method is immediately aborted and the exception is propagated
+			/// to the caller.
+			void notify(const void* pSender, TArgs& args);
 
 			/// Sends a notification to all registered delegates. The order is 
 			/// determined by the TStrategy. This method is not blocking and will
@@ -255,93 +257,26 @@ namespace eve
 			/// delegate will no longer be invoked (unless it has already been
 			/// invoked prior to removal). If one of the delegates throws an exception, 
 			/// the execution is aborted and the exception is propagated to the caller.
-			Poco::ActiveResult<TArgs> notifyAsync(const void* pSender, const TArgs& args)
-			{
-				NotifyAsyncParams params(pSender, args);
-				{
-					typename Poco::FastMutex::ScopedLock lock(_mutex);
-
-					// thread-safeness: 
-					// copy should be faster and safer than blocking until
-					// execution ends
-					// make a copy of the strategy here to guarantee that
-					// between notifyAsync and the execution of the method no changes can occur
-
-					params.ptrStrat = std::shared_ptr<TStrategy>(new TStrategy(_strategy));
-					params.enabled = _enabled;
-				}
-				ActiveResult<TArgs> result = _executeAsync(params);
-				return result;
-			}
+			Poco::ActiveResult<TArgs> notifyAsync(const void* pSender, const TArgs& args);
 
 			/// Enables the event.
-			void enable()
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_enabled = true;
-			}
+			void enable(void);
 
 			/// Disables the event. notify and notifyAsnyc will be ignored,
 			/// but adding/removing delegates is still allowed.
-			void disable()
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_enabled = false;
-			}
+			void disable(void);
 
-			bool isEnabled() const
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				return _enabled;
-			}
+			bool isEnabled(void) const;
 
 			/// Removes all delegates.
-			void clear()
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_strategy.clear();
-			}
+			void clear(void);
 
 			/// Checks if any delegates are registered at the delegate.
-			bool empty() const
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				return _strategy.empty();
-			}
+			bool empty(void) const;
+
 
 		protected:
-			struct NotifyAsyncParams
-			{
-				std::shared_ptr<TStrategy> ptrStrat;
-				const void* pSender;
-				TArgs       args;
-				bool        enabled;
-
-				/// Default constructor reduces the need for TArgs to have an empty constructor, only copy constructor is needed.
-				NotifyAsyncParams(const void* pSend, const TArgs& a) :ptrStrat(), pSender(pSend), args(a), enabled(true)
-				{
-				}
-			};
-
-			Poco::ActiveMethod<TArgs, NotifyAsyncParams, TEventAbstract> _executeAsync;
-
-			TArgs executeAsyncImpl(const NotifyAsyncParams& par)
-			{
-				if (!par.enabled)
-				{
-					return par.args;
-				}
-
-				NotifyAsyncParams params = par;
-				TArgs retArgs(params.args);
-				params.ptrStrat->notify(params.pSender, retArgs);
-				return retArgs;
-			}
-
-			TStrategy _strategy; /// The strategy used to notify observers.
-			bool      _enabled;  /// Stores if an event is enabled. Notfies on disabled events have no effect
-			/// but it is possible to change the observers.
-			mutable Poco::FastMutex _mutex;
+			TArgs executeAsyncImpl(const NotifyAsyncParams& par);
 		};
 
 
@@ -466,52 +401,61 @@ namespace eve
 		class TEventAbstract<void, TStrategy, TDelegate>
 		{
 
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			struct NotifyAsyncParams
+			{
+				std::shared_ptr<TStrategy>	ptrStrat;
+				const void *				pSender;
+				bool						enabled;
+
+				/// Default constructor reduces the need for TArgs to have an empty constructor, only copy constructor is needed.
+				NotifyAsyncParams(const void* pSend) 
+					: ptrStrat()
+					, pSender(pSend)
+					, enabled(true)
+				{}
+			};
+
+			Poco::ActiveMethod<void, NotifyAsyncParams, TEventAbstract> _executeAsync;
+
+		protected:
+			TStrategy							_strategy;		//!< The strategy used to notify observers.
+			bool								_enabled;		//!< Stores if an event is enabled. Notifies on disabled events have no effect but it is possible to change the observers.
+			mutable eve::threading::SpinLock *	m_pFence;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
 			EVE_DISABLE_COPY(TEventAbstract);
 
 		public:
-			TEventAbstract() :
-				_executeAsync(this, &TEventAbstract::executeAsyncImpl),
-				_enabled(true)
-			{}
+			TEventAbstract(void);
 
-			TEventAbstract(const TStrategy& strat) :
-				_executeAsync(this, &TEventAbstract::executeAsyncImpl),
-				_strategy(strat),
-				_enabled(true)
-			{}
+			TEventAbstract(const TStrategy& strat);
 
-			virtual ~TEventAbstract()
-			{}
+			virtual ~TEventAbstract(void);
 
 			/// Adds a delegate to the event. 
 			///
 			/// Exact behavior is determined by the TStrategy.
-			void operator += (const TDelegate& aDelegate)
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_strategy.add(aDelegate);
-			}
+			void operator += (const TDelegate& aDelegate);
 
 			/// Removes a delegate from the event.
 			///
 			/// If the delegate is not found, this function does nothing.
-			void operator -= (const TDelegate& aDelegate)
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_strategy.remove(aDelegate);
-			}
+			void operator -= (const TDelegate& aDelegate);
 
 			/// Shortcut for notify(pSender, args);
-			void operator () (const void* pSender)
-			{
-				notify(pSender);
-			}
+			void operator () (const void* pSender);
 
 			/// Shortcut for notify(args).
-			void operator () ()
-			{
-				notify(0);
-			}
+			void operator () ();
 
 			/// Sends a notification to all registered delegates. The order is 
 			/// determined by the TStrategy. This method is blocking. While executing,
@@ -522,18 +466,7 @@ namespace eve
 			/// invoked prior to removal). If one of the delegates throws an exception, 
 			/// the notify method is immediately aborted and the exception is propagated
 			/// to the caller.
-			void notify(const void* pSender)
-			{
-				Poco::ScopedLockWithUnlock<Poco::FastMutex> lock(_mutex);
-
-				if (!_enabled) return;
-
-				// thread-safeness: 
-				// copy should be faster and safer than blocking until execution ends
-				TStrategy strategy(_strategy);
-				lock.unlock();
-				strategy.notify(pSender);
-			}
+			void notify(const void* pSender);
 
 			/// Sends a notification to all registered delegates. The order is 
 			/// determined by the TStrategy. This method is not blocking and will
@@ -545,95 +478,337 @@ namespace eve
 			/// delegate will no longer be invoked (unless it has already been
 			/// invoked prior to removal). If one of the delegates throws an exception, 
 			/// the execution is aborted and the exception is propagated to the caller.
-			Poco::ActiveResult<void> notifyAsync(const void* pSender)
-			{
-				NotifyAsyncParams params(pSender);
-				{
-					typename Poco::FastMutex::ScopedLock lock(_mutex);
-
-					// thread-safeness: 
-					// copy should be faster and safer than blocking until execution ends.
-					// make a copy of the strategy here to guarantee that.
-					// between notifyAsync and the execution of the method no changes can occur.
-
-					params.ptrStrat = std::shared_ptr<TStrategy>(new TStrategy(_strategy));
-					params.enabled = _enabled;
-				}
-				ActiveResult<void> result = _executeAsync(params);
-				return result;
-			}
+			Poco::ActiveResult<void> notifyAsync(const void* pSender);
 
 			/// Enables the event.
-			void enable()
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_enabled = true;
-			}
+			void enable(void);
 
 			/// Disables the event. notify and notifyAsnyc will be ignored,
 			/// but adding/removing delegates is still allowed.
-			void disable()
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_enabled = false;
-			}
+			void disable(void);
 
-			bool isEnabled() const
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				return _enabled;
-			}
+			bool isEnabled(void) const;
 
 			/// Removes all delegates.
-			void clear()
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				_strategy.clear();
-			}
+			void clear(void);
 
 			/// Checks if any delegates are registered at the delegate.
-			bool empty() const
-			{
-				typename Poco::FastMutex::ScopedLock lock(_mutex);
-				return _strategy.empty();
-			}
+			bool empty(void) const;
+
 
 		protected:
-			struct NotifyAsyncParams
-			{
-				std::shared_ptr<TStrategy> ptrStrat;
-				const void* pSender;
-				bool        enabled;
-
-				/// Default constructor reduces the need for TArgs to have an empty constructor, only copy constructor is needed.
-				NotifyAsyncParams(const void* pSend) :ptrStrat(), pSender(pSend), enabled(true)
-				{
-				}
-			}; // struct NotifyAsyncParams
-
-			Poco::ActiveMethod<void, NotifyAsyncParams, TEventAbstract> _executeAsync;
-
-			void executeAsyncImpl(const NotifyAsyncParams& par)
-			{
-				if (!par.enabled)
-				{
-					return;
-				}
-
-				NotifyAsyncParams params = par;
-				params.ptrStrat->notify(params.pSender);
-				return;
-			}
-
-			TStrategy _strategy; //!< The strategy used to notify observers.
-			bool      _enabled;  //!< Stores if an event is enabled. Notifies on disabled events have no effect
-			/// but it is possible to change the observers.
-			mutable Poco::FastMutex _mutex;
+			void executeAsyncImpl(const NotifyAsyncParams& par);
 
 		}; // class TEventAbstract
 
 	} // namespace evt
 
 } // namespace eve
+
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::TEventAbstract(void) 
+	: _executeAsync(this, &TEventAbstract::executeAsyncImpl)
+	, _enabled(true)
+{
+	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::TEventAbstract(const TStrategy& strat) 
+	: _executeAsync(this, &TEventAbstract::executeAsyncImpl),
+	, _strategy(strat)
+	, _enabled(true)
+{
+	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::~TEventAbstract(void)
+{
+	EVE_RELEASE_PTR(m_pFence);
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::operator += (const TDelegate& aDelegate)
+{
+	m_pFence->lock();
+	_strategy.add(aDelegate);
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::operator -= (const TDelegate& aDelegate)
+{
+	m_pFence->lock();
+	_strategy.remove(aDelegate);
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::operator () (const void* pSender, TArgs& args)
+{
+	notify(pSender, args);
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::operator () (TArgs& args)
+{
+	notify(0, args);
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::notify(const void* pSender, TArgs& args)
+{
+	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+
+	if (!_enabled) return;
+
+	// thread-safeness: 
+	// copy should be faster and safer than blocking until execution ends
+	TStrategy strategy(_strategy);
+	lock.unlock();
+	strategy.notify(pSender, args);
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+Poco::ActiveResult<TArgs> eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::notifyAsync(const void* pSender, const TArgs& args)
+{
+	NotifyAsyncParams params(pSender, args);
+	{
+		eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+
+		// thread-safeness: 
+		// copy should be faster and safer than blocking until  execution ends
+		// make a copy of the strategy here to guarantee that
+		// between notifyAsync and the execution of the method no changes can occur
+
+		params.ptrStrat = std::shared_ptr<TStrategy>(new TStrategy(_strategy));
+		params.enabled = _enabled;
+	}
+	ActiveResult<TArgs> result = _executeAsync(params);
+	return result;
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::enable(void)
+{
+	m_pFence->lock();
+	_enabled = true;
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::disable(void)
+{
+	m_pFence->lock();
+	_enabled = false;
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+bool eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::isEnabled(void) const
+{
+	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	return _enabled;
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::clear(void)
+{
+	m_pFence->lock();
+	_strategy.clear();
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+bool eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::empty(void) const
+{
+	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	return _strategy.empty();
+}
+
+//=================================================================================================
+template <class TArgs, class TStrategy, class TDelegate>
+TArgs eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::executeAsyncImpl(const NotifyAsyncParams& par)
+{
+	if (!par.enabled)
+	{
+		return par.args;
+	}
+
+	NotifyAsyncParams params = par;
+	TArgs retArgs(params.args);
+	params.ptrStrat->notify(params.pSender, retArgs);
+	return retArgs;
+}
+
+
+//-----------------------------------------------
+
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+eve::evt::TEventAbstract<void, TStrategy, TDelegate>::TEventAbstract(void) 
+	: _executeAsync(this, &TEventAbstract::executeAsyncImpl)
+	, _enabled(true)
+{
+	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+eve::evt::TEventAbstract<void, TStrategy, TDelegate>::TEventAbstract(const TStrategy& strat)
+	: _executeAsync(this, &TEventAbstract::executeAsyncImpl)
+	, _strategy(strat)
+	, _enabled(true)
+{
+	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+eve::evt::TEventAbstract<void, TStrategy, TDelegate>::~TEventAbstract(void)
+{
+	EVE_RELEASE_PTR(m_pFence);
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::operator += (const TDelegate& aDelegate)
+{
+	m_pFence->lock();
+	_strategy.add(aDelegate);
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::operator -= (const TDelegate& aDelegate)
+{
+	m_pFence->lock();
+	_strategy.remove(aDelegate);
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::operator () (const void* pSender)
+{
+	notify(pSender);
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::operator () ()
+{
+	notify(0);
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::notify(const void* pSender)
+{
+	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+
+	if (!_enabled) return;
+
+	// thread-safeness: 
+	// copy should be faster and safer than blocking until execution ends
+	TStrategy strategy(_strategy);
+	lock.unlock();
+	strategy.notify(pSender);
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+Poco::ActiveResult<void> eve::evt::TEventAbstract<void, TStrategy, TDelegate>::notifyAsync(const void* pSender)
+{
+	NotifyAsyncParams params(pSender);
+	{
+		eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+
+		// thread-safeness: 
+		// copy should be faster and safer than blocking until execution ends.
+		// make a copy of the strategy here to guarantee that.
+		// between notifyAsync and the execution of the method no changes can occur.
+
+		params.ptrStrat = std::shared_ptr<TStrategy>(new TStrategy(_strategy));
+		params.enabled = _enabled;
+	}
+	ActiveResult<void> result = _executeAsync(params);
+	return result;
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::enable(void)
+{
+	m_pFence->lock();
+	_enabled = true;
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::disable(void)
+{
+	m_pFence->lock();
+	_enabled = false;
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+bool eve::evt::TEventAbstract<void, TStrategy, TDelegate>::isEnabled(void) const
+{
+	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	return _enabled;
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::clear(void)
+{
+	m_pFence->lock();
+	_strategy.clear();
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+bool eve::evt::TEventAbstract<void, TStrategy, TDelegate>::empty(void) const
+{
+	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	return _strategy.empty();
+}
+
+//=================================================================================================
+template <class TStrategy, class TDelegate>
+void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::executeAsyncImpl(const NotifyAsyncParams& par)
+{
+	if (!par.enabled)
+	{
+		return;
+	}
+
+	NotifyAsyncParams params = par;
+	params.ptrStrat->notify(params.pSender);
+	return;
+}
 
 #endif // __EVE_EVT_TABSTRACT_EVENT_H__

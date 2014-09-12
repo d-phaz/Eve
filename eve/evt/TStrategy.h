@@ -48,10 +48,28 @@ namespace eve
 		template <class TArgs, class TDelegate>
 		class TStrategy
 		{
+
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
 			typedef std::shared_ptr<TDelegate>   DelegatePtr;
 			typedef std::vector<DelegatePtr>     Delegates;
 			typedef typename Delegates::iterator Iterator;
+
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			Delegates _delegates;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
 		public:
 			TStrategy()
@@ -124,9 +142,6 @@ namespace eve
 				return _delegates.empty();
 			}
 
-		protected:
-			Delegates _delegates;
-
 		}; // class TStrategy
 
 
@@ -138,12 +153,42 @@ namespace eve
 			/// Delegates are kept in a std::vector<>, ordered
 			/// by their priority.
 		{
+			
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
 			typedef std::shared_ptr<TDelegate>   DelegatePtr;
 			typedef std::vector<DelegatePtr>     Delegates;
 			typedef typename Delegates::iterator Iterator;
 
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			Delegates _delegates;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
 		public:
+			TStrategy()
+			{
+			}
+
+			TStrategy(const TStrategy& s) :
+				_delegates(s._delegates)
+			{
+			}
+
+			~TStrategy()
+			{
+			}
 
 			void notify(const void* sender)
 			{
@@ -201,9 +246,6 @@ namespace eve
 			{
 				return _delegates.empty();
 			}
-
-		protected:
-			Delegates _delegates;
 
 		}; // class TStrategy
 
