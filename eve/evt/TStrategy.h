@@ -42,9 +42,11 @@ namespace eve
 {
 	namespace evt
 	{
-		/// NotificationStrategy for PriorityEvent.
-		///
-		/// Delegates are kept in a std::vector<>, ordered by their priority.
+		/** 
+		* \class eve::evt::TStrategy
+		* \brief Notification strategy for event.
+		* Delegates are stored in a std::vector<>, ordered by their priority.
+		*/
 		template <class TArgs, class TDelegate>
 		class TStrategy
 		{
@@ -54,9 +56,9 @@ namespace eve
 			//////////////////////////////////////
 
 		public:
-			typedef std::shared_ptr<TDelegate>   DelegatePtr;
-			typedef std::vector<DelegatePtr>     Delegates;
-			typedef typename Delegates::iterator Iterator;
+			typedef std::shared_ptr<TDelegate>		DelegatePtr;
+			typedef std::vector<DelegatePtr>		Delegates;
+			typedef typename Delegates::iterator	Iterator;
 
 
 			//////////////////////////////////////
@@ -64,7 +66,7 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			Delegates _delegates;
+			Delegates m_delegates;
 
 
 			//////////////////////////////////////
@@ -72,86 +74,44 @@ namespace eve
 			//////////////////////////////////////
 
 		public:
-			TStrategy()
-			{
-			}
+			/** \brief Class constructor. */
+			TStrategy(void);
+			/** \brief Copy constructor. */
+			TStrategy(const TStrategy & s);
+			/** \brief Class destructor. */
+			virtual ~TStrategy(void);
 
-			TStrategy(const TStrategy& s) :
-				_delegates(s._delegates)
-			{
-			}
 
-			~TStrategy()
-			{
-			}
+			/** \brief Assignation operator. */
+			TStrategy& operator = (const TStrategy & s);
 
-			void notify(const void* sender, TArgs& arguments)
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					(*it)->notify(sender, arguments);
-				}
-			}
 
-			void add(const TDelegate& delegate)
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					if ((*it)->priority() > delegate.priority())
-					{
-						_delegates.insert(it, DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
-						return;
-					}
-				}
-				_delegates.push_back(DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
-			}
+			/** \brief Notify delegates using sender and arguments. */
+			void notify(const void * sender, TArgs& arguments);
 
-			void remove(const TDelegate& p_delegate)
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					if (p_delegate.equals(**it))
-					{
-						(*it)->disable();
-						_delegates.erase(it);
-						return;
-					}
-				}
-			}
 
-			TStrategy& operator = (const TStrategy& s)
-			{
-				if (this != &s)
-				{
-					_delegates = s._delegates;
-				}
-				return *this;
-			}
+			/** \brief Add a copy of the target delegate \p_delegate. */
+			void add(const TDelegate & p_delegate);
+			/** \brief Disable and remove delegate similar to the target one \p_delegate. */
+			void remove(const TDelegate & p_delegate);
+			/** \brief Disable and remove all delegates. */
+			void clear(void);
 
-			void clear()
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					(*it)->disable();
-				}
-				_delegates.clear();
-			}
 
-			bool empty() const
-			{
-				return _delegates.empty();
-			}
+			/** \brief Test if delegate std::vector is empty. */
+			bool empty(void) const;
 
 		}; // class TStrategy
 
 
 
+		/**
+		* \class eve::evt::TStrategy (specialized)
+		* \brief Notification strategy for event.
+		* Delegates are stored in a std::vector<>, ordered by their priority.
+		*/
 		template <class TDelegate>
 		class TStrategy<void, TDelegate>
-			/// NotificationStrategy for PriorityEvent.
-			///
-			/// Delegates are kept in a std::vector<>, ordered
-			/// by their priority.
 		{
 			
 			//////////////////////////////////////
@@ -169,7 +129,7 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			Delegates _delegates;
+			Delegates m_delegates;
 
 
 			//////////////////////////////////////
@@ -177,80 +137,214 @@ namespace eve
 			//////////////////////////////////////
 
 		public:
-			TStrategy()
-			{
-			}
+			/** \brief Class constructor. */
+			TStrategy(void);
+			/** \brief Copy constructor. */
+			TStrategy(const TStrategy & s);
+			/** \brief Class destructor. */
+			virtual ~TStrategy(void);
 
-			TStrategy(const TStrategy& s) :
-				_delegates(s._delegates)
-			{
-			}
 
-			~TStrategy()
-			{
-			}
+			/** \brief Assignation operator. */
+			TStrategy& operator = (const TStrategy & s);
 
-			void notify(const void* sender)
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					(*it)->notify(sender);
-				}
-			}
 
-			void add(const TDelegate& delegate)
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					if ((*it)->priority() > delegate.priority())
-					{
-						_delegates.insert(it, DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
-						return;
-					}
-				}
-				_delegates.push_back(DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
-			}
+			/** \brief Notify delegates using sender and arguments. */
+			void notify(const void * sender);
 
-			void remove(const TDelegate& p_delegate)
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					if (p_delegate.equals(**it))
-					{
-						(*it)->disable();
-						_delegates.erase(it);
-						return;
-					}
-				}
-			}
 
-			TStrategy& operator = (const TStrategy& s)
-			{
-				if (this != &s)
-				{
-					_delegates = s._delegates;
-				}
-				return *this;
-			}
+			/** \brief Add a copy of the target delegate \p_delegate. */
+			void add(const TDelegate & delegate);
+			/** \brief Disable and remove delegate similar to the target one \p_delegate. */
+			void remove(const TDelegate & p_delegate);
+			/** \brief Disable and remove all delegates. */
+			void clear(void);
 
-			void clear()
-			{
-				for (Iterator it = _delegates.begin(); it != _delegates.end(); ++it)
-				{
-					(*it)->disable();
-				}
-				_delegates.clear();
-			}
 
-			bool empty() const
-			{
-				return _delegates.empty();
-			}
+			/** \brief Test if delegate std::vector is empty. */
+			bool empty(void) const;
 
 		}; // class TStrategy
 
 	} // namespace evt
 
 } // namespace eve
+
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+eve::evt::TStrategy<TArgs, TDelegate>::TStrategy(void)
+	: m_delegates()
+{}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+eve::evt::TStrategy<TArgs, TDelegate>::TStrategy(const TStrategy & s) 
+	: m_delegates(s.m_delegates)
+{}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+eve::evt::TStrategy<TArgs, TDelegate>::~TStrategy(void)
+{}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+eve::evt::TStrategy<TArgs, TDelegate> & eve::evt::TStrategy<TArgs, TDelegate>::operator = (const TStrategy<TArgs, TDelegate> & s)
+{
+	if (this != &s)
+	{
+		m_delegates = s.m_delegates;
+	}
+	return *this;
+}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+void eve::evt::TStrategy<TArgs, TDelegate>::notify(const void * sender, TArgs& arguments)
+{
+	for (auto& it : m_delegates)
+	{
+		it->notify(sender, arguments);
+	}
+}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+void eve::evt::TStrategy<TArgs, TDelegate>::add(const TDelegate & p_delegate)
+{
+	for (Iterator it = m_delegates.begin(); it != m_delegates.end(); ++it)
+	{
+		if ((*it)->priority() > p_delegate.priority())
+		{
+			m_delegates.insert(it, DelegatePtr(static_cast<TDelegate*>(p_delegate.clone())));
+			return;
+		}
+	}
+	m_delegates.push_back(DelegatePtr(static_cast<TDelegate*>(p_delegate.clone())));
+}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+void eve::evt::TStrategy<TArgs, TDelegate>::remove(const TDelegate & p_delegate)
+{
+	for (Iterator it = m_delegates.begin(); it != m_delegates.end(); ++it)
+	{
+		if (p_delegate.equals(**it))
+		{
+			(*it)->disable();
+			m_delegates.erase(it);
+			return;
+		}
+	}
+}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+void eve::evt::TStrategy<TArgs, TDelegate>::clear(void)
+{
+	for (auto& it : m_delegates)
+	{
+		it->disable();
+	}
+	m_delegates.clear();
+}
+
+//=================================================================================================
+template <class TArgs, class TDelegate>
+bool eve::evt::TStrategy<TArgs, TDelegate>::empty(void) const
+{
+	return m_delegates.empty();
+}
+
+
+//-----------------------------------------------
+
+
+//=================================================================================================
+template <class TDelegate>
+eve::evt::TStrategy<void, TDelegate>::TStrategy(void)
+	: m_delegates()
+{}
+
+//=================================================================================================
+template <class TDelegate>
+eve::evt::TStrategy<void, TDelegate>::TStrategy(const TStrategy & s) 
+	: m_delegates(s.m_delegates)
+{}
+
+//=================================================================================================
+template <class TDelegate>
+eve::evt::TStrategy<void, TDelegate>::~TStrategy(void)
+{}
+
+//=================================================================================================
+template <class TDelegate>
+eve::evt::TStrategy<void, TDelegate> & eve::evt::TStrategy<void, TDelegate>::operator = (const TStrategy<void, TDelegate> & s)
+{
+	if (this != &s)
+	{
+		m_delegates = s.m_delegates;
+	}
+	return *this;
+}
+
+//=================================================================================================
+template <class TDelegate>
+void eve::evt::TStrategy<void, TDelegate>::notify(const void * sender)
+{
+	for (auto& it : m_delegates)
+	{
+		it->notify(sender);
+	}
+}
+
+//=================================================================================================
+template <class TDelegate>
+void eve::evt::TStrategy<void, TDelegate>::add(const TDelegate & delegate)
+{
+	for (Iterator it = m_delegates.begin(); it != m_delegates.end(); ++it)
+	{
+		if ((*it)->priority() > delegate.priority())
+		{
+			m_delegates.insert(it, DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
+			return;
+		}
+	}
+	m_delegates.push_back(DelegatePtr(static_cast<TDelegate*>(delegate.clone())));
+}
+
+//=================================================================================================
+template <class TDelegate>
+void eve::evt::TStrategy<void, TDelegate>::remove(const TDelegate & p_delegate)
+{
+	for (Iterator it = m_delegates.begin(); it != m_delegates.end(); ++it)
+	{
+		if (p_delegate.equals(**it))
+		{
+			(*it)->disable();
+			m_delegates.erase(it);
+			return;
+		}
+	}
+}
+
+//=================================================================================================
+template <class TDelegate>
+void eve::evt::TStrategy<void, TDelegate>::clear(void)
+{
+	for (auto& it : m_delegates)
+	{
+		it->disable();
+	}
+	m_delegates.clear();
+}
+
+//=================================================================================================
+template <class TDelegate>
+bool eve::evt::TStrategy<void, TDelegate>::empty(void) const
+{
+	return m_delegates.empty();
+}
 
 #endif // __EVE_EVT_TSTRATEGY_H__

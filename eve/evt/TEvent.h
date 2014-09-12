@@ -67,9 +67,9 @@ namespace eve
 		*/
 		template <class TArgs>
 		class TEvent
-			: public eve::evt::TEventAbstract<TArgs,
-											  eve::evt::TStrategy<TArgs, eve::evt::TDelegateAbstract<TArgs>>, 
-											  eve::evt::TDelegateAbstract<TArgs >>
+			: public eve::evt::TEventAbstract< TArgs
+											 , eve::evt::TStrategy<TArgs, eve::evt::TDelegateAbstract<TArgs>> 
+											 , eve::evt::TDelegateAbstract<TArgs> >
 		{
 
 			//////////////////////////////////////

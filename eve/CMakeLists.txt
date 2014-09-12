@@ -199,24 +199,24 @@ if( APPLE )
 endif()
 
 
-# POCO
-#################################################
-add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS )
-if( WIN32 )
-	if( OPTION_BUILD_TYPE_DEBUG )
-		set( LIBS ${LIBS} PocoFoundationmdd.lib ) 
-	else()
-		set( LIBS ${LIBS} PocoFoundationmd.lib )
-	endif()
-endif()
+# # POCO
+# #################################################
+# add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS )
+# if( WIN32 )
+	# if( OPTION_BUILD_TYPE_DEBUG )
+		# set( LIBS ${LIBS} PocoFoundationmdd.lib ) 
+	# else()
+		# set( LIBS ${LIBS} PocoFoundationmd.lib )
+	# endif()
+# endif()
 
-if( APPLE )
-	if( OPTION_BUILD_TYPE_DEBUG )
-		set( LIBS ${LIBS} libPocoFoundationmdd.a ) 
-	else()
-		set( LIBS ${LIBS} libPocoFoundationmd.a )
-	endif()
-endif()
+# if( APPLE )
+	# if( OPTION_BUILD_TYPE_DEBUG )
+		# set( LIBS ${LIBS} libPocoFoundationmdd.a ) 
+	# else()
+		# set( LIBS ${LIBS} libPocoFoundationmd.a )
+	# endif()
+# endif()
 
 
 # Windows Resource file.
