@@ -43,9 +43,10 @@ namespace eve
 {
 	namespace evt
 	{
-		/// Base class for TDelegate and PriorityExpire.
-		///
-		/// Extends AbstractDelegate with a priority value.
+		/**
+		* \clas eve::evt::TDelegateAbstract
+		* \brief Abstract base delegate class using priority.
+		*/
 		template <class TArgs>
 		class TDelegateAbstract 
 		{
@@ -53,40 +54,45 @@ namespace eve
 			int32_t _priority;
 
 		public:
+			/** \brief Class constructor. */
 			TDelegateAbstract(int32_t prio)
 				// Members init
 				: _priority(prio)
 			{}
-
+			/** \brief Class copy constructor. */
 			TDelegateAbstract(const TDelegateAbstract& del)
 				// Members init
 				: _priority(del._priority)
 			{}
-
+			/** \brief Class destructor. */
 			virtual ~TDelegateAbstract(void)
 			{}
 
+
+			/** \brief get delegate priority. */
 			int32_t priority(void) const
 			{
 				return _priority;
 			}
 
-			/// Invokes the delegate's callback function.
-			/// Returns true if successful, or false if the delegate
-			/// has been disabled or has expired.
+			
+		public:
+			/**
+			* \brief Invokes the delegate's callback function. (pure virtual)
+			* Returns true if successful, or false if the delegate has been disabled or has expired.
+			*/
 			virtual bool notify(const void* sender, TArgs& arguments) = 0;
 
-			/// Compares the AbstractDelegate with the other one for equality.
+			/** \brief Compares the AbstractDelegate with the other one for equality. (pure virtual) */
 			virtual bool equals(const TDelegateAbstract& other) const = 0;
 
-			/// Returns a deep copy of the AbstractDelegate.
+			/** \brief Returns a deep copy of the AbstractDelegate. (pure virtual) */
 			virtual TDelegateAbstract* clone(void) const = 0;
 
-			/// Disables the delegate, which is done prior to removal.
+			/** \brief Disables the delegate, which is done prior to removal. (pure virtual) */
 			virtual void disable(void) = 0;
 
-			/// Returns the unwrapped delegate. Must be overridden by decorators
-			/// like Expire.
+			/* \brief Returns the unwrapped delegate. */
 			virtual const TDelegateAbstract* unwrap(void) const
 			{
 				return this;
@@ -95,9 +101,10 @@ namespace eve
 
 
 
-		/// Base class for TDelegate and PriorityExpire.
-		///
-		/// Extends AbstractDelegate with a priority value.
+		/**
+		* \clas eve::evt::TDelegateAbstract (specialized)
+		* \brief Abstract base delegate class using priority.
+		*/
 		template <>
 		class TDelegateAbstract<void>
 		{
@@ -106,40 +113,45 @@ namespace eve
 			int32_t _priority;
 
 		public:
+			/** \brief Class constructor. */
 			TDelegateAbstract(int32_t prio)
 				// Members init
 				: _priority(prio)
 			{}
-
+			/** \brief Class copy constructor. */
 			TDelegateAbstract(const TDelegateAbstract& del)
 				// Members init
 				: _priority(del._priority)
 			{}
-
+			/** \brief Class destructor. */
 			virtual ~TDelegateAbstract(void)
 			{}
 
+
+			/** \brief get delegate priority. */
 			int32_t priority(void) const
 			{
 				return _priority;
 			}
 
-			/// Invokes the delegate's callback function.
-			/// Returns true if successful, or false if the delegate
-			/// has been disabled or has expired.
+
+		public:
+			/** 
+			* \brief Invokes the delegate's callback function. (pure virtual)
+			* Returns true if successful, or false if the delegate has been disabled or has expired.
+			*/
 			virtual bool notify(const void* sender) = 0;
 
-			/// Compares the AbstractDelegate with the other one for equality.
+			/** \brief Compares the AbstractDelegate with the other one for equality. (pure virtual) */
 			virtual bool equals(const TDelegateAbstract& other) const = 0;
 
-			/// Returns a deep copy of the AbstractDelegate.
+			/** \brief Returns a deep copy of the AbstractDelegate. (pure virtual) */
 			virtual TDelegateAbstract* clone(void) const = 0;
 
-			/// Disables the delegate, which is done prior to removal.
+			/** \brief Disables the delegate, which is done prior to removal. (pure virtual) */
 			virtual void disable(void) = 0;
 
-			/// Returns the unwrapped delegate. Must be overridden by decorators
-			/// like Expire.
+			/* \brief Returns the unwrapped delegate. */
 			virtual const TDelegateAbstract* unwrap(void) const
 			{
 				return this;

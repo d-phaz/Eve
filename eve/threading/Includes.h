@@ -46,6 +46,10 @@
 #include "eve/threading/Mutex.h"
 #endif
 
+#ifndef __EVE_THREADING_SCOPED_FENCE_H__
+#include "eve/threading/ScopedFence.h"
+#endif
+
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
 #include "eve/threading/SpinLock.h"
 #endif 

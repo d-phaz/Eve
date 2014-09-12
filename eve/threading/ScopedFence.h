@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_THREADING_FENCE_H__
-#define __EVE_THREADING_FENCE_H__
+#ifndef __EVE_THREADING_SCOPED_FENCE_H__
+#define __EVE_THREADING_SCOPED_FENCE_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -44,38 +44,74 @@ namespace eve
 	{
 
 		/**
-		* \class eve::threading::Fence
-		* \brief Abstract base fence class (lock/mutex/...)
+		* \class eve::threading::ScopedFence
+		* \brief Scoped fence class, lock the fence in the constructor and unlock it in the destructor.
+		* Used fence is NOT deleted after destructor call.
 		* \note extends memory::Pointer
 		*/
-		class Fence
-			: public eve::memory::Pointer
+		template<class TFence>
+		class ScopedFence
 		{
-
-			friend class eve::memory::Pointer;
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Fence);
-			EVE_PROTECT_DESTRUCTOR(Fence);
+		private:
+			TFence *		m_pFence;
 
-		protected:
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(ScopedFence);
+
+		public:
 			/** \brief Class constructor. */
-			Fence(void);
+			ScopedFence(TFence * p_pFence);
+			/** \brief Class destructor. */
+			virtual ~ScopedFence(void);
 
 
 		public:
-			/** \brief Lock the fence. (pure virtual) */
-			virtual void lock(void) = 0;
-			/** \brief Unlock the fence. (pure virtual)*/
-			virtual void unlock(void) = 0;
+			/** \brief Unlock the fence and set it to null.*/
+			virtual void unlock(void);
 
-		}; // class Fence
+		}; // class Mutex
 
 	} // namespace threading
 
 } // namespace eve
 
-#endif // __EVE_THREADING_FENCE_H__
+
+//=================================================================================================
+template<class TFence>
+eve::threading::ScopedFence<TFence>::ScopedFence(TFence * p_pFence)
+	: m_pFence(p_pFence)
+{
+	EVE_ASSERT(m_pFence);
+	m_pFence->lock();
+}
+
+//=================================================================================================
+template<class TFence>
+eve::threading::ScopedFence<TFence>::~ScopedFence(void)
+{
+	if (m_pFence)
+	{
+		m_pFence->unlock();
+		m_pFence = nullptr;
+	}
+}
+
+//=================================================================================================
+template<class TFence>
+void eve::threading::ScopedFence<TFence>::unlock(void)
+{
+	EVE_ASSERT(m_pFence);
+
+	m_pFence->unlock();
+	m_pFence = nullptr;
+}
+
+#endif // __EVE_THREADING_SCOPED_FENCE_H__
