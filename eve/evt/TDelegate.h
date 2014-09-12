@@ -64,8 +64,8 @@ namespace eve
 			typedef void (TObj::*NotifyMethod)(const void*, TArgs&);
 
 		protected:
-			TObj*						_receiverObject;
-			NotifyMethod				_receiverMethod;
+			TObj*						m_pReceiverObject;
+			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
 
 		private:
@@ -116,8 +116,8 @@ namespace eve
 			typedef void (TObj::*NotifyMethod)(TArgs&);
 
 		protected:
-			TObj*						_receiverObject;
-			NotifyMethod				_receiverMethod;
+			TObj*						m_pReceiverObject;
+			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
 
 		private:
@@ -168,8 +168,8 @@ namespace eve
 			typedef void (TObj::*NotifyMethod)(const void*);
 
 		protected:
-			TObj*						_receiverObject;
-			NotifyMethod				_receiverMethod;
+			TObj*						m_pReceiverObject;
+			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
 
 		private:
@@ -220,8 +220,8 @@ namespace eve
 			typedef void (TObj::*NotifyMethod)(void);
 
 		protected:
-			TObj*						_receiverObject;
-			NotifyMethod				_receiverMethod;
+			TObj*						m_pReceiverObject;
+			NotifyMethod				m_receiverMethod;
 			eve::threading::SpinLock *	m_pFence;
 
 		private:
@@ -302,8 +302,8 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::TDelegate(TObj* obj, NotifyMethod m
 	// Inheritance
 	: eve::evt::TDelegateAbstract<TArgs>(prio)
 	// Members init
-	, _receiverObject(obj)
-	, _receiverMethod(method)
+	, m_pReceiverObject(obj)
+	, m_receiverMethod(method)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);	
 }
@@ -314,8 +314,8 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::TDelegate(const TDelegate<TObj, TAr
 	// Inheritance
 	: eve::evt::TDelegateAbstract<TArgs>(p_other)
 	// Members init
-	, _receiverObject(p_other._receiverObject),
-	, _receiverMethod(p_other._receiverMethod)
+	, m_pReceiverObject(p_other.m_pReceiverObject),
+	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -326,10 +326,9 @@ eve::evt::TDelegate<TObj, TArgs, useSender> & eve::evt::TDelegate<TObj, TArgs, u
 {
 	if (&p_other != this)
 	{
-		this->_pTarget			= p_other._pTarget;
-		this->_receiverObject	= p_other._receiverObject;
-		this->_receiverMethod	= p_other._receiverMethod;
-		this->_priority			= p_other._priority;
+		this->m_pReceiverObject	= p_other.m_pReceiverObject;
+		this->m_receiverMethod	= p_other.m_receiverMethod;
+		this->m_priority		= p_other.m_priority;
 	}
 	return *this;
 }
@@ -346,9 +345,9 @@ template <class TObj, class TArgs, bool useSender>
 bool eve::evt::TDelegate<TObj, TArgs, useSender>::notify(const void* sender, TArgs& arguments)
 {
 	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
-	if (_receiverObject)
+	if (m_pReceiverObject)
 	{
-		(_receiverObject->*_receiverMethod)(sender, arguments);
+		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
 		return true;
 	}
 	else return false;
@@ -359,7 +358,7 @@ template <class TObj, class TArgs, bool useSender>
 bool eve::evt::TDelegate<TObj, TArgs, useSender>::equals(const eve::evt::TDelegateAbstract<TArgs>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
-	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
+	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && m_pReceiverObject == pOtherDelegate->m_pReceiverObject && m_receiverMethod == pOtherDelegate->m_receiverMethod;
 }
 
 //=================================================================================================
@@ -374,7 +373,7 @@ template <class TObj, class TArgs, bool useSender>
 void eve::evt::TDelegate<TObj, TArgs, useSender>::disable(void)
 {
 	m_pFence->lock();
-	_receiverObject = 0;
+	m_pReceiverObject = 0;
 	m_pFence->unlock();
 }
 
@@ -395,8 +394,8 @@ eve::evt::TDelegate<TObj, TArgs, false>::TDelegate(TObj* obj, NotifyMethod metho
 	// Inheritance
 	: eve::evt::TDelegateAbstract<TArgs>(prio)
 	// Members init
-	, _receiverObject(obj)
-	, _receiverMethod(method)
+	, m_pReceiverObject(obj)
+	, m_receiverMethod(method)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -407,8 +406,8 @@ eve::evt::TDelegate<TObj, TArgs, false>::TDelegate(const TDelegate<TObj, TArgs, 
 	// Inheritance
 	: eve::evt::TDelegateAbstract<TArgs>(p_other)
 	// Members init
-	, _receiverObject(p_other._receiverObject)
-	, _receiverMethod(p_other._receiverMethod)
+	, m_pReceiverObject(p_other.m_pReceiverObject)
+	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -419,10 +418,9 @@ eve::evt::TDelegate<TObj, TArgs, false> & eve::evt::TDelegate<TObj, TArgs, false
 {
 	if (&p_other != this)
 	{
-		this->_pTarget			= p_other._pTarget;
-		this->_receiverObject	= p_other._receiverObject;
-		this->_receiverMethod	= p_other._receiverMethod;
-		this->_priority			= p_other._priority;
+		this->m_pReceiverObject	= p_other.m_pReceiverObject;
+		this->m_receiverMethod	= p_other.m_receiverMethod;
+		this->m_priority		= p_other.m_priority;
 	}
 	return *this;
 }
@@ -439,9 +437,9 @@ template <class TObj, class TArgs>
 bool eve::evt::TDelegate<TObj, TArgs, false>::notify(const void* sender, TArgs& arguments)
 {
 	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
-	if (_receiverObject)
+	if (m_pReceiverObject)
 	{
-		(_receiverObject->*_receiverMethod)(arguments);
+		(m_pReceiverObject->*m_receiverMethod)(arguments);
 		return true;
 	}
 	else return false;
@@ -452,7 +450,7 @@ template <class TObj, class TArgs>
 bool eve::evt::TDelegate<TObj, TArgs, false>::equals(const eve::evt::TDelegateAbstract<TArgs>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
-	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
+	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && m_pReceiverObject == pOtherDelegate->m_pReceiverObject && m_receiverMethod == pOtherDelegate->m_receiverMethod;
 }
 
 //=================================================================================================
@@ -467,7 +465,7 @@ template <class TObj, class TArgs>
 void eve::evt::TDelegate<TObj, TArgs, false>::disable(void)
 {
 	m_pFence->lock();
-	_receiverObject = 0;
+	m_pReceiverObject = 0;
 	m_pFence->unlock();
 }
 
@@ -488,8 +486,8 @@ eve::evt::TDelegate<TObj, void, true>::TDelegate(TObj* obj, NotifyMethod method,
 	// Inheritance
 	: eve::evt::TDelegateAbstract<void>(prio)
 	// Members init
-	, _receiverObject(obj)
-	, _receiverMethod(method)
+	, m_pReceiverObject(obj)
+	, m_receiverMethod(method)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -500,8 +498,8 @@ eve::evt::TDelegate<TObj, void, true>::TDelegate(const TDelegate<TObj, void, tru
 	// Inheritance
 	: eve::evt::TDelegateAbstract<void>(p_other)
 	// Members init
-	, _receiverObject(p_other._receiverObject),
-	, _receiverMethod(p_other._receiverMethod)
+	, m_pReceiverObject(p_other.m_pReceiverObject),
+	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -512,10 +510,9 @@ eve::evt::TDelegate<TObj, void, true> & eve::evt::TDelegate<TObj, void, true>::o
 {
 	if (&p_other != this)
 	{
-		this->_pTarget = p_other._pTarget;
-		this->_receiverObject = p_other._receiverObject;
-		this->_receiverMethod = p_other._receiverMethod;
-		this->_priority = p_other._priority;
+		this->m_pReceiverObject = p_other.m_pReceiverObject;
+		this->m_receiverMethod	= p_other.m_receiverMethod;
+		this->m_priority		= p_other.m_priority;
 	}
 	return *this;
 }
@@ -532,9 +529,9 @@ template <class TObj>
 bool eve::evt::TDelegate<TObj, void, true>::notify(const void* sender)
 {
 	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
-	if (_receiverObject)
+	if (m_pReceiverObject)
 	{
-		(_receiverObject->*_receiverMethod)(sender, arguments);
+		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
 		return true;
 	}
 	else return false;
@@ -545,7 +542,7 @@ template <class TObj>
 bool eve::evt::TDelegate<TObj, void, true>::equals(const eve::evt::TDelegateAbstract<void>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
-	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
+	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && m_pReceiverObject == pOtherDelegate->m_pReceiverObject && m_receiverMethod == pOtherDelegate->m_receiverMethod;
 }
 
 //=================================================================================================
@@ -560,7 +557,7 @@ template <class TObj>
 void eve::evt::TDelegate<TObj, void, true>::disable(void)
 {
 	m_pFence->lock();
-	_receiverObject = 0;
+	m_pReceiverObject = 0;
 	m_pFence->unlock();
 }
 
@@ -581,8 +578,8 @@ eve::evt::TDelegate<TObj, void, false>::TDelegate(TObj* obj, NotifyMethod method
 	// Inheritance
 	: eve::evt::TDelegateAbstract<void>(prio)
 	// Members init
-	, _receiverObject(obj)
-	, _receiverMethod(method)
+	, m_pReceiverObject(obj)
+	, m_receiverMethod(method)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -593,8 +590,8 @@ eve::evt::TDelegate<TObj, void, false>::TDelegate(const TDelegate<TObj, void, fa
 	// Inheritance
 	: eve::evt::TDelegateAbstract<void>(p_other)
 	// Members init
-	, _receiverObject(p_other._receiverObject),
-	, _receiverMethod(p_other._receiverMethod)
+	, m_pReceiverObject(p_other.m_pReceiverObject),
+	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
 }
@@ -605,10 +602,9 @@ eve::evt::TDelegate<TObj, void, false> & eve::evt::TDelegate<TObj, void, false>:
 {
 	if (&p_other != this)
 	{
-		this->_pTarget = p_other._pTarget;
-		this->_receiverObject = p_other._receiverObject;
-		this->_receiverMethod = p_other._receiverMethod;
-		this->_priority = p_other._priority;
+		this->m_pReceiverObject = p_other.m_pReceiverObject;
+		this->m_receiverMethod	= p_other.m_receiverMethod;
+		this->m_priority		= p_other.m_priority;
 	}
 	return *this;
 }
@@ -625,9 +621,9 @@ template <class TObj>
 bool eve::evt::TDelegate<TObj, void, false>::notify(const void* sender)
 {
 	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
-	if (_receiverObject)
+	if (m_pReceiverObject)
 	{
-		(_receiverObject->*_receiverMethod)(sender, arguments);
+		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
 		return true;
 	}
 	else return false;
@@ -638,7 +634,7 @@ template <class TObj>
 bool eve::evt::TDelegate<TObj, void, false>::equals(const eve::evt::TDelegateAbstract<void>& other) const
 {
 	const TDelegate* pOtherDelegate = dynamic_cast<const TDelegate*>(other.unwrap());
-	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && _receiverObject == pOtherDelegate->_receiverObject && _receiverMethod == pOtherDelegate->_receiverMethod;
+	return pOtherDelegate && this->priority() == pOtherDelegate->priority() && m_pReceiverObject == pOtherDelegate->m_pReceiverObject && m_receiverMethod == pOtherDelegate->m_receiverMethod;
 }
 
 //=================================================================================================
@@ -653,7 +649,7 @@ template <class TObj>
 void eve::evt::TDelegate<TObj, void, false>::disable(void)
 {
 	m_pFence->lock();
-	_receiverObject = 0;
+	m_pReceiverObject = 0;
 	m_pFence->unlock();
 }
 

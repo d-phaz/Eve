@@ -51,18 +51,18 @@ namespace eve
 		class TDelegateAbstract 
 		{
 		protected:
-			int32_t _priority;
+			int32_t m_priority;
 
 		public:
 			/** \brief Class constructor. */
 			TDelegateAbstract(int32_t prio)
 				// Members init
-				: _priority(prio)
+				: m_priority(prio)
 			{}
 			/** \brief Class copy constructor. */
 			TDelegateAbstract(const TDelegateAbstract& del)
 				// Members init
-				: _priority(del._priority)
+				: m_priority(del.m_priority)
 			{}
 			/** \brief Class destructor. */
 			virtual ~TDelegateAbstract(void)
@@ -72,7 +72,7 @@ namespace eve
 			/** \brief get delegate priority. */
 			int32_t priority(void) const
 			{
-				return _priority;
+				return m_priority;
 			}
 
 			
@@ -110,18 +110,18 @@ namespace eve
 		{
 
 		protected:
-			int32_t _priority;
+			int32_t m_priority;
 
 		public:
 			/** \brief Class constructor. */
 			TDelegateAbstract(int32_t prio)
 				// Members init
-				: _priority(prio)
+				: m_priority(prio)
 			{}
 			/** \brief Class copy constructor. */
 			TDelegateAbstract(const TDelegateAbstract& del)
 				// Members init
-				: _priority(del._priority)
+				: m_priority(del.m_priority)
 			{}
 			/** \brief Class destructor. */
 			virtual ~TDelegateAbstract(void)
@@ -131,7 +131,7 @@ namespace eve
 			/** \brief get delegate priority. */
 			int32_t priority(void) const
 			{
-				return _priority;
+				return m_priority;
 			}
 
 
