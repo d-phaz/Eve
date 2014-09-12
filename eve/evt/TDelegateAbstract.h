@@ -55,25 +55,15 @@ namespace eve
 
 		public:
 			/** \brief Class constructor. */
-			TDelegateAbstract(int32_t prio)
-				// Members init
-				: m_priority(prio)
-			{}
+			TDelegateAbstract(int32_t prio);
 			/** \brief Class copy constructor. */
-			TDelegateAbstract(const TDelegateAbstract& del)
-				// Members init
-				: m_priority(del.m_priority)
-			{}
+			TDelegateAbstract(const TDelegateAbstract & del);
 			/** \brief Class destructor. */
-			virtual ~TDelegateAbstract(void)
-			{}
+			virtual ~TDelegateAbstract(void);
 
 
 			/** \brief get delegate priority. */
-			int32_t priority(void) const
-			{
-				return m_priority;
-			}
+			int32_t priority(void) const;
 
 			
 		public:
@@ -81,22 +71,19 @@ namespace eve
 			* \brief Invokes the delegate's callback function. (pure virtual)
 			* Returns true if successful, or false if the delegate has been disabled or has expired.
 			*/
-			virtual bool notify(const void* sender, TArgs& arguments) = 0;
+			virtual bool notify(const void * sender, TArgs & arguments) = 0;
 
 			/** \brief Compares the AbstractDelegate with the other one for equality. (pure virtual) */
-			virtual bool equals(const TDelegateAbstract& other) const = 0;
+			virtual bool equals(const TDelegateAbstract & other) const = 0;
 
 			/** \brief Returns a deep copy of the AbstractDelegate. (pure virtual) */
-			virtual TDelegateAbstract* clone(void) const = 0;
+			virtual TDelegateAbstract * clone(void) const = 0;
 
 			/** \brief Disables the delegate, which is done prior to removal. (pure virtual) */
 			virtual void disable(void) = 0;
 
 			/* \brief Returns the unwrapped delegate. */
-			virtual const TDelegateAbstract* unwrap(void) const
-			{
-				return this;
-			}
+			virtual const TDelegateAbstract * unwrap(void) const;
 		};
 
 
@@ -119,7 +106,7 @@ namespace eve
 				: m_priority(prio)
 			{}
 			/** \brief Class copy constructor. */
-			TDelegateAbstract(const TDelegateAbstract& del)
+			TDelegateAbstract(const TDelegateAbstract & del)
 				// Members init
 				: m_priority(del.m_priority)
 			{}
@@ -140,19 +127,19 @@ namespace eve
 			* \brief Invokes the delegate's callback function. (pure virtual)
 			* Returns true if successful, or false if the delegate has been disabled or has expired.
 			*/
-			virtual bool notify(const void* sender) = 0;
+			virtual bool notify(const void * sender) = 0;
 
 			/** \brief Compares the AbstractDelegate with the other one for equality. (pure virtual) */
 			virtual bool equals(const TDelegateAbstract& other) const = 0;
 
 			/** \brief Returns a deep copy of the AbstractDelegate. (pure virtual) */
-			virtual TDelegateAbstract* clone(void) const = 0;
+			virtual TDelegateAbstract * clone(void) const = 0;
 
 			/** \brief Disables the delegate, which is done prior to removal. (pure virtual) */
 			virtual void disable(void) = 0;
 
 			/* \brief Returns the unwrapped delegate. */
-			virtual const TDelegateAbstract* unwrap(void) const
+			virtual const TDelegateAbstract * unwrap(void) const
 			{
 				return this;
 			}
@@ -162,5 +149,39 @@ namespace eve
 	} // namespace evt
 
 } // namespace eve
+
+
+//=================================================================================================
+template <class TArgs>
+eve::evt::TDelegateAbstract<TArgs>::TDelegateAbstract(int32_t prio)
+	// Members init
+	: m_priority(prio)
+{}
+
+//=================================================================================================
+template <class TArgs>
+eve::evt::TDelegateAbstract<TArgs>::TDelegateAbstract(const TDelegateAbstract<TArgs> & del)
+	// Members init
+	: m_priority(del.m_priority)
+{}
+
+//=================================================================================================
+template <class TArgs>
+eve::evt::TDelegateAbstract<TArgs>::~TDelegateAbstract(void)
+{}
+
+//=================================================================================================
+template <class TArgs>
+int32_t eve::evt::TDelegateAbstract<TArgs>::priority(void) const
+{
+	return m_priority;
+}
+
+//=================================================================================================
+template <class TArgs>
+const eve::evt::TDelegateAbstract<TArgs> * eve::evt::TDelegateAbstract<TArgs>::unwrap(void) const
+{
+	return this;
+}
 
 #endif // __EVE_EVT_TDELEGATE_ABSTRACT_H__
