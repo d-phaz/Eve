@@ -75,8 +75,13 @@ namespace eve
 			uint8_t		key;
 		};
 
+		/** \brief Key event type definition. */
 		typedef eve::evt::TEvent<eve::evt::KeyEventArgs> KeyEvent;
 		
+		/** 
+		* \class eve::evt::EvtKey
+		* \brief Stock global static key events.
+		*/
 		class EvtKey
 		{
 		public:
@@ -136,8 +141,13 @@ namespace eve
 			int32_t		y;
 		};
 
+		/** \brief Mouse event type definition. */
 		typedef eve::evt::TEvent<eve::evt::MouseEventArgs> MouseEvent;
 
+		/**
+		* \class eve::evt::EvtMouse
+		* \brief Stock global static mouse events.
+		*/
 		class EvtMouse
 		{
 		public:
@@ -226,8 +236,13 @@ namespace eve
 			float		yaccel;
 		}; 
 
+		/** \brief Touch event type definition. */
 		typedef eve::evt::TEvent<eve::evt::TouchEventArgs> TouchEvent;
 		
+		/**
+		* \class eve::evt::EvtTouch
+		* \brief Stock global static touch events.
+		*/
 		class EvtTouch
 		{
 		public:
@@ -284,6 +299,10 @@ namespace eve
 			int32_t height;
 		};
 
+		/**
+		* \class eve::evt::EvtWindow
+		* \brief Stock global static window events.
+		*/
 		class EvtWindow
 		{
 		public:
@@ -334,6 +353,10 @@ namespace eve
 		//		APPLICATION EVENTS
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
+		/**
+		* \class eve::evt::EvtApp
+		* \brief Stock global static application events.
+		*/
 		class EvtApp
 		{
 		public:
