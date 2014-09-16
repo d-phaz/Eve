@@ -37,9 +37,9 @@
 //		KEY EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::KeyEventArgs> 		eve::evt::EvtKey::keyPressed;
-eve::evt::TEvent<eve::evt::KeyEventArgs> 		eve::evt::EvtKey::keyReleased;
-eve::evt::TEvent<eve::evt::KeyEventArgs> 		eve::evt::EvtKey::keyInput;
+eve::evt::KeyEvent 		eve::evt::EvtKey::keyPressed;
+eve::evt::KeyEvent 		eve::evt::EvtKey::keyReleased;
+eve::evt::KeyEvent 		eve::evt::EvtKey::keyInput;
 
 //=================================================================================================
 void eve::evt::enable_events_key(void)
@@ -91,11 +91,11 @@ void eve::evt::notify_key_input( uint8_t p_key )
 //		MOUSE EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mousePassiveMotion;
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mouseMotion;
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mouseDown;
-eve::evt::TEvent<eve::evt::MouseEventArgs>		eve::evt::EvtMouse::mouseDoubleClick;
-eve::evt::TEvent<eve::evt::MouseEventArgs> 		eve::evt::EvtMouse::mouseUp;
+eve::evt::MouseEvent 		eve::evt::EvtMouse::mousePassiveMotion;
+eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseMotion;
+eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseDown;
+eve::evt::MouseEvent		eve::evt::EvtMouse::mouseDoubleClick;
+eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseUp;
 
 //=================================================================================================
 void eve::evt::enable_events_mouse(void)
@@ -178,11 +178,11 @@ void eve::evt::notify_mouse_passive_motion( int32_t x, int32_t y )
 //		TOUCH EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchDown;
-eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchUp;
-eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchDoubleTap;
-eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchMoved;
-eve::evt::TEvent<eve::evt::TouchEventArgs>		eve::evt::EvtTouch::touchCanceled;
+eve::evt::TouchEvent		eve::evt::EvtTouch::touchDown;
+eve::evt::TouchEvent		eve::evt::EvtTouch::touchUp;
+eve::evt::TouchEvent		eve::evt::EvtTouch::touchDoubleTap;
+eve::evt::TouchEvent		eve::evt::EvtTouch::touchMoved;
+eve::evt::TouchEvent		eve::evt::EvtTouch::touchCanceled;
 
 //=================================================================================================
 void eve::evt::enable_events_touch(void)

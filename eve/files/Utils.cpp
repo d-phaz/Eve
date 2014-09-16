@@ -34,6 +34,31 @@
 
 
 
+//=================================================================================================
+std::string eve::files::normalizePath(const std::string & p_path)
+{
+	std::string str(p_path);
+
+#if defined(EVE_OS_WIN)
+	size_t inc = 0;
+	for (size_t i = 0; i < p_path.length(); i++)
+	{
+		if (p_path.at(i) == '\\')
+		{
+			str.insert(i + inc, "\\");
+			inc++;
+		}
+		else if (p_path.at(i) == '/')
+		{
+			str.replace(i + inc, 1, "\\");
+		}
+	}
+#endif
+
+	return str;
+}
+
+
 
 //=================================================================================================
 bool eve::files::exists(const std::string & p_path)
@@ -516,27 +541,6 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //	// Return value
 //	return String_Return;
-//}
-//
-//
-//
-////-------------------------------------------------------------------------------------------
-//std::string normalizePath(const std::string & p_path)
-//{
-//	std::string S_Return(p_path);
-//
-//	NATIVE_Uint32_t inc = 0;
-//
-//	for (NATIVE_Uint32_t i = 0; i < p_path.length(); i++)
-//	{
-//		if (p_path.at(i) == '\\')
-//		{
-//			S_Return.insert(i + inc, "\\");
-//			inc++;
-//		}
-//	}
-//
-//	return S_Return;
 //}
 //
 //

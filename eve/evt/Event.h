@@ -75,12 +75,14 @@ namespace eve
 			uint8_t		key;
 		};
 
+		typedef eve::evt::TEvent<eve::evt::KeyEventArgs> KeyEvent;
+		
 		class EvtKey
 		{
 		public:
-			static eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyPressed;				//!< Key pressed event.
-			static eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyReleased;			//!< Key released event.
-			static eve::evt::TEvent<eve::evt::KeyEventArgs> 		keyInput;				//!< Text input event.
+			static KeyEvent 		keyPressed;				//!< Key pressed event.
+			static KeyEvent 		keyReleased;			//!< Key released event.
+			static KeyEvent 		keyInput;				//!< Text input event.
 		};
 
 		/** \! Enable key events dispatch. */
@@ -134,14 +136,16 @@ namespace eve
 			int32_t		y;
 		};
 
+		typedef eve::evt::TEvent<eve::evt::MouseEventArgs> MouseEvent;
+
 		class EvtMouse
 		{
 		public:
-			static eve::evt::TEvent<eve::evt::MouseEventArgs> 		mousePassiveMotion;		//!< Mouse passive motion (no mouse button pressed) event.
-			static eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseMotion;			//!< Mouse motion (mouse button pressed) event.
-			static eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseDown;				//!< Mouse button pressed event.
-			static eve::evt::TEvent<eve::evt::MouseEventArgs>		mouseDoubleClick;		//!< Mouse double click event.
-			static eve::evt::TEvent<eve::evt::MouseEventArgs> 		mouseUp;				//!< Mouse button released event.
+			static MouseEvent 		mousePassiveMotion;		//!< Mouse passive motion (no mouse button pressed) event.
+			static MouseEvent 		mouseMotion;			//!< Mouse motion (mouse button pressed) event.
+			static MouseEvent 		mouseDown;				//!< Mouse button pressed event.
+			static MouseEvent		mouseDoubleClick;		//!< Mouse double click event.
+			static MouseEvent 		mouseUp;				//!< Mouse button released event.
 		};
 
 		/** \! Enable mouse events dispatch. */
@@ -221,15 +225,17 @@ namespace eve
 			float		xaccel;
 			float		yaccel;
 		}; 
+
+		typedef eve::evt::TEvent<eve::evt::TouchEventArgs> TouchEvent;
 		
 		class EvtTouch
 		{
 		public:
-			static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDown;				//!< Touch down event.
-			static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchUp;				//!< Touch up event.
-			static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchDoubleTap;			//!< Touch double tap event.
-			static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchMoved;				//!< Touch move event.
-			static eve::evt::TEvent<eve::evt::TouchEventArgs>		touchCanceled;			//!< Touch canceled event.
+			static TouchEvent		touchDown;				//!< Touch down event.
+			static TouchEvent		touchUp;				//!< Touch up event.
+			static TouchEvent		touchDoubleTap;			//!< Touch double tap event.
+			static TouchEvent		touchMoved;				//!< Touch move event.
+			static TouchEvent		touchCanceled;			//!< Touch canceled event.
 		};
 		
 		/** \! Enable touch events dispatch. */

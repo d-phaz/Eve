@@ -87,14 +87,14 @@ static char * get_current_date(void)
 	localtime_s(&timestamp, &curTime);
 
 	memset(strCurrDate, 0, sizeof(strCurrDate));
-	sprintf(strCurrDate, "%04d-%02d-%02d at %02d:%02d", timestamp.tm_year + 1900, timestamp.tm_mon + 1, timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min);
+	sprintf(strCurrDate, "[%04d-%02d-%02d %02d:%02d]", timestamp.tm_year + 1900, timestamp.tm_mon + 1, timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min);
 
 	return strCurrDate;
 }
 
 
-eve::messaging::Server * eve::messaging::Server::m_p_server = nullptr;
-eve::threading::Mutex *	eve::messaging::Server::m_p_mutex = nullptr;
+eve::messaging::Server *	eve::messaging::Server::m_p_server	= nullptr;
+eve::threading::SpinLock *	eve::messaging::Server::m_p_mutex	= nullptr;
 
 
 //=================================================================================================
@@ -104,7 +104,7 @@ eve::messaging::Server * eve::messaging::Server::create_instance(const std::stri
 	EVE_ASSERT(!m_p_mutex);
 
 	m_p_server	= EVE_CREATE_PTR(eve::messaging::Server);
-	m_p_mutex	= EVE_CREATE_PTR(eve::threading::Mutex);
+	m_p_mutex	= EVE_CREATE_PTR(eve::threading::SpinLock);
 
 	if (p_logFilePath.size() > 0)
 	{
@@ -121,7 +121,7 @@ void eve::messaging::Server::release_instance(void)
 	EVE_RELEASE_PTR(m_p_server);
 
 	EVE_ASSERT(m_p_mutex);
-	EVE_RELEASE_PTR(eve::messaging::Server::m_p_mutex);
+	EVE_RELEASE_PTR(m_p_mutex);
 }
 
 
@@ -176,7 +176,7 @@ void eve::messaging::Server::default_log_error(const char *funcName, const char 
 
 	va_list arg;
 
-	std::string mess = " [ ERROR ] ";
+	std::string mess = "[  ERROR  ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -202,7 +202,7 @@ void eve::messaging::Server::default_log_info(const char *funcName, const char *
 	
 	va_list arg;
 
-	std::string mess = " [ INFO ] ";
+	std::string mess = "[  INFO   ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -229,7 +229,7 @@ void eve::messaging::Server::default_log_warning(const char *funcName, const cha
 
 	va_list arg;
 
-	std::string mess = " [ WARNING ] ";
+	std::string mess = "[ WARNING ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -256,7 +256,7 @@ void eve::messaging::Server::default_log_progress(const char *funcName, const ch
 
 	va_list arg;
 
-	std::string mess = " [ PROGRESS ] ";
+	std::string mess = "[ PROGRESS]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -283,7 +283,7 @@ void eve::messaging::Server::default_log_debug(const char *funcName, const char 
 	
 	va_list arg;
 
-	std::string mess = " [ DEBUG ] ";
+	std::string mess = "[  DEBUG  ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -310,7 +310,7 @@ void eve::messaging::Server::default_log_in_file_error(const char *funcName, con
 
 	va_list arg;
 
-	std::string mess = " [ ERROR ] ";
+	std::string mess = "[  ERROR  ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -333,7 +333,7 @@ void eve::messaging::Server::default_log_in_file_info(const char *funcName, cons
 
 	va_list arg;
 
-	std::string mess = " [ INFO ] ";
+	std::string mess = "[  INFO   ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -356,7 +356,7 @@ void eve::messaging::Server::default_log_in_file_warning(const char *funcName, c
 
 	va_list arg;
 
-	std::string mess = " [ WARNING ] ";
+	std::string mess = "[ WARNING ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -379,7 +379,7 @@ void eve::messaging::Server::default_log_in_file_progress(const char *funcName, 
 
 	va_list arg;
 
-	std::string mess = " [ PROGRESS ] ";
+	std::string mess = "[ PROGRESS]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -402,7 +402,7 @@ void eve::messaging::Server::default_log_in_file_debug(const char *funcName, con
 
 	va_list arg;
 
-	std::string mess = " [ DEBUG ] ";
+	std::string mess = "[  DEBUG  ]";
 	mess += get_current_date();
 	mess += " ";
 	mess += funcName;
@@ -430,8 +430,6 @@ void eve::messaging::Server::set_log_in_file(bool p_bLogInFile)
 	m_p_mutex->lock();
 
 #if !defined(NDEBUG)
-	EVE_ASSERT(!p_bLogInFile);
-
 	// Default mode -> log in console if not in Release mode, else do nothing.
 	m_p_server->m_pHandlerError		= &eve::messaging::Server::default_log_error;
 	m_p_server->m_pHandlerWarning	= &eve::messaging::Server::default_log_warning;
@@ -473,7 +471,7 @@ bool eve::messaging::Server::set_error_stream_path(const std::string & p_path)
 	if (eve::files::exists(p_path))
 	{
 		FILE * file = fopen(p_path.c_str(), "w+");
-		set_error_stream(file);
+		m_p_server->m_pStreamError = file;
 
 		bret = true;
 	}
@@ -491,7 +489,7 @@ bool eve::messaging::Server::set_warning_stream_path(const std::string & p_path)
 	if (eve::files::exists(p_path))
 	{
 		FILE * file = fopen(p_path.c_str(), "w+");
-		set_warning_stream(file);
+		m_p_server->m_pStreamWarning = file;
 
 		bret = true;
 	}
@@ -509,7 +507,7 @@ bool eve::messaging::Server::set_info_stream_path(const std::string & p_path)
 	if (eve::files::exists(p_path))
 	{
 		FILE * file = fopen(p_path.c_str(), "w+");
-		set_info_stream(file);
+		m_p_server->m_pStreamInfo = file;
 
 		bret = true;
 	}
@@ -527,7 +525,7 @@ bool eve::messaging::Server::set_progress_stream_path(const std::string & p_path
 	if (eve::files::exists(p_path))
 	{
 		FILE * file = fopen(p_path.c_str(), "w+");
-		set_progress_stream(file);
+		m_p_server->m_pStreamProgress = file;
 
 		bret = true;
 	}
@@ -545,7 +543,7 @@ bool eve::messaging::Server::set_debug_stream_path(const std::string & p_path)
 	if (eve::files::exists(p_path))
 	{
 		FILE * file = fopen(p_path.c_str(), "w+");
-		set_debug_stream(file);
+		m_p_server->m_pStreamDebug = file;
 
 		bret = true;
 	}
@@ -563,7 +561,11 @@ bool eve::messaging::Server::set_msg_stream_path(const std::string & p_path)
 	if (eve::files::exists(p_path))
 	{
 		FILE * file = fopen(p_path.c_str(), "w+");
-		set_msg_stream(file);
+		m_p_server->m_pStreamError		= file;
+		m_p_server->m_pStreamWarning	= file;
+		m_p_server->m_pStreamInfo		= file;
+		m_p_server->m_pStreamProgress	= file;
+		m_p_server->m_pStreamDebug		= file;
 
 		bret = true;
 	}

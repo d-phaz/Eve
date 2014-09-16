@@ -41,6 +41,10 @@ namespace eve
 {
 	namespace files
 	{
+		/** \brief normalize path to fit system requirements. */
+		std::string normalizePath(const std::string & p_path);
+
+
 		/**
 		* \brief test file existence.
 		* \return true if file exists, false otherwise.
@@ -114,13 +118,6 @@ namespace eve
 //		* @return file path and file name as std::pair<std::string,std::string>
 //		*/
 //		std::string getSaveFilePath(const std::vector<std::string> & p_extensions, const std::string & p_targetPath = "");
-//
-//
-//		/**
-//		* @brief normalize path to fit system requirements
-//		* @param p_path path to normalize as std::string
-//		*/
-//		std::string normalizePath(const std::string & p_path);
 //
 //
 //		/**

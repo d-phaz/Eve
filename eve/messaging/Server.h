@@ -71,8 +71,8 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			static Server *					m_p_server;				//!< Unique instance.
-			static eve::threading::Mutex *	m_p_mutex;				//!< Message logging protection mutex.
+			static Server *						m_p_server;				//!< Unique instance.
+			static eve::threading::SpinLock *	m_p_mutex;				//!< Message logging protection mutex.
 
 			handlerMethod					m_pHandlerError;		//!< Error messages method pointer.
 			handlerMethod					m_pHandlerWarning;		//!< Warning messages method pointer.
