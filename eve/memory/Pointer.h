@@ -54,13 +54,12 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY( Pointer )
+			EVE_DISABLE_COPY(Pointer)
+			EVE_PROTECT_DESTRUCTOR(Pointer)
 
 		protected:
 			/** \brief Class constructor. */
 			Pointer(void);
-			/** \brief Class destructor. */
-			EVE_PROTECT_DESTRUCTOR(Pointer)
 
 
 		protected:
@@ -94,9 +93,6 @@ T * eve::memory::Pointer::create_ptr(void)
 	ptr->init();
 	return ptr;
 }
-// Convenience MACRO.
-#define EVE_CREATE_PTR( T )	\
-	eve::memory::Pointer::create_ptr<T>();
 
 
 //=================================================================================================
@@ -108,15 +104,28 @@ void eve::memory::Pointer::release_ptr(T * p_pPtr)
 	p_pPtr->release();
 	delete p_pPtr;
 }
-// Convenience MACRO.
+
+
+/**
+* \def EVE_CREATE_PTR
+* \brief Create new eve::memory::Pointer or derived pointer.
+*/
+#define EVE_CREATE_PTR( T )	\
+	eve::memory::Pointer::create_ptr<T>();
+
+
+/**
+* \def EVE_RELEASE_PTR
+* \brief Release and nullify  eve::memory::Pointer or derived pointer.
+*/
 #define EVE_RELEASE_PTR( PTR )	\
 	eve::memory::Pointer::release_ptr(PTR);	\
 	PTR = nullptr;
 
 
 /**
-* \macro EVE_RELEASE_PTR_C
-* \brief Release and nullify standard C++ pointer.
+* \def EVE_RELEASE_PTR_C
+* \brief Release and nullify standard C pointer.
 */
 #define EVE_RELEASE_PTR_C( PTR )	\
 	free( PTR );					\
@@ -124,7 +133,7 @@ void eve::memory::Pointer::release_ptr(T * p_pPtr)
 
 
 /**
-* \macro EVE_RELEASE_PTR_CPP
+* \def EVE_RELEASE_PTR_CPP
 * \brief Release and nullify standard C++ pointer.
 */
 #define EVE_RELEASE_PTR_CPP( PTR )  \

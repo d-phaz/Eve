@@ -108,8 +108,6 @@ eve::threading::ScopedFence<TFence>::~ScopedFence(void)
 template<class TFence>
 void eve::threading::ScopedFence<TFence>::unlock(void)
 {
-	EVE_ASSERT(m_pFence);
-
 	m_pFence->unlock();
 	m_pFence = nullptr;
 }

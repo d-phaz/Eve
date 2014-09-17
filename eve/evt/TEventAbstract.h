@@ -58,7 +58,6 @@ namespace eve
 		* \class eve::evt::TEventAbstract
 		*
 		* \brief TEventAbstract is the base class of all events. 
-		* It works similar to the way C# handles notifications (aka events in C#).
 		*
 		* Events can be used to send information to a set of delegates
 		* which are registered with the event. The type of the data is specified with
@@ -140,7 +139,6 @@ namespace eve
 		* \class eve::evt::TEventAbstract (specialized)
 		*
 		* \brief TEventAbstract is the base class of all events.
-		* It works similar to the way C# handles notifications (aka events in C#).
 		*
 		* Events can be used to send information to a set of delegates
 		* which are registered with the event. The type of the data is specified with

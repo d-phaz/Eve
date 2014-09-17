@@ -42,7 +42,7 @@ namespace eve
 	{
 		/** 
 		 * \struct eve::threading::SleepEvent
-		 * \brief simple system event HANDLE used by sleep method.
+		 * \brief Simple system event HANDLE used by sleep method.
 		 */
 		struct SleepEvent
 		{

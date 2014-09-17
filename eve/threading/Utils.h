@@ -69,12 +69,12 @@ namespace eve
 		*/
 		HANDLE current_thread_handle(void);
 		/**
-		* \brief Compare the thread m_threadID's (inLeft == inRight); return true if they are equal. 
-		* On some OS's DWORD is a struct so == will not work.
+		* \brief Compare thread ID (inLeft == inRight) and return true if they are equal. 
+		* On some Operating System(s) DWORD is a struct so == will not work.
 		*/
 		bool equal_ID(DWORD inLeft, DWORD inRight);
 		/**
-		* \brief Return a zeroed out thread ID. On some OS's DWORD is a struct so == 0 will not work.
+		* \brief Return a zeroed out thread ID. On some Operating System(s) DWORD is a struct so == 0 will not work.
 		*/
 		DWORD zero_ID(void);
 
