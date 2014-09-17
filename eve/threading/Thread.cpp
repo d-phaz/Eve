@@ -61,7 +61,7 @@ eve::threading::Thread::Thread( void )
 	, m_threadID		( eve::threading::zero_ID() )
 
 	, m_pSpinLock		( nullptr )
-	, m_pWorker			( nullptr )
+	//, m_pWorker			( nullptr )
 {}
 
 
@@ -82,63 +82,22 @@ void eve::threading::Thread::release(void)
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
 
-	EVE_RELEASE_PTR(m_pWorker);	
+	//EVE_RELEASE_PTR(m_pWorker);	
 	EVE_RELEASE_PTR(m_pSpinLock);
 }
 
 
 
 //=================================================================================================
-void eve::threading::Thread::run(void)
-{
-	do 
-	{
-		m_pSpinLock->lock();
-
-		m_pWorker->consumeEvents();
-		m_pWorker->work();
-
-		m_pSpinLock->unlock();
-
-	} while (running());
-
-}
-
-
-
-//=================================================================================================
-uint32_t eve::threading::Thread::run_wrapper(void * p_pThread)
-{
-	EVE_ASSERT(p_pThread);
-
-	// Grab and cast thread pointer.
-	eve::threading::Thread * objectPtr = reinterpret_cast<eve::threading::Thread*>(p_pThread);
-
-	// Since initialized, set status to started.
-	objectPtr->setStarted();
-
-	// Run thread (pure virtual function).
-	objectPtr->run();
-
-	// Since we're out of run loop set status to not started.
-	objectPtr->resetStarted();
-
-	// No error occurred so return 0 (zero).
-	return 0;
-}
-
-
-
-//=================================================================================================
-void eve::threading::Thread::start(priorities p_priority)
+void eve::threading::Thread::start(ThreadRoutine p_routine, priorities p_priority)
 {
 	if (eve::threading::equal_ID(m_threadID, eve::threading::zero_ID()))
 	{
 		// Spawn new thread. Thread is suspended until priority is set.
-		m_hThread = (std::thread*)_beginthreadex(
+		m_hThread = (HANDLE)_beginthreadex(
 			NULL,							// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
 			0,								// DWORD dwStackSize,							// initial thread stack size
-			run_wrapper,					// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
+			p_routine,						// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
 			this,							// LPVOID lpParameter,							// argument for new thread
 			CREATE_SUSPENDED,				// DWORD dwCreationFlags,						// creation flags
 			(unsigned*)&m_threadID			// LPDWORD lpThreadId							// pointer to receive thread ID
@@ -163,6 +122,46 @@ void eve::threading::Thread::start(priorities p_priority)
 		//m_threadID = m_hThread->get_id();
 		//EVE_ASSERT(m_hThread);
 	}
+}
+
+
+
+//=================================================================================================
+uint32_t eve::threading::Thread::routine(void * p_pThread)
+{
+	EVE_ASSERT(p_pThread);
+
+	// Grab and cast thread pointer.
+	eve::threading::Thread * objectPtr = reinterpret_cast<eve::threading::Thread*>(p_pThread);
+
+	// Since initialized, set status to started.
+	objectPtr->setStarted();
+
+	// Run thread (pure virtual function).
+	objectPtr->run();
+
+	// Since we're out of run loop set status to not started.
+	objectPtr->resetStarted();
+
+	// No error occurred so return 0 (zero).
+	return 0;
+}
+
+
+
+//=================================================================================================
+void eve::threading::Thread::run(void)
+{
+	do
+	{
+		m_pSpinLock->lock();
+
+		m_pWorker->work();
+
+		m_pSpinLock->unlock();
+
+	} while (running());
+
 }
 
 

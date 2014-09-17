@@ -39,8 +39,8 @@
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_THREADING_TWORKER_H__
-#include "eve/threading/TWorker.h"
+#ifndef __EVE_THREADING_WORKER_H__
+#include "eve/threading/Worker.h"
 #endif
 
 
@@ -66,7 +66,19 @@ namespace eve
 
 			friend class eve::memory::Pointer;
 
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
+
 		public:
+			/** 
+			* \brief Thread function pointer type. 
+			* Used in _beginthreadex call.
+			*/
+			typedef unsigned(__stdcall *ThreadRoutine)(void *);
+
+
+			/** \brief Human readable thread priority enum. */
 			enum priorities 
 			{
 				IdlePriority,
@@ -80,7 +92,7 @@ namespace eve
 			};
 
 			//////////////////////////////////////
-			//				DATAS				//
+			//				DATA				//
 			//////////////////////////////////////
 	
 		private:
@@ -97,7 +109,7 @@ namespace eve
 
 		private:
 			SpinLock *						m_pSpinLock;			//!< Spin lock protecting workers and run loop.
-			eve::threading::TWorker<int> *	m_pWorker;				//!< Thread worker called in run loop.
+			eve::threading::Worker *		m_pWorker;				//!< Thread worker called in run loop.
 
 
 			//////////////////////////////////////
@@ -123,15 +135,17 @@ namespace eve
 			virtual void release(void) override;
 
 
-		protected:
+		public:
 			/**
-			* \brief Run is the main loop for this thread. 
-			* \sa start()
+			* \brief Start the object's thread execution. Increments thread
+			* count, spawns new thread, and stores thread m_threadID.
+			*
+			* \param p_priority thread desired priority.
 			*/
-			virtual void run(void);
+			void start(ThreadRoutine p_routine = &eve::threading::Thread::routine, priorities p_priority = InheritPriority);
 
 
-		private:
+		public:
 			/**
 			* \brief Low level function which starts a new thread, called by start().
 			*
@@ -145,17 +159,18 @@ namespace eve
 			*
 			* This must be static in order to work with _beginthread / _beginthreadex / ...
 			*/
-			static uint32_t __stdcall run_wrapper(void * p_pThread);
+			static uint32_t __stdcall routine(void * p_pThread);
+
+
+		protected:
+			/**
+			* \brief Run is the main loop for this thread. 
+			* \sa start()
+			*/
+			virtual void run(void);
 
 
 		public:
-			/**
-			* \brief Start the object's thread execution. Increments thread
-			* count, spawns new thread, and stores thread m_threadID.
-			*
-			* \param p_priority thread desired priority.
-			*/
-			void start(priorities p_priority=InheritPriority);
 			/**
 			* \brief Stop the thread. 
 			* Decrements thread count and resets the thread m_threadID.

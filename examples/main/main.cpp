@@ -108,14 +108,14 @@ int main(int argc, char **argv)
 
 	// Thread Pointer example //
 
-	//// Create thread pointer.
-	//eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
-	//// Start thread.
-	//thr->start();
-	//// Sleep using microseconds.
-	//eve::threading::sleep_micro(1000ULL * 1000ULL);
-	//// Release pointer.
-	//EVE_RELEASE_PTR(thr);
+	// Create thread pointer.
+	eve::threading::ThreadDummy * thr = EVE_CREATE_PTR(eve::threading::ThreadDummy);
+	// Start thread.
+	thr->start();
+	// Sleep using microseconds.
+	eve::threading::sleep_micro(1000ULL * 1000ULL);
+	// Release pointer.
+	EVE_RELEASE_PTR(thr);
 
 
 	//-------------------------------------------
