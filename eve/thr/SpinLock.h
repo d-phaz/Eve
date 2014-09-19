@@ -30,64 +30,76 @@
 */
 
 #pragma once
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#define __EVE_THREADING_SPIN_LOCK_H__
+
+#include <atomic>
+#include <thread>
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#ifndef __EVE_THREADING_FENCE_H__
+#include "eve/thr/Fence.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+namespace eve
+{
+	namespace thr
+	{
+		/** 
+		 * \class eve::thr::SpinLock
+		 *
+		 * \brief A fast lock for non-contented mem access.
+		 * Readers or writers will starve on high contention.
+		 *
+		 * \note extends eve::thr::Fence
+		 */
+		class SpinLock
+			: public eve::thr::Fence
+		{
+
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
+
+		private:
+			std::atomic_flag	m_state;
 
 
-#if defined(EVE_OS_WIN)
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
+			EVE_DISABLE_COPY(SpinLock)
+			EVE_PROTECT_DESTRUCTOR(SpinLock)
+			
+		protected:
+			/** \brief Class constructor. */
+			SpinLock(void);
 
 
-#endif // __EVE_CORE_INCLUDES_H__
+		protected:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members. (pure virtual) */
+			virtual void release(void) override;
+
+
+		public:
+			/** \brief Acquire the lock exclusively. */
+			virtual void lock(void) override;
+			/** \brief Release an exclusive lock. */
+			virtual void unlock(void) override;
+
+		}; // class SpinLock
+
+	} // namespace thr
+
+} // namespace eve
+
+#endif //__EVE_THREADING_SPIN_LOCK_H__

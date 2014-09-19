@@ -39,11 +39,11 @@
 #endif
 
 #ifndef __EVE_THREADING_SCOPED_FENCE_H__
-#include "eve/threading/ScopedFence.h"
+#include "eve/thr/ScopedFence.h"
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
-#include "eve/threading/SpinLock.h"
+#include "eve/thr/SpinLock.h"
 #endif 
 
 #ifndef __EVE_EVT_TDELEGATE_H__
@@ -82,7 +82,7 @@ namespace eve
 			TStrategy							m_strategy;  /// The strategy used to notify observers.
 			bool								m_bEnabled;   /// Stores if an event is enabled. Notifies on disabled events have no effect
 															/// but it is possible to change the observers.
-			mutable eve::threading::SpinLock *	m_pFence;
+			mutable eve::thr::SpinLock *	m_pFence;
 
 
 			//////////////////////////////////////
@@ -162,7 +162,7 @@ namespace eve
 		protected:
 			TStrategy							m_strategy;		//!< The strategy used to notify observers.
 			bool								m_bEnabled;		//!< Stores if an event is enabled. Notifies on disabled events have no effect but it is possible to change the observers.
-			mutable eve::threading::SpinLock *	m_pFence;
+			mutable eve::thr::SpinLock *	m_pFence;
 
 
 			//////////////////////////////////////
@@ -225,7 +225,7 @@ eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::TEventAbstract(void)
 	: m_strategy()
 	, m_bEnabled(true)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -234,7 +234,7 @@ eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::TEventAbstract(const TStr
 	: m_strategy(strat)
 	, m_bEnabled(true)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -266,7 +266,7 @@ void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::operator -= (const T
 template <class TArgs, class TStrategy, class TDelegate>
 void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::notify(const void* pSender, TArgs& args)
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 
 	if (!m_bEnabled) return;
 
@@ -298,7 +298,7 @@ void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::disable(void)
 template <class TArgs, class TStrategy, class TDelegate>
 bool eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::isEnabled(void) const
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	return m_bEnabled;
 }
 
@@ -315,7 +315,7 @@ void eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::clear(void)
 template <class TArgs, class TStrategy, class TDelegate>
 bool eve::evt::TEventAbstract<TArgs, TStrategy, TDelegate>::empty(void) const
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	return m_strategy.empty();
 }
 
@@ -329,7 +329,7 @@ eve::evt::TEventAbstract<void, TStrategy, TDelegate>::TEventAbstract(void)
 	: m_strategy()
 	, m_bEnabled(true)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -338,7 +338,7 @@ eve::evt::TEventAbstract<void, TStrategy, TDelegate>::TEventAbstract(const TStra
 	: m_strategy(strat)
 	, m_bEnabled(true)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -370,7 +370,7 @@ void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::operator -= (const TD
 template <class TStrategy, class TDelegate>
 void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::notify(const void* pSender)
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 
 	if (!m_bEnabled) return;
 
@@ -402,7 +402,7 @@ void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::disable(void)
 template <class TStrategy, class TDelegate>
 bool eve::evt::TEventAbstract<void, TStrategy, TDelegate>::isEnabled(void) const
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	return m_bEnabled;
 }
 
@@ -419,7 +419,7 @@ void eve::evt::TEventAbstract<void, TStrategy, TDelegate>::clear(void)
 template <class TStrategy, class TDelegate>
 bool eve::evt::TEventAbstract<void, TStrategy, TDelegate>::empty(void) const
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	return m_strategy.empty();
 }
 

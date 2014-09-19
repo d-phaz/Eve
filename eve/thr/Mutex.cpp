@@ -29,65 +29,42 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+// Main header
+#include "eve/thr/Mutex.h"
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
+//=============================================================================================
+eve::thr::Mutex::Mutex(void)
+	// Inheritance
+	: eve::thr::Fence()
+	// Members init
+	, m_mutex(0)
+{}
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+
+//=================================================================================================
+void eve::thr::Mutex::init(void)
+{
+	m_mutex = ::CreateMutexW(NULL, false, NULL);
+}
+
+//=================================================================================================
+void eve::thr::Mutex::release(void)
+{
+	::CloseHandle(m_mutex);
+}
 
 
-#if defined(EVE_OS_WIN)
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+//=============================================================================================
+void eve::thr::Mutex::lock(void)
+{
+	::WaitForSingleObjectEx(m_mutex, INFINITE, FALSE);
+}
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+//=============================================================================================
+void eve::thr::Mutex::unlock(void)
+{
+	::ReleaseMutex(m_mutex);
+}

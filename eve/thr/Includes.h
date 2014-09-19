@@ -30,64 +30,41 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#ifndef __EVE_THREADING_INCLUDES_H__
+#define __EVE_THREADING_INCLUDES_H__
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#ifndef __EVE_THREADING_CONDITION_H__
+#include "eve/thr/Condition.h"
+#endif
+
+#ifndef __EVE_THREADING_LOCK_H__
+#include "eve/thr/Lock.h"
+#endif 
+
+#ifndef __EVE_THREADING_MUTEX_H__
+#include "eve/thr/Mutex.h"
+#endif
+
+#ifndef __EVE_THREADING_SCOPED_FENCE_H__
+#include "eve/thr/ScopedFence.h"
+#endif
+
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "eve/thr/SpinLock.h"
+#endif 
+
+#ifndef __EVE_THREADING_THREAD_H__
+#include "eve/thr/Thread.h"
+#endif 
+
+#ifndef __EVE_THREADING_THREAD_DUMMY_H__
+#include "eve/thr/ThreadDummy.h"
+#endif 
+
+#ifndef __EVE_THREADING_UTILS_H__
+#include "eve/thr/Utils.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
-
-
-#if defined(EVE_OS_WIN)
-
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+#endif // __EVE_THREADING_INCLUDES_H__

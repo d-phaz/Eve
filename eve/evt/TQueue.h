@@ -39,7 +39,7 @@
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
-#include "eve/threading/SpinLock.h"
+#include "eve/thr/SpinLock.h"
 #endif 
 
 namespace eve
@@ -53,14 +53,14 @@ namespace eve
 		* TEvt template type is the event type of this queue.
 		* Events are objects and should NOT be pointers.
 		*
-		* \note extends memory::Pointer
+		* \note extends mem::Pointer
 		*/
 		template <class TEvt>
 		class TQueue
-			: public eve::memory::Pointer
+			: public eve::mem::Pointer
 		{
 
-			friend class eve::memory::Pointer;
+			friend class eve::mem::Pointer;
 
 
 		protected:
@@ -68,7 +68,7 @@ namespace eve
 			std::deque<TEvt *> *            m_pQueueFront;			//!< Front event queue.
 			std::deque<TEvt *> *            m_pQueueRef;			//!< Reference event queue used for swapping.
 
-			eve::threading::SpinLock *		m_pFence;				//!< Memory fence as spin lock.
+			eve::thr::SpinLock *		m_pFence;				//!< Memory fence as spin lock.
 
 
 			//////////////////////////////////////
@@ -118,7 +118,7 @@ namespace eve
 template <class TEvt>
 eve::evt::TQueue<TEvt>::TQueue(void)
 	// Inheritance
-	: eve::memory::Pointer()
+	: eve::mem::Pointer()
 	// Members init
 	, m_pQueueBack(nullptr)
 	, m_pQueueFront(nullptr)
@@ -134,7 +134,7 @@ inline void eve::evt::TQueue<TEvt>::init(void)
 {
 	m_pQueueBack	= new std::deque<TEvt *>(200);
 	m_pQueueFront	= new std::deque<TEvt *>(200);
-	m_pFence		= EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence		= EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================

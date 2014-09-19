@@ -30,64 +30,58 @@
 */
 
 #pragma once
+#ifndef __EVE_THREADING_WORKER_H__
+#define __EVE_THREADING_WORKER_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#ifndef __EVE_EVT_INCLUDES_H__
+#include "eve/evt/Includes.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+namespace eve
+{
+	namespace thr
+	{
+
+		/**
+		* \class eve::thr::Worker
+		*
+		* \brief Abstract base thread worker class.
+		* Workers are the ONLY thread level stored data and should be the basis for any engine.
+		*
+		* \note extends mem::Pointer
+		*/
+		class Worker
+			: public eve::mem::Pointer
+		{
+
+			friend class eve::mem::Pointer;
 
 
-#if defined(EVE_OS_WIN)
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+			EVE_DISABLE_COPY(Worker);
+			EVE_PROTECT_DESTRUCTOR(Worker);
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
+		protected:
+			/** Class constructor. */
+			Worker(void);
 
 
-#endif // __EVE_CORE_INCLUDES_H__
+		public:
+			/** Main schedule work method. (pure virtual) */
+			virtual void work(void) = 0;
+
+		}; // Class Worker
+
+	} // namespace thr
+
+} // namespace eve
+
+#endif // __EVE_THREADING_WORKER_H__

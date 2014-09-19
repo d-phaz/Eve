@@ -29,65 +29,55 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+// Main header
+#include "eve/thr/ThreadDummy.h"
+
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "eve/thr/SpinLock.h"
+#endif 
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
+//=================================================================================================
+eve::thr::ThreadDummy::ThreadDummy(void)
+
+	// Inheritance
+	: eve::thr::Thread()
+{}
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
 
+//=================================================================================================
+void eve::thr::ThreadDummy::init(void)
+{
+	// Call parent class
+	eve::thr::Thread::init();
 
-#if defined(EVE_OS_WIN)
+	m_pLock = EVE_CREATE_PTR(eve::thr::SpinLock);
+}
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+//=================================================================================================
+void eve::thr::ThreadDummy::release(void)
+{
+	EVE_RELEASE_PTR(m_pLock);
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+	// Call parent class
+	eve::thr::Thread::release();
+}
 
-#endif // defined(EVE_OS_WIN)
+//=================================================================================================
+void eve::thr::ThreadDummy::run(void)
+{
+	static int32_t id = 0;
+	++id;
 
+	int32_t i = 0;
+	while ( i < 1000/*running()*/ )
+	{
+		m_pLock->lock();
 
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
+		printf("thread: %i value: %i\n", id, i);
+		++i;
 
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+		m_pLock->unlock();
+	}
+}

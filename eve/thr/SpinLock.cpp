@@ -29,65 +29,46 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+// Main header
+#include "eve/thr/SpinLock.h"
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
+//=================================================================================================
+eve::thr::SpinLock::SpinLock(void)
+	// Inheritance
+	: eve::thr::Fence()
+	// Members init
+	, m_state()
+{}
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+
+//=================================================================================================
+void eve::thr::SpinLock::init(void)
+{
+	m_state.clear();
+}
+
+//=================================================================================================
+void eve::thr::SpinLock::release(void)
+{
+	m_state.clear();
+}
 
 
-#if defined(EVE_OS_WIN)
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+//=================================================================================================
+void eve::thr::SpinLock::lock(void)
+{
+	while (m_state.test_and_set(std::memory_order_acquire))
+	{
+		::SwitchToThread();
+		//std::this_thread::yield();
+	}
+}
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+//=================================================================================================
+void eve::thr::SpinLock::unlock(void)
+{
+	m_state.clear(std::memory_order_release);
+}

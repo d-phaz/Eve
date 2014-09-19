@@ -1,6 +1,6 @@
 
 /*
- Copyright (c) 2014, The eve Project
+ Copyright (c) 2014, The Eve Project
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -30,64 +30,63 @@
 */
 
 #pragma once
+#ifndef __EVE_THREADING_THREADPOOL_H__
+#define __EVE_THREADING_THREADPOOL_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#include "Eve/core/Includes.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+namespace eve
+{
+	namespace thr
+	{
 
 
-#if defined(EVE_OS_WIN)
+		/**
+		* @class eve::thr::ThreadPool
+		*
+		* Abstract base thread class containing init and release abstract methods,
+		* each thread must inherit from this class to properly alloc/init and release/free its members.
+		*
+		* @note extends mem::Pointer
+		*/
+		class ThreadPool
+			: public eve::mem::Pointer
+		{
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+			friend class eve::mem::Pointer;
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
 
 
-#endif // __EVE_CORE_INCLUDES_H__
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(ThreadPool);
+			EVE_PROTECT_DESTRUCTOR(ThreadPool);
+
+
+		public:
+			/** Create new pointer. */
+			static ThreadPool * create_ptr(void);
+			/** Release pointer. */
+			static void release_ptr(ThreadPool * p_pPtr);
+
+
+		protected:
+			/** Class constructor. */
+			ThreadPool(void);
+
+		}; // Class ThreadPool
+
+	} // namespace thr
+
+} // namespace eve
+
+#endif // __EVE_THREADING_THREADPOOL_H__

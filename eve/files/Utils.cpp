@@ -72,7 +72,7 @@ bool eve::files::exists(const std::string & p_path)
 	{
 		// Update return value
 		bret = true;
-		// Free memory
+		// Free mem
 		fclose(file);
 	}
 
@@ -640,7 +640,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //			delete wpath;
 //		}
-//		// Free memory
+//		// Free mem
 //		fclose(file);
 //	}
 //
@@ -666,7 +666,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		else
 //			native_error_msg("native_system::getPathDesktop", "unable to retrieve desktop path. \n");
 //
-//		// free memory
+//		// free mem
 //		::CoTaskMemFree(static_cast<void*>(my_path));
 //	}
 //
@@ -706,7 +706,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //			delete wpath;
 //		}
-//		// Free memory
+//		// Free mem
 //		fclose(file);
 //	}
 //
@@ -743,7 +743,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //			delete wpath;
 //		}
-//		// Free memory
+//		// Free mem
 //		fclose(file);
 //	}
 //
@@ -767,7 +767,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		else
 //			native_error_msg("native_system::getPathDocuments", "unable to retrieve documents path. \n");
 //
-//		// free memory
+//		// free mem
 //		::CoTaskMemFree(static_cast<void*>(my_path));
 //	}
 //
@@ -798,7 +798,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		else
 //			native_error_msg("native_system::getPathRoaming", "unable to retrieve roaming path. \n");
 //
-//		// free memory
+//		// free mem
 //		::CoTaskMemFree(static_cast<void*>(my_path));
 //	}
 //
@@ -824,7 +824,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		else
 //			native_error_msg("native_system::getPathLocal", "unable to retrieve local path. \n");
 //
-//		// free memory
+//		// free mem
 //		::CoTaskMemFree(static_cast<void*>(my_path));
 //	}
 //

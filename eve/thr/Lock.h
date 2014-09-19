@@ -30,64 +30,71 @@
 */
 
 #pragma once
+#ifndef __EVE_THREADING_LOCK_H__
+#define __EVE_THREADING_LOCK_H__  
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#ifndef __EVE_THREADING_FENCE_H__
+#include "eve/thr/Fence.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+namespace eve
+{
+	namespace thr
+	{
+
+		/** 
+		* \class eve::thr::Lock
+		* \brief lock using critical section
+		* \note extends eve::thr::Fence
+		*/
+		class Lock
+			: public eve::thr::Fence
+		{
+
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
+
+		private:
+			CRITICAL_SECTION		m_criticalSections;
 
 
-#if defined(EVE_OS_WIN)
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
+			EVE_DISABLE_COPY(Lock)
+			EVE_PROTECT_DESTRUCTOR(Lock)
+        
+		protected:
+			/** \brief Class constructor. */
+			Lock(void);
 
 
-#endif // __EVE_CORE_INCLUDES_H__
+		protected:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members. (pure virtual) */
+			virtual void release(void) override;
+
+
+		public:
+			/** \brief Acquire the lock. */
+			virtual void lock(void) override;
+			/** \brief Release the lock. */
+			virtual void unlock(void) override;
+
+		}; // class Lock
+
+	} // namespace thr
+
+} // namespace eve
+
+#endif // __EVE_THREADING_LOCK_H__

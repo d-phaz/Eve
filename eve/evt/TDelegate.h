@@ -39,11 +39,11 @@
 #endif
 
 #ifndef __EVE_THREADING_SCOPED_FENCE_H__
-#include "eve/threading/ScopedFence.h"
+#include "eve/thr/ScopedFence.h"
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
-#include "eve/threading/SpinLock.h"
+#include "eve/thr/SpinLock.h"
 #endif 
 
 namespace eve
@@ -75,7 +75,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::threading::SpinLock *	m_pFence;
+			eve::thr::SpinLock *	m_pFence;
 
 
 			//////////////////////////////////////
@@ -141,7 +141,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::threading::SpinLock *	m_pFence;
+			eve::thr::SpinLock *	m_pFence;
 
 
 			//////////////////////////////////////
@@ -207,7 +207,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::threading::SpinLock *	m_pFence;
+			eve::thr::SpinLock *	m_pFence;
 
 
 			//////////////////////////////////////
@@ -273,7 +273,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::threading::SpinLock *	m_pFence;
+			eve::thr::SpinLock *	m_pFence;
 
 
 			//////////////////////////////////////
@@ -349,7 +349,7 @@ namespace eve
 template <class TObj, class TArgs, bool useSender>
 eve::evt::TDelegate<TObj, TArgs, useSender>::TDelegate(void)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -361,7 +361,7 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::TDelegate(TObj* obj, NotifyMethod m
 	, m_pReceiverObject(obj)
 	, m_receiverMethod(method)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);	
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);	
 }
 
 //=================================================================================================
@@ -373,7 +373,7 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::TDelegate(const TDelegate<TObj, TAr
 	, m_pReceiverObject(p_other.m_pReceiverObject),
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -400,7 +400,7 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::~TDelegate(void)
 template <class TObj, class TArgs, bool useSender>
 bool eve::evt::TDelegate<TObj, TArgs, useSender>::notify(const void* sender, TArgs& arguments)
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	if (m_pReceiverObject)
 	{
 		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
@@ -441,7 +441,7 @@ void eve::evt::TDelegate<TObj, TArgs, useSender>::disable(void)
 template <class TObj, class TArgs>
 eve::evt::TDelegate<TObj, TArgs, false>::TDelegate(void)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -453,7 +453,7 @@ eve::evt::TDelegate<TObj, TArgs, false>::TDelegate(TObj* obj, NotifyMethod metho
 	, m_pReceiverObject(obj)
 	, m_receiverMethod(method)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -465,7 +465,7 @@ eve::evt::TDelegate<TObj, TArgs, false>::TDelegate(const TDelegate<TObj, TArgs, 
 	, m_pReceiverObject(p_other.m_pReceiverObject)
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -492,7 +492,7 @@ eve::evt::TDelegate<TObj, TArgs, false>::~TDelegate(void)
 template <class TObj, class TArgs>
 bool eve::evt::TDelegate<TObj, TArgs, false>::notify(const void* sender, TArgs& arguments)
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	if (m_pReceiverObject)
 	{
 		(m_pReceiverObject->*m_receiverMethod)(arguments);
@@ -533,7 +533,7 @@ void eve::evt::TDelegate<TObj, TArgs, false>::disable(void)
 template <class TObj>
 eve::evt::TDelegate<TObj, void, true>::TDelegate(void)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -545,7 +545,7 @@ eve::evt::TDelegate<TObj, void, true>::TDelegate(TObj* obj, NotifyMethod method,
 	, m_pReceiverObject(obj)
 	, m_receiverMethod(method)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -557,7 +557,7 @@ eve::evt::TDelegate<TObj, void, true>::TDelegate(const TDelegate<TObj, void, tru
 	, m_pReceiverObject(p_other.m_pReceiverObject),
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -584,7 +584,7 @@ eve::evt::TDelegate<TObj, void, true>::~TDelegate(void)
 template <class TObj>
 bool eve::evt::TDelegate<TObj, void, true>::notify(const void* sender)
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	if (m_pReceiverObject)
 	{
 		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
@@ -625,7 +625,7 @@ void eve::evt::TDelegate<TObj, void, true>::disable(void)
 template <class TObj>
 eve::evt::TDelegate<TObj, void, false>::TDelegate(void)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -637,7 +637,7 @@ eve::evt::TDelegate<TObj, void, false>::TDelegate(TObj* obj, NotifyMethod method
 	, m_pReceiverObject(obj)
 	, m_receiverMethod(method)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -649,7 +649,7 @@ eve::evt::TDelegate<TObj, void, false>::TDelegate(const TDelegate<TObj, void, fa
 	, m_pReceiverObject(p_other.m_pReceiverObject),
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
-	m_pFence = EVE_CREATE_PTR(eve::threading::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
@@ -676,7 +676,7 @@ eve::evt::TDelegate<TObj, void, false>::~TDelegate(void)
 template <class TObj>
 bool eve::evt::TDelegate<TObj, void, false>::notify(const void* sender)
 {
-	eve::threading::ScopedFence<eve::threading::SpinLock> lock(m_pFence);
+	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	if (m_pReceiverObject)
 	{
 		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);

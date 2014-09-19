@@ -30,64 +30,73 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#ifndef __EVE_THREADING_THREAD_DUMMY_H__
+#define __EVE_THREADING_THREAD_DUMMY_H__
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
+#ifndef __EVE_THREADING_THREAD_H__
+#include "eve/thr/Thread.h"
+#endif 
+
+namespace eve
+{
+	namespace thr
+	{
+		class SpinLock;
+
+		/**
+		* \class eve::thr::ThreadDummy
+		*
+		* \brief This class is used for testing purpose only.
+		*
+		* \note extends thr::Thread
+		*/
+		class ThreadDummy
+			: public eve::thr::Thread
+		{
+
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			eve::thr::SpinLock *		m_pLock;
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(ThreadDummy)
+			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
+
+		protected:
+			/** \brief Class constructor. */
+			ThreadDummy(void);
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+		protected:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/**
+			* \brief Release and delete class members. (pure virtual)
+			* Stop this object's thread execution (if any) immediately
+			*/
+			virtual void release(void) override;
 
 
-#if defined(EVE_OS_WIN)
+		public:
+			/**
+			* \brief Run is the main loop for this thread. (pure virtual)
+			* Usually this is called by Start(), but may be called directly for single-threaded applications.
+			*/
+			virtual void run(void) override;
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+		}; // class ThreadDummy
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+	} // namespace thr
 
-#endif // defined(EVE_OS_WIN)
+} // namespace eve
 
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+#endif // __EVE_THREADING_THREAD_DUMMY_H__

@@ -30,64 +30,18 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
-
-
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
-
-
-#if defined(EVE_OS_WIN)
-
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
 #ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
+#define __EVE_MEMORY_INCLUDES_H__
+
+
+#ifndef __EVE_MEMORY_POINTER_H__
+#include "eve/mem/Pointer.h"
 #endif
 
 
-#endif // __EVE_CORE_INCLUDES_H__
+#ifndef __EVE_MEMORY_SCOPED_H__
+#include "eve/mem/Scoped.h"
+#endif
+
+
+#endif //__EVE_MEMORY_INCLUDES_H__

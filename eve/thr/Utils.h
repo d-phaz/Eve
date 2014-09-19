@@ -30,64 +30,56 @@
 */
 
 #pragma once
+#ifndef __EVE_THREADING_UTILS_H__
+#define __EVE_THREADING_UTILS_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#include "eve/core/Includes.h"
 #endif
 
-
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+namespace eve
+{
+	namespace thr
+	{
+		/**
+		* \brief Sleep thread for given amount of milliseconds.
+		* \param p_milliseconds milliseconds amount to sleep.
+		*/
+		void sleep_milli(const int32_t p_milliseconds);
+		/**
+		* \brief Sleep thread for given amount of iterations, switch hand to other threads.
+		* \param p_iters iterations amount.
+		*/
+		void sleep_iter(uint32_t p_iters);
+		/**
+		* \brief Sleep thread for given amount of micro seconds, switch hand to other threads.
+		* \param p_ticks target ticks amount.
+		*/
+		void sleep_micro(uint64_t p_ticks);
 
 
-#if defined(EVE_OS_WIN)
+		/**
+		* \brief Get current thread ID.
+		* \return id as DWORD.
+		*/
+		DWORD current_thread_ID(void);
+		/** 
+		* \brief Get current thread handle (void*).
+		* \return handle as HANDLE (void*).
+		*/
+		HANDLE current_thread_handle(void);
+		/**
+		* \brief Compare thread ID (inLeft == inRight) and return true if they are equal. 
+		* On some Operating System(s) DWORD is a struct so == will not work.
+		*/
+		bool equal_ID(DWORD inLeft, DWORD inRight);
+		/**
+		* \brief Return a zeroed out thread ID. On some Operating System(s) DWORD is a struct so == 0 will not work.
+		*/
+		DWORD zero_ID(void);
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+	} // namespace thr
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+} // namespace eve
 
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+#endif // __EVE_THREADING_UTILS_H__

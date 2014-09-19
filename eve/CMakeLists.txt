@@ -83,10 +83,10 @@ source_group( "Files" FILES ${FILES_SRCS} )
 # Memory.
 #################################################
 set( MEMORY_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Pointer.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/memory/Scoped.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Scoped.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MEMORY_SRCS} )
 source_group( "Memory" FILES ${MEMORY_SRCS} )
@@ -95,41 +95,51 @@ source_group( "Memory" FILES ${MEMORY_SRCS} )
 # Messaging.
 #################################################
 set( MESSAGING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Error.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Error.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Server.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/messaging/Server.cpp )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Error.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Error.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Server.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Server.cpp )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MESSAGING_SRCS} )
 source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 
 
+# System.
+#################################################
+set( SYSTEM_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${SYSTEM_SRCS} )
+source_group( "System" FILES ${SYSTEM_SRCS} )
+
+
 # Thread.
 #################################################
 set( THREADING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Condition.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Fence.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Fence.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Lock.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Mutex.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ScopedFence.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/SpinLock.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Thread.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadDummy.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadDummy.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadPool.cpp   
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/ThreadPool.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Utils.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Utils.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Worker.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/threading/Worker.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Condition.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Condition.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Fence.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Fence.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Lock.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Lock.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Mutex.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Mutex.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ScopedFence.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadDummy.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadDummy.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.cpp   
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Worker.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Worker.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )

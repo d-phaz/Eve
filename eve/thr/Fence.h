@@ -30,64 +30,52 @@
 */
 
 #pragma once
+#ifndef __EVE_THREADING_FENCE_H__
+#define __EVE_THREADING_FENCE_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#include "eve/core/Includes.h"
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-// x64 compliant integers
-#include <stdint.h>
-// pointers and mem
-#include <mem>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// list types
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-// file handling
-#include <fstream>
+namespace eve
+{
+	namespace thr
+	{
+
+		/**
+		* \class eve::thr::Fence
+		* \brief Abstract base fence class (lock/mutex/...)
+		* \note extends eve::mem::Pointer
+		*/
+		class Fence
+			: public eve::mem::Pointer
+		{
+
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(Fence);
+			EVE_PROTECT_DESTRUCTOR(Fence);
+
+		protected:
+			/** \brief Class constructor. */
+			Fence(void);
 
 
-#if defined(EVE_OS_WIN)
+		public:
+			/** \brief Lock the fence. (pure virtual) */
+			virtual void lock(void) = 0;
+			/** \brief Unlock the fence. (pure virtual)*/
+			virtual void unlock(void) = 0;
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+		}; // class Fence
 
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+	} // namespace thr
 
-#endif // defined(EVE_OS_WIN)
+} // namespace eve
 
-
-#ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-
-#endif // __EVE_CORE_INCLUDES_H__
+#endif // __EVE_THREADING_FENCE_H__
