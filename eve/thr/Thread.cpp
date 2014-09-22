@@ -43,7 +43,7 @@
 #endif
 
 #ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mes/Includes.h"
+#include "eve/mess/Includes.h"
 #endif
 
 
@@ -107,13 +107,13 @@ void eve::thr::Thread::start(ThreadRoutine p_routine, priorities p_priority)
 		// Set thread priority
 		if (!setPriority(p_priority))
 		{
-			EVE_LOG_ERROR("Unable to set thread priority, error is %s", eve::mes::get_error_msg());
+			EVE_LOG_ERROR("Unable to set thread priority, error is %s", eve::mess::get_error_msg());
 			EVE_ASSERT_FAILURE
 		}
 
 		if (::ResumeThread(m_hThread) == (DWORD)-1)
 		{
-			EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mes::get_error_msg());
+			EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mess::get_error_msg());
 			EVE_ASSERT_FAILURE
 		}
 

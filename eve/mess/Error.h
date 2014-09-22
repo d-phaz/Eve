@@ -30,18 +30,33 @@
 */
 
 #pragma once
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#define __EVE_MESSAGING_INCLUDES_H__
-
-
 #ifndef __EVE_MESSAGING_ERROR_H__
-#include "eve/mes/Error.h"
+#define __EVE_MESSAGING_ERROR_H__
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
 #endif
 
 
-#ifndef __EVE_MESSAGING_SERVER_H__
-#include "eve/mes/Server.h"
+namespace eve
+{
+	namespace mess
+	{
+#if defined(EVE_OS_WIN)
+
+		/** 
+		 * \brief get Windows error message based on error code.
+		 * \param p_err error code.
+		 */
+		std::string get_error_msg(DWORD p_err);
+		/**
+		* \brief get Windows error message using GetLastError().
+		*/
+		std::string get_error_msg(void);
 #endif
 
+	} // namespace mess
 
-#endif //__EVE_MEMORY_INCLUDES_H__
+} // namespace eve
+
+#endif // __EVE_MESSAGING_ERROR_H__

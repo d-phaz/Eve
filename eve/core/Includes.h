@@ -50,8 +50,8 @@
 #include <sstream>
 // x64 compliant integers
 #include <stdint.h>
-// pointers and mem
-#include <mem>
+// pointers and memory
+#include <memory>
 // assertion
 #include <cassert>
 // standard string
@@ -89,5 +89,8 @@
 #include "eve/mem/Includes.h"
 #endif
 
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
 
 #endif // __EVE_CORE_INCLUDES_H__

@@ -44,4 +44,4 @@
 #endif
 
 
-#endif //__EVE_MEMORY_INCLUDES_H__
+#endif // __EVE_MEMORY_INCLUDES_H__

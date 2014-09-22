@@ -33,9 +33,7 @@
 #ifndef __EVE_THREADING_FENCE_H__
 #define __EVE_THREADING_FENCE_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
+#include "eve/mem/Pointer.h"
 
 
 namespace eve

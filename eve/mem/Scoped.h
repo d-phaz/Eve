@@ -38,10 +38,6 @@
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MEMORY_POINTER_H__
-#include "eve/mem/Pointer.h"
-#endif
-
 
 namespace eve
 {

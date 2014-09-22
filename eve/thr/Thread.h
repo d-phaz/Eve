@@ -108,8 +108,8 @@ namespace eve
 
 
 		private:
-			SpinLock *						m_pSpinLock;			//!< Spin lock protecting workers and run loop.
-			eve::thr::Worker *		m_pWorker;				//!< Thread worker called in run loop.
+			eve::thr::SpinLock *		m_pSpinLock;				//!< Spin lock protecting workers and run loop.
+			eve::thr::Worker *			m_pWorker;					//!< Thread worker called in run loop.
 
 
 			//////////////////////////////////////

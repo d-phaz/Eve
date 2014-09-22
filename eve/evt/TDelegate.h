@@ -75,7 +75,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::thr::SpinLock *	m_pFence;
+			eve::thr::SpinLock *		m_pFence;
 
 
 			//////////////////////////////////////
@@ -141,7 +141,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::thr::SpinLock *	m_pFence;
+			eve::thr::SpinLock *		m_pFence;
 
 
 			//////////////////////////////////////
@@ -207,7 +207,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::thr::SpinLock *	m_pFence;
+			eve::thr::SpinLock *		m_pFence;
 
 
 			//////////////////////////////////////
@@ -273,7 +273,7 @@ namespace eve
 		protected:
 			TObj*						m_pReceiverObject;
 			NotifyMethod				m_receiverMethod;
-			eve::thr::SpinLock *	m_pFence;
+			eve::thr::SpinLock *		m_pFence;
 
 
 			//////////////////////////////////////

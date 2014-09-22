@@ -82,7 +82,7 @@ namespace eve
 			TStrategy							m_strategy;  /// The strategy used to notify observers.
 			bool								m_bEnabled;   /// Stores if an event is enabled. Notifies on disabled events have no effect
 															/// but it is possible to change the observers.
-			mutable eve::thr::SpinLock *	m_pFence;
+			mutable eve::thr::SpinLock *		m_pFence;
 
 
 			//////////////////////////////////////
@@ -162,7 +162,7 @@ namespace eve
 		protected:
 			TStrategy							m_strategy;		//!< The strategy used to notify observers.
 			bool								m_bEnabled;		//!< Stores if an event is enabled. Notifies on disabled events have no effect but it is possible to change the observers.
-			mutable eve::thr::SpinLock *	m_pFence;
+			mutable eve::thr::SpinLock *		m_pFence;
 
 
 			//////////////////////////////////////

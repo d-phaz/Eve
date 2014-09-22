@@ -2,21 +2,21 @@
 /*
  Copyright (c) 2014, The eve Project
  All rights reserved.
-
+ 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
-
+ 
  * Redistributions of source code must retain the above copyright notice, this
  list of conditions and the following disclaimer.
-
+ 
  * Redistributions in binary form must reproduce the above copyright notice,
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
-
+ 
  * Neither the name of the {organization} nor the names of its
  contributors may be used to endorse or promote products derived from
  this software without specific prior written permission.
-
+ 
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -29,56 +29,19 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "eve/mes/Error.h"
+#pragma once
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#define __EVE_MESSAGING_INCLUDES_H__
 
 
-#if defined(EVE_OS_WIN)
+#ifndef __EVE_MESSAGING_ERROR_H__
+#include "eve/mess/Error.h"
+#endif
 
-	//=================================================================================================
-	std::string eve::mes::get_error_msg(DWORD p_err)
-	{
-		std::string returnString;
 
-		char buffer[2048];
-		try
-		{
-			DWORD len = 0;
-			LPWSTR msg = nullptr;
+#ifndef __EVE_MESSAGING_SERVER_H__
+#include "eve/mess/Server.h"
+#endif
 
-			len = FormatMessageW(
-				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL,
-				p_err,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				(LPWSTR)&msg, 0, NULL
-				);
 
-			if (len > 0)
-			{
-				_snprintf(buffer, 2048, "error (%d): %s\n", p_err, msg);
-			}
-			else
-			{
-				_snprintf(buffer, 2048, "error code: %d.\n", p_err);
-			}
-
-			returnString = std::string(buffer);
-
-			if (msg) LocalFree(msg);
-
-		}
-		catch (...)
-		{
-			returnString = "Can't get Win32 error message";
-		}
-		return returnString;
-	}
-
-	//=================================================================================================
-	std::string eve::mes::get_error_msg(void)
-	{
-		return eve::mes::get_error_msg(::GetLastError());
-	}
-
-#endif // defined(EVE_OS_WIN)
+#endif // __EVE_MESSAGING_INCLUDES_H__

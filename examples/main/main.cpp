@@ -34,7 +34,7 @@
 #endif
 
 #ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mes/Includes.h"
+#include "eve/mess/Includes.h"
 #endif
 
 #ifndef __EVE_THREADING_INCLUDES_H__
@@ -57,13 +57,13 @@ class Example
 public:
 	Example(void)
 	{
-		eve::mes::Server::create_instance();
+		eve::mess::Server::create_instance();
 		eve::evt::register_events_mouse(this);
 	}
 	virtual ~Example(void)
 	{
 		eve::evt::unregister_events_mouse(this);
-		eve::mes::Server::release_instance();
+		eve::mess::Server::release_instance();
 	}
 
 public:
@@ -94,13 +94,13 @@ int main(int argc, char **argv)
 
 	// Messaging example //
 
-	//eve::mes::Server::create_instance();
+	//eve::mess::Server::create_instance();
 	//EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
 	//EVE_LOG_WARNING("Warning level %i.", 3);
 	//EVE_LOG_PROGRESS("App execution in progress.");
 	//EVE_LOG_DEBUG("Woups... debug log info.");
 	//EVE_LOG_ERROR("Any error occured?");
-	//eve::mes::Server::release_instance();
+	//eve::mess::Server::release_instance();
 
 
 	//-------------------------------------------

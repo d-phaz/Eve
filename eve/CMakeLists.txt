@@ -95,11 +95,11 @@ source_group( "Memory" FILES ${MEMORY_SRCS} )
 # Messaging.
 #################################################
 set( MESSAGING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Error.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Error.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Server.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mes/Server.cpp )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Error.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Error.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Server.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Server.cpp )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MESSAGING_SRCS} )
 source_group( "Messaging" FILES ${MESSAGING_SRCS} )

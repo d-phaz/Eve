@@ -30,7 +30,7 @@
 */
 
 // Main header
-#include "eve/mes/Server.h"
+#include "eve/mess/Server.h"
 
 #include <sys/timeb.h>
 
@@ -93,17 +93,17 @@ static char * get_current_date(void)
 }
 
 
-eve::mes::Server *	eve::mes::Server::m_p_server	= nullptr;
-eve::thr::SpinLock *	eve::mes::Server::m_p_mutex	= nullptr;
+eve::mess::Server *	eve::mess::Server::m_p_server	= nullptr;
+eve::thr::SpinLock *	eve::mess::Server::m_p_mutex	= nullptr;
 
 
 //=================================================================================================
-eve::mes::Server * eve::mes::Server::create_instance(const std::string & p_logFilePath)
+eve::mess::Server * eve::mess::Server::create_instance(const std::string & p_logFilePath)
 {
 	EVE_ASSERT(!m_p_server);
 	EVE_ASSERT(!m_p_mutex);
 
-	m_p_server	= EVE_CREATE_PTR(eve::mes::Server);
+	m_p_server	= EVE_CREATE_PTR(eve::mess::Server);
 	m_p_mutex	= EVE_CREATE_PTR(eve::thr::SpinLock);
 
 	if (p_logFilePath.size() > 0)
@@ -115,7 +115,7 @@ eve::mes::Server * eve::mes::Server::create_instance(const std::string & p_logFi
 }
 
 //=================================================================================================
-void eve::mes::Server::release_instance(void)
+void eve::mess::Server::release_instance(void)
 {
 	EVE_ASSERT(m_p_server);
 	EVE_RELEASE_PTR(m_p_server);
@@ -127,7 +127,7 @@ void eve::mes::Server::release_instance(void)
 
 
 //=================================================================================================
-eve::mes::Server::Server(void)
+eve::mess::Server::Server(void)
 	
 	// Inheritance
 	: eve::mem::Pointer()
@@ -149,18 +149,18 @@ eve::mes::Server::Server(void)
 
 
 //=================================================================================================
-void eve::mes::Server::init(void)
+void eve::mess::Server::init(void)
 {
 	// Default mode -> log in console if not in Release mode, else do nothing.
-	m_pHandlerError		= &eve::mes::Server::default_log_error;
-	m_pHandlerWarning	= &eve::mes::Server::default_log_warning;
-	m_pHandlerInfo		= &eve::mes::Server::default_log_info;
-	m_pHandlerProgress	= &eve::mes::Server::default_log_progress;
-	m_pHandlerDebug		= &eve::mes::Server::default_log_debug;
+	m_pHandlerError		= &eve::mess::Server::default_log_error;
+	m_pHandlerWarning	= &eve::mess::Server::default_log_warning;
+	m_pHandlerInfo		= &eve::mess::Server::default_log_info;
+	m_pHandlerProgress	= &eve::mess::Server::default_log_progress;
+	m_pHandlerDebug		= &eve::mess::Server::default_log_debug;
 }
 
 //=================================================================================================
-void eve::mes::Server::release(void)
+void eve::mess::Server::release(void)
 {
 	
 }
@@ -168,7 +168,7 @@ void eve::mes::Server::release(void)
 
 
 //=================================================================================================
-void eve::mes::Server::default_log_error(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_error(const char *funcName, const char *format, ...)
 {
 #if !defined(NDEBUG)
 	
@@ -176,16 +176,16 @@ void eve::mes::Server::default_log_error(const char *funcName, const char *forma
 
 	va_list arg;
 
-	std::string mes = "[  ERROR  ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[  ERROR  ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(stderr, mes.c_str(), arg);
+	vfprintf(stderr, mess.c_str(), arg);
 	fflush(stderr);
 	va_end(arg);
 
@@ -194,7 +194,7 @@ void eve::mes::Server::default_log_error(const char *funcName, const char *forma
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_info(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_info(const char *funcName, const char *format, ...)
 {
 #if !defined(NDEBUG)
 	
@@ -202,43 +202,16 @@ void eve::mes::Server::default_log_info(const char *funcName, const char *format
 	
 	va_list arg;
 
-	std::string mes = "[  INFO   ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[  INFO   ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(stderr, mes.c_str(), arg);
-	fflush(stderr);
-	va_end(arg);
-
-	m_p_mutex->unlock();
-
-#endif
-}
-
-//=================================================================================================
-void eve::mes::Server::default_log_warning(const char *funcName, const char *format, ...)
-{
-#if !defined(NDEBUG)
-	
-	m_p_mutex->lock();
-
-	va_list arg;
-
-	std::string mes = "[ WARNING ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
-
-	va_start(arg, format);
-	vfprintf(stderr, mes.c_str(), arg);
+	vfprintf(stderr, mess.c_str(), arg);
 	fflush(stderr);
 	va_end(arg);
 
@@ -248,7 +221,7 @@ void eve::mes::Server::default_log_warning(const char *funcName, const char *for
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_progress(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_warning(const char *funcName, const char *format, ...)
 {
 #if !defined(NDEBUG)
 	
@@ -256,16 +229,16 @@ void eve::mes::Server::default_log_progress(const char *funcName, const char *fo
 
 	va_list arg;
 
-	std::string mes = "[ PROGRESS]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[ WARNING ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(stderr, mes.c_str(), arg);
+	vfprintf(stderr, mess.c_str(), arg);
 	fflush(stderr);
 	va_end(arg);
 
@@ -275,7 +248,34 @@ void eve::mes::Server::default_log_progress(const char *funcName, const char *fo
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_debug(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_progress(const char *funcName, const char *format, ...)
+{
+#if !defined(NDEBUG)
+	
+	m_p_mutex->lock();
+
+	va_list arg;
+
+	std::string mess = "[ PROGRESS]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
+
+	va_start(arg, format);
+	vfprintf(stderr, mess.c_str(), arg);
+	fflush(stderr);
+	va_end(arg);
+
+	m_p_mutex->unlock();
+
+#endif
+}
+
+//=================================================================================================
+void eve::mess::Server::default_log_debug(const char *funcName, const char *format, ...)
 {
 #if !defined(NDEBUG)
 
@@ -283,16 +283,16 @@ void eve::mes::Server::default_log_debug(const char *funcName, const char *forma
 	
 	va_list arg;
 
-	std::string mes = "[  DEBUG  ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[  DEBUG  ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(stderr, mes.c_str(), arg);
+	vfprintf(stderr, mess.c_str(), arg);
 	fflush(stderr);
 	va_end(arg);
 
@@ -304,22 +304,22 @@ void eve::mes::Server::default_log_debug(const char *funcName, const char *forma
 
 
 //=================================================================================================
-void eve::mes::Server::default_log_in_file_error(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_in_file_error(const char *funcName, const char *format, ...)
 {
 	m_p_mutex->lock();
 
 	va_list arg;
 
-	std::string mes = "[  ERROR  ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[  ERROR  ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(get_error_stream(), mes.c_str(), arg);
+	vfprintf(get_error_stream(), mess.c_str(), arg);
 	fflush(get_error_stream());
 	va_end(arg);
 
@@ -327,22 +327,22 @@ void eve::mes::Server::default_log_in_file_error(const char *funcName, const cha
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_in_file_info(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_in_file_info(const char *funcName, const char *format, ...)
 {
 	m_p_mutex->lock();
 
 	va_list arg;
 
-	std::string mes = "[  INFO   ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[  INFO   ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(get_info_stream(), mes.c_str(), arg);
+	vfprintf(get_info_stream(), mess.c_str(), arg);
 	fflush(get_info_stream());
 	va_end(arg);
 
@@ -350,22 +350,22 @@ void eve::mes::Server::default_log_in_file_info(const char *funcName, const char
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_in_file_warning(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_in_file_warning(const char *funcName, const char *format, ...)
 {
 	m_p_mutex->lock();
 
 	va_list arg;
 
-	std::string mes = "[ WARNING ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[ WARNING ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(get_warning_stream(), mes.c_str(), arg);
+	vfprintf(get_warning_stream(), mess.c_str(), arg);
 	fflush(get_warning_stream());
 	va_end(arg);
 
@@ -373,22 +373,22 @@ void eve::mes::Server::default_log_in_file_warning(const char *funcName, const c
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_in_file_progress(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_in_file_progress(const char *funcName, const char *format, ...)
 {
 	m_p_mutex->lock();
 
 	va_list arg;
 
-	std::string mes = "[ PROGRESS]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[ PROGRESS]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(get_progress_stream(), mes.c_str(), arg);
+	vfprintf(get_progress_stream(), mess.c_str(), arg);
 	fflush(get_progress_stream());
 	va_end(arg);
 
@@ -396,22 +396,22 @@ void eve::mes::Server::default_log_in_file_progress(const char *funcName, const 
 }
 
 //=================================================================================================
-void eve::mes::Server::default_log_in_file_debug(const char *funcName, const char *format, ...)
+void eve::mess::Server::default_log_in_file_debug(const char *funcName, const char *format, ...)
 {
 	m_p_mutex->lock();
 
 	va_list arg;
 
-	std::string mes = "[  DEBUG  ]";
-	mes += get_current_date();
-	mes += " ";
-	mes += funcName;
-	mes += " ";
-	mes += format;
-	mes += "\n";
+	std::string mess = "[  DEBUG  ]";
+	mess += get_current_date();
+	mess += " ";
+	mess += funcName;
+	mess += " ";
+	mess += format;
+	mess += "\n";
 
 	va_start(arg, format);
-	vfprintf(get_debug_stream(), mes.c_str(), arg);
+	vfprintf(get_debug_stream(), mess.c_str(), arg);
 	fflush(get_debug_stream());
 	va_end(arg);
 
@@ -425,34 +425,34 @@ void eve::mes::Server::default_log_in_file_debug(const char *funcName, const cha
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-void eve::mes::Server::set_log_in_file(bool p_bLogInFile)
+void eve::mess::Server::set_log_in_file(bool p_bLogInFile)
 {
 	m_p_mutex->lock();
 
 #if !defined(NDEBUG)
 	// Default mode -> log in console if not in Release mode, else do nothing.
-	m_p_server->m_pHandlerError		= &eve::mes::Server::default_log_error;
-	m_p_server->m_pHandlerWarning	= &eve::mes::Server::default_log_warning;
-	m_p_server->m_pHandlerInfo		= &eve::mes::Server::default_log_info;
-	m_p_server->m_pHandlerProgress	= &eve::mes::Server::default_log_progress;
-	m_p_server->m_pHandlerDebug		= &eve::mes::Server::default_log_debug;
+	m_p_server->m_pHandlerError		= &eve::mess::Server::default_log_error;
+	m_p_server->m_pHandlerWarning	= &eve::mess::Server::default_log_warning;
+	m_p_server->m_pHandlerInfo		= &eve::mess::Server::default_log_info;
+	m_p_server->m_pHandlerProgress	= &eve::mess::Server::default_log_progress;
+	m_p_server->m_pHandlerDebug		= &eve::mess::Server::default_log_debug;
 #else
 
 	if (p_bLogInFile)
 	{
-		m_p_server->m_pHandlerError		= &eve::mes::Server::default_log_in_file_error;
-		m_p_server->m_pHandlerWarning	= &eve::mes::Server::default_log_in_file_info;
-		m_p_server->m_pHandlerInfo		= &eve::mes::Server::default_log_in_file_warning;
-		m_p_server->m_pHandlerProgress	= &eve::mes::Server::default_log_in_file_progress;
-		m_p_server->m_pHandlerDebug		= &eve::mes::Server::default_log_in_file_debug;
+		m_p_server->m_pHandlerError		= &eve::mess::Server::default_log_in_file_error;
+		m_p_server->m_pHandlerWarning	= &eve::mess::Server::default_log_in_file_info;
+		m_p_server->m_pHandlerInfo		= &eve::mess::Server::default_log_in_file_warning;
+		m_p_server->m_pHandlerProgress	= &eve::mess::Server::default_log_in_file_progress;
+		m_p_server->m_pHandlerDebug		= &eve::mess::Server::default_log_in_file_debug;
 	}
 	else
 	{
-		m_p_server->m_pHandlerError		= &eve::mes::Server::default_log_error;
-		m_p_server->m_pHandlerWarning	= &eve::mes::Server::default_log_warning;
-		m_p_server->m_pHandlerInfo		= &eve::mes::Server::default_log_info;
-		m_p_server->m_pHandlerProgress	= &eve::mes::Server::default_log_progress;
-		m_p_server->m_pHandlerDebug		= &eve::mes::Server::default_log_debug;
+		m_p_server->m_pHandlerError		= &eve::mess::Server::default_log_error;
+		m_p_server->m_pHandlerWarning	= &eve::mess::Server::default_log_warning;
+		m_p_server->m_pHandlerInfo		= &eve::mess::Server::default_log_info;
+		m_p_server->m_pHandlerProgress	= &eve::mess::Server::default_log_progress;
+		m_p_server->m_pHandlerDebug		= &eve::mess::Server::default_log_debug;
 	}
 
 #endif
@@ -463,7 +463,7 @@ void eve::mes::Server::set_log_in_file(bool p_bLogInFile)
 
 
 //=================================================================================================
-bool eve::mes::Server::set_error_stream_path(const std::string & p_path)
+bool eve::mess::Server::set_error_stream_path(const std::string & p_path)
 {
 	bool bret = false;
 	m_p_mutex->lock();
@@ -481,7 +481,7 @@ bool eve::mes::Server::set_error_stream_path(const std::string & p_path)
 }
 
 //=================================================================================================
-bool eve::mes::Server::set_warning_stream_path(const std::string & p_path)
+bool eve::mess::Server::set_warning_stream_path(const std::string & p_path)
 {
 	bool bret = false;
 	m_p_mutex->lock();
@@ -499,7 +499,7 @@ bool eve::mes::Server::set_warning_stream_path(const std::string & p_path)
 }
 
 //=================================================================================================
-bool eve::mes::Server::set_info_stream_path(const std::string & p_path)
+bool eve::mess::Server::set_info_stream_path(const std::string & p_path)
 {
 	bool bret = false;
 	m_p_mutex->lock();
@@ -517,7 +517,7 @@ bool eve::mes::Server::set_info_stream_path(const std::string & p_path)
 }
 
 //=================================================================================================
-bool eve::mes::Server::set_progress_stream_path(const std::string & p_path)
+bool eve::mess::Server::set_progress_stream_path(const std::string & p_path)
 {
 	bool bret = false;
 	m_p_mutex->lock();
@@ -535,7 +535,7 @@ bool eve::mes::Server::set_progress_stream_path(const std::string & p_path)
 }
 
 //=================================================================================================
-bool eve::mes::Server::set_debug_stream_path(const std::string & p_path)
+bool eve::mess::Server::set_debug_stream_path(const std::string & p_path)
 {
 	bool bret = false;
 	m_p_mutex->lock();
@@ -553,7 +553,7 @@ bool eve::mes::Server::set_debug_stream_path(const std::string & p_path)
 }
 
 //=================================================================================================
-bool eve::mes::Server::set_msg_stream_path(const std::string & p_path)
+bool eve::mess::Server::set_msg_stream_path(const std::string & p_path)
 {
 	bool bret = false;
 	m_p_mutex->lock();
