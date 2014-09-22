@@ -45,6 +45,10 @@
 #include "eve/evt/Includes.h"
 #endif
 
+#ifndef __EVE_SYSTEM_INCLUDES_H__
+#include "eve/sys/Includes.h"
+#endif
+
 
 class Example
 {
@@ -108,14 +112,14 @@ int main(int argc, char **argv)
 
 	// Thread Pointer example //
 
-	// Create thread pointer.
-	eve::thr::ThreadDummy * thr = EVE_CREATE_PTR(eve::thr::ThreadDummy);
-	// Start thread.
-	thr->start();
-	// Sleep using microseconds.
-	eve::thr::sleep_micro(1000ULL * 1000ULL);
-	// Release pointer.
-	EVE_RELEASE_PTR(thr);
+	//// Create thread pointer.
+	//eve::thr::ThreadDummy * thr = EVE_CREATE_PTR(eve::thr::ThreadDummy);
+	//// Start thread.
+	//thr->start();
+	//// Sleep using microseconds.
+	//eve::thr::sleep_micro(1000ULL * 1000ULL);
+	//// Release pointer.
+	//EVE_RELEASE_PTR(thr);
 
 
 	//-------------------------------------------
@@ -137,8 +141,17 @@ int main(int argc, char **argv)
 
 	// Event example //
 
-	Example ex;
-	eve::evt::notify_mouse_down(0, 10, 20);
+	//Example ex;
+	//eve::evt::notify_mouse_down(0, 10, 20);
+
+
+	//-------------------------------------------
+
+
+	// Window example //
+
+	eve::sys::Window * win = eve::sys::Window::create_ptr(50, 50, 800, 600);
+	EVE_RELEASE_PTR(win);
 
 	return 0;
 }

@@ -186,6 +186,9 @@ void eve::sys::Window::init(void)
 		EVE_LOG_ERROR("Can't track system Window mouse events: %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
+
+	// Show the window.
+	::ShowWindow(m_handle, SW_SHOWNORMAL);
 }
 
 //=================================================================================================
