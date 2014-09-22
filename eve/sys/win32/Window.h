@@ -37,6 +37,14 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
 
 namespace eve{ namespace thr{ class SpinLock;  } }
 

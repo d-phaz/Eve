@@ -85,12 +85,4 @@
 #include "eve/core/Macro.h"
 #endif
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
-
 #endif // __EVE_CORE_INCLUDES_H__

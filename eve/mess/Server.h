@@ -217,11 +217,11 @@ namespace eve
 
 
 //=================================================================================================
-inline void eve::mess::Server::set_error_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerError	= p_method; 	m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_error_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerError		= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_warning_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerWarning	= p_method; 	m_p_mutex->unlock(); }
-inline void eve::mess::Server::set_info_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerInfo		= p_method; 	m_p_mutex->unlock(); }
-inline void eve::mess::Server::set_progress_handler(handlerMethod p_method)	{ m_p_mutex->lock(); m_p_server->m_pHandlerProgress = p_method;		m_p_mutex->unlock(); }
-inline void eve::mess::Server::set_debug_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerDebug	= p_method; 	m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_info_handler(handlerMethod p_method)			{ m_p_mutex->lock(); m_p_server->m_pHandlerInfo		= p_method; 	m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_progress_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerProgress = p_method;		m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_debug_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerDebug		= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_msg_handler(handlerMethod p_method)
 {
 	m_p_mutex->lock();
@@ -234,20 +234,20 @@ inline void eve::mess::Server::set_msg_handler(handlerMethod p_method)
 }
 
 //=================================================================================================
-inline eve::mess::Server::handlerMethod eve::mess::Server::get_error_handler(void)		{ return m_p_server->m_pHandlerError;		}
+inline eve::mess::Server::handlerMethod eve::mess::Server::get_error_handler(void)			{ return m_p_server->m_pHandlerError;		}
 inline eve::mess::Server::handlerMethod eve::mess::Server::get_warning_handler(void)		{ return m_p_server->m_pHandlerWarning;		}
-inline eve::mess::Server::handlerMethod eve::mess::Server::get_info_handler(void)			{ return m_p_server->m_pHandlerInfo;		}
-inline eve::mess::Server::handlerMethod eve::mess::Server::get_progress_handler(void)		{ return m_p_server->m_pHandlerProgress;	}
-inline eve::mess::Server::handlerMethod eve::mess::Server::get_debug_handler(void)		{ return m_p_server->m_pHandlerDebug;		}
+inline eve::mess::Server::handlerMethod eve::mess::Server::get_info_handler(void)			{ return m_p_server->m_pHandlerInfo;			}
+inline eve::mess::Server::handlerMethod eve::mess::Server::get_progress_handler(void)		{ return m_p_server->m_pHandlerProgress;		}
+inline eve::mess::Server::handlerMethod eve::mess::Server::get_debug_handler(void)			{ return m_p_server->m_pHandlerDebug;		}
 
 
 
 //=================================================================================================
-inline void eve::mess::Server::set_error_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamError		= p_pFile;		m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_error_stream(FILE * p_pFile)			{ m_p_mutex->lock(); m_p_server->m_pStreamError		= p_pFile;		m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_warning_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamWarning	= p_pFile; 		m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_info_stream(FILE * p_pFile)			{ m_p_mutex->lock(); m_p_server->m_pStreamInfo		= p_pFile;		m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_progress_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamProgress	= p_pFile; 		m_p_mutex->unlock(); }
-inline void eve::mess::Server::set_debug_stream(FILE * p_pFile)		{ m_p_mutex->lock(); m_p_server->m_pStreamDebug		= p_pFile;		m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_debug_stream(FILE * p_pFile)			{ m_p_mutex->lock(); m_p_server->m_pStreamDebug		= p_pFile;		m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_msg_stream(FILE * p_pFile)			
 { 
 	m_p_mutex->lock();
@@ -260,11 +260,11 @@ inline void eve::mess::Server::set_msg_stream(FILE * p_pFile)
 }
 
 //=================================================================================================
-inline FILE * eve::mess::Server::get_error_stream(void)		{ return m_p_server->m_pStreamError;		}
+inline FILE * eve::mess::Server::get_error_stream(void)			{ return m_p_server->m_pStreamError;			}
 inline FILE * eve::mess::Server::get_warning_stream(void)		{ return m_p_server->m_pStreamWarning;		}
 inline FILE * eve::mess::Server::get_info_stream(void)			{ return m_p_server->m_pStreamInfo;			}
 inline FILE * eve::mess::Server::get_progress_stream(void)		{ return m_p_server->m_pStreamProgress;		}
-inline FILE * eve::mess::Server::get_debug_stream(void)		{ return m_p_server->m_pStreamDebug;		}
+inline FILE * eve::mess::Server::get_debug_stream(void)			{ return m_p_server->m_pStreamDebug;			}
 
 
 

@@ -30,7 +30,7 @@
 */
 
 // Main header
-#include "evt/Event.h"
+#include "eve/evt/Event.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ void eve::evt::enable_events_key(void)
 }
 
 //=================================================================================================
-void disable_events_key(void)
+void eve::evt::disable_events_key(void)
 {
 	eve::evt::EvtKey::keyPressed.disable();
 	eve::evt::EvtKey::keyReleased.disable();

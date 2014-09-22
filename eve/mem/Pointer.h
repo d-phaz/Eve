@@ -54,8 +54,8 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Pointer)
-			EVE_PROTECT_DESTRUCTOR(Pointer)
+			EVE_DISABLE_COPY(Pointer);
+			EVE_PROTECT_DESTRUCTOR(Pointer);
 
 		protected:
 			/** \brief Class constructor. */
@@ -140,4 +140,4 @@ void eve::mem::Pointer::release_ptr(T * p_pPtr)
 	delete PTR;						\
 	PTR = nullptr;
 
-#endif //__EVE_MEMORY_POINTER_H__
+#endif // __EVE_MEMORY_POINTER_H__
