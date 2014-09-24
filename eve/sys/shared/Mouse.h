@@ -30,21 +30,58 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_INCLUDES_H__
-#define __EVE_SYSTEM_INCLUDES_H__
-
-
 #ifndef __EVE_SYSTEM_MOUSE_H__
-#include "eve/sys/shared/Mouse.h"
-#endif
-
-#ifndef __EVE_SYSTEM_WINDOW_H__
-#include "eve/sys/win32/Window.h"
-#endif
-
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
-#endif
+#define __EVE_SYSTEM_MOUSE_H__
 
 
-#endif // __EVE_SYSTEM_INCLUDES_H__
+namespace eve
+{
+	namespace sys
+	{
+
+		/** \brief Mouse button enumeration. */
+		enum MouseButton
+		{
+			/// Unknown mouse button
+			btn_Unknown = 1,
+			/// Left mouse button
+			btn_Left = 2,
+			/// Middle mouse button
+			btn_Middle = 3,
+			/// Right mouse button
+			btn_Right = 4,
+			/// Mouse wheel up
+			btn_WheelUp = 5,
+			/// Mouse wheel down
+			btn_WheelDown = 6,
+			/// Scroll left
+			btn_ScrollLeft = 7,
+			/// Scroll right
+			btn_ScrollRight = 8,
+			/// X UIButton
+			btn_X = 9,
+			/// Y UIButton
+			btn_Y = 10
+
+		}; // enum MouseButton
+
+
+		/** \brief Mouse button state enumeration. */
+		enum MouseButtonState
+		{
+			/// Unknown state
+			btnState_Unknown = 1,
+			/// Down state
+			btnState_Down = 2,
+			/// Up state
+			btnState_Up = 3,
+			/// Double Click state
+			btnState_DbleClick = 4
+
+		}; // enum MouseButtonState
+
+	} // namespace sys
+
+} // namespace eve
+
+#endif // __EVE_SYSTEM_MOUSE_H__

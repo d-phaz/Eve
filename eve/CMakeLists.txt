@@ -108,7 +108,8 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 # System.
 #################################################
 set( SYSTEM_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/Includes.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/Includes.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Mouse.h )
 	 
 set( SYSTEM_SRCS
 	 ${SYSTEM_SRCS} 

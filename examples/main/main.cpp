@@ -98,12 +98,12 @@ int main(int argc, char **argv)
 
 	// Messaging example //
 
-	//eve::mess::Server::create_instance();
+	eve::mess::Server::create_instance();
 	//EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
 	//EVE_LOG_WARNING("Warning level %i.", 3);
 	//EVE_LOG_PROGRESS("App execution in progress.");
 	//EVE_LOG_DEBUG("Woups... debug log info.");
-	//EVE_LOG_ERROR("Any error occured?");
+	//EVE_LOG_ERROR("Any error occurred?");
 	//eve::mess::Server::release_instance();
 
 
@@ -151,8 +151,7 @@ int main(int argc, char **argv)
 	// Window example //
 
 	eve::sys::Window * win = eve::sys::Window::create_ptr(50, 50, 800, 600);
-	//win->toggleFullScreen();
-	//win->toggleFullScreen();
+	eve::sys::MessagePump * pump = eve::sys::MessagePump::create_ptr(win->getHandle());
 
 	while (true);
 

@@ -38,7 +38,7 @@ void eve::sys::MessagePump::init(void)
 	// Stock previous window procedure and set new one.
 	m_prevWndProc = (WNDPROC)::SetWindowLongPtrW(m_handle, GWLP_WNDPROC, (LONG_PTR)eve::sys::MessagePump::wndProc);
 
-	// Avoid window procedure recursion
+	// Avoid window procedure recursion.
 	EVE_ASSERT(m_prevWndProc != eve::sys::MessagePump::wndProc);
 }
 
@@ -47,33 +47,40 @@ void eve::sys::MessagePump::release(void)
 {
 	// Set default window procedure back.
 	::SetWindowLongPtr(m_handle, GWLP_WNDPROC, (LONG_PTR)m_prevWndProc);
+	m_prevWndProc = 0;
 
 	// Unregister from handler map.
 	eve::sys::MessagePump::unregister_handler(m_handle);
+	m_handle = 0;
 }
 
 
 
 //=================================================================================================
-void eve::sys::MessagePump::register_handler(HWND hWnd, eve::sys::MessagePump* handler)
+void eve::sys::MessagePump::register_handler(HWND p_hWnd, eve::sys::MessagePump * p_pHandler)
 {
-	EVE_ASSERT(m_handlers_map.find(hWnd) == m_handlers_map.end());
-	m_handlers_map[hWnd] = handler;
+	eve::sys::MessagePump::HandlerMap::const_iterator it = m_handlers_map.find(p_hWnd);
+	EVE_ASSERT(it == m_handlers_map.end());
+
+	m_handlers_map[p_hWnd] = p_pHandler;
 }
 
 //=================================================================================================
-void eve::sys::MessagePump::unregister_handler(HWND hWnd)
+void eve::sys::MessagePump::unregister_handler(HWND p_hWnd)
 {
-	EVE_ASSERT(m_handlers_map.find(hWnd) != m_handlers_map.end());
-	m_handlers_map.erase(hWnd);
+	eve::sys::MessagePump::HandlerMap::const_iterator it = m_handlers_map.find(p_hWnd);
+	EVE_ASSERT(it != m_handlers_map.end());
+
+	m_handlers_map.erase(it);
 }
 
 //=================================================================================================
 eve::sys::MessagePump * eve::sys::MessagePump::get_handler(HWND p_hWnd)
 {
-	EVE_ASSERT(m_handlers_map.find(p_hWnd) != m_handlers_map.end())
+	eve::sys::MessagePump::HandlerMap::const_iterator it = m_handlers_map.find(p_hWnd);
+	EVE_ASSERT(it != m_handlers_map.end())
 
-	eve::sys::MessagePump * ptr = m_handlers_map[p_hWnd];
+	eve::sys::MessagePump * ptr = it->second;
 	return ptr;
 }
 
@@ -98,7 +105,7 @@ LRESULT CALLBACK eve::sys::MessagePump::cb_wndProc(HWND hWnd, UINT message, WPAR
 	LRESULT L_result = 0;
 	std::pair<LRESULT, bool> result;
 
-	//result = m_pNode->getEventReader()->handleEvent(*m_pNode->getEventListener(), hWnd, message, wParam, lParam);
+	//result = getEventReader()->handleEvent(getEventListener(), hWnd, message, wParam, lParam);
 
 	//L_result = result.first;
 	//if (!result.second) {

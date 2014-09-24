@@ -146,12 +146,14 @@ void eve::sys::Window::init(void)
 		EVE_ASSERT_FAILURE;
 	}
 	
-	// Set window user data.
-	if (::SetWindowLongPtrW(m_handle, 0, reinterpret_cast<LONG_PTR>(this)) == 0)
-	{
-		EVE_LOG_ERROR("Can't set system Window user data: %s", eve::mess::get_error_msg().c_str());
-		EVE_ASSERT_FAILURE;
-	}
+	//// Set window user data.
+	//LONG_PTR ret	= ::SetWindowLongPtrW(m_handle, 0, reinterpret_cast<LONG_PTR>(this));
+	//DWORD err		= ::GetLastError();
+	//if (ret == 0 && err != 0)
+	//{
+	//	EVE_LOG_ERROR("Can't set system Window user data: %s", eve::mess::get_error_msg(err).c_str());
+	//	EVE_ASSERT_FAILURE;
+	//}
 
 	// Track mouse event to receive WM_MOUSELEAVE events.
 	TRACKMOUSEEVENT tme;
@@ -164,6 +166,9 @@ void eve::sys::Window::init(void)
 		EVE_LOG_ERROR("Can't track system Window mouse events: %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
+
+	// Show Window.
+	::ShowWindow(m_handle, SW_SHOWNORMAL);
 }
 
 //=================================================================================================
@@ -292,15 +297,15 @@ void eve::sys::Window::toggleFullScreen(void)
 		m_width		= rc.right  - rc.left;
 		m_height	= rc.bottom - rc.top;
 		
-		if (!::SetWindowLong(m_handle, GWL_STYLE, m_style_fullscreen))
+		if (!::SetWindowLongW(m_handle, GWL_STYLE, m_style_fullscreen))
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLong failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLongW failed: %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
-		if (!::SetWindowLong(m_handle, GWL_EXSTYLE, m_ex_style_fullscreen))
+		if (!::SetWindowLongW(m_handle, GWL_EXSTYLE, m_ex_style_fullscreen))
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLong failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLongW failed: %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -322,19 +327,19 @@ void eve::sys::Window::toggleFullScreen(void)
 		m_width		= m_windowedRect.right  - m_windowedRect.left;
 		m_height	= m_windowedRect.bottom - m_windowedRect.top;
 		
-		if (!::SetWindowLong(m_handle, GWL_STYLE, m_style))
+		if (!::SetWindowLongW(m_handle, GWL_STYLE, m_style))
 		{
-			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLong failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLongW failed: %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
-		if (!::SetWindowLong(m_handle, GWL_EXSTYLE, m_exStyle))
+		if (!::SetWindowLongW(m_handle, GWL_EXSTYLE, m_exStyle))
 		{
-			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLong failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLongW failed: %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
-		if (!::SetWindowPos(m_handle, HWND_NOTOPMOST,
+		if (!::SetWindowPos(m_handle, HWND_TOP,
 							m_x, m_y, m_width, m_height,
 							SWP_FRAMECHANGED))
 		{
