@@ -33,6 +33,9 @@
 #ifndef __EVE_SYSTEM_INCLUDES_H__
 #define __EVE_SYSTEM_INCLUDES_H__
 
+#ifndef __EVE_SYSTEM_CURSOR_H__
+#include "eve/sys/win32/Cursor.h"
+#endif
 
 #ifndef __EVE_SYSTEM_MOUSE_H__
 #include "eve/sys/shared/Mouse.h"

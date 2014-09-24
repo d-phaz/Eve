@@ -29,61 +29,48 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_SYSTEM_MOUSE_H__
-#define __EVE_SYSTEM_MOUSE_H__
+// Main header
+#include "eve/sys/win32/Cursor.h"
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
 
-namespace eve
+/** \brief Set the cursor and change it for target window class. */
+#define MAP_CURSOR(a, b, c) \
+    case a: \
+	::SetCursor((HCURSOR)::LoadImageW(NULL, b, IMAGE_CURSOR, 0, 0, LR_SHARED));  \
+	::SetClassLongPtrW(c, GCLP_HCURSOR, (LONG)(LONG_PTR)::LoadImageW(NULL, b, IMAGE_CURSOR, 0, 0, LR_SHARED)); \
+	break;
+
+
+//=============================================================================================
+void eve::sys::set_cursor(eve::sys::Cursor p_cursorType)
 {
-	namespace sys
+	// Grab current window
+	POINT point;
+	::GetCursorPos(&point);
+	HWND handle = ::WindowFromPoint(point);
+
+	switch (p_cursorType)
 	{
+		MAP_CURSOR(cursor_None,				 NULL,			handle);
+		MAP_CURSOR(cursor_Inherit,			 IDC_CROSS,		handle);
+		MAP_CURSOR(cursor_Arrow,			 IDC_ARROW,		handle);
+		MAP_CURSOR(cursor_Info,				 IDC_HELP,		handle);
+		MAP_CURSOR(cursor_Wait,				 IDC_WAIT,		handle);
+		MAP_CURSOR(cursor_Cross,			 IDC_CROSS,		handle);
+		MAP_CURSOR(cursor_Text,				 IDC_IBEAM,		handle);
+		MAP_CURSOR(cursor_UpDown,			 IDC_SIZENS,	handle);
+		MAP_CURSOR(cursor_LeftRight,		 IDC_SIZEWE,	handle);
+		MAP_CURSOR(cursor_CornerTopLeft,	 IDC_SIZENWSE,	handle);
+		MAP_CURSOR(cursor_CornerTopRight,	 IDC_SIZENESW,	handle);
+		MAP_CURSOR(cursor_CornerBottomLeft,  IDC_SIZENWSE,	handle);
+		MAP_CURSOR(cursor_CornerBottomRight, IDC_SIZENESW,	handle);
+		MAP_CURSOR(cursor_Cycle,			 IDC_SIZEALL,	handle);
 
-		/** \brief Mouse button enumeration. */
-		enum MouseButton
-		{
-			btn_Unused,
-			/// Unknown mouse button
-			btn_Unknown,
-			/// Left mouse button
-			btn_Left,
-			/// Middle mouse button
-			btn_Middle,
-			/// Right mouse button
-			btn_Right,
-			/// Mouse wheel up
-			btn_WheelUp,
-			/// Mouse wheel down
-			btn_WheelDown,
-			/// Scroll left
-			btn_ScrollLeft,
-			/// Scroll right
-			btn_ScrollRight,
-			/// X UIButton
-			btn_X,
-			/// Y UIButton
-			btn_Y
-
-		}; // enum MouseButton
-
-
-		/** \brief Mouse button state enumeration. */
-		enum MouseButtonState
-		{
-			btnState_Unused,
-			/// Unknown state
-			btnState_Unknown,
-			/// Down state
-			btnState_Down,
-			/// Up state
-			btnState_Up,
-			/// Double Click state
-			btnState_DbleClick
-
-		}; // enum MouseButtonState
-
-	} // namespace sys
-
-} // namespace eve
-
-#endif // __EVE_SYSTEM_MOUSE_H__
+	default:
+		break;
+	}
+}

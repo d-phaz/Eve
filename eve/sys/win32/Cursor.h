@@ -30,60 +30,57 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_MOUSE_H__
-#define __EVE_SYSTEM_MOUSE_H__
+#ifndef __EVE_SYSTEM_CURSOR_H__
+#define __EVE_SYSTEM_CURSOR_H__
 
 
 namespace eve
 {
 	namespace sys
 	{
-
-		/** \brief Mouse button enumeration. */
-		enum MouseButton
+		/** \brief Cursor type enumeration. */
+		enum Cursor
 		{
-			btn_Unused,
-			/// Unknown mouse button
-			btn_Unknown,
-			/// Left mouse button
-			btn_Left,
-			/// Middle mouse button
-			btn_Middle,
-			/// Right mouse button
-			btn_Right,
-			/// Mouse wheel up
-			btn_WheelUp,
-			/// Mouse wheel down
-			btn_WheelDown,
-			/// Scroll left
-			btn_ScrollLeft,
-			/// Scroll right
-			btn_ScrollRight,
-			/// X UIButton
-			btn_X,
-			/// Y UIButton
-			btn_Y
+			cursor_Unused,
+			cursor_None ,
+			cursor_Inherit,
+			cursor_Arrow,
+			cursor_Info,
+			cursor_Wait,
+			cursor_Cross,
+			cursor_Text,
+			cursor_UpDown,
+			cursor_LeftRight,
+			cursor_CornerTopLeft,
+			cursor_CornerTopRight,
+			cursor_CornerBottomLeft,
+			cursor_CornerBottomRight,
+			cursor_Cycle
+		};
 
-		}; // enum MouseButton
-
-
-		/** \brief Mouse button state enumeration. */
-		enum MouseButtonState
-		{
-			btnState_Unused,
-			/// Unknown state
-			btnState_Unknown,
-			/// Down state
-			btnState_Down,
-			/// Up state
-			btnState_Up,
-			/// Double Click state
-			btnState_DbleClick
-
-		}; // enum MouseButtonState
+		/** \brief Set cursor. Cursor is applied to window at mouse position. */
+		void set_cursor(eve::sys::Cursor p_cursorType);
 
 	} // namespace sys
 
 } // namespace eve
 
-#endif // __EVE_SYSTEM_MOUSE_H__
+
+
+#if defined( NATIVE_OS_WIN32)
+/* Set the cursor AND change it for this window class. */
+#define MAP_CURSOR(a, b, c) \
+    case a: \
+	SetCursor( (HCURSOR)LoadImage(NULL, b, IMAGE_CURSOR, 0, 0, LR_SHARED) );  \
+	SetClassLongPtr( c, GCLP_HCURSOR, ( LONG )( LONG_PTR )LoadImage(NULL, b, IMAGE_CURSOR, 0, 0, LR_SHARED) ); \
+	break;
+
+/* Nuke the cursor AND change it for this window class. */
+#define ZAP_CURSOR(a, b, c) \
+	case a: \
+	SetCursor( NULL ); \
+	SetClassLongPtr( c, GCLP_HCURSOR, ( LONG )( LONG_PTR )NULL ); \
+	break;
+#endif
+
+#endif // __SYSTEM_CURSOR_H__
