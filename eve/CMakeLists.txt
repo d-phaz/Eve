@@ -111,7 +111,9 @@ set( SYSTEM_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/Includes.h )
 	 
 set( SYSTEM_SRCS
-	 ${SYSTEM_SRCS}
+	 ${SYSTEM_SRCS} 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/MessagePump.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/MessagePump.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.h )
 

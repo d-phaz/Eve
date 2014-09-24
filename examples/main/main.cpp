@@ -151,8 +151,11 @@ int main(int argc, char **argv)
 	// Window example //
 
 	eve::sys::Window * win = eve::sys::Window::create_ptr(50, 50, 800, 600);
-	win->toggleFullScreen();
-	win->toggleFullScreen();
+	//win->toggleFullScreen();
+	//win->toggleFullScreen();
+
+	while (true);
+
 	EVE_RELEASE_PTR(win);
 
 	return 0;

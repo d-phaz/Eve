@@ -38,5 +38,9 @@
 #include "eve/sys/win32/Window.h"
 #endif
 
+#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
+#include "eve/sys/win32/MessagePump.h"
+#endif
+
 
 #endif // __EVE_SYSTEM_INCLUDES_H__

@@ -62,6 +62,7 @@
 #include <deque>
 #include <vector>
 #include <map>
+#include <hash_map>
 // file handling
 #include <fstream>
 

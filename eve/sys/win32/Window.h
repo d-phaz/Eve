@@ -55,7 +55,11 @@ namespace eve
 	{
 		/** 
 		* \class eve::sys::Window
+		*
 		* \brief Creates and manage system window.
+		* Message pump events are linked to window handle (aka HWND),
+		* event translation and dispatch is done here.
+		*
 		* \note extends eve::mem::Pointer
 		*/
 		class Window final
@@ -69,24 +73,24 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			int32_t					m_x;					//!< Window position on X-axis.
-			int32_t					m_y;					//!< Window position on Y-axis.
-			uint32_t				m_width;				//!< Window width, should never be negative.
-			uint32_t				m_height;				//!< Window height, should never be negative.
-			char *					m_title;				//!< Window title as char pointer.
+			int32_t							m_x;					//!< Window position on X-axis.
+			int32_t							m_y;					//!< Window position on Y-axis.
+			uint32_t						m_width;				//!< Window width, should never be negative.
+			uint32_t						m_height;				//!< Window height, should never be negative.
+			char *							m_title;				//!< Window title as char pointer.
 
-			HWND					m_handle;				//!< System window handle.
-			ATOM					m_atom;					//!< System window atom.
-			HINSTANCE				m_hinstance;			//!< System window instance handle.
+			HWND							m_handle;				//!< System window handle.
+			ATOM							m_atom;					//!< System window atom.
+			HINSTANCE						m_hinstance;			//!< System window instance handle.
 
-			RECT					m_windowedRect;			//!< Window rect when not in full screen mode.
-			bool					m_bFullScreen;			//!< Window scaled on output state (full screen).
-			LONG					m_style;				//!< Window system style.
-			LONG					m_exStyle;				//!< Window system extended style.
-			static LONG				m_style_fullscreen;		//!< Window system style when full screen is enabled.
-			static LONG				m_ex_style_fullscreen;	//!< Window system extended style when full screen is enabled.
+			RECT							m_windowedRect;			//!< Window rect when not in full screen mode.
+			bool							m_bFullScreen;			//!< Window scaled on output state (full screen).
+			LONG							m_style;				//!< Window system style.
+			LONG							m_exStyle;				//!< Window system extended style.
+			static LONG						m_style_fullscreen;		//!< Window system style when full screen is enabled.
+			static LONG						m_ex_style_fullscreen;	//!< Window system extended style when full screen is enabled.
 
-			eve::thr::SpinLock *	m_pFence;				//!< Window style change protection fence as spin lock.
+			eve::thr::SpinLock *			m_pFence;				//!< Window style change protection fence as spin lock.
 
 
 			//////////////////////////////////////
@@ -107,7 +111,7 @@ namespace eve
 			static Window * create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
 
 
-		protected:
+		private:
 			/** 
 			* \brief Class constructor. 
 			* \param p_x is the Window position on X-axis.
@@ -118,7 +122,7 @@ namespace eve
 			Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
@@ -167,7 +171,13 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Get system window handle. */
+			const HWND getHandle(void) const;
+
 				
+		public:
 			/** \brief Registers whether window accepts dropped files. */
 			void setDragAcceptFiles(bool p_bStatus);
 
@@ -214,11 +224,13 @@ namespace eve
 
 		}; // class Window
 
-
 	} // namespace sys
 
-
 } // namespace eve
+
+//=================================================================================================
+inline const HWND eve::sys::Window::getHandle(void) const		{ return m_handle; }
+
 
 //=================================================================================================
 inline void eve::sys::Window::getSize(uint32_t &p_width, uint32_t &p_height) 

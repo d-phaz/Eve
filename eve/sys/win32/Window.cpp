@@ -146,11 +146,12 @@ void eve::sys::Window::init(void)
 		EVE_ASSERT_FAILURE;
 	}
 	
-	//if (::SetWindowLongPtrW(m_handle, 0, reinterpret_cast<LONG_PTR>(this)) == 0)
-	//{
-	//	EVE_LOG_ERROR("Can't set system Window user data: %s", eve::mess::get_error_msg().c_str());
-	//	EVE_ASSERT_FAILURE;
-	//}
+	// Set window user data.
+	if (::SetWindowLongPtrW(m_handle, 0, reinterpret_cast<LONG_PTR>(this)) == 0)
+	{
+		EVE_LOG_ERROR("Can't set system Window user data: %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
 
 	// Track mouse event to receive WM_MOUSELEAVE events.
 	TRACKMOUSEEVENT tme;
@@ -163,27 +164,18 @@ void eve::sys::Window::init(void)
 		EVE_LOG_ERROR("Can't track system Window mouse events: %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
-
-	// Show the window.
-	::ShowWindow(m_handle, SW_SHOWNORMAL);
 }
 
 //=================================================================================================
 void eve::sys::Window::release(void)
 {
-	// Destroy system window
-	try
+	// Destroy system window.
+	if (!::DestroyWindow(m_handle))
 	{
-		if (!::DestroyWindow(m_handle))
-		{
-			std::string err = "Can't destroy window: ";
-			err += eve::mess::get_error_msg();
-			EVE_LOG_ERROR("DestroyWindow() failed with error %s.", err.c_str());
-		}
-	}
-	catch (std::exception & e)
-	{
-		EVE_LOG_ERROR( "DestroyWindow() failed with error %s.", e.what() );
+		std::string err = "Can't destroy window: ";
+		err += eve::mess::get_error_msg();
+		EVE_LOG_ERROR("DestroyWindow() failed with error %s.", err.c_str());
+		EVE_ASSERT_FAILURE;
 	}
 
 	// Title as char array
