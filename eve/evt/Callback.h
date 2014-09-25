@@ -367,9 +367,93 @@ namespace eve
 			}
 		};
 
+
+		/**
+		* \brief Create and return a new static or global method callback.
+		* Method must provide the following signature: TReturn method(void)
+		*/
+		template <class TReturn>
+		inline Callback0<TReturn> * create_callback(TReturn(*func)());
+		/**
+		* \brief Create and return a new static or global method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1)
+		*/
+		template <class TReturn, class TArg1>
+		inline Callback1<TReturn, TArg1> * create_callback(TReturn(*func)(TArg1));
+		/**
+		* \brief Create and return a new static or global method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
+		*/
+		template <class TReturn, class TArg1, class TArg2>
+		inline Callback2<TReturn, TArg1, TArg2> * create_callback(TReturn(*func)(TArg1, TArg2));
+		/**
+		* \brief Create and return a new static or global method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3>
+		inline Callback3<TReturn, TArg1, TArg2, TArg3> * create_callback(TReturn(*func)(TArg1, TArg2, TArg3));
+		/**
+		* \brief Create and return a new static or global method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		inline Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> * create_callback(TReturn(*func)(TArg1, TArg2, TArg3, TArg4));
+		/**
+		* \brief Create and return a new static or global method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		inline Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> * create_callback(TReturn(*func)(TArg1, TArg2, TArg3, TArg4, TArg5));
+
 	} // namespace evt
 
 } // namespace eve
+
+
+//=================================================================================================
+template <class TReturn>
+inline eve::evt::Callback0<TReturn> * eve::evt::create_callback(TReturn(*func)())
+{
+	return new eve::evt::StaticCallback0<TReturn>(func);
+}
+
+//=================================================================================================
+template <class TReturn, class TArg1>
+inline eve::evt::Callback1<TReturn, TArg1> * eve::evt::create_callback(TReturn(*func)(TArg1))
+{
+	return new eve::evt::StaticCallback1<TReturn, TArg1>(func);
+}
+
+//=================================================================================================
+template <class TReturn, class TArg1, class TArg2>
+inline eve::evt::Callback2<TReturn, TArg1, TArg2> * eve::evt::create_callback(TReturn(*func)(TArg1, TArg2))
+{
+	return new eve::evt::StaticCallback2<TReturn, TArg1, TArg2>(func);
+}
+
+//=================================================================================================
+template <class TReturn, class TArg1, class TArg2, class TArg3>
+inline eve::evt::Callback3<TReturn, TArg1, TArg2, TArg3> * eve::evt::create_callback(TReturn(*func)(TArg1, TArg2, TArg3))
+{
+	return new eve::evt::StaticCallback3<TReturn, TArg1, TArg2, TArg3>(func);
+}
+
+//=================================================================================================
+template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+inline eve::evt::Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> * eve::evt::create_callback(TReturn(*func)(TArg1, TArg2, TArg3, TArg4))
+{
+	return new eve::evt::StaticCallback4<TReturn, TArg1, TArg2, TArg3, TArg4>(func);
+}
+
+//=================================================================================================
+template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+inline eve::evt::Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> * eve::evt::create_callback(TReturn(*func)(TArg1, TArg2, TArg3, TArg4, TArg5))
+{
+	return new eve::evt::StaticCallback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>(func);
+}
+
+
+
 
 
 namespace eve
@@ -620,292 +704,90 @@ namespace eve
 				return (cb != NULL && func == cb->func && obj == cb->obj);
 			}
 		};
+		
+
+		/**
+		* \brief Create and return a new class method callback.
+		* Method must provide the following signature: TReturn method(void)
+		*/
+		template <class TClass, class TReturn>
+		inline ClassCallback0<TClass, TReturn> * create_callback(TClass *obj, TReturn(TClass::*func)());
+		/**
+		* \brief Create and return a new class method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1)
+		*/
+		template <class TClass, class TReturn, class TArg1>
+		inline ClassCallback1<TClass, TReturn, TArg1> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1));
+		/**
+		* \brief Create and return a new class method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2>
+		inline ClassCallback2<TClass, TReturn, TArg1, TArg2> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2));
+		/**
+		* \brief Create and return a new class method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
+		inline ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2, TArg3));
+		/**
+		* \brief Create and return a new class method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		inline ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2, TArg3, TArg4));
+		/**
+		* \brief Create and return a new class method callback.
+		* Method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		inline ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2, TArg3, TArg4, TArg5));
 
 	} // namespace evt
 
 } // namespace eve
 
 
-/*****************************************************************************
-* CALLBACK SETS
-*/
-template <class TCallback>
-inline void insertCallbackIntoSet(TCallback *p_callBack, std::set<TCallback*> *cb_set)
+//=================================================================================================
+template <class TClass, class TReturn>
+inline eve::evt::ClassCallback0<TClass, TReturn> * eve::evt::create_callback(TClass *obj, TReturn(TClass::*func)())
 {
-	typename std::set<TCallback*>::iterator it;
-	it = cb_set->begin();
-	while (it != cb_set->end() && *it != p_callBack && **it != *p_callBack) ++it;
-	if (it != cb_set->end())
-	{
-		if (*it != p_callBack)
-		{
-			delete *it;
-		}
-		cb_set->erase(it);
-	}
-
-	cb_set->insert(p_callBack);
+	return new eve::evt::ClassCallback0<TClass, TReturn>(obj, func);
 }
 
-template <class TCallback>
-inline void removeCallbackFromSet(TCallback *p_callBack, std::set<TCallback*> *cb_set)
-{
-	typename std::set<TCallback*>::iterator it;
-	it = cb_set->begin();
-	while (it != cb_set->end() && *it != p_callBack && **it != *p_callBack) ++it;
-	if (it != cb_set->end())
-	{
-		if (*it != p_callBack)
-		{
-			delete *it;
-			delete p_callBack;
-		}
-		cb_set->erase(it);
-	}
-	else
-		delete p_callBack;
-}
-
-template <class TCallback>
-inline void clearCallbackSet(std::set<TCallback*> *cb_set)
-{
-	typename std::set<TCallback*>::iterator it;
-	for (it = cb_set->begin(); it != cb_set->end(); ++it)
-		delete *it;
-	cb_set->clear();
-}
-
-template <class TReturn>
-class Callback0Set
-{
-public:
-	typedef Callback0<TReturn> CallbackType;
-
-	void add    (CallbackType *p_callBack) { insertCallbackIntoSet(p_callBack, &callbacks); }
-	void remove (CallbackType *p_callBack) { removeCallbackFromSet(p_callBack, &callbacks); }
-	void clear  ()                 { clearCallbackSet(&callbacks); }
-
-	void execute()
-	{
-		typename std::set<CallbackType*>::iterator it;
-		for (it = callbacks.begin(); it != callbacks.end(); ++it)
-			(*it)->execute();
-	}
-
-private:
-	std::set<CallbackType*> callbacks;
-};
-
-template <class TReturn, class TArg1>
-class Callback1Set
-{
-public:
-	typedef Callback1<TReturn, TArg1> CallbackType;
-
-	void add    (CallbackType *p_callBack) { insertCallbackIntoSet(p_callBack, &callbacks); }
-	void remove (CallbackType *p_callBack) { removeCallbackFromSet(p_callBack, &callbacks); }
-	void clear  ()                 { clearCallbackSet(&callbacks); }
-
-	void execute(TArg1 arg1)
-	{
-		typename std::set<CallbackType*>::iterator it;
-		for (it = callbacks.begin(); it != callbacks.end(); ++it)
-			(*it)->execute(arg1);
-	}
-
-private:
-	std::set<CallbackType*> callbacks;
-};
-
-template <class TReturn, class TArg1, class TArg2>
-class Callback2Set
-{
-public:
-	typedef Callback2<TReturn, TArg1, TArg2> CallbackType;
-
-	void add    (CallbackType *p_callBack) { insertCallbackIntoSet(p_callBack, &callbacks); }
-	void remove (CallbackType *p_callBack) { removeCallbackFromSet(p_callBack, &callbacks); }
-	void clear  ()                 { clearCallbackSet(&callbacks); }
-
-	void execute(TArg1 arg1, TArg2 arg2)
-	{
-		typename std::set<CallbackType*>::iterator it;
-		for (it = callbacks.begin(); it != callbacks.end(); ++it)
-			(*it)->execute(arg1, arg2);
-	}
-
-private:
-	std::set<CallbackType*> callbacks;
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3>
-class Callback3Set
-{
-public:
-	typedef Callback3<TReturn, TArg1, TArg2, TArg3> CallbackType;
-
-	void add    (CallbackType *p_callBack) { insertCallbackIntoSet(p_callBack, &callbacks); }
-	void remove (CallbackType *p_callBack) { removeCallbackFromSet(p_callBack, &callbacks); }
-	void clear  ()                 { clearCallbackSet(&callbacks); }
-
-	void execute(TArg1 arg1, TArg2 arg2, TArg3 arg3)
-	{
-		typename std::set<CallbackType*>::iterator it;
-		for (it = callbacks.begin(); it != callbacks.end(); ++it)
-			(*it)->execute(arg1, arg2, arg3);
-	}
-
-private:
-	std::set<CallbackType*> callbacks;
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
-class Callback4Set
-{
-public:
-	typedef Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> CallbackType;
-
-	void add    (CallbackType *p_callBack) { insertCallbackIntoSet(p_callBack, &callbacks); }
-	void remove (CallbackType *p_callBack) 
-	{
-		removeCallbackFromSet(p_callBack, &callbacks); 
-	}
-	void clear  ()               
-	{
-		clearCallbackSet(&callbacks);
-	}
-
-	void execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
-	{
-		typename std::set<CallbackType*>::iterator it;
-		for (it = callbacks.begin(); it != callbacks.end(); ++it)
-			(*it)->execute(arg1, arg2, arg3, arg4);
-	}
-
-private:
-	std::set<CallbackType*> callbacks;
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
-class Callback5Set
-{
-public:
-	typedef Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> CallbackType;
-
-	void add    (CallbackType *p_callBack)
-	{
-		insertCallbackIntoSet(p_callBack, &callbacks);
-	}
-
-	void remove (CallbackType *p_callBack)
-	{ 
-		removeCallbackFromSet(p_callBack, &callbacks);
-	}
-
-	void clear  ()                
-	{
-		clearCallbackSet(&callbacks); 
-	}
-
-	void execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
-	{
-		typename std::set<CallbackType*>::iterator it;
-		for (it = callbacks.begin(); it != callbacks.end(); ++it)
-			(*it)->execute(arg1, arg2, arg3, arg4, arg5);
-	}
-
-private:
-	std::set<CallbackType*> callbacks;
-};
-
-
-
-
-/*****************************************************************************
-* CALLBACKS CONSTRUCTORS
-*/
-template <class TReturn>
-inline Callback0<TReturn> * callback(TReturn (*func)())
-{ 
-	return new StaticCallback0<TReturn>(func);
-}
-
-
-template <class TReturn, class TArg1>
-inline Callback1<TReturn, TArg1> * callback(TReturn (*func)(TArg1))
-{ 
-	return new StaticCallback1<TReturn, TArg1>(func); 
-}
-
-
-template <class TReturn, class TArg1, class TArg2>
-inline Callback2<TReturn, TArg1, TArg2> * callback(TReturn (*func)(TArg1, TArg2))
-{ 
-	return new StaticCallback2<TReturn, TArg1, TArg2>(func); 
-}
-
-
-template <class TReturn, class TArg1, class TArg2, class TArg3>
-inline Callback3<TReturn, TArg1, TArg2, TArg3> * callback(TReturn (*func)(TArg1, TArg2, TArg3))
-{ 
-	return new StaticCallback3<TReturn, TArg1, TArg2, TArg3>(func);
-}
-
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
-inline Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> * callback(TReturn (*func)(TArg1, TArg2, TArg3, TArg4))
-{ 
-	return new StaticCallback4<TReturn, TArg1, TArg2, TArg3, TArg4>(func);
-}
-
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
-inline Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> * callback(TReturn (*func)(TArg1, TArg2, TArg3, TArg4, TArg5))
-{
-	return new StaticCallback5<TReturn,TArg1, TArg2, TArg3, TArg4, TArg5>(func); 
-}
-
-
-template <class TClass, class TReturn> 
-inline ClassCallback0<TClass, TReturn> * callback(TClass *obj, TReturn (TClass::*func)())
-{ 
-	return new ClassCallback0<TClass, TReturn>(obj, func);
-}
-
-
+//=================================================================================================
 template <class TClass, class TReturn, class TArg1>
-inline ClassCallback1<TClass, TReturn, TArg1> * callback(TClass *obj, TReturn (TClass::*func)(TArg1))
-{ 
+inline eve::evt::ClassCallback1<TClass, TReturn, TArg1> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1))
+{
 	return new ClassCallback1<TClass, TReturn, TArg1>(obj, func);
 }
 
-
+//=================================================================================================
 template <class TClass, class TReturn, class TArg1, class TArg2>
-inline ClassCallback2<TClass, TReturn, TArg1, TArg2> * callback(TClass *obj, TReturn (TClass::*func)(TArg1, TArg2))
-{ 
-	return new ClassCallback2<TClass, TReturn, TArg1, TArg2>(obj, func);
-}
-
-
-template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
-inline ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3> * callback(TClass *obj, TReturn (TClass::*func)(TArg1, TArg2, TArg3))
-{ 
-	return new ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3>(obj, func); 
-}
-
-
-template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
-inline ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4> * callback(TClass *obj, TReturn (TClass::*func)(TArg1, TArg2, TArg3, TArg4))
+inline eve::evt::ClassCallback2<TClass, TReturn, TArg1, TArg2> * eve::evt::create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2))
 {
-	return new ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4>(obj, func);
+	return new eve::evt::ClassCallback2<TClass, TReturn, TArg1, TArg2>(obj, func);
 }
 
+//=================================================================================================
+template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
+inline eve::evt::ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3> * eve::evt::create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2, TArg3))
+{
+	return new eve::evt::ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3>(obj, func);
+}
 
+//=================================================================================================
+template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+inline eve::evt::ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4> * eve::evt::create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2, TArg3, TArg4))
+{
+	return new eve::evt::ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4>(obj, func);
+}
+
+//=================================================================================================
 template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
-inline ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> * callback(TClass *obj, TReturn (TClass::*func)(TArg1, TArg2, TArg3, TArg4, TArg5))
-{ 
-	return new ClassCallback5<TClass, TReturn,TArg1, TArg2, TArg3, TArg4, TArg5>(obj, func);
+inline eve::evt::ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> * eve::evt::create_callback(TClass *obj, TReturn(TClass::*func)(TArg1, TArg2, TArg3, TArg4, TArg5))
+{
+	return new eve::evt::ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>(obj, func);
 }
-
 
 #endif // __EVE_EVT_CALLBACK_H__
