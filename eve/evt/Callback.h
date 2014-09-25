@@ -167,7 +167,7 @@ namespace eve
 
 			virtual bool operator == (const Callback0<TReturn> &p_other) const override
 			{
-				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
 				return (p_callBack != NULL && func == p_callBack->func);
 			}
 		};
@@ -206,7 +206,7 @@ namespace eve
 
 			virtual bool operator == (const Callback1<TReturn, TArg1> &p_other) const override
 			{
-				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
 				return (p_callBack != NULL && func == p_callBack->func);
 			}
 		};
@@ -220,7 +220,7 @@ namespace eve
 		* Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
 		*
-		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2>
+		* \note extends eve::evt::Callback2<TReturn, TArg1, TArg2>
 		*/
 		template <class TReturn, class TArg1, class TArg2>
 		class StaticCallback2 
@@ -245,7 +245,7 @@ namespace eve
 
 			virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &p_other) const override
 			{
-				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
 				return (p_callBack != NULL && func == p_callBack->func);
 			}
 		};
@@ -259,7 +259,7 @@ namespace eve
 		* Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
 		*
-		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2, TArg3>
+		* \note extends eve::evt::Callback3<TReturn, TArg1, TArg2, TArg3>
 		*/
 		template <class TReturn, class TArg1, class TArg2, class TArg3>
 		class StaticCallback3 
@@ -284,7 +284,7 @@ namespace eve
 
 			virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const override
 			{
-				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
 				return (p_callBack != NULL && func == p_callBack->func);
 			}
 		};
@@ -298,7 +298,7 @@ namespace eve
 		* Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
 		*
-		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2, TArg3, TArg4>
+		* \note extends eve::evt::Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
 		*/
 		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
 		class StaticCallback4 
@@ -323,7 +323,7 @@ namespace eve
 
 			virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const override
 			{
-				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
 				return (p_callBack != NULL && func == p_callBack->func);
 			}
 		};
@@ -337,7 +337,7 @@ namespace eve
 		* Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
 		*
-		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
+		* \note extends eve::evt::Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
 		*/
 		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
 		class StaticCallback5 
@@ -362,198 +362,268 @@ namespace eve
 
 			virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const override
 			{
-				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
 				return (p_callBack != NULL && func == p_callBack->func);
 			}
 		};
-
 
 	} // namespace evt
 
 } // namespace eve
 
 
-
-
-/*****************************************************************************
-* CLASS FUNCTION CALLBACKS
-*/
-template <class TClass, class TReturn>
-class ClassCallback0 : public Callback0<TReturn>
+namespace eve
 {
-public:
-	typedef TReturn (TClass::*FunctionType)();
-	typedef ClassCallback0<TClass, TReturn> CurrentType;
-
-	ClassCallback0(TClass *object, FunctionType function)
-		: obj(object), func(function)
+	namespace evt
 	{
-	}
+		/**
+		* \class eve::evt::ClassCallback0<class TClass, class TReturn>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method of any class as a callback.
+		* The method must provide the following signature: TReturn method(void)
+		*
+		* \note extends eve::evt::Callback0<TReturn>
+		*/
+		template <class TClass, class TReturn>
+		class ClassCallback0 
+			: public Callback0<TReturn>
+		{
+		public:
+			typedef TReturn(TClass::*FunctionType)();
+			typedef ClassCallback0<TClass, TReturn> CurrentType;
 
-	virtual TReturn execute()
-	{ 
-		(obj->*func)(); 
-	}
+		private:
+			TClass *	 obj;
+			FunctionType func;
 
-	virtual bool operator == (const Callback0<TReturn> &p_other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
-		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
-	}
+		public:
+			ClassCallback0(TClass *object, FunctionType function)
+				: obj(object)
+				, func(function)
+			{}
 
-private:
-	TClass *obj;
-	FunctionType func;
-};
+			virtual TReturn execute(void) override
+			{
+				(obj->*func)();
+			}
 
-template <class TClass, class TReturn, class TArg1>
-class ClassCallback1 : public Callback1<TReturn, TArg1>
-{
-public:
-	typedef TReturn (TClass::*FunctionType)(TArg1);
-	typedef ClassCallback1<TClass, TReturn, TArg1> CurrentType;
-
-	ClassCallback1(TClass *object, FunctionType function)
-		: obj(object), func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1)
-	{
-		(obj->*func)(arg1);
-	}
-
-	virtual bool operator == (const Callback1<TReturn, TArg1> &p_other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
-		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
-	}
-
-private:
-	TClass *obj;
-	FunctionType func;
-};
-
-template <class TClass, class TReturn, class TArg1, class TArg2>
-class ClassCallback2 : public Callback2<TReturn, TArg1, TArg2>
-{
-public:
-	typedef TReturn (TClass::*FunctionType)(TArg1, TArg2);
-	typedef ClassCallback2<TClass, TReturn, TArg1, TArg2> CurrentType;
-
-	ClassCallback2(TClass *object, FunctionType function)
-		: obj(object), func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2)
-	{
-		return (obj->*func)(arg1, arg2);
-	}
-
-	virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &p_other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
-		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
-	}
-
-private:
-	TClass *obj;
-	FunctionType func;
-};
-
-template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
-class ClassCallback3 : public Callback3<TReturn, TArg1, TArg2, TArg3>
-{
-public:
-	typedef TReturn (TClass::*FunctionType)(TArg1, TArg2, TArg3);
-	typedef ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3> CurrentType;
-
-	ClassCallback3(TClass *object, FunctionType function)
-		: obj(object), func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3)
-	{
-		(obj->*func)(arg1, arg2, arg3);
-	}
-
-	virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
-		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
-	}
-
-private:
-	TClass *obj;
-	FunctionType func;
-};
-
-template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
-class ClassCallback4 : public Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
-{
-public:
-	typedef TReturn (TClass::*FunctionType)(TArg1, TArg2, TArg3, TArg4);
-	typedef ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4> CurrentType;
-
-	ClassCallback4(TClass *object, FunctionType function)
-		: obj(object), func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
-	{
-		(obj->*func)(arg1, arg2, arg3, arg4);
-	}
-
-	virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
-		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
-	}
-
-private:
-	TClass *obj;
-	FunctionType func;
-};
-
-template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
-class ClassCallback5 : public Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
-{
-public:
-	typedef TReturn (TClass::*FunctionType)(TArg1, TArg2, TArg3, TArg4, TArg5);
-	typedef ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> CurrentType;
-
-	ClassCallback5(TClass *object, FunctionType function)
-		: obj(object), func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
-	{ 
-		(obj->*func)(arg1, arg2, arg3, arg4, arg5);
-	}
-
-	virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
-		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
-	}
-
-private:
-	TClass *obj;
-	FunctionType func;
-};
+			virtual bool operator == (const Callback0<TReturn> &p_other) const override
+			{
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func && obj == cb->obj);
+			}
+		};
 
 
+		/**
+		* \class eve::evt::ClassCallback1<class TClass, class TReturn, class TArg1>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method of any class as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1)
+		*
+		* \note extends eve::evt::Callback1<TReturn, TArg1>
+		*/
+		template <class TClass, class TReturn, class TArg1>
+		class ClassCallback1 
+			: public Callback1<TReturn, TArg1>
+		{
+		public:
+			typedef TReturn(TClass::*FunctionType)(TArg1);
+			typedef ClassCallback1<TClass, TReturn, TArg1> CurrentType;
+
+		private:
+			TClass *	 obj;
+			FunctionType func;
+
+		public:
+			ClassCallback1(TClass *object, FunctionType function)
+				: obj(object)
+				, func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1) override
+			{
+				(obj->*func)(arg1);
+			}
+
+			virtual bool operator == (const Callback1<TReturn, TArg1> &p_other) const override
+			{
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func && obj == cb->obj);
+			}
+		};
 
 
+		/**
+		* \class eve::evt::ClassCallback2<class TClass, class TReturn, class TArg1, class TArg2>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method of any class as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
+		*
+		* \note extends eve::evt::Callback2<TReturn, TArg1, TArg2>
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2>
+		class ClassCallback2 
+			: public Callback2<TReturn, TArg1, TArg2>
+		{
+		public:
+			typedef TReturn(TClass::*FunctionType)(TArg1, TArg2);
+			typedef ClassCallback2<TClass, TReturn, TArg1, TArg2> CurrentType;
+
+		private:
+			TClass *	 obj;
+			FunctionType func;
+
+		public:
+			ClassCallback2(TClass *object, FunctionType function)
+				: obj(object)
+				, func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2) override
+			{
+				return (obj->*func)(arg1, arg2);
+			}
+
+			virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &p_other) const override
+			{
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func && obj == cb->obj);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::ClassCallback3<class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method of any class as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
+		*
+		* \note extends eve::evt::Callback3<TReturn, TArg1, TArg2, TArg3>
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
+		class ClassCallback3 
+			: public Callback3<TReturn, TArg1, TArg2, TArg3>
+		{
+		public:
+			typedef TReturn(TClass::*FunctionType)(TArg1, TArg2, TArg3);
+			typedef ClassCallback3<TClass, TReturn, TArg1, TArg2, TArg3> CurrentType;
+
+		private:
+			TClass *	 obj;
+			FunctionType func;
+
+		public:
+			ClassCallback3(TClass *object, FunctionType function)
+				: obj(object)
+				, func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3) override
+			{
+				(obj->*func)(arg1, arg2, arg3);
+			}
+
+			virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const override
+			{
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func && obj == cb->obj);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::ClassCallback4<class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method of any class as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
+		*
+		* \note extends eve::evt::Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		class ClassCallback4 
+			: public Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
+		{
+		public:
+			typedef TReturn(TClass::*FunctionType)(TArg1, TArg2, TArg3, TArg4);
+			typedef ClassCallback4<TClass, TReturn, TArg1, TArg2, TArg3, TArg4> CurrentType;
+
+		private:
+			TClass *	 obj;
+			FunctionType func;
+
+		public:
+			ClassCallback4(TClass *object, FunctionType function)
+				: obj(object)
+				, func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4) override
+			{
+				(obj->*func)(arg1, arg2, arg3, arg4);
+			}
+
+			virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const override
+			{
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func && obj == cb->obj);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::ClassCallback5<class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method of any class as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
+		*
+		* \note extends eve::evt::Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
+		*/
+		template <class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		class ClassCallback5 
+			: public Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
+		{
+		public:
+			typedef TReturn(TClass::*FunctionType)(TArg1, TArg2, TArg3, TArg4, TArg5);
+			typedef ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> CurrentType;
+
+		private:
+			TClass *obj;
+			FunctionType func;
+
+		public:
+			ClassCallback5(TClass *object, FunctionType function)
+				: obj(object)
+				, func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5) override
+			{
+				(obj->*func)(arg1, arg2, arg3, arg4, arg5);
+			}
+
+			virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const override
+			{
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func && obj == cb->obj);
+			}
+		};
+
+	} // namespace evt
+
+} // namespace eve
 
 
 /*****************************************************************************
