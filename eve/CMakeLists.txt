@@ -54,6 +54,8 @@ source_group( "Core" FILES ${CORE_SRCS} )
 # Event.
 #################################################
 set( EVENT_SRCS 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Callback.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/CallbackAuto.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  

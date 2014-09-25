@@ -57,6 +57,7 @@
 // standard string
 #include <string>
 // list types
+#include <set>
 #include <list>
 #include <queue>
 #include <deque>
