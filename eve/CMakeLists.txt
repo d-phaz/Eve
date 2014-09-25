@@ -53,11 +53,11 @@ source_group( "Core" FILES ${CORE_SRCS} )
 
 # Event.
 #################################################
-set( EVENT_SRCS 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Callback.h  
+set( EVENT_SRCS  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TCallback.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegate.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegateAbstract.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h 

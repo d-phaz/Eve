@@ -1,7 +1,7 @@
 
 #pragma once
-#ifndef __EVE_EVT_CALLBACK_H__
-#define __EVE_EVT_CALLBACK_H__
+#ifndef __EVE_EVT_TCALLBACK_H__
+#define __EVE_EVT_TCALLBACK_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -790,4 +790,4 @@ inline eve::evt::ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TAr
 	return new eve::evt::ClassCallback5<TClass, TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>(obj, func);
 }
 
-#endif // __EVE_EVT_CALLBACK_H__
+#endif // __EVE_EVT_TCALLBACK_H__
