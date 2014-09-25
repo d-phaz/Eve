@@ -29,29 +29,5 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_SYSTEM_INCLUDES_H__
-#define __EVE_SYSTEM_INCLUDES_H__
-
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#include "eve/sys/win32/Cursor.h"
-#endif
-
-#ifndef __EVE_SYSTEM_KEYBOARD_H__
+// Main header
 #include "eve/sys/win32/Keyboard.h"
-#endif
-
-#ifndef __EVE_SYSTEM_MOUSE_H__
-#include "eve/sys/shared/Mouse.h"
-#endif
-
-#ifndef __EVE_SYSTEM_WINDOW_H__
-#include "eve/sys/win32/Window.h"
-#endif
-
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
-#endif
-
-
-#endif // __EVE_SYSTEM_INCLUDES_H__

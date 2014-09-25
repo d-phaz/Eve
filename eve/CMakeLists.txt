@@ -116,6 +116,8 @@ set( SYSTEM_SRCS
 	 ${SYSTEM_SRCS} 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Cursor.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Cursor.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Keyboard.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Keyboard.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/MessagePump.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/MessagePump.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.cpp 
