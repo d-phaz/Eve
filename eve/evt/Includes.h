@@ -34,16 +34,16 @@
 #define __EVE_EVT_INCLUDES_H__
 
 
-#ifndef __EVE_EVT_TCALLBACK_H__
-#include "eve/evt/TCallback.h"
-#endif
-
 #ifndef __EVE_EVT_EVENT_H__
 #include "eve/evt/Event.h"
 #endif
 
 #ifndef __EVE_EVT_SERVER_H__
 #include "eve/evt/Server.h"
+#endif
+
+#ifndef __EVE_EVT_TCALLBACK_H__
+#include "eve/evt/TCallback.h"
 #endif
 
 #ifndef __EVE_EVT_TEVENT_H__
