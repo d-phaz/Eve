@@ -12,7 +12,360 @@ namespace eve
 {
 	namespace evt
 	{
+		/**
+		* \class eve::evt::Callback0<class TReturn>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method as a callback.
+		* The method must provide the following signature: TReturn method(void)
+		*/
+		template <class TReturn>
+		class Callback0
+		{
+		public:
+			virtual ~Callback0(void) {}
+			virtual TReturn execute(void) = 0;
+			virtual bool operator == (const Callback0<TReturn> & p_other) const = 0;
+			virtual bool operator != (const Callback0<TReturn> & p_other) const { return (*this != p_other); }
+		};
 
+
+		/**
+		* \class eve::evt::Callback1<class TReturn>, class TArg1>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1)
+		*/
+		template <class TReturn, class TArg1>
+		class Callback1
+		{
+		public:
+			virtual ~Callback1(void) {}
+			virtual TReturn execute(TArg1) = 0;
+			virtual bool operator == (const Callback1<TReturn, TArg1> & p_other) const = 0;
+			virtual bool operator != (const Callback1<TReturn, TArg1> & p_other) const { return (*this != p_other); }
+		};
+
+
+		/**
+		* \class eve::evt::Callback2<class TReturn>, class TArg1, class TArg2>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
+		*/
+		template <class TReturn, class TArg1, class TArg2>
+		class Callback2
+		{
+		public:
+			virtual ~Callback2(void) {}
+			virtual TReturn execute(TArg1, TArg2) = 0;
+			virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> & p_other) const = 0;
+			virtual bool operator != (const Callback2<TReturn, TArg1, TArg2> & p_other) const { return (*this != p_other); }
+		};
+
+
+		/**
+		* \class eve::evt::Callback3<class TReturn>, class TArg1, class TArg2, class TArg3>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3>
+		class Callback3
+		{
+		public:
+			virtual ~Callback3(void) {}
+			virtual TReturn execute(TArg1, TArg2, TArg3) = 0;
+			virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const = 0;
+			virtual bool operator != (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const { return (*this != p_other); }
+		};
+
+
+		/**
+		* \class eve::evt::Callback4<class TReturn>, class TArg1, class TArg2, class TArg3, class TArg4>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		class Callback4
+		{
+		public:
+			virtual ~Callback4(void) {}
+			virtual TReturn execute(TArg1, TArg2, TArg3, TArg4) = 0;
+			virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const = 0;
+			virtual bool operator != (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const { return (*this != p_other); }
+		};
+
+
+		/**
+		* \class eve::evt::Callback4<class TReturn>, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		class Callback5
+		{
+		public:
+			virtual ~Callback5(void) {}
+			virtual TReturn execute(TArg1, TArg2, TArg3, TArg4, TArg5) = 0;
+			virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const = 0;
+			virtual bool operator != (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const { return (*this != p_other); }
+		};
+
+	} // namespace evt
+
+} // namespace eve
+
+
+namespace eve
+{
+	namespace evt
+	{
+		/**
+		* \class eve::evt::StaticCallback0<class TReturn>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any global or static method as a callback.
+		* The method must provide the following signature: TReturn method(void)
+		*
+		* \note extends eve::evt::Callback0<TReturn>
+		*/
+		template <class TReturn>
+		class StaticCallback0 
+			: public Callback0<TReturn>
+		{
+		public:
+			typedef TReturn(*FunctionType)(void);
+			typedef StaticCallback0<TReturn> CurrentType;
+
+		private:
+			FunctionType func;
+
+		public:
+			StaticCallback0(FunctionType function) 
+				: func(function) 
+			{}
+
+			virtual TReturn execute(void) override
+			{ 
+				func(); 
+			}
+
+			virtual bool operator == (const Callback0<TReturn> &p_other) const override
+			{
+				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				return (p_callBack != NULL && func == p_callBack->func);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::StaticCallback1<class TReturn, class TArg1>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any global or static method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1)
+		*
+		* \note extends eve::evt::Callback1<TReturn, TArg1>
+		*/
+		template <class TReturn, class TArg1>
+		class StaticCallback1 
+			: public Callback1<TReturn, TArg1>
+		{
+		public:
+			typedef TReturn(*FunctionType)(TArg1);
+			typedef StaticCallback1<TReturn, TArg1> CurrentType;
+
+		private:
+			FunctionType func;
+
+		public:
+			StaticCallback1(FunctionType function)
+				: func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1) override
+			{
+				func(arg1);
+			}
+
+			virtual bool operator == (const Callback1<TReturn, TArg1> &p_other) const override
+			{
+				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				return (p_callBack != NULL && func == p_callBack->func);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::StaticCallback2<class TReturn, class TArg1, class TArg2>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any global or static method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
+		*
+		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2>
+		*/
+		template <class TReturn, class TArg1, class TArg2>
+		class StaticCallback2 
+			: public Callback2<TReturn, TArg1, TArg2>
+		{
+		public:
+			typedef TReturn(*FunctionType)(TArg1, TArg2);
+			typedef StaticCallback2<TReturn, TArg1, TArg2> CurrentType;
+
+		private:
+			FunctionType func;
+
+		public:
+			StaticCallback2(FunctionType function)
+				: func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2) override
+			{
+				func(arg1, arg2);
+			}
+
+			virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &p_other) const override
+			{
+				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				return (p_callBack != NULL && func == p_callBack->func);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::StaticCallback3<class TReturn, class TArg1, class TArg2, class TArg3>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any global or static method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
+		*
+		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2, TArg3>
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3>
+		class StaticCallback3 
+			: public Callback3<TReturn, TArg1, TArg2, TArg3>
+		{
+		public:
+			typedef TReturn(*FunctionType)(TArg1, TArg2, TArg3);
+			typedef StaticCallback3<TReturn, TArg1, TArg2, TArg3> CurrentType;
+
+		private:
+			FunctionType func;
+
+		public:
+			StaticCallback3(FunctionType function)
+				: func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3) override
+			{
+				func(arg1, arg2, arg3);
+			}
+
+			virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const override
+			{
+				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				return (p_callBack != NULL && func == p_callBack->func);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::StaticCallback3<class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any global or static method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
+		*
+		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2, TArg3, TArg4>
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
+		class StaticCallback4 
+			: public Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
+		{
+		public:
+			typedef TReturn(*FunctionType)(TArg1, TArg2, TArg3, TArg4);
+			typedef StaticCallback4<TReturn, TArg1, TArg2, TArg3, TArg4> CurrentType;
+
+		private:
+			FunctionType func;
+
+		public:
+			StaticCallback4(FunctionType function)
+				: func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4) override
+			{
+				func(arg1, arg2, arg3, arg4);
+			}
+
+			virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const override
+			{
+				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				return (p_callBack != NULL && func == p_callBack->func);
+			}
+		};
+
+
+		/**
+		* \class eve::evt::StaticCallback5<class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		*
+		* \brief Abstract base callback class.
+		*
+		* Register any global or static method as a callback.
+		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
+		*
+		* \note extends eve::evt::Callback1<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
+		*/
+		template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
+		class StaticCallback5 
+			: public Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
+		{
+		public:
+			typedef TReturn(*FunctionType)(TArg1, TArg2, TArg3, TArg4, TArg5);
+			typedef StaticCallback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> CurrentType;
+
+		private:
+			FunctionType func;
+
+		public:
+			StaticCallback5(FunctionType function)
+				: func(function)
+			{}
+
+			virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5) override
+			{
+				func(arg1, arg2, arg3, arg4, arg5);
+			}
+
+			virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const override
+			{
+				const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
+				return (p_callBack != NULL && func == p_callBack->func);
+			}
+		};
 
 
 	} // namespace evt
@@ -20,263 +373,7 @@ namespace eve
 } // namespace eve
 
 
-/**
-* \class eve::evt::Callback0
-* \brief
-*/
-template <class TReturn>
-class Callback0
-{
-public:
-	virtual ~Callback0() {}
-	virtual TReturn execute() = 0;
-	virtual bool operator == (const Callback0<TReturn> &other) const = 0;
-	virtual bool operator != (const Callback0<TReturn> &other) const
-	{
-		return !(*this == other);
-	}
-};
 
-
-
-
-/*****************************************************************************
-* ABSTRACT CALLBACKS
-*/
-
-
-template <class TReturn, class TArg1>
-class Callback1
-{
-public:
-	virtual ~Callback1() {}
-	virtual TReturn execute(TArg1) = 0;
-	virtual bool operator == (const Callback1<TReturn, TArg1> &other) const = 0;
-	virtual bool operator != (const Callback1<TReturn, TArg1> &other) const
-	{ 
-		return !(*this == other);
-	}
-};
-
-template <class TReturn, class TArg1, class TArg2>
-class Callback2
-{
-public:
-	virtual ~Callback2() {}
-	virtual TReturn execute(TArg1, TArg2) = 0;
-	virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &other) const = 0;
-	virtual bool operator != (const Callback2<TReturn, TArg1, TArg2> &other) const
-	{ 
-		return !(*this == other);
-	}
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3>
-class Callback3
-{
-public:
-	virtual ~Callback3() {}
-	virtual TReturn execute(TArg1, TArg2, TArg3) = 0;
-	virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &other) const = 0;
-	virtual bool operator != (const Callback3<TReturn, TArg1, TArg2, TArg3> &other) const
-	{
-		return !(*this == other);
-	}
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
-class Callback4
-{
-public:
-	virtual ~Callback4() {}
-	virtual TReturn execute(TArg1, TArg2, TArg3, TArg4) = 0;
-	virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &other) const = 0;
-	virtual bool operator != (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &other) const
-	{ 
-		return !(*this == other);
-	}
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
-class Callback5
-{
-public:
-	virtual ~Callback5() {}
-	virtual TReturn execute(TArg1, TArg2, TArg3, TArg4, TArg5) = 0;
-	virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &other) const = 0;
-	virtual bool operator != (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &other) const
-	{
-		return !(*this == other);
-	}
-};
-
-/*****************************************************************************
-* STATIC FUNCTION CALLBACKS
-*/
-template <class TReturn>
-class StaticCallback0 : public Callback0<TReturn>
-{
-public:
-	typedef TReturn (*FunctionType)();
-	typedef StaticCallback0<TReturn> CurrentType;
-
-	StaticCallback0(FunctionType function)
-		: func(function)
-	{
-
-	}
-
-	virtual TReturn execute()
-	{
-		func(); 
-	}
-
-	virtual bool operator == (const Callback0<TReturn> &other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
-		return (p_callBack != NULL && func == p_callBack->func);
-	}
-
-private:
-	FunctionType func;
-};
-
-template <class TReturn, class TArg1>
-class StaticCallback1 : public Callback1<TReturn, TArg1>
-{
-public:
-	typedef TReturn (*FunctionType)(TArg1);
-	typedef StaticCallback1<TReturn, TArg1> CurrentType;
-
-	StaticCallback1(FunctionType function)
-		: func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1)
-	{
-		func(arg1);
-	}
-
-	virtual bool operator == (const Callback1<TReturn, TArg1> &other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
-		return (p_callBack != NULL && func == p_callBack->func);
-	}
-
-private:
-	FunctionType func;
-};
-
-template <class TReturn, class TArg1, class TArg2>
-class StaticCallback2 : public Callback2<TReturn, TArg1, TArg2>
-{
-public:
-	typedef TReturn (*FunctionType)(TArg1, TArg2);
-	typedef StaticCallback2<TReturn, TArg1, TArg2> CurrentType;
-
-	StaticCallback2(FunctionType function)
-		: func(function)
-	{
-
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2)
-	{
-		func(arg1, arg2); 
-	}
-
-	virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
-		return (p_callBack != NULL && func == p_callBack->func);
-	}
-
-private:
-	FunctionType func;
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3>
-class StaticCallback3 : public Callback3<TReturn, TArg1, TArg2, TArg3>
-{
-public:
-	typedef TReturn (*FunctionType)(TArg1, TArg2, TArg3);
-	typedef StaticCallback3<TReturn, TArg1, TArg2, TArg3> CurrentType;
-
-	StaticCallback3(FunctionType function)
-		: func(function)
-	{
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3)
-	{ 
-		func(arg1, arg2, arg3); 
-	}
-
-	virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
-		return (p_callBack != NULL && func == p_callBack->func);
-	}
-
-private:
-	FunctionType func;
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
-class StaticCallback4 : public Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
-{
-public:
-	typedef TReturn (*FunctionType)(TArg1, TArg2, TArg3, TArg4);
-	typedef StaticCallback4<TReturn, TArg1, TArg2, TArg3, TArg4> CurrentType;
-
-	StaticCallback4(FunctionType function)
-		: func(function)
-	{
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
-	{ 
-		func(arg1, arg2, arg3, arg4);
-	}
-
-	virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
-		return (p_callBack != NULL && func == p_callBack->func);
-	}
-
-private:
-	FunctionType func;
-};
-
-template <class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
-class StaticCallback5 : public Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
-{
-public:
-	typedef TReturn (*FunctionType)(TArg1, TArg2, TArg3, TArg4, TArg5);
-	typedef StaticCallback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> CurrentType;
-
-	StaticCallback5(FunctionType function)
-		: func(function)
-	{
-	}
-
-	virtual TReturn execute(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
-	{ 
-		func(arg1, arg2, arg3, arg4, arg5);
-	}
-
-	virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &other) const
-	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
-		return (p_callBack != NULL && func == p_callBack->func);
-	}
-
-private:
-	FunctionType func;
-};
 
 /*****************************************************************************
 * CLASS FUNCTION CALLBACKS
@@ -298,9 +395,9 @@ public:
 		(obj->*func)(); 
 	}
 
-	virtual bool operator == (const Callback0<TReturn> &other) const
+	virtual bool operator == (const Callback0<TReturn> &p_other) const
 	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
+		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
 		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
 	}
 
@@ -327,9 +424,9 @@ public:
 		(obj->*func)(arg1);
 	}
 
-	virtual bool operator == (const Callback1<TReturn, TArg1> &other) const
+	virtual bool operator == (const Callback1<TReturn, TArg1> &p_other) const
 	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
+		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
 		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
 	}
 
@@ -356,9 +453,9 @@ public:
 		return (obj->*func)(arg1, arg2);
 	}
 
-	virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &other) const
+	virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &p_other) const
 	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
+		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
 		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
 	}
 
@@ -385,9 +482,9 @@ public:
 		(obj->*func)(arg1, arg2, arg3);
 	}
 
-	virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &other) const
+	virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const
 	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
+		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
 		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
 	}
 
@@ -414,9 +511,9 @@ public:
 		(obj->*func)(arg1, arg2, arg3, arg4);
 	}
 
-	virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &other) const
+	virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const
 	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
+		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
 		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
 	}
 
@@ -443,9 +540,9 @@ public:
 		(obj->*func)(arg1, arg2, arg3, arg4, arg5);
 	}
 
-	virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &other) const
+	virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const
 	{
-		const CurrentType *p_callBack = static_cast<const CurrentType*>(&other);
+		const CurrentType *p_callBack = static_cast<const CurrentType*>(&p_other);
 		return (p_callBack != NULL && func == p_callBack->func && obj == p_callBack->obj);
 	}
 
@@ -453,6 +550,11 @@ private:
 	TClass *obj;
 	FunctionType func;
 };
+
+
+
+
+
 
 /*****************************************************************************
 * CALLBACK SETS
@@ -645,6 +747,9 @@ public:
 private:
 	std::set<CallbackType*> callbacks;
 };
+
+
+
 
 /*****************************************************************************
 * CALLBACKS CONSTRUCTORS
