@@ -100,17 +100,28 @@ LRESULT CALLBACK eve::sys::MessagePump::wndProc(HWND hWnd, UINT uMsg, WPARAM wPa
 }
 
 //=================================================================================================
-LRESULT CALLBACK eve::sys::MessagePump::cb_wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK eve::sys::MessagePump::cb_wndProc(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
 	LRESULT L_result = 0;
 	std::pair<LRESULT, bool> result;
 
-	//result = getEventReader()->handleEvent(getEventListener(), hWnd, message, wParam, lParam);
-
-	//L_result = result.first;
-	//if (!result.second) {
-		L_result = ::CallWindowProcW(m_prevWndProc, hWnd, message, wParam, lParam);
-	//}
+	// Handle event here.
+	result = this->handleEvent(p_hWnd, p_uMsg, p_wParam, p_lParam);
+	L_result = result.first;
+	
+	// If event was not handled fall back to default system handler method.
+	if (!result.second) 
+	{
+		L_result = ::CallWindowProcW(m_prevWndProc, p_hWnd, p_uMsg, p_wParam, p_lParam);
+	}
 
 	return L_result;
+}
+
+
+
+//=================================================================================================
+std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+
 }

@@ -124,6 +124,35 @@ namespace eve
 			/** \brief Handler dedicated window procedure. */
 			LRESULT CALLBACK cb_wndProc(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 
+
+		private:
+			/** \brief System event handler. */
+			std::pair<LRESULT, bool> handleEvent(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			
+
+			LRESULT handleEnterSizeMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleExitSizeMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleSizing(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleSize(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+			LRESULT handlePaint(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleEraseBkgnd(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			
+			LRESULT handleKey(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			
+			LRESULT handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleMouseEnter(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleMouseLeave(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+			LRESULT handleFocus(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleGetMinMaxInfo(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleDrop(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleClose(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			LRESULT handleIdle(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
 		}; // class MessagePump
 
 	} // namespace sys

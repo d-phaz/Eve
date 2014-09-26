@@ -167,6 +167,9 @@ void eve::sys::Window::init(void)
 		EVE_ASSERT_FAILURE;
 	}
 
+	// Activate drag and drop.
+	this->setDragAcceptFiles(true);
+
 	// Show Window.
 	::ShowWindow(m_handle, SW_SHOWNORMAL);
 }

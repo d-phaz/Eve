@@ -41,6 +41,10 @@
 #include "eve/thr/Includes.h"
 #endif
 
+#ifndef __EVE_THREADING_THREAD_DUMMY_H__
+#include "eve/thr/ThreadDummy.h"
+#endif 
+
 #ifndef __EVE_EVT_INCLUDES_H__
 #include "eve/evt/Includes.h"
 #endif

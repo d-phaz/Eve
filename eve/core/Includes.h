@@ -66,6 +66,10 @@
 #include <hash_map>
 // file handling
 #include <fstream>
+// utility
+#include <utility>
+// time
+#include <sys\timeb.h>
 
 
 #if defined(EVE_OS_WIN)

@@ -58,13 +58,6 @@ namespace eve
 			friend class eve::mem::Pointer;
 
 			//////////////////////////////////////
-			//				DATA				//
-			//////////////////////////////////////
-
-		protected:
-			eve::thr::SpinLock *		m_pLock;
-
-			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
@@ -77,13 +70,10 @@ namespace eve
 
 
 		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) override;
-			/**
-			* \brief Release and delete class members. (pure virtual)
-			* Stop this object's thread execution (if any) immediately
-			*/
-			virtual void release(void) override;
+			/** \brief Alloc and init threaded data. (pure virtual) */
+			virtual void initThreadedData(void) override;
+			/** \brief Release and delete threaded data. (pure virtual) */
+			virtual void releaseThreadedData(void) override;
 
 
 		public:

@@ -39,8 +39,12 @@
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_THREADING_WORKER_H__
-#include "eve/thr/Worker.h"
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
 #endif
 
 
@@ -95,7 +99,7 @@ namespace eve
 			//				DATA				//
 			//////////////////////////////////////
 	
-		private:
+		protected:
 			//std::thread *				m_hThread;					//!< Thread handle (void*).
 			//std::thread::id			m_threadID;					//!< Thread ID (DWORD)
 			HANDLE						m_hThread;					//!< Thread handle (void*).
@@ -107,9 +111,8 @@ namespace eve
 			uint32_t					m_runWait;					//!< Sleep time when testing running() in milliseconds. \sa running()
 
 
-		private:
-			eve::thr::SpinLock *		m_pSpinLock;				//!< Spin lock protecting workers and run loop.
-			eve::thr::Worker *			m_pWorker;					//!< Thread worker called in run loop.
+		protected:
+			eve::thr::SpinLock *		m_pFence;					//!< Spin lock protecting workers and run loop.
 
 
 			//////////////////////////////////////
@@ -130,7 +133,7 @@ namespace eve
 			virtual void init(void) override;
 			/** 
 			* \brief Release and delete class members. (pure virtual) 
-			* Stop this object's thread execution (if any) immediately
+			* Stop this object's thread execution (if any) immediately.
 			*/
 			virtual void release(void) override;
 
@@ -145,7 +148,7 @@ namespace eve
 			void start(ThreadRoutine p_routine = &eve::thr::Thread::routine, priorities p_priority = InheritPriority);
 
 
-		public:
+		private:
 			/**
 			* \brief Low level function which starts a new thread, called by start().
 			*
@@ -163,11 +166,13 @@ namespace eve
 
 
 		protected:
-			/**
-			* \brief Run is the main loop for this thread. 
-			* \sa start()
-			*/
-			virtual void run(void);
+			/** \brief Alloc and init threaded data. (pure virtual) */
+			virtual void initThreadedData(void) = 0;
+			/** \brief Release and delete threaded data. (pure virtual) */
+			virtual void releaseThreadedData(void) = 0;
+
+			/** \brief Run is the main loop for this thread (\sa start()). (pure virtual) */
+			virtual void run(void) = 0;
 
 
 		public:

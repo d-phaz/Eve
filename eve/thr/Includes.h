@@ -58,12 +58,12 @@
 #include "eve/thr/Thread.h"
 #endif 
 
-#ifndef __EVE_THREADING_THREAD_DUMMY_H__
-#include "eve/thr/ThreadDummy.h"
-#endif 
-
 #ifndef __EVE_THREADING_UTILS_H__
 #include "eve/thr/Utils.h"
+#endif
+
+#ifndef __EVE_THREADING_WORKER_H__
+#include "eve/thr/Worker.h"
 #endif
 
 

@@ -43,11 +43,12 @@ namespace eve
 	namespace sys
 	{
 		/**
-		* \brief Key symbol enumeration
-		* Keys representing the Latin-1 supplement characters (Unicode 0xa0-0xff) are usually
-		* mapped to lower case charaters, for example aDIARESIS instead of ADIARESIS.
+		* \brief Key symbol enumeration.
+		* 
+		* \note Keys representing the Latin-1 supplement characters (Unicode 0xa0-0xff) are usually
+		* mapped to lower case characters, for example aDIARESIS instead of ADIARESIS.
 		*
-		* \note the numeric values of the enumerants may change, use symbols instead
+		* \note the numeric values of the enumerated may change, use symbols instead
 		*/
 		enum Key
 		{

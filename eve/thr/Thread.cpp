@@ -42,10 +42,6 @@
 #include "eve/thr/Utils.h"
 #endif
 
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
-
 
 //=================================================================================================
 eve::thr::Thread::Thread( void )
@@ -54,14 +50,13 @@ eve::thr::Thread::Thread( void )
 	: eve::mem::Pointer()
 
 	// Members init
-	, m_hThread			( nullptr )
-	, m_hShutdownEvent	( 0 )
-	, m_StartEvent		( 0 )
-	, m_runWait			( 10 ) // milliseconds
-	, m_threadID		( eve::thr::zero_ID() )
+	, m_hThread( nullptr )
+	, m_hShutdownEvent( 0 )
+	, m_StartEvent( 0 )
+	, m_runWait( 10 )
+	, m_threadID( eve::thr::zero_ID() )
 
-	, m_pSpinLock		( nullptr )
-	//, m_pWorker			( nullptr )
+	, m_pFence(nullptr)
 {}
 
 
@@ -69,8 +64,7 @@ eve::thr::Thread::Thread( void )
 //=================================================================================================
 void eve::thr::Thread::init(void)
 {
-	m_pSpinLock		= EVE_CREATE_PTR(eve::thr::SpinLock);
-	//m_pWorker		= EVE_CREATE_PTR(eve::thr::TWorker<int>);
+	m_pFence			= EVE_CREATE_PTR(eve::thr::SpinLock);
 
 	m_hShutdownEvent	= ::CreateEvent(NULL, TRUE, FALSE, NULL);
 	m_StartEvent		= ::CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -82,8 +76,7 @@ void eve::thr::Thread::release(void)
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
 
-	//EVE_RELEASE_PTR(m_pWorker);	
-	EVE_RELEASE_PTR(m_pSpinLock);
+	EVE_RELEASE_PTR(m_pFence);
 }
 
 
@@ -134,6 +127,8 @@ uint32_t eve::thr::Thread::routine(void * p_pThread)
 	// Grab and cast thread pointer.
 	eve::thr::Thread * objectPtr = reinterpret_cast<eve::thr::Thread*>(p_pThread);
 
+	// Alloc and init threaded data.
+	objectPtr->initThreadedData();
 	// Since initialized, set status to started.
 	objectPtr->setStarted();
 
@@ -142,6 +137,8 @@ uint32_t eve::thr::Thread::routine(void * p_pThread)
 
 	// Since we're out of run loop set status to not started.
 	objectPtr->resetStarted();
+	// Release and delete threaded data.
+	objectPtr->releaseThreadedData();
 
 	// No error occurred so return 0 (zero).
 	return 0;
@@ -149,20 +146,20 @@ uint32_t eve::thr::Thread::routine(void * p_pThread)
 
 
 
-//=================================================================================================
-void eve::thr::Thread::run(void)
-{
-	do
-	{
-		m_pSpinLock->lock();
-
-		m_pWorker->work();
-
-		m_pSpinLock->unlock();
-
-	} while (running());
-
-}
+////=================================================================================================
+//void eve::thr::Thread::run(void)
+//{
+//	do
+//	{
+//		m_pFence->lock();
+//
+//		m_pWorker->work();
+//
+//		m_pFence->unlock();
+//
+//	} while (running());
+//
+//}
 
 
 

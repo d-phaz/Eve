@@ -95,68 +95,79 @@ std::pair<LRESULT, bool> SystemEventReader::handleEvent( SystemEventListener & p
 
     switch(message)
     {
-        case WM_MOUSEMOVE: 
+        case WM_MOUSEMOVE:  // (ret 0)
 			L_result = handleMotion( p_listener, hwnd, message, wparam, lparam );
 			break;
 
-		case WM_LBUTTONDOWN:
-        case WM_MBUTTONDOWN:
-        case WM_RBUTTONDOWN:
-        case WM_XBUTTONDOWN:
-        case WM_MOUSEWHEEL:
-        case WM_MOUSEHWHEEL:
+		case WM_LBUTTONDOWN:	// (ret 0)
+		case WM_MBUTTONDOWN:	// (ret 0)
+		case WM_RBUTTONDOWN:	// (ret 0)
+		case WM_XBUTTONDOWN:	// (ret 0)
+        case WM_MOUSEWHEEL:		// (ret 0) Wheel
+		case WM_MOUSEHWHEEL:	// (ret 0) Horizontal Scroll
 			L_result = handleMouseDown( p_listener, hwnd, message, wparam, lparam );
 			break;
 
-		case WM_LBUTTONUP:
-        case WM_MBUTTONUP:
-        case WM_RBUTTONUP:
-        case WM_XBUTTONUP:
+		case WM_LBUTTONUP:	// (ret 0)
+		case WM_MBUTTONUP:	// (ret 0)
+		case WM_RBUTTONUP:	// (ret 0)
+		case WM_XBUTTONUP:	// (ret 0)
 			L_result = handleMouseUp( p_listener, hwnd, message, wparam, lparam );
 			break;
+
+		case WM_LBUTTONDBLCLK:	// (ret 0)
+		case WM_MBUTTONDBLCLK:	// (ret 0)
+		case WM_RBUTTONDBLCLK:	// (ret 0)
+		case WM_XBUTTONDBLCLK:	// (ret 0)
+			break;
 		
-		case WM_MOUSELEAVE: 
+		case WM_MOUSEHOVER:	// (ret 0) Hover tracking stops when WM_MOUSEHOVER is generated. The application must call TrackMouseEvent again if it requires further tracking of mouse hover behavior.
+		case WM_MOUSELEAVE: // (ret 0) All tracking requested by TrackMouseEvent is canceled when this message is generated. The application must call TrackMouseEvent when the mouse reenters its window if it requires further tracking of mouse hover behavior.
 			L_result = handleLeave( p_listener, hwnd, message, wparam, lparam );
 			break;
 
 
-		case WM_KEYDOWN: 
-        case WM_KEYUP: 
-        case WM_SYSKEYDOWN: 
-        case WM_SYSKEYUP: 
+		case WM_KEYDOWN:	// (ret 0) no ALT pressed (CTRL+ALT if non US)
+        case WM_KEYUP:		// (ret 0) no ALT pressed (CTRL+ALT if non US)
+        case WM_SYSKEYDOWN: // (ret 0) ALT pressed (CTRL+ALT if non US)
+        case WM_SYSKEYUP:	// (ret 0) ALT pressed (CTRL+ALT if non US)
 			L_result = handleKey( p_listener, hwnd, message, wparam, lparam );
 			break;
 
-		case WM_CHAR:
+		case WM_DEADCHAR:	// (ret 0) dead char such as ^ or ¨ etc... (UNICODE)
+		case WM_SYSDEADCHAR:// (ret 0) dead char such as ^ or ¨ etc... (UNICODE)
+		case WM_CHAR:		// (ret 0) Entered char (same as WM_KEYDOWN ? or doubled call?)
 			L_result = handleChar( p_listener, hwnd, message, wparam, lparam );
 			break;
 
 
-        case WM_ENTERSIZEMOVE: 
+        case WM_ENTERSIZEMOVE: 	// (ret 0) invalidate further system action.
 			L_result = handleEnterSizeMove( p_listener, hwnd, message, wparam, lparam );
 			break;
-        case WM_EXITSIZEMOVE:
+		case WM_EXITSIZEMOVE:	// (ret 0) invalidate further system action.
 			L_result = handleExitSizeMove( p_listener, hwnd, message, wparam, lparam );
 			break;
-		/*case WM_SIZING:
+		/*case WM_SIZING: // An application should return TRUE if it processes this message.
 			L_result = handleSizing(window, hwnd, message, wparam, lparam);
 			break;*/
-        case WM_SIZE:
+        case WM_SIZE:	// (ret 0) Sent to a window after its size has changed.
 			L_result = handleSize( p_listener, hwnd, message, wparam, lparam );
 			break;
 
+			
 
-        case WM_PAINT: 
+        case WM_PAINT: 	// (ret 0)
 			L_result = handlePaint( p_listener, hwnd, message, wparam, lparam );
 			break;
 
-        case WM_ERASEBKGND:
+        case WM_ERASEBKGND: // return 1 to invalidate further system action.
 			L_result = handleEraseBkgnd( p_listener, hwnd, message, wparam, lparam );
 			break;
 
-        case WM_GETMINMAXINFO:
-			L_result = handleGetMinMaxInfo( p_listener, hwnd, message, wparam, lparam );
-			break;
+			// Let the system handle this !!!! ---- RC
+   //     case WM_GETMINMAXINFO:
+			//L_result = handleGetMinMaxInfo( p_listener, hwnd, message, wparam, lparam );
+			//break;
 
 		
 		//// not sure that's in use !!!
@@ -172,16 +183,19 @@ std::pair<LRESULT, bool> SystemEventReader::handleEvent( SystemEventListener & p
 			break;
 
 
-		case WM_CLOSE:
+		case WM_CLOSE:	// (ret 0)
 			L_result = handleClose( p_listener, hwnd, message, wparam, lparam );
 			break;
 
+			// Never used these :(
+		//case WM_SETFOCUS:
+  //      case WM_KILLFOCUS:
+		//	L_result = handleFocus( p_listener, hwnd, message, wparam, lparam );
+		//	break;
 
-		case WM_SETFOCUS:
-        case WM_KILLFOCUS:
-			L_result = handleFocus( p_listener, hwnd, message, wparam, lparam );
-			break;
-
+		case WM_MOVE: // (ret 0) Sent after a window has been moved. Shall we deal with that??
+		case WM_MOVING:	// (ret TRUE) an application can monitor the position of the drag rectangle and, if needed, change its position.
+		case WM_COMPACTING:	// (ret 0) Indicates system memory is low.
 
         default:
 			validity = false;

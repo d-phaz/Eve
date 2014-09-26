@@ -50,6 +50,17 @@ namespace eve
 {
 	namespace evt
 	{
+		/************************************************************************/
+		/*		                                                                */
+		/* NOTE:                                                                */
+		/*	Events managed here are global events.								*/
+		/*	These events should only be used in single window application(s).   */
+		/*		                                                                */
+		/*		                                                                */
+		/************************************************************************/
+
+
+
 		/** 
 		* \class eve::evt::Args
 		* \brief Empty base event argument(s) class.

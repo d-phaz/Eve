@@ -47,22 +47,14 @@ eve::thr::ThreadDummy::ThreadDummy(void)
 
 
 //=================================================================================================
-void eve::thr::ThreadDummy::init(void)
-{
-	// Call parent class
-	eve::thr::Thread::init();
-
-	m_pLock = EVE_CREATE_PTR(eve::thr::SpinLock);
-}
+void eve::thr::ThreadDummy::initThreadedData(void)
+{}
 
 //=================================================================================================
-void eve::thr::ThreadDummy::release(void)
-{
-	EVE_RELEASE_PTR(m_pLock);
+void eve::thr::ThreadDummy::releaseThreadedData(void)
+{}
 
-	// Call parent class
-	eve::thr::Thread::release();
-}
+
 
 //=================================================================================================
 void eve::thr::ThreadDummy::run(void)
@@ -73,11 +65,11 @@ void eve::thr::ThreadDummy::run(void)
 	int32_t i = 0;
 	while ( i < 1000/*running()*/ )
 	{
-		m_pLock->lock();
+		m_pFence->lock();
 
 		printf("thread: %i value: %i\n", id, i);
 		++i;
 
-		m_pLock->unlock();
+		m_pFence->unlock();
 	}
 }

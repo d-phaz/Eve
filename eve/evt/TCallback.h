@@ -759,7 +759,7 @@ inline eve::evt::ClassCallback0<TClass, TReturn> * eve::evt::create_callback(TCl
 template <class TClass, class TReturn, class TArg1>
 inline eve::evt::ClassCallback1<TClass, TReturn, TArg1> * create_callback(TClass *obj, TReturn(TClass::*func)(TArg1))
 {
-	return new ClassCallback1<TClass, TReturn, TArg1>(obj, func);
+	return new eve::evt::ClassCallback1<TClass, TReturn, TArg1>(obj, func);
 }
 
 //=================================================================================================

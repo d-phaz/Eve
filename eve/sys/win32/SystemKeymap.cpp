@@ -416,11 +416,9 @@ namespace keymap
 		case WM_XBUTTONUP:
 			return mouse::Button(mouse::BUTTON_X + GET_XBUTTON_WPARAM(wparam) - 1);
 		case WM_MOUSEWHEEL:
-			return GET_WHEEL_DELTA_WPARAM(wparam) < 0 
-				? mouse::WHEEL_DOWN : mouse::WHEEL_UP;
+			return GET_WHEEL_DELTA_WPARAM(wparam) < 0 ? mouse::WHEEL_DOWN : mouse::WHEEL_UP;
 		case WM_MOUSEHWHEEL:
-			return GET_WHEEL_DELTA_WPARAM(wparam) < 0
-				? mouse::SCROLL_LEFT : mouse::SCROLL_RIGHT;
+			return GET_WHEEL_DELTA_WPARAM(wparam) < 0 ? mouse::SCROLL_LEFT : mouse::SCROLL_RIGHT;
 			default:
 				return mouse::UNKNOWN;
 		}

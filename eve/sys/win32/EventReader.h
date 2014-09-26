@@ -1,21 +1,70 @@
 
 #pragma once
-#ifndef __SYSTEM_EVENT_READER_H__
-#define __SYSTEM_EVENT_READER_H__
+#ifndef __EVE_SYSTEM_EVENT_READER_H__
+#define __EVE_SYSTEM_EVENT_READER_H__
 
-#include <Windows.h>
-#include <sys\timeb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <utility>
-
-#ifndef __NATIVE_SYSTEM_H__
-#include "Native_system.h"
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
 #endif
 
-#ifndef __NATIVE_TYPES_H__
-#include "Native_types.h"
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
 #endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
+
+namespace eve
+{
+	namespace sys
+	{
+		/**
+		* \class eve::sys::EventReader
+		*
+		* \brief Interpret eve::sys::MessagePump received events and translate them to eve readable ones.
+		*
+		* \note extends eve::mem::Pointer
+		*/
+		class EventReader final
+			: public eve::mem::Pointer
+		{
+
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(EventReader);
+			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(EventReader);
+
+
+		private:
+			/** \brief Class constructor. */
+			EventReader(void);
+
+
+		private:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members. (pure virtual) */
+			virtual void release(void) override;
+
+		};
+
+	} // namespace sys
+
+} // namespace eve
+
+
+
 
 
 
@@ -105,4 +154,4 @@ protected:
 
 };
 
-#endif // __SYSTEM_EVENT_READER_H__
+#endif // __EVE_SYSTEM_EVENT_READER_H__
