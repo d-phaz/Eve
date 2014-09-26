@@ -38,35 +38,6 @@
 #endif
 
 
-/** \brief convenience defines to retrieve ctrl pressed keys (faster). */
-#define EVE_KEY_CTRL_A		1
-#define EVE_KEY_CTRL_B		2
-#define EVE_KEY_CTRL_C		3
-#define EVE_KEY_CTRL_D		4
-#define EVE_KEY_CTRL_E		5
-#define EVE_KEY_CTRL_F		6
-#define EVE_KEY_CTRL_G		7
-#define EVE_KEY_CTRL_H		8
-#define EVE_KEY_CTRL_I		9
-#define EVE_KEY_CTRL_J		10
-#define EVE_KEY_CTRL_K		11
-#define EVE_KEY_CTRL_L		12
-#define EVE_KEY_CTRL_M		13
-#define EVE_KEY_CTRL_N		14
-#define EVE_KEY_CTRL_O		15
-#define EVE_KEY_CTRL_P		16
-#define EVE_KEY_CTRL_Q		17
-#define EVE_KEY_CTRL_R		18
-#define EVE_KEY_CTRL_S		19
-#define EVE_KEY_CTRL_T		20
-#define EVE_KEY_CTRL_U		21
-#define EVE_KEY_CTRL_V		22
-#define EVE_KEY_CTRL_W		23
-#define EVE_KEY_CTRL_X		24
-#define EVE_KEY_CTRL_Y		25
-#define EVE_KEY_CTRL_Z		26
-
-
 namespace eve
 {
 	namespace sys
@@ -605,6 +576,40 @@ namespace eve
 			key_DeadAboveRing = 0x150,
 
 			key_Num_Keys // TERMINATOR
+		};
+
+
+		/** \brief Convenience enumeration used to retrieve ctrl pressed keys. */
+		enum KeyCtrl
+		{
+			key_ctrl_Unused,
+
+			key_ctrl_a,
+			key_ctrl_b,
+			key_ctrl_c,
+			key_ctrl_d,
+			key_ctrl_e,
+			key_ctrl_f,
+			key_ctrl_g,
+			key_ctrl_h,
+			key_ctrl_i,
+			key_ctrl_j,
+			key_ctrl_k,
+			key_ctrl_l,
+			key_ctrl_m,
+			key_ctrl_n,
+			key_ctrl_o,
+			key_ctrl_p,
+			key_ctrl_q,
+			key_ctrl_r,
+			key_ctrl_s,
+			key_ctrl_t,
+			key_ctrl_u,
+			key_ctrl_v,
+			key_ctrl_w,
+			key_ctrl_x,
+			key_ctrl_y,
+			key_ctrl_z
 		};
 
 	} // namespace sys
