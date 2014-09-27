@@ -88,8 +88,8 @@ bool eve::files::copy(const std::wstring & p_pathSource, const std::wstring & p_
 
 	if (eve::files::exists(p_pathSource))
 	{
-		std::ifstream  src(p_pathSource, std::ios::binary);
-		std::ofstream  dst(p_pathDestination, std::ios::binary);
+		std::wifstream src(p_pathSource, std::ios::binary);
+		std::wofstream dst(p_pathDestination, std::ios::binary);
 
 		dst << src.rdbuf();
 

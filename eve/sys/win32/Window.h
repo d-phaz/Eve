@@ -77,7 +77,7 @@ namespace eve
 			int32_t							m_y;					//!< Window position on Y-axis.
 			uint32_t						m_width;				//!< Window width, should never be negative.
 			uint32_t						m_height;				//!< Window height, should never be negative.
-			char *							m_title;				//!< Window title as char pointer.
+			std::wstring					m_title;				//!< Window title.
 
 			HWND							m_handle;				//!< System window handle.
 			ATOM							m_atom;					//!< System window atom.
@@ -220,7 +220,7 @@ namespace eve
 			
 				
 			/** \brief Set window title (UTF-8). */
-			void setTitle( const std::string & p_title );
+			void setTitle( const std::wstring & p_title );
 
 		}; // class Window
 

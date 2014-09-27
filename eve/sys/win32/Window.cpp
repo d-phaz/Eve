@@ -60,7 +60,7 @@ eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_
 	, m_y(p_y)
 	, m_width(p_width)
 	, m_height(p_height)
-	, m_title(0)
+	, m_title()
 
 	, m_handle(0)
 	, m_atom(0)
@@ -182,12 +182,6 @@ void eve::sys::Window::release(void)
 	{
 		EVE_LOG_ERROR("DestroyWindow() failed with error %s.", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
-	}
-
-	// Title as char array
-	if (m_title)
-	{
-		EVE_RELEASE_PTR_C(m_title);
 	}
 
 	// Release fence.
@@ -589,30 +583,18 @@ void eve::sys::Window::setPositionY(int32_t p_y )
 
 
 //=================================================================================================
-void eve::sys::Window::setTitle( const std::string & p_title)
+void eve::sys::Window::setTitle(const std::wstring & p_title)
 {
     if( !p_title.empty() )
 	{
 		// Grab title as char array
-		if (m_title)
-		{
-			EVE_RELEASE_PTR_C(m_title);
-		}
-		m_title = (char*)malloc(sizeof(char) * (p_title.size()+1));
-		strcpy(m_title, p_title.c_str());
-
-		const size_t size = strlen(p_title.c_str()) + 1;
-		wchar_t * unicodeTitle = (wchar_t*)malloc(sizeof(wchar_t) * size);
-		mbstowcs( unicodeTitle, p_title.c_str(), size );
+		m_title = std::wstring(p_title);
 
 		// Set window title
-		if (!::SetWindowTextW(m_handle, unicodeTitle))
+		if (!::SetWindowTextW(m_handle, m_title.c_str()))
 		{
 			EVE_LOG_ERROR("Can't set Window title, SetWindowText failed: %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
-
-		// Free mem
-		free(unicodeTitle);
 	}
 }
