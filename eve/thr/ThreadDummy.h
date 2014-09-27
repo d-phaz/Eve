@@ -51,7 +51,7 @@ namespace eve
 		*
 		* \note extends thr::Thread
 		*/
-		class ThreadDummy
+		class ThreadDummy final
 			: public eve::thr::Thread
 		{
 
@@ -64,19 +64,19 @@ namespace eve
 			EVE_DISABLE_COPY(ThreadDummy)
 			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
 
-		protected:
+		private:
 			/** \brief Class constructor. */
 			ThreadDummy(void);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
 
 
-		public:
+		private:
 			/**
 			* \brief Run is the main loop for this thread. (pure virtual)
 			* Usually this is called by Start(), but may be called directly for single-threaded applications.

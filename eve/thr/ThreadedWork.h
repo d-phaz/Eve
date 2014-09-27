@@ -30,52 +30,86 @@
 */
 
 #pragma once
-#ifndef __EVE_THREADING_FENCE_H__
-#define __EVE_THREADING_FENCE_H__
+#ifndef __EVE_THREADING_THREADED_WORK_H__
+#define __EVE_THREADING_THREADED_WORK_H__
 
-#ifndef __EVE_MEMORY_POINTER_H__
-#include "eve/mem/Pointer.h"
-#endif
+
+#ifndef __EVE_THREADING_THREAD_H__
+#include "eve/thr/Thread.h"
+#endif 
+
+
+namespace eve{ namespace thr{ class Worker; } }
 
 
 namespace eve
 {
 	namespace thr
 	{
+		class SpinLock;
 
 		/**
-		* \class eve::thr::Fence
-		* \brief Abstract base fence class (lock/mutex/...)
-		* \note extends eve::mem::Pointer
+		* \class eve::thr::ThreadedWork
+		*
+		* \brief Thread using workers.
+		* Stock workers in a FIFO queue.
+		* Switch to next worker right after previous one completion.
+		* Worker is released right after its work completion.
+		*
+		* \note extends thr::Thread
 		*/
-		class Fence
-			: public eve::mem::Pointer
+		class ThreadedWork
+			: public eve::thr::Thread
 		{
 
 			friend class eve::mem::Pointer;
 
 			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		private:
+			std::deque<eve::thr::Worker *> *	m_pWorkers;			//!< Workers FIFO queue.
+
+
+			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Fence);
-			EVE_PROTECT_DESTRUCTOR(Fence);
+			EVE_DISABLE_COPY(ThreadedWork)
+			EVE_PROTECT_DESTRUCTOR(ThreadedWork)
 
-		protected:
-			/** \brief Class constructor. */
-			Fence(void);
+
+		private:
+			/** \brief Class constructor.	*/
+			ThreadedWork(void);
+
+
+		private:
+			/** \brief Alloc and init threaded data. (pure virtual) */
+			virtual void initThreadedData(void) override;
+			/** \brief Release and delete threaded data. (pure virtual) */
+			virtual void releaseThreadedData(void) override;
 
 
 		public:
-			/** \brief Lock the fence. (pure virtual) */
-			virtual void lock(void) = 0;
-			/** \brief Unlock the fence. (pure virtual)*/
-			virtual void unlock(void) = 0;
+			/** \brief Add worker and return immediately. */
+			void addWorker(eve::thr::Worker * p_pWorker);
+			/** \brief Add worker so that it will be the next one used and return immediately. */
+			void addPriorityWorker(eve::thr::Worker * p_pWorker);
 
-		}; // class Fence
+
+		private:
+			/**
+			* \brief Run is the main loop for this thread. (pure virtual)
+			* Usually this is called by Start(), but may be called directly for single-threaded applications.
+			*/
+			virtual void run(void) override;
+
+		}; // class ThreadDummy
 
 	} // namespace thr
 
 } // namespace eve
 
-#endif // __EVE_THREADING_FENCE_H__
+#endif // __EVE_THREADING_THREADED_WORK_H__

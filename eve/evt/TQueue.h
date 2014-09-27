@@ -68,7 +68,7 @@ namespace eve
 			std::deque<TEvt *> *            m_pQueueFront;			//!< Front event queue.
 			std::deque<TEvt *> *            m_pQueueRef;			//!< Reference event queue used for swapping.
 
-			eve::thr::SpinLock *		m_pFence;				//!< Memory fence as spin lock.
+			eve::thr::SpinLock *			m_pFence;				//!< Memory fence as spin lock.
 
 
 			//////////////////////////////////////
@@ -104,8 +104,8 @@ namespace eve
 
 
 		public:
-			/** \brief Copy event(s) from a target \p_queue. */
-			void copyEvents(const TQueue<TEvt> & p_ref);
+			/** \brief Copy content from a target \p_queue. */
+			void copy(const TQueue<TEvt> & p_ref);
 
 		}; // class TEvent
 
@@ -195,7 +195,7 @@ inline void eve::evt::TQueue<TEvt>::swap(void)
 
 //=================================================================================================
 template <class TEvt>
-inline void eve::evt::TQueue<TEvt>::copyEvents(const TQueue<TEvt> & p_ref)
+inline void eve::evt::TQueue<TEvt>::copy(const TQueue<TEvt> & p_ref)
 {
 	m_pFence->lock();
 

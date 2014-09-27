@@ -79,8 +79,11 @@ namespace eve
 			/** \brief Called once after the work is done. Usually used to release used data.. (pure virtual) */
 			virtual void afterWork(void) = 0;
 
-			/** \brief Main schedule work method. (pure virtual) */
-			virtual void work(void) = 0;
+			/** 
+			* \brief Main schedule work method. (pure virtual) 
+			* \return false to exit work loop.
+			*/
+			virtual bool work(void) = 0;
 
 		}; // Class Worker
 
