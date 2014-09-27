@@ -119,7 +119,7 @@ void eve::thr::ThreadedWork::run(void)
 	while (!m_pWorkers->empty())
 	{
 		// Grab next worker.
-		m_pFence->lock();		
+		m_pFence->lock();
 		eve::thr::Worker * worker = m_pWorkers->front();
 		m_pWorkers->pop_front();
 		m_pFence->unlock();

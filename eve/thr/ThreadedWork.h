@@ -38,6 +38,9 @@
 #include "eve/thr/Thread.h"
 #endif 
 
+#ifndef __EVE_EVT_TCALLBACK_H__
+#include "eve/evt/TCallback.h"
+#endif
 
 namespace eve{ namespace thr{ class Worker; } }
 
@@ -46,7 +49,6 @@ namespace eve
 {
 	namespace thr
 	{
-		class SpinLock;
 
 		/**
 		* \class eve::thr::ThreadedWork
@@ -68,7 +70,7 @@ namespace eve
 			//				DATA				//
 			//////////////////////////////////////
 
-		private:
+		protected:
 			std::deque<eve::thr::Worker *> *	m_pWorkers;			//!< Workers FIFO queue.
 
 
@@ -80,12 +82,12 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(ThreadedWork)
 
 
-		private:
+		protected:
 			/** \brief Class constructor.	*/
 			ThreadedWork(void);
 
 
-		private:
+		protected:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
@@ -99,7 +101,7 @@ namespace eve
 			void addPriorityWorker(eve::thr::Worker * p_pWorker);
 
 
-		private:
+		protected:
 			/**
 			* \brief Run is the main loop for this thread. (pure virtual)
 			* Usually this is called by Start(), but may be called directly for single-threaded applications.

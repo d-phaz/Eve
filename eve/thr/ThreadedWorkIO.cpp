@@ -29,63 +29,48 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_THREADING_THREAD_DUMMY_H__
-#define __EVE_THREADING_THREAD_DUMMY_H__
+// Main header
+#include "eve/thr/ThreadedWorkIO.h"
 
 
-#ifndef __EVE_THREADING_THREAD_H__
-#include "eve/thr/Thread.h"
-#endif 
+//=================================================================================================
+eve::thr::ThreadedWorkIO::ThreadedWorkIO(eve::thr::ThreadedWorkCallback * p_cbStart, eve::thr::ThreadedWorkCallback * p_cbExit)
 
-namespace eve
+	// Inheritance
+	: eve::thr::ThreadedWork()
+
+	// Members init
+	, m_cbStart(p_cbStart)
+	, m_cbExit(p_cbExit)
 {
-	namespace thr
-	{
-
-		/**
-		* \class eve::thr::ThreadDummy
-		*
-		* \brief This class is used for testing purpose only.
-		*
-		* \note extends thr::Thread
-		*/
-		class ThreadDummy final
-			: public eve::thr::Thread
-		{
-
-			friend class eve::mem::Pointer;
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(ThreadDummy)
-			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
-
-		private:
-			/** \brief Class constructor. */
-			ThreadDummy(void);
+	EVE_ASSERT(m_cbStart);
+	EVE_ASSERT(m_cbExit);
+}
 
 
-		private:
-			/** \brief Alloc and init threaded data. (pure virtual) */
-			virtual void initThreadedData(void) override;
-			/** \brief Release and delete threaded data. (pure virtual) */
-			virtual void releaseThreadedData(void) override;
+
+//=================================================================================================
+void eve::thr::ThreadedWorkIO::releaseThreadedData(void)
+{
+	// Release callbacks
+	EVE_RELEASE_PTR_CPP(m_cbStart);
+	EVE_RELEASE_PTR_CPP(m_cbExit);
+
+	// Call parent class
+	eve::thr::ThreadedWork::releaseThreadedData();
+}
 
 
-		private:
-			/**
-			* \brief Run is the main loop for this thread. (pure virtual)
-			* Usually this is called by Start(), but may be called directly for single-threaded applications.
-			*/
-			virtual void run(void) override;
 
-		}; // class ThreadDummy
+//=================================================================================================
+void eve::thr::ThreadedWorkIO::run(void)
+{
+	// Start callback.
+	m_cbStart->execute(this);
+	
+	// Call parent class
+	eve::thr::ThreadedWork::run();
 
-	} // namespace thr
-
-} // namespace eve
-
-#endif // __EVE_THREADING_THREAD_DUMMY_H__
+	// Exit callback.
+	m_cbExit->execute(this);
+}

@@ -30,47 +30,75 @@
 */
 
 #pragma once
-#ifndef __EVE_THREADING_THREAD_DUMMY_H__
-#define __EVE_THREADING_THREAD_DUMMY_H__
+#ifndef __EVE_THREADING_THREADED_WORK_IO_H__
+#define __EVE_THREADING_THREADED_WORK_IO_H__
 
 
-#ifndef __EVE_THREADING_THREAD_H__
-#include "eve/thr/Thread.h"
+#ifndef __EVE_THREADING_THREADED_WORK_H__
+#include "eve/thr/ThreadedWork.h"
 #endif 
+
 
 namespace eve
 {
 	namespace thr
 	{
 
+		//////////////////////////////////////
+		//				TYPES				//
+		//////////////////////////////////////
+
+		/** \brief convenience callback type definition. */
+		typedef eve::evt::ClassCallback1<ThreadedWork, void, ThreadedWork*> ThreadedWorkCallback;
+
 		/**
-		* \class eve::thr::ThreadDummy
+		* \class eve::thr::ThreadedWorkIO
 		*
-		* \brief This class is used for testing purpose only.
+		* \brief Thread using workers.
+		* Stock workers in a FIFO queue.
+		* Switch to next worker right after previous one completion.
+		* Worker is released right after its work completion.
+		* Start and exit callbacks are used by thread pool(s) to manage active / sleeping status.
 		*
 		* \note extends thr::Thread
 		*/
-		class ThreadDummy final
-			: public eve::thr::Thread
+		class ThreadedWorkIO final
+			: public eve::thr::ThreadedWork
 		{
 
 			friend class eve::mem::Pointer;
+
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		private:
+			eve::thr::ThreadedWorkCallback  *		m_cbStart;			//!< Callback called at startup.
+			eve::thr::ThreadedWorkCallback  *		m_cbExit;			//!< Callback called at run exit.
+
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(ThreadDummy)
-			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
+			EVE_DISABLE_COPY(ThreadedWorkIO);
+			EVE_PROTECT_DESTRUCTOR(ThreadedWorkIO);
 
-		private:
+		public:
+			/**
+			* \brief Create and return new pointer.
+			* \param p_handle linked system window handle.
+			*/
+			static ThreadedWorkIO * create_ptr(eve::thr::ThreadedWorkCallback * p_cbStart, eve::thr::ThreadedWorkCallback * p_cbExit);
+
+
+		protected:
 			/** \brief Class constructor. */
-			ThreadDummy(void);
+			ThreadedWorkIO(eve::thr::ThreadedWorkCallback * p_cbStart, eve::thr::ThreadedWorkCallback * p_cbExit);
 
 
 		private:
-			/** \brief Alloc and init threaded data. (pure virtual) */
-			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
 
@@ -88,4 +116,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_THREADING_THREAD_DUMMY_H__
+#endif // __EVE_THREADING_THREADED_WORK_IO_H__

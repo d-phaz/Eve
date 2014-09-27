@@ -30,13 +30,26 @@
 */
 
 #pragma once
-#ifndef __EVE_THREADING_THREAD_DUMMY_H__
-#define __EVE_THREADING_THREAD_DUMMY_H__
+#ifndef __EVE_THREADING_THREAD_POOL_H__
+#define __EVE_THREADING_THREAD_POOL_H__
 
 
-#ifndef __EVE_THREADING_THREAD_H__
-#include "eve/thr/Thread.h"
-#endif 
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
+
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
+
+namespace eve{ namespace thr{ class ThreadedWork;	} }
+namespace eve{ namespace thr{ class Worker;			} }
+
 
 namespace eve
 {
@@ -44,43 +57,59 @@ namespace eve
 	{
 
 		/**
-		* \class eve::thr::ThreadDummy
+		* \class eve::thr::ThreadPool
 		*
-		* \brief This class is used for testing purpose only.
+		* \brief Thread pool using threaded works (tasks).
+		* Create thread and schedule task.
 		*
-		* \note extends thr::Thread
+		* \note extends mem::Pointer
 		*/
-		class ThreadDummy final
-			: public eve::thr::Thread
+		class ThreadPool final
+			: public eve::mem::Pointer
 		{
 
 			friend class eve::mem::Pointer;
 
 			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		private:
+			std::deque<eve::thr::Worker *> *	m_pWorkers;			//!< Workers FIFO queue.
+
+
+			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(ThreadDummy)
-			EVE_PROTECT_DESTRUCTOR(ThreadDummy)
+			EVE_DISABLE_COPY(ThreadPool);
+			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(ThreadPool);
 
-		private:
-			/** \brief Class constructor. */
-			ThreadDummy(void);
-
-
-		private:
-			/** \brief Alloc and init threaded data. (pure virtual) */
-			virtual void initThreadedData(void) override;
-			/** \brief Release and delete threaded data. (pure virtual) */
-			virtual void releaseThreadedData(void) override;
-
-
-		private:
+		public:
 			/**
-			* \brief Run is the main loop for this thread. (pure virtual)
-			* Usually this is called by Start(), but may be called directly for single-threaded applications.
+			* \brief Create and return new pointer.
+			* \param p_numThread amount of created thread(s).
 			*/
-			virtual void run(void) override;
+			static ThreadPool * create_ptr(size_t p_numThread);
+
+
+		private:
+			/** \brief Class constructor.	*/
+			ThreadPool(size_t p_numThread);
+
+
+		private:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members. (pure virtual) */
+			virtual void release(void) override;
+
+
+		public:
+			/** \brief Add worker and return immediately. */
+			void addWorker(eve::thr::Worker * p_pWorker);
+			/** \brief Add worker so that it will be the next one used and return immediately. */
+			void addPriorityWorker(eve::thr::Worker * p_pWorker);
 
 		}; // class ThreadDummy
 
@@ -88,4 +117,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_THREADING_THREAD_DUMMY_H__
+#endif // __EVE_THREADING_THREAD_POOL_H__

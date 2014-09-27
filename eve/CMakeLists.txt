@@ -153,6 +153,10 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadDummy.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWork.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWork.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWorkIO.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWorkIO.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Worker.cpp
