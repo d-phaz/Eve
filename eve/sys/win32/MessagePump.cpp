@@ -123,5 +123,5 @@ LRESULT CALLBACK eve::sys::MessagePump::cb_wndProc(HWND p_hWnd, UINT p_uMsg, WPA
 //=================================================================================================
 std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-
+	return std::pair<LRESULT, bool>(0, false);
 }

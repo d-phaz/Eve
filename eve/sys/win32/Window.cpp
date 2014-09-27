@@ -92,7 +92,7 @@ void eve::sys::Window::init(void)
 	m_windowedRect.top		= m_y;
 	m_windowedRect.bottom	= m_y + m_height;
 
-	// Generate per-instance unique classname string
+	// Generate per-instance unique classname
 	wchar_t classname[sizeof(eve::sys::Window*) * 2 + 2]; // we add 2 chars to the window class name 
 	genClassNameStr(this, classname);
 
@@ -100,7 +100,7 @@ void eve::sys::Window::init(void)
 	m_hinstance = ::GetModuleHandleW(0);
 	if (!m_hinstance) 
 	{
-		EVE_LOG_ERROR("Could not get system module handle: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR( "Could not get system module handle: %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -180,9 +180,7 @@ void eve::sys::Window::release(void)
 	// Destroy system window.
 	if (!::DestroyWindow(m_handle))
 	{
-		std::string err = "Can't destroy window: ";
-		err += eve::mess::get_error_msg();
-		EVE_LOG_ERROR("DestroyWindow() failed with error %s.", err.c_str());
+		EVE_LOG_ERROR("DestroyWindow() failed with error %s.", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 

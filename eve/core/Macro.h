@@ -94,4 +94,18 @@ protected:											\
 #endif
 
 
+/** 
+* \def EVE_TXT
+* \brief Convenience macro to use text as ANSI or UNICODE
+*/
+#if defined(UNICODE) || defined(_UNICODE)
+#define EVE_TXT(txt)	L##txt
+#else
+#define EVE_TXT(txt)	txt
+#endif
+
+/** \brief Convenience macro to enforce UNICODE on system provided macro such as __FILE__ or __FUNCTION__. */
+#define  EVE_TXT_ENFORCE(txt)	EVE_TXT(txt)
+
+
 #endif // __EVE_CORE_MACRO_H__

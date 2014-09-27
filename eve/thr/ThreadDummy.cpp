@@ -67,9 +67,8 @@ void eve::thr::ThreadDummy::run(void)
 	{
 		m_pFence->lock();
 
-		printf("thread: %i value: %i\n", id, i);
-		++i;
-
+		EVE_LOG_INFO("thread: %i value: %i\n", id, ++i);
+		
 		m_pFence->unlock();
 	}
 }

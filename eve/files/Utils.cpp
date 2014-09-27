@@ -35,22 +35,22 @@
 
 
 //=================================================================================================
-std::string eve::files::normalizePath(const std::string & p_path)
+std::wstring eve::files::normalizePath(const std::wstring & p_path)
 {
-	std::string str(p_path);
+	std::wstring str(p_path);
 
 #if defined(EVE_OS_WIN)
 	size_t inc = 0;
 	for (size_t i = 0; i < p_path.length(); i++)
 	{
-		if (p_path.at(i) == '\\')
+		if (p_path.at(i) == EVE_TXT('\\'))
 		{
-			str.insert(i + inc, "\\");
+			str.insert(i + inc, EVE_TXT("\\"));
 			inc++;
 		}
-		else if (p_path.at(i) == '/')
+		else if (p_path.at(i) == EVE_TXT('/'))
 		{
-			str.replace(i + inc, 1, "\\");
+			str.replace(i + inc, 1, EVE_TXT("\\"));
 		}
 	}
 #endif
@@ -61,12 +61,12 @@ std::string eve::files::normalizePath(const std::string & p_path)
 
 
 //=================================================================================================
-bool eve::files::exists(const std::string & p_path)
+bool eve::files::exists(const std::wstring & p_path)
 {
 	bool bret = false;
 
 	// Try to open file
-	FILE * file = fopen(p_path.c_str(), "r");
+	FILE * file = _wfopen(p_path.c_str(), EVE_TXT("r"));
 	// File exists
 	if (file)
 	{
@@ -82,7 +82,7 @@ bool eve::files::exists(const std::string & p_path)
 
 
 //=================================================================================================
-bool eve::files::copy(const std::string & p_pathSource, const std::string & p_pathDestination)
+bool eve::files::copy(const std::wstring & p_pathSource, const std::wstring & p_pathDestination)
 {
 	bool bret = false;
 
@@ -102,12 +102,12 @@ bool eve::files::copy(const std::string & p_pathSource, const std::string & p_pa
 
 
 //=================================================================================================
-std::string eve::files::remove_file_name(const std::string & p_path)
+std::wstring eve::files::remove_file_name(const std::wstring & p_path)
 {
-	std::string str = std::string(p_path);
+	std::wstring str = std::wstring(p_path);
 
-	const size_t last_slash_idx = str.find_last_of("\\/");
-	if (std::string::npos != last_slash_idx)
+	const size_t last_slash_idx = str.find_last_of(EVE_TXT("\\/"));
+	if (std::wstring::npos != last_slash_idx)
 	{
 		const size_t length = str.length();
 		str.erase(last_slash_idx + 1, length);
@@ -117,12 +117,12 @@ std::string eve::files::remove_file_name(const std::string & p_path)
 }
 
 //=================================================================================================
-std::string eve::files::remove_extension(const std::string & p_name)
+std::wstring eve::files::remove_extension(const std::wstring & p_name)
 {
-	std::string str = std::string(p_name);
+	std::wstring str = std::wstring(p_name);
 
-	const size_t last_dot_idx = str.find_last_of(".");
-	if (std::string::npos != last_dot_idx)
+	const size_t last_dot_idx = str.find_last_of(EVE_TXT("."));
+	if (std::wstring::npos != last_dot_idx)
 	{
 		const size_t length = str.length();
 		str.erase(last_dot_idx, length);
@@ -132,12 +132,12 @@ std::string eve::files::remove_extension(const std::string & p_name)
 }
 
 //=================================================================================================
-std::string eve::files::get_file_name(const std::string & p_path)
+std::wstring eve::files::get_file_name(const std::wstring & p_path)
 {
-	std::string str = std::string(p_path);
+	std::wstring str = std::wstring(p_path);
 
-	const size_t last_slash_idx = str.find_last_of("\\/");
-	if (std::string::npos != last_slash_idx)
+	const size_t last_slash_idx = str.find_last_of(EVE_TXT("\\/"));
+	if (std::wstring::npos != last_slash_idx)
 	{
 		str.erase(0, last_slash_idx + 1);
 	}
@@ -148,7 +148,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 
 
 ////-------------------------------------------------------------------------------------------
-//COMDLG_FILTERSPEC extensionsToFileterSpec(std::pair<std::vector<std::string>, std::string> p_extensions)
+//COMDLG_FILTERSPEC extensionsToFileterSpec(std::pair<std::vector<std::wstring>, std::wstring> p_extensions)
 //{
 //	wchar_t extensionName[10000];
 //	wchar_t extensionSpec[10000];
@@ -170,7 +170,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //		delete temp;
 //
-//		for (std::vector<std::string>::const_iterator strIt = p_extensions.first.begin(); strIt != p_extensions.first.end(); ++strIt)
+//		for (std::vector<std::wstring>::const_iterator strIt = p_extensions.first.begin(); strIt != p_extensions.first.end(); ++strIt)
 //		{
 //			// Extension
 //			wchar_t * ext = toUnicode(strIt->c_str());
@@ -227,7 +227,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////-------------------------------------------------------------------------------------------
-//std::pair<std::string, std::string> getOpenFilePath(std::pair<std::vector<std::string>, std::string> p_extensions, const std::string & p_targetPath)
+//std::pair<std::wstring, std::wstring> getOpenFilePath(std::pair<std::vector<std::wstring>, std::wstring> p_extensions, const std::wstring & p_targetPath)
 //{
 //	LPWSTR szFilePath;
 //	// Grab target path
@@ -244,7 +244,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //	}
 //
 //	// Return value
-//	std::pair<std::string, std::string> fileInfo = std::pair<std::string, std::string>(std::string(), std::string());
+//	std::pair<std::wstring, std::wstring> fileInfo = std::pair<std::wstring, std::wstring>(std::wstring(), std::wstring());
 //
 //	// Create the File Open Dialog object.
 //	IFileDialog *pfd = NULL;
@@ -303,17 +303,17 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //							{
 //								// Grab file path
 //								NATIVE_char8_t * path = toWideChar(pszFilePath);
-//								std::string filePath = std::string(path);
+//								std::wstring filePath = std::wstring(path);
 //								// Free file path
 //								CoTaskMemFree(pszFilePath);
 //								delete path;
 //
 //								// Grab file name
-//								std::string filename = getFileNameFromPath(filePath);
+//								std::wstring filename = getFileNameFromPath(filePath);
 //
 //								// Return value
-//								fileInfo.first = std::string(filePath);
-//								fileInfo.second = std::string(filename);
+//								fileInfo.first = std::wstring(filePath);
+//								fileInfo.second = std::wstring(filename);
 //							}
 //							psiResult->Release();
 //						}
@@ -336,7 +336,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////=============================================================================================
-//void openDropBrowser(std::pair<std::vector<std::string>, std::string> p_extensions, const std::string & p_targetPath)
+//void openDropBrowser(std::pair<std::vector<std::wstring>, std::wstring> p_extensions, const std::wstring & p_targetPath)
 //{
 //	wchar_t * dir = toUnicode(p_targetPath.c_str());
 //
@@ -348,7 +348,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////-------------------------------------------------------------------------------------------
-//std::pair<std::string, std::string> getSaveFilePath(std::pair<std::vector<std::string>, std::string> p_extensions, const std::string & p_targetPath)
+//std::pair<std::wstring, std::wstring> getSaveFilePath(std::pair<std::vector<std::wstring>, std::wstring> p_extensions, const std::wstring & p_targetPath)
 //{
 //	// Grab target path
 //	IShellItem * pItemFolder = NULL;
@@ -364,7 +364,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //	}
 //
 //	// Return value
-//	std::pair<std::string, std::string> fileInfo = std::pair<std::string, std::string>(std::string(), std::string());
+//	std::pair<std::wstring, std::wstring> fileInfo = std::pair<std::wstring, std::wstring>(std::wstring(), std::wstring());
 //
 //	// Create the File Open Dialog object.
 //	IFileDialog *pfd = NULL;
@@ -422,10 +422,10 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //							{
 //								// Grab file path
 //								NATIVE_char8_t * path = toWideChar(pszFilePath);
-//								std::string pathStr = std::string(path);
-//								std::string filePath;
-//								std::string extension = "." + p_extensions.first.at(0);
-//								if (pathStr.find(extension) == std::string::npos)
+//								std::wstring pathStr = std::wstring(path);
+//								std::wstring filePath;
+//								std::wstring extension = "." + p_extensions.first.at(0);
+//								if (pathStr.find(extension) == std::wstring::npos)
 //									filePath = pathStr + extension; // have to get extension here cause dialog box display name doesn't return it :/
 //								else
 //									filePath = pathStr;
@@ -434,11 +434,11 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //								delete path;
 //
 //								// Grab file name
-//								std::string filename = getFileNameFromPath(filePath);
+//								std::wstring filename = getFileNameFromPath(filePath);
 //
 //								// Return value
-//								fileInfo.first = std::string(filePath);
-//								fileInfo.second = std::string(filename);
+//								fileInfo.first = std::wstring(filePath);
+//								fileInfo.second = std::wstring(filename);
 //							}
 //							psiResult->Release();
 //						}
@@ -459,7 +459,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////-------------------------------------------------------------------------------------------
-//std::string getOpenFolderPath(const std::string & p_targetPath)
+//std::wstring getOpenFolderPath(const std::wstring & p_targetPath)
 //{
 //	// Grab target path
 //	IShellItem * pItemFolder = NULL;
@@ -475,7 +475,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //	}
 //
 //	// Return value
-//	std::string String_Return = "";
+//	std::wstring String_Return = "";
 //
 //	// Create the File Open Dialog object.
 //	IFileOpenDialog *pfd = NULL;
@@ -523,7 +523,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //						{
 //							// Grab folder path
 //							NATIVE_char8_t * path = toWideChar(pszFilePath);
-//							String_Return = std::string(path);
+//							String_Return = std::wstring(path);
 //							// Free file path
 //							::CoTaskMemFree(pszFilePath);
 //							delete path;
@@ -546,10 +546,10 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////---------------------------------------------------------------------------------------------
-//std::vector<std::string> listDirectoryFiles(const std::string & p_pathDirectory)
+//std::vector<std::wstring> listDirectoryFiles(const std::wstring & p_pathDirectory)
 //{
 //	// Return vector
-//	std::vector<std::string> Vec_Return;
+//	std::vector<std::wstring> Vec_Return;
 //
 //
 //	WIN32_FIND_DATA ffd;
@@ -569,8 +569,8 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //	}
 //
 //
-//	// Prepare string for use with FindFile functions.  First, copy the
-//	// string to a buffer, then append '\*' to the directory name
+//	// Prepare wstring for use with FindFile functions.  First, copy the
+//	// wstring to a buffer, then append '\*' to the directory name
 //	wchar_t * wpathDirectory = toUnicode(p_pathDirectory.c_str());
 //	wcscpy(szDir, wpathDirectory);
 //	wcscat(szDir, NATIVE_TEXT_UNICODE("\\*"));
@@ -588,7 +588,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //	do
 //	{
 //		NATIVE_char8_t * wcFileName = toWideChar(ffd.cFileName);
-//		Vec_Return.push_back(std::string(wcFileName));
+//		Vec_Return.push_back(std::wstring(wcFileName));
 //		delete wcFileName;
 //	} while (::FindNextFileW(hFind, &ffd) != 0);
 //
@@ -610,9 +610,9 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////---------------------------------------------------------------------------------------------
-//std::string getPathLocalDedicated(void)
+//std::wstring getPathLocalDedicated(void)
 //{
-//	std::string path = getPathLocal();
+//	std::wstring path = getPathLocal();
 //
 //	// Local dir found
 //	if (path.length() > 1)
@@ -621,7 +621,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		path += NATIVE_LOCAL_PATH_DEDICATED;
 //
 //		// Test directory
-//		std::string testPath = std::string(path);
+//		std::wstring testPath = std::wstring(path);
 //		testPath += NATIVE_LOCAL_DIR_DEDICATED;
 //		FILE * file = fopen(testPath.c_str(), "w+");
 //
@@ -650,9 +650,9 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////=============================================================================================
-//std::string getPathDesktop(void)
+//std::wstring getPathDesktop(void)
 //{
-//	static std::string path = "";
+//	static std::wstring path = "";
 //
 //	if (path.length() < 1)
 //	{
@@ -661,7 +661,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		if (::SHGetKnownFolderPath(FOLDERID_Desktop, 0/*KF_FLAG_NO_ALIAS | KF_FLAG_DONT_UNEXPAND*/, NULL, &my_path) == S_OK)
 //		{
 //			std::wstring ws(my_path);
-//			path = std::string(ws.begin(), ws.end());
+//			path = std::wstring(ws.begin(), ws.end());
 //		}
 //		else
 //			native_error_msg("native_system::getPathDesktop", "unable to retrieve desktop path. \n");
@@ -676,9 +676,9 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////---------------------------------------------------------------------------------------------
-//std::string getPathLogDedicated(void)
+//std::wstring getPathLogDedicated(void)
 //{
-//	std::string path = getPathLocalDedicated();
+//	std::wstring path = getPathLocalDedicated();
 //
 //	// Local dir found
 //	if (path.length() > 1)
@@ -687,7 +687,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		path += "\\log\\";
 //
 //		// Test directory
-//		std::string testPath = std::string(path);
+//		std::wstring testPath = std::wstring(path);
 //		testPath += NATIVE_LOCAL_DIR_DEDICATED;
 //		FILE * file = fopen(testPath.c_str(), "w+");
 //
@@ -713,9 +713,9 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //	return path;
 //}
 //
-//std::string getPathPresetDedicated(void)
+//std::wstring getPathPresetDedicated(void)
 //{
-//	std::string path = getPathLocalDedicated();
+//	std::wstring path = getPathLocalDedicated();
 //
 //	// Local dir found
 //	if (path.length() > 1)
@@ -724,7 +724,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		path += "\\preset\\";
 //
 //		// Test directory
-//		std::string testPath = std::string(path);
+//		std::wstring testPath = std::wstring(path);
 //		testPath += NATIVE_LOCAL_DIR_DEDICATED;
 //		FILE * file = fopen(testPath.c_str(), "w+");
 //
@@ -751,9 +751,9 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //}
 //
 ////---------------------------------------------------------------------------------------------
-//std::string getPathDocuments(void)
+//std::wstring getPathDocuments(void)
 //{
-//	static std::string path = "";
+//	static std::wstring path = "";
 //
 //	if (path.length() < 1)
 //	{
@@ -762,7 +762,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		if (::SHGetKnownFolderPath(FOLDERID_Documents, 0/*KF_FLAG_NO_ALIAS | KF_FLAG_DONT_UNEXPAND*/, NULL, &my_path) == S_OK)
 //		{
 //			std::wstring ws(my_path);
-//			path = std::string(ws.begin(), ws.end());
+//			path = std::wstring(ws.begin(), ws.end());
 //		}
 //		else
 //			native_error_msg("native_system::getPathDocuments", "unable to retrieve documents path. \n");
@@ -777,14 +777,14 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////---------------------------------------------------------------------------------------------
-//std::string getPathRoaming(void)
+//std::wstring getPathRoaming(void)
 //{
 //	// This has benn normalized cause of OSX, we added "\\MWM\\" to local path retrieve, 
 //	// this need to be normalized in this file !!! otherwise we'll have to run threw every file of code 
 //	// calling this method !!!
 //	NATIVE_ASSERT(0);
 //
-//	static std::string path = "";
+//	static std::wstring path = "";
 //
 //	if (path.length() < 1)
 //	{
@@ -793,7 +793,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		if (::SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0/*KF_FLAG_NO_ALIAS | KF_FLAG_DONT_UNEXPAND*/, NULL, &my_path) == S_OK)
 //		{
 //			std::wstring ws(my_path);
-//			path = std::string(ws.begin(), ws.end());
+//			path = std::wstring(ws.begin(), ws.end());
 //		}
 //		else
 //			native_error_msg("native_system::getPathRoaming", "unable to retrieve roaming path. \n");
@@ -808,9 +808,9 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////---------------------------------------------------------------------------------------------
-//std::string getPathLocal(void)
+//std::wstring getPathLocal(void)
 //{
-//	static std::string path = "";
+//	static std::wstring path = "";
 //
 //	if (path.length() < 1)
 //	{
@@ -819,7 +819,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //		if (::SHGetKnownFolderPath(FOLDERID_LocalAppData, 0/*KF_FLAG_NO_ALIAS | KF_FLAG_DONT_UNEXPAND*/, NULL, &my_path) == S_OK)
 //		{
 //			std::wstring ws(my_path);
-//			path = std::string(ws.begin(), ws.end());
+//			path = std::wstring(ws.begin(), ws.end());
 //		}
 //		else
 //			native_error_msg("native_system::getPathLocal", "unable to retrieve local path. \n");
@@ -834,7 +834,7 @@ std::string eve::files::get_file_name(const std::string & p_path)
 //
 //
 ////------------------------------------------------------------------------------------------------
-//bool createDirectory(const std::string & p_path)
+//bool createDirectory(const std::wstring & p_path)
 //{
 //	wchar_t * wpath = toUnicode(p_path.c_str());
 //	BOOL bReturn = ::CreateDirectoryW(wpath, NULL);

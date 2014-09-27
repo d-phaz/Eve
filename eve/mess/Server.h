@@ -63,7 +63,7 @@ namespace eve
 			friend class eve::mem::Pointer;
 
 		public:
-			typedef void(*handlerMethod)(const char *funcName, const char *format, ...);
+			typedef void(*handlerMethod)(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 
 
 			//////////////////////////////////////
@@ -96,7 +96,7 @@ namespace eve
 
 		public:
 			/** \brief Create unique instance. */
-			static Server * create_instance(const std::string & p_logFilePath="");
+			static Server * create_instance(const std::wstring & p_logFilePath=EVE_TXT(""));
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
@@ -114,27 +114,32 @@ namespace eve
 
 
 		private:
+			/** \brief Format message to log. */
+			static std::wstring format_message(const wchar_t * ptitle, const wchar_t * p_funcName, const wchar_t *p_format);
+
+
+		private:
 			/** \brief Default error log method (in console). */
-			static void default_log_error(const char *funcName, const char *format, ...);
+			static void default_log_error(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default info log method (in console). */
-			static void default_log_info(const char *funcName, const char *format, ...);
+			static void default_log_info(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default warning log method (in console). */
-			static void default_log_warning(const char *funcName, const char *format, ...);
+			static void default_log_warning(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default progress log method (in console). */
-			static void default_log_progress(const char *funcName, const char *format, ...);
+			static void default_log_progress(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default debug log method (in console). */
-			static void default_log_debug(const char *funcName, const char *format, ...);
+			static void default_log_debug(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 
 			/** \brief Default in file error log method. */
-			static void default_log_in_file_error(const char *funcName, const char *format, ...);
+			static void default_log_in_file_error(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default in file info log method. */
-			static void default_log_in_file_info(const char *funcName, const char *format, ...);
+			static void default_log_in_file_info(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default in file warning log method. */
-			static void default_log_in_file_warning(const char *funcName, const char *format, ...);
+			static void default_log_in_file_warning(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default in file progress log method. */
-			static void default_log_in_file_progress(const char *funcName, const char *format, ...);
+			static void default_log_in_file_progress(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 			/** \brief Default in file debug log method. */
-			static void default_log_in_file_debug(const char *funcName, const char *format, ...);
+			static void default_log_in_file_debug(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -186,17 +191,17 @@ namespace eve
 			static void set_msg_stream(FILE * p_pFile);
 
 			/** \brief Redirect the error messages to target file path \p_path. */
-			static bool set_error_stream_path(const std::string & p_path);
+			static bool set_error_stream_path(const std::wstring & p_path);
 			/** \brief Redirect the warning messages to target file path \p_path. */
-			static bool set_warning_stream_path(const std::string & p_path);
+			static bool set_warning_stream_path(const std::wstring & p_path);
 			/** \brief Redirect the info messages to target file path \p_path. */
-			static bool set_info_stream_path(const std::string & p_path);
+			static bool set_info_stream_path(const std::wstring & p_path);
 			/** \brief Redirect the progress messages to target file path \p_path. */
-			static bool set_progress_stream_path(const std::string & p_path);
+			static bool set_progress_stream_path(const std::wstring & p_path);
 			/** \brief Redirect the debug messages to target file path \p_path. */
-			static bool set_debug_stream_path(const std::string & p_path);
+			static bool set_debug_stream_path(const std::wstring & p_path);
 			/** \brief Redirect all the messages target file path \p_path. */
-			static bool set_msg_stream_path(const std::string & p_path);
+			static bool set_msg_stream_path(const std::wstring & p_path);
 
 			/** \brief Get the current (FILE*) error stream. */
 			static FILE * get_error_stream(void);
@@ -217,11 +222,11 @@ namespace eve
 
 
 //=================================================================================================
-inline void eve::mess::Server::set_error_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerError		= p_method; 	m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_error_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerError	= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_warning_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerWarning	= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_info_handler(handlerMethod p_method)			{ m_p_mutex->lock(); m_p_server->m_pHandlerInfo		= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_progress_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerProgress = p_method;		m_p_mutex->unlock(); }
-inline void eve::mess::Server::set_debug_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerDebug		= p_method; 	m_p_mutex->unlock(); }
+inline void eve::mess::Server::set_debug_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerDebug	= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_msg_handler(handlerMethod p_method)
 {
 	m_p_mutex->lock();
@@ -236,8 +241,8 @@ inline void eve::mess::Server::set_msg_handler(handlerMethod p_method)
 //=================================================================================================
 inline eve::mess::Server::handlerMethod eve::mess::Server::get_error_handler(void)			{ return m_p_server->m_pHandlerError;		}
 inline eve::mess::Server::handlerMethod eve::mess::Server::get_warning_handler(void)		{ return m_p_server->m_pHandlerWarning;		}
-inline eve::mess::Server::handlerMethod eve::mess::Server::get_info_handler(void)			{ return m_p_server->m_pHandlerInfo;			}
-inline eve::mess::Server::handlerMethod eve::mess::Server::get_progress_handler(void)		{ return m_p_server->m_pHandlerProgress;		}
+inline eve::mess::Server::handlerMethod eve::mess::Server::get_info_handler(void)			{ return m_p_server->m_pHandlerInfo;		}
+inline eve::mess::Server::handlerMethod eve::mess::Server::get_progress_handler(void)		{ return m_p_server->m_pHandlerProgress;	}
 inline eve::mess::Server::handlerMethod eve::mess::Server::get_debug_handler(void)			{ return m_p_server->m_pHandlerDebug;		}
 
 
@@ -260,18 +265,18 @@ inline void eve::mess::Server::set_msg_stream(FILE * p_pFile)
 }
 
 //=================================================================================================
-inline FILE * eve::mess::Server::get_error_stream(void)			{ return m_p_server->m_pStreamError;			}
+inline FILE * eve::mess::Server::get_error_stream(void)			{ return m_p_server->m_pStreamError;		}
 inline FILE * eve::mess::Server::get_warning_stream(void)		{ return m_p_server->m_pStreamWarning;		}
 inline FILE * eve::mess::Server::get_info_stream(void)			{ return m_p_server->m_pStreamInfo;			}
 inline FILE * eve::mess::Server::get_progress_stream(void)		{ return m_p_server->m_pStreamProgress;		}
-inline FILE * eve::mess::Server::get_debug_stream(void)			{ return m_p_server->m_pStreamDebug;			}
+inline FILE * eve::mess::Server::get_debug_stream(void)			{ return m_p_server->m_pStreamDebug;		}
 
 
 
-#define EVE_LOG_ERROR(format, ...)		eve::mess::Server::get_error_handler()(__FUNCTION__, format, __VA_ARGS__);
-#define EVE_LOG_WARNING(format, ...)	eve::mess::Server::get_warning_handler()(__FUNCTION__, format, __VA_ARGS__);
-#define EVE_LOG_INFO(format, ...)		eve::mess::Server::get_info_handler()(__FUNCTION__, format, __VA_ARGS__);
-#define EVE_LOG_PROGRESS(format, ...)	eve::mess::Server::get_progress_handler()(__FUNCTION__, format, __VA_ARGS__);
-#define EVE_LOG_DEBUG(format, ...)		eve::mess::Server::get_debug_handler()(__FUNCTION__, format, __VA_ARGS__);
+#define EVE_LOG_ERROR(format, ...)		eve::mess::Server::get_error_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
+#define EVE_LOG_WARNING(format, ...)	eve::mess::Server::get_warning_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
+#define EVE_LOG_INFO(format, ...)		eve::mess::Server::get_info_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
+#define EVE_LOG_PROGRESS(format, ...)	eve::mess::Server::get_progress_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
+#define EVE_LOG_DEBUG(format, ...)		eve::mess::Server::get_debug_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
 
 #endif // __EVE_MESSAGING_SERVER_H__

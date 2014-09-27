@@ -3,6 +3,10 @@
 #ifndef __EVE_VERSION_H__
 #define __EVE_VERSION_H__
 
-#define EVE_VERSIONNAME "0.0.1"
+#ifndef __EVE_CORE_MACRO_H__
+#include "eve/core/Macro.h"
+#endif
+
+#define EVE_VERSIONNAME EVE_TXT("0.0.1")
 
 #endif 	// __VERSION_H__

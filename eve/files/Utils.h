@@ -42,125 +42,125 @@ namespace eve
 	namespace files
 	{
 		/** \brief normalize path to fit system requirements. */
-		std::string normalizePath(const std::string & p_path);
+		std::wstring normalizePath(const std::wstring & p_path);
 
 
 		/**
 		* \brief test file existence.
 		* \return true if file exists, false otherwise.
 		*/
-		bool exists(const std::string & p_path);
+		bool exists(const std::wstring & p_path);
 
 
 		/**
 		* \brief copy file from path \p_pathSource to path \p_pathDestination.
 		* \return true if file exists and copy was successful, false otherwise.
 		*/
-		bool copy(const std::string & p_pathSource, const std::string & p_pathDestination);
+		bool copy(const std::wstring & p_pathSource, const std::wstring & p_pathDestination);
 
 
 		/**
 		* \brief remove file name from path.
-		* \param p_path target path as std::string.
-		* \return new path as std::string.
+		* \param p_path target path as std::wstring.
+		* \return new path as std::wstring.
 		*/
-		std::string remove_file_name(const std::string & p_path);
+		std::wstring remove_file_name(const std::wstring & p_path);
 		/**
 		* \brief remove extension from file name.
-		* \param p_name target file name as std::string.
-		* \return new name as std::string.
+		* \param p_name target file name as std::wstring.
+		* \return new name as std::wstring.
 		*/
-		std::string remove_extension(const std::string & p_name);
+		std::wstring remove_extension(const std::wstring & p_name);
 		/**
 		* \brief get file name from path.
-		* \param p_path target path as std::string.
-		* \return file name as std::string.
+		* \param p_path target path as std::wstring.
+		* \return file name as std::wstring.
 		*/
-		std::string get_file_name(const std::string & p_path);
+		std::wstring get_file_name(const std::wstring & p_path);
 
 
 //#if defined(EVE_OS_WIN)
 //		/**
 //		* @brief convert extensions to filter spec
-//		* @param p_extensions taget extensions list as std::vector<std::string>
+//		* @param p_extensions taget extensions list as std::vector<std::wstring>
 //		* @return filter spec as COMDLG_FILTERSPEC
 //		*/
-//		COMDLG_FILTERSPEC extensionsToFileterSpec(std::pair<std::vector<std::string>, std::string> p_extensions);
+//		COMDLG_FILTERSPEC extensionsToFileterSpec(std::pair<std::vector<std::wstring>, std::wstring> p_extensions);
 //#endif //defined (NATIVE_OS_WIN32)
 //
 //
 //		/**
 //		* @brief open file
-//		* @param p_extensions taget extensions list as std::vector<std::string>
-//		* @param p_targetPath target path to start browsing as std::string (default to empty)
-//		* @return file path and file name as std::pair<std::string,std::string>
+//		* @param p_extensions taget extensions list as std::vector<std::wstring>
+//		* @param p_targetPath target path to start browsing as std::wstring (default to empty)
+//		* @return file path and file name as std::pair<std::wstring,std::wstring>
 //		* @note call folder browsing window
 //		*/
-//		std::string getOpenFilePath(const std::vector<std::string> & p_extensions, const std::string & p_targetPath = "");
+//		std::wstring getOpenFilePath(const std::vector<std::wstring> & p_extensions, const std::wstring & p_targetPath = "");
 //		/**
 //		* @brief open folder
-//		* @return folder path as std::string
-//		* @param p_targetPath target path to start browsing as std::string (default to empty)
+//		* @return folder path as std::wstring
+//		* @param p_targetPath target path to start browsing as std::wstring (default to empty)
 //		* @note call folder browsing window
 //		*/
-//		std::string getOpenFolderPath(const std::string & p_targetPath = "");
+//		std::wstring getOpenFolderPath(const std::wstring & p_targetPath = "");
 //		/**
 //		* @brief open file browser to easily drop files on GUI
-//		* @param p_extensions taget extensions list as std::vector<std::string>
-//		* @param p_targetPath target path to start browsing as std::string (default to empty)
+//		* @param p_extensions taget extensions list as std::vector<std::wstring>
+//		* @param p_targetPath target path to start browsing as std::wstring (default to empty)
 //		* @note call folder browsing window
 //		*/
-//		void openDropBrowser(const std::vector<std::string> & p_extensions, const std::string & p_targetPath = "");
+//		void openDropBrowser(const std::vector<std::wstring> & p_extensions, const std::wstring & p_targetPath = "");
 //		/**
 //		* @brief get save file path
-//		* @param p_extensions taget extensions list as std::vector<std::string>
-//		* @param p_targetPath target path to start browsing as std::string (default to empty)
-//		* @return file path and file name as std::pair<std::string,std::string>
+//		* @param p_extensions taget extensions list as std::vector<std::wstring>
+//		* @param p_targetPath target path to start browsing as std::wstring (default to empty)
+//		* @return file path and file name as std::pair<std::wstring,std::wstring>
 //		*/
-//		std::string getSaveFilePath(const std::vector<std::string> & p_extensions, const std::string & p_targetPath = "");
+//		std::wstring getSaveFilePath(const std::vector<std::wstring> & p_extensions, const std::wstring & p_targetPath = "");
 //
 //
 //		/**
 //		* @brief get the exe Path
-//		* @return executable path as std::string
+//		* @return executable path as std::wstring
 //		*/
-//		std::string ExePath(void);
+//		std::wstring ExePath(void);
 //
 //
 //		/**
 //		* @brief list target directory files
-//		* @param p_pathDirectory target directory path as std::string
-//		* @return files list as std::vector<std::string>
+//		* @param p_pathDirectory target directory path as std::wstring
+//		* @return files list as std::vector<std::wstring>
 //		*/
-//		std::vector<std::string> listDirectoryFiles(const std::string & p_pathDirectory);
+//		std::vector<std::wstring> listDirectoryFiles(const std::wstring & p_pathDirectory);
 //
 //
 //		/**
 //		* @brief get dedicated local directory, AppData/Local/mwm on windows
 //		* @note if directory doesn't exist it'll be created
-//		* @return directory path as std::string
+//		* @return directory path as std::wstring
 //		*/
-//		std::string getPathLocal(void);
+//		std::wstring getPathLocal(void);
 //		/**
 //		* @brief get documents path (user/Documents)
-//		* @return documents path as std::string
+//		* @return documents path as std::wstring
 //		*/
-//		std::string getPathDocuments(void);
+//		std::wstring getPathDocuments(void);
 //		/**
 //		* @brief get roaming path (AppData/Roaming)
-//		* @return roaming path as std::string
+//		* @return roaming path as std::wstring
 //		*/
-//		std::string getPathRoamingDedicated(void);
+//		std::wstring getPathRoamingDedicated(void);
 //		/**
 //		* @brief get local path (AppData/Local)
-//		* @return local path as std::string
+//		* @return local path as std::wstring
 //		*/
-//		std::string getPathLocalDedicated(void);
+//		std::wstring getPathLocalDedicated(void);
 //		/**
 //		* @brief get desktop path
-//		* @return path as std::string
+//		* @return path as std::wstring
 //		*/
-//		std::string getPathDesktop(void);
+//		std::wstring getPathDesktop(void);
 //
 //
 //		/**
@@ -168,7 +168,7 @@ namespace eve
 //		* @param p_path new directory path
 //		* @return true on success, false otherwise
 //		*/
-//		bool createDirectory(const std::string & p_path);
+//		bool createDirectory(const std::wstring & p_path);
 
 	} // namespace files
 

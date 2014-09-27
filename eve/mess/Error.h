@@ -48,11 +48,11 @@ namespace eve
 		 * \brief get Windows error message based on error code.
 		 * \param p_err error code.
 		 */
-		std::string get_error_msg(DWORD p_err);
+		std::wstring get_error_msg(DWORD p_err);
 		/**
 		* \brief get Windows error message using GetLastError().
 		*/
-		std::string get_error_msg(void);
+		std::wstring get_error_msg(void);
 #endif
 
 	} // namespace mess

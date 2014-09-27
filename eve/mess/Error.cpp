@@ -36,11 +36,11 @@
 #if defined(EVE_OS_WIN)
 
 	//=================================================================================================
-	std::string eve::mess::get_error_msg(DWORD p_err)
+	std::wstring eve::mess::get_error_msg(DWORD p_err)
 	{
-		std::string returnString;
+		std::wstring returnString;
 
-		char buffer[2048];
+		wchar_t buffer[2048];
 		try
 		{
 			DWORD len = 0;
@@ -53,27 +53,27 @@
 								   (LPWSTR)&msg, 0, NULL);
 			if (len > 0)
 			{
-				_snprintf(buffer, 2048, "error (%d): %s", p_err, msg);
+				_snwprintf(buffer, 2048, EVE_TXT("error (%d): %s"), p_err, msg);
 			}
 			else
 			{
-				_snprintf(buffer, 2048, "error code: %d.", p_err);
+				_snwprintf(buffer, 2048, EVE_TXT("error code: %d."), p_err);
 			}
 
-			returnString = std::string(buffer);
+			returnString = std::wstring(buffer);
 
 			if (msg) ::LocalFree(msg);
 
 		}
 		catch (...)
 		{
-			returnString = "Can't get Win32 error message";
+			returnString = EVE_TXT("Can't get Win32 error message");
 		}
 		return returnString;
 	}
 
 	//=================================================================================================
-	std::string eve::mess::get_error_msg(void)
+	std::wstring eve::mess::get_error_msg(void)
 	{
 		return eve::mess::get_error_msg(::GetLastError());
 	}
