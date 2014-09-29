@@ -38,18 +38,15 @@
 #include "eve/thr/ThreadedWork.h"
 #endif 
 
+#ifndef __EVE_THREADING_THREAD_POOL_H__
+#include "eve/thr/ThreadPool.h"
+#endif
+
 
 namespace eve
 {
 	namespace thr
 	{
-
-		//////////////////////////////////////
-		//				TYPES				//
-		//////////////////////////////////////
-
-		/** \brief convenience callback type definition. */
-		typedef eve::evt::ClassCallback1<ThreadedWork, void, ThreadedWork*> ThreadedWorkCallback;
 
 		/**
 		* \class eve::thr::ThreadedWorkIO
@@ -67,6 +64,14 @@ namespace eve
 		{
 
 			friend class eve::mem::Pointer;
+			
+			//////////////////////////////////////
+			//				TYPES				//
+			//////////////////////////////////////
+
+		public:
+			/** \brief convenience callback type definition. */
+			typedef eve::evt::ClassCallback1<eve::thr::ThreadPool, void, eve::thr::ThreadedWorkIO*> * ThreadedWorkCallback;
 
 
 			//////////////////////////////////////
@@ -74,8 +79,8 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			eve::thr::ThreadedWorkCallback  *		m_cbStart;			//!< Callback called at startup.
-			eve::thr::ThreadedWorkCallback  *		m_cbExit;			//!< Callback called at run exit.
+			eve::thr::ThreadedWorkIO::ThreadedWorkCallback 		m_cbStart;			//!< Callback called at startup.
+			eve::thr::ThreadedWorkIO::ThreadedWorkCallback 		m_cbExit;			//!< Callback called at run exit.
 
 
 			//////////////////////////////////////
@@ -85,17 +90,10 @@ namespace eve
 			EVE_DISABLE_COPY(ThreadedWorkIO);
 			EVE_PROTECT_DESTRUCTOR(ThreadedWorkIO);
 
-		public:
-			/**
-			* \brief Create and return new pointer.
-			* \param p_handle linked system window handle.
-			*/
-			static ThreadedWorkIO * create_ptr(eve::thr::ThreadedWorkCallback * p_cbStart, eve::thr::ThreadedWorkCallback * p_cbExit);
-
 
 		protected:
 			/** \brief Class constructor. */
-			ThreadedWorkIO(eve::thr::ThreadedWorkCallback * p_cbStart, eve::thr::ThreadedWorkCallback * p_cbExit);
+			ThreadedWorkIO(void);
 
 
 		private:
@@ -110,10 +108,26 @@ namespace eve
 			*/
 			virtual void run(void) override;
 
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set callback called at startup. */
+			void setCallbackStart(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb);
+			/** \brief Set callback called at exit. */
+			void setCallbackExit(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb);
+
 		}; // class ThreadDummy
 
 	} // namespace thr
 
 } // namespace eve
+
+
+//=================================================================================================
+void eve::thr::ThreadedWorkIO::setCallbackStart(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb)	{ EVE_ASSERT(p_cb); m_cbStart = p_cb; }
+void eve::thr::ThreadedWorkIO::setCallbackExit(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb)	{ EVE_ASSERT(p_cb); m_cbExit  = p_cb; }
 
 #endif // __EVE_THREADING_THREADED_WORK_IO_H__

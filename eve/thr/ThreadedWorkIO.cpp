@@ -34,18 +34,15 @@
 
 
 //=================================================================================================
-eve::thr::ThreadedWorkIO::ThreadedWorkIO(eve::thr::ThreadedWorkCallback * p_cbStart, eve::thr::ThreadedWorkCallback * p_cbExit)
+eve::thr::ThreadedWorkIO::ThreadedWorkIO(void)
 
 	// Inheritance
 	: eve::thr::ThreadedWork()
 
 	// Members init
-	, m_cbStart(p_cbStart)
-	, m_cbExit(p_cbExit)
-{
-	EVE_ASSERT(m_cbStart);
-	EVE_ASSERT(m_cbExit);
-}
+	, m_cbStart(nullptr)
+	, m_cbExit(nullptr)
+{}
 
 
 

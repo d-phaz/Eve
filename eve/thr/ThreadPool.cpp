@@ -30,11 +30,15 @@
 */
 
 // Main header
-#include "eve/thr/ThreadedWork.h"
+#include "eve/thr/ThreadPool.h"
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
 #include "eve/thr/SpinLock.h"
 #endif 
+
+#ifndef __EVE_THREADING_THREADED_WORK_IO_H__
+#include "eve/thr/ThreadedWorkIO.h"
+#endif
 
 #ifndef __EVE_THREADING_WORKER_H__
 #include "eve/thr/Worker.h"
@@ -42,93 +46,157 @@
 
 
 //=================================================================================================
-eve::thr::ThreadedWork::ThreadedWork(void)
+eve::thr::ThreadPool * eve::thr::ThreadPool::create_ptr(size_t p_numThread)
+{
+	eve::thr::ThreadPool * ptr = new eve::thr::ThreadPool(p_numThread);
+	ptr->init();
+	return ptr;
+}
+
+
+
+//=================================================================================================
+eve::thr::ThreadPool::ThreadPool(size_t p_numThread)
 
 	// Inheritance
-	: eve::thr::Thread()
+	: eve::mem::Pointer()
 
 	// Members init
-	, m_pWorkers(nullptr)
+	, m_numThread(p_numThread)
+	, m_pThreadsActive(nullptr)
+	, m_pThreadsSleeping(nullptr)
+	, m_pFence(nullptr)
 {}
 
 
 
 //=================================================================================================
-void eve::thr::ThreadedWork::initThreadedData(void)
+void eve::thr::ThreadPool::init(void)
 {
-	m_pWorkers = new std::deque<eve::thr::Worker *>();
-}
+	m_pThreadsActive	= new std::vector<eve::thr::ThreadedWorkIO *>(m_numThread);
+	m_pThreadsSleeping	= new std::vector<eve::thr::ThreadedWorkIO *>(m_numThread);
 
-//=================================================================================================
-void eve::thr::ThreadedWork::releaseThreadedData(void)
-{
-	eve::thr::Worker * wk = nullptr;
-	for (auto & it : (*m_pWorkers))
-	{
-		wk = it;
-		it = nullptr;
-		EVE_RELEASE_PTR(wk);
-	}
-	m_pWorkers->clear();
-	EVE_RELEASE_PTR_CPP(m_pWorkers);
-}
+	m_pFence			= EVE_CREATE_PTR(eve::thr::SpinLock);
 
-
-
-//=================================================================================================
-void eve::thr::ThreadedWork::addWorker(eve::thr::Worker * p_pWorker)
-{
-	EVE_ASSERT(p_pWorker);
-
-	m_pFence->lock();
-
-	bool needStart = m_pWorkers->empty();
-	m_pWorkers->push_back(p_pWorker);
-
-	if (needStart)
-	{
-		this->start();
-	}
-
-	m_pFence->unlock();
-}
-
-//=================================================================================================
-void eve::thr::ThreadedWork::addPriorityWorker(eve::thr::Worker * p_pWorker)
-{
-	EVE_ASSERT(p_pWorker);
-
-	m_pFence->lock();
-
-	bool needStart = m_pWorkers->empty();
-	m_pWorkers->push_front(p_pWorker);
-
-	if (needStart)
-	{
-		this->start();
-	}
 	
+	eve::thr::ThreadedWorkIO * thrd = nullptr;
+	for (size_t i = 0; i < m_numThread; i++)
+	{
+		thrd = EVE_CREATE_PTR(eve::thr::ThreadedWorkIO);
+		thrd->setCallbackStart(eve::evt::create_callback(this, &eve::thr::ThreadPool::threadSetActive));
+		thrd->setCallbackExit( eve::evt::create_callback(this, &eve::thr::ThreadPool::threadSetSleeping));
+
+		m_pThreadsSleeping->push_back(thrd);
+	}
+}
+
+//=================================================================================================
+void eve::thr::ThreadPool::release(void)
+{
+	m_pFence->lock();
+
+	eve::thr::ThreadedWorkIO * thrd = nullptr;
+	while (!m_pThreadsActive->empty())
+	{
+		thrd = m_pThreadsActive->back();
+		m_pThreadsActive->pop_back();
+
+		thrd->stop();
+		EVE_RELEASE_PTR(thrd);
+	}
+	EVE_RELEASE_PTR_CPP(m_pThreadsActive);
+
+	while (!m_pThreadsSleeping->empty())
+	{
+		thrd = m_pThreadsSleeping->back();
+		m_pThreadsSleeping->pop_back();
+
+		thrd->stop();
+		EVE_RELEASE_PTR(thrd);
+	}
+	EVE_RELEASE_PTR_CPP(m_pThreadsSleeping);
+
+	m_pFence->unlock();
+
+	EVE_RELEASE_PTR(m_pFence);
+}
+
+
+
+//=================================================================================================
+void eve::thr::ThreadPool::threadSetActive(eve::thr::ThreadedWorkIO * p_pThread)
+{
+	m_pFence->lock();
+	
+	std::vector<eve::thr::ThreadedWorkIO *>::iterator itrE = m_pThreadsSleeping->end();
+	std::vector<eve::thr::ThreadedWorkIO *>::iterator itr = std::find(m_pThreadsSleeping->begin(), itrE, p_pThread);
+	if (itr != itrE)
+	{
+		m_pThreadsSleeping->erase(itr);
+	}
+
+	m_pThreadsActive->push_back(p_pThread);
+
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+void eve::thr::ThreadPool::threadSetSleeping(eve::thr::ThreadedWorkIO * p_pThread)
+{
+	m_pFence->lock();
+
+	std::vector<eve::thr::ThreadedWorkIO *>::iterator itrE = m_pThreadsActive->end();
+	std::vector<eve::thr::ThreadedWorkIO *>::iterator itr = std::find(m_pThreadsActive->begin(), itrE, p_pThread);
+	if (itr != itrE)
+	{
+		m_pThreadsActive->erase(itr);
+	}
+
+	m_pThreadsSleeping->push_back(p_pThread);
+
 	m_pFence->unlock();
 }
 
 
 
 //=================================================================================================
-void eve::thr::ThreadedWork::run(void)
+void eve::thr::ThreadPool::addWorker(eve::thr::Worker * p_pWorker)
 {
-	while (!m_pWorkers->empty())
+	m_pFence->lock();
+
+	if (m_pThreadsSleeping->size() > 0)
 	{
-		// Grab next worker.
-		m_pFence->lock();
-		eve::thr::Worker * worker = m_pWorkers->front();
-		m_pWorkers->pop_front();
-		m_pFence->unlock();
+		eve::thr::ThreadedWorkIO * thrd = m_pThreadsSleeping->back();
+		m_pThreadsSleeping->pop_back();
 
-		// Do work.
-		worker->beforeWork();
-		while (worker->work());
-		worker->afterWork();
-
-		EVE_RELEASE_PTR(worker);
+		thrd->addWorker(p_pWorker);
+		m_pThreadsActive->push_back(thrd);
 	}
+	else
+	{
+		m_pThreadsActive->front()->addWorker(p_pWorker);
+	}
+
+	m_pFence->unlock();
+}
+
+//=================================================================================================
+void eve::thr::ThreadPool::addPriorityWorker(eve::thr::Worker * p_pWorker)
+{
+	m_pFence->lock();
+
+	if (m_pThreadsSleeping->size() > 0)
+	{
+		eve::thr::ThreadedWorkIO * thrd = m_pThreadsSleeping->back();
+		m_pThreadsSleeping->pop_back();
+
+		thrd->addPriorityWorker(p_pWorker);
+		m_pThreadsActive->push_back(thrd);
+	}
+	else
+	{
+		m_pThreadsActive->front()->addPriorityWorker(p_pWorker);
+	}
+
+	m_pFence->unlock();
 }

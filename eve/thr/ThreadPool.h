@@ -33,7 +33,6 @@
 #ifndef __EVE_THREADING_THREAD_POOL_H__
 #define __EVE_THREADING_THREAD_POOL_H__
 
-
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
@@ -47,8 +46,9 @@
 #endif
 
 
-namespace eve{ namespace thr{ class ThreadedWork;	} }
-namespace eve{ namespace thr{ class Worker;			} }
+namespace eve { namespace thr	{ class SpinLock;		} }
+namespace eve { namespace thr	{ class ThreadedWorkIO; } }
+namespace eve{ namespace thr	{ class Worker;			} }
 
 
 namespace eve
@@ -69,13 +69,21 @@ namespace eve
 		{
 
 			friend class eve::mem::Pointer;
+			friend class eve::thr::ThreadedWorkIO;
 
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
 
 		private:
-			std::deque<eve::thr::Worker *> *	m_pWorkers;			//!< Workers FIFO queue.
+
+		private:
+			size_t											m_numThread;			//!< Contained threads amount.
+
+			std::vector<eve::thr::ThreadedWorkIO *> *		m_pThreadsActive;		//!< Active contained threads.
+			std::vector<eve::thr::ThreadedWorkIO *> *		m_pThreadsSleeping;		//!< Sleeping contained threads.
+
+			eve::thr::SpinLock *							m_pFence;				//!< Spin lock protecting thread queues.
 
 
 			//////////////////////////////////////
@@ -103,6 +111,13 @@ namespace eve
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
+
+
+		private:
+			/** \brief Add target thread to active thread queue. Called by thread itself. */
+			void threadSetActive(eve::thr::ThreadedWorkIO * p_pThread);
+			/** \brief Add target thread to sleeping thread queue. Called by thread itself. */
+			void threadSetSleeping(eve::thr::ThreadedWorkIO * p_pThread);
 
 
 		public:
