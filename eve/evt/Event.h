@@ -413,7 +413,7 @@ namespace eve
 		/**
 		* \brief Register listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
-		*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+		*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 		*		void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg)
 		*		void cb_evtWindowFocusGot(void)
 		*		void cb_evtWindowFocusLost(void)
@@ -424,7 +424,7 @@ namespace eve
 		/**
 		* \brief Unregister listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
-		*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+		*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 		*		void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg)
 		*		void cb_evtWindowFocusGot(void)
 		*		void cb_evtWindowFocusLost(void)
@@ -584,7 +584,7 @@ void eve::evt::unregister_events_touch(ListenerClass * p_pListener, int32_t p_pr
 template<class ListenerClass>
 void eve::evt::register_events_window(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowResize,		p_prio);
 	eve::evt::add_listener(eve::evt::EvtWindow::windowMoved,		p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
 	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
 	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusLost,	p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);
@@ -595,7 +595,7 @@ void eve::evt::register_events_window(ListenerClass * p_pListener, int32_t p_pri
 template<class ListenerClass>
 void eve::evt::unregister_events_window(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowResize,		p_prio);
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowMoved,			p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusLost,		p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);

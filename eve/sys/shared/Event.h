@@ -41,6 +41,10 @@
 #include "eve/mem/Includes.h"
 #endif
 
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
 #ifndef __EVE_EVT_INCLUDES_H__
 #include "eve/evt/Includes.h"
 #endif
@@ -125,14 +129,14 @@ namespace eve
 			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
 			*/
 			template<class ListenerClass>
-			void registerEventsFile(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void registerEventsFile(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 			/**
 			* \brief Unregister listener class from file events.
 			* Listener class must provide file event handler methods using the following signatures:
 			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
 			*/
 			template<class ListenerClass>
-			void unregisterEventsFile(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void unregisterEventsFile(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +164,7 @@ namespace eve
 			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 			*/
 			template<class ListenerClass>
-			void registerEventsKey(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void registerEventsKey(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 			/**
 			* \brief Unregister listener class from key events.
 			* Listener class must provide key event handler methods using the following signatures:
@@ -169,7 +173,7 @@ namespace eve
 			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 			*/
 			template<class ListenerClass>
-			void unregisterEventsKey(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void unregisterEventsKey(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +207,7 @@ namespace eve
 			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 			*/
 			template<class ListenerClass>
-			void registerEventsMouse(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void registerEventsMouse(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 			/**
 			* \brief Unregister listener class from mouse events.
 			* Listener class must provide mouse event handler methods using the following signatures:
@@ -214,7 +218,7 @@ namespace eve
 			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 			*/
 			template<class ListenerClass>
-			void unregisterEventsMouse(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void unregisterEventsMouse(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -241,23 +245,25 @@ namespace eve
 			/**
 			* \brief Register listener class to window events.
 			* Listener class must provide window event handler methods using the following signatures:
-			*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowFocusGot(void)
 			*		void cb_evtWindowFocusLost(void)
 			*		void cb_evtWindowClose(void)
 			*/
 			template<class ListenerClass>
-			void registerEventsWindow(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void registerEventsWindow(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 			/**
 			* \brief Unregister listener class to window events.
 			* Listener class must provide window event handler methods using the following signatures:
-			*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowFocusGot(void)
 			*		void cb_evtWindowFocusLost(void)
 			*		void cb_evtWindowClose(void)
 			*/
 			template<class ListenerClass>
-			void unregisterEventsWindow(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			void unregisterEventsWindow(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
 
 
@@ -265,50 +271,52 @@ namespace eve
 			//		ALL EVENTS
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			public:
-				/** \! Enable events dispatch. */
-				void enableEvents(void);
-				/** \! Disable events dispatch. */
-				void disableEvents(void);
+		public:
+			/** \! Enable events dispatch. */
+			void enableEvents(void);
+			/** \! Disable events dispatch. */
+			void disableEvents(void);
 
-				/**
-				* \brief Register listener class to events.
-				* Listener class must provide event handler methods using the following signatures:
-				*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
-				*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
-				*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
-				*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
-				*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
-				*		void cb_evtWindowFocusGot(void)
-				*		void cb_evtWindowFocusLost(void)
-				*		void cb_evtWindowClose(void)
-				*/
-				template<class ListenerClass>
-				void registerEvents(ListenerClass * p_pListener, int32_t p_prio = orderApp);
-				/**
-				* \brief Unregister listener class to events.
-				* Listener class must provide event handler methods using the following signatures:
-				*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
-				*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
-				*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
-				*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
-				*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
-				*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
-				*		void cb_evtWindowFocusGot(void)
-				*		void cb_evtWindowFocusLost(void)
-				*		void cb_evtWindowClose(void)
-				*/
-				template<class ListenerClass>
-				void unregisterEvents(ListenerClass * p_pListener, int32_t p_prio = orderApp);
+			/**
+			* \brief Register listener class to events.
+			* Listener class must provide event handler methods using the following signatures:
+			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
+			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowFocusGot(void)
+			*		void cb_evtWindowFocusLost(void)
+			*		void cb_evtWindowClose(void)
+			*/
+			template<class ListenerClass>
+			void registerEvents(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
+			/**
+			* \brief Unregister listener class to events.
+			* Listener class must provide event handler methods using the following signatures:
+			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
+			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowFocusGot(void)
+			*		void cb_evtWindowFocusLost(void)
+			*		void cb_evtWindowClose(void)
+			*/
+			template<class ListenerClass>
+			void unregisterEvents(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
 		}; // class Event 
 
@@ -396,7 +404,7 @@ void eve::sys::Event::unregisterEventsMouse(ListenerClass * p_pListener, int32_t
 template<class ListenerClass>
 void eve::sys::Event::registerEventsWindow(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(m_windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::add_listener(m_windowResized,		p_pListener, &ListenerClass::cb_evtWindowResize,		p_prio);
 	eve::evt::add_listener(m_windowMoved,		p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
 	eve::evt::add_listener(m_windowFocusGot,	p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
 	eve::evt::add_listener(m_windowFocusLost,	p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);
@@ -407,7 +415,7 @@ void eve::sys::Event::registerEventsWindow(ListenerClass * p_pListener, int32_t 
 template<class ListenerClass>
 void eve::sys::Event::unregisterEventsWindow(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(m_windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::remove_listener(m_windowResized,		p_pListener, &ListenerClass::cb_evtWindowResize,		p_prio);
 	eve::evt::remove_listener(m_windowMoved,		p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
 	eve::evt::remove_listener(m_windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
 	eve::evt::remove_listener(m_windowFocusLost,	p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);

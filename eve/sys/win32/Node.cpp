@@ -29,21 +29,8 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_SYSTEM_INCLUDES_H__
-#define __EVE_SYSTEM_INCLUDES_H__
-
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#include "eve/sys/win32/Cursor.h"
-#endif
-
-#ifndef __EVE_SYSTEM_KEYBOARD_H__
-#include "eve/sys/win32/Keyboard.h"
-#endif
-
-#ifndef __EVE_SYSTEM_MOUSE_H__
-#include "eve/sys/shared/Mouse.h"
-#endif
+// Main class header
+#include "eve/sys/win32/Node.h"
 
 #ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
 #include "eve/sys/win32/MessagePump.h"
@@ -54,4 +41,62 @@
 #endif
 
 
-#endif // __EVE_SYSTEM_INCLUDES_H__
+//=================================================================================================
+eve::sys::Node::Node(void)
+	// Inheritance
+	: eve::thr::Thread()
+
+	// Members init
+	, m_pWindow(nullptr)
+	, m_pMessagePump(nullptr)
+{}
+
+
+
+//=================================================================================================
+void eve::sys::Node::initThreadedData(void)
+{
+	m_pWindow = eve::sys::Window::create_ptr(50, 50, 800, 600);
+
+	m_pMessagePump = eve::sys::MessagePump::create_ptr(m_pWindow->getHandle());
+	m_pMessagePump->registerListener(this);
+}
+
+//=================================================================================================
+void eve::sys::Node::releaseThreadedData(void)
+{
+	m_pMessagePump->unregisterListener(this);
+	EVE_RELEASE_PTR(m_pMessagePump);
+
+	EVE_RELEASE_PTR(m_pWindow);
+}
+
+
+
+//=================================================================================================
+void eve::sys::Node::run(void)
+{
+	bool bGotMsg;
+	MSG msg;
+	msg.message = WM_NULL;
+
+	while (this->running())
+	{
+		// Grab new message
+		bGotMsg = (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
+		// Test message
+		if (bGotMsg && msg.message != WM_NULL)
+		{
+			// Translate and dispatch the message
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			msg.message = WM_NULL;
+		}
+		else {
+			// Wait some ms, so the thread doesn't soak up CPU
+			::WaitForSingleObject(::GetCurrentThread(), 20);
+		}
+	}
+}

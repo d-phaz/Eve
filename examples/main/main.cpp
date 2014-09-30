@@ -67,9 +67,11 @@ public:
 	{
 		eve::mess::Server::create_instance();
 		eve::evt::register_events_mouse(this);
+		eve::evt::register_events_window(this);
 	}
 	virtual ~Example(void)
 	{
+		eve::evt::unregister_events_window(this);
 		eve::evt::unregister_events_mouse(this);
 		eve::mess::Server::release_instance();
 	}
@@ -84,6 +86,12 @@ public:
 	void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args){}
 	void cb_evtMotion(eve::evt::MouseEventArgs & p_args){}
 	void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args){}
+
+	void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg){}
+	void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg){}
+	void cb_evtWindowFocusGot(void){}
+	void cb_evtWindowFocusLost(void){}
+	void cb_evtWindowClose(void){}
 
 };
 

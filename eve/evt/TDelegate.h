@@ -329,16 +329,16 @@ namespace eve
 
 
 		template <class TObj>
-		static TDelegate<TObj, void> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*), int32_t prio)
+		static TDelegate<TObj, void, true> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(const void*), int32_t prio)
 		{
-			return TDelegate<TObj, void>(pObj, NotifyMethod, prio);
+			return TDelegate<TObj, void, true>(pObj, NotifyMethod, prio);
 		}
 
 
 		template <class TObj>
-		static TDelegate<TObj, void> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(), int32_t prio)
+		static TDelegate<TObj, void, false> priorityDelegate(TObj* pObj, void (TObj::*NotifyMethod)(void), int32_t prio)
 		{
-			return TDelegate<TObj, void>(pObj, NotifyMethod, prio);
+			return TDelegate<TObj, void, false>(pObj, NotifyMethod, prio);
 		}
 
 	} // namespace evt
@@ -587,7 +587,7 @@ bool eve::evt::TDelegate<TObj, void, true>::notify(const void* sender)
 	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	if (m_pReceiverObject)
 	{
-		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
+		(m_pReceiverObject->*m_receiverMethod)(sender);
 		return true;
 	}
 	else return false;
@@ -646,7 +646,7 @@ eve::evt::TDelegate<TObj, void, false>::TDelegate(const TDelegate<TObj, void, fa
 	// Inheritance
 	: eve::evt::TDelegateAbstract<void>(p_other)
 	// Members init
-	, m_pReceiverObject(p_other.m_pReceiverObject),
+	, m_pReceiverObject(p_other.m_pReceiverObject)
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
@@ -679,7 +679,7 @@ bool eve::evt::TDelegate<TObj, void, false>::notify(const void* sender)
 	eve::thr::ScopedFence<eve::thr::SpinLock> lock(m_pFence);
 	if (m_pReceiverObject)
 	{
-		(m_pReceiverObject->*m_receiverMethod)(sender, arguments);
+		(m_pReceiverObject->*m_receiverMethod)();
 		return true;
 	}
 	else return false;

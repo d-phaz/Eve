@@ -33,20 +33,9 @@
 #ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
 #define __EVE_SYSTEM_MESSAGE_PUMP_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
+#ifndef __EVE_SYSTEM_EVENT_H__ 
+#include "eve/sys/shared/Event.h"
 #endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
-
-
-namespace eve{ namespace sys{ class Event; } }
 
 
 namespace eve
@@ -212,7 +201,7 @@ namespace eve
 			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowFocusGot(void)
 			*		void cb_evtWindowFocusLost(void)
 			*		void cb_evtWindowClose(void)
@@ -231,7 +220,7 @@ namespace eve
 			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowFocusGot(void)
 			*		void cb_evtWindowFocusLost(void)
 			*		void cb_evtWindowClose(void)
