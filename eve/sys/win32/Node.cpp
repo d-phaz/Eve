@@ -54,6 +54,18 @@ eve::sys::Node::Node(void)
 
 
 //=================================================================================================
+void eve::sys::Node::init(void)
+{
+	// Call parent class
+	eve::thr::Thread::init();
+
+	// Start execution
+	this->start();
+}
+
+
+
+//=================================================================================================
 void eve::sys::Node::initThreadedData(void)
 {
 	m_pWindow = eve::sys::Window::create_ptr(50, 50, 800, 600);
@@ -80,23 +92,33 @@ void eve::sys::Node::run(void)
 	MSG msg;
 	msg.message = WM_NULL;
 
-	while (this->running())
-	{
+	do {
 		// Grab new message
-		bGotMsg = (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
+		//bGotMsg = (::PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
+		bGotMsg = (::PeekMessageW(&msg, m_pWindow->getHandle(), 0U, 0U, PM_REMOVE) != 0);
+
 		// Test message
 		if (bGotMsg && msg.message != WM_NULL)
 		{
 			// Translate and dispatch the message
 			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+				::TranslateMessage(&msg);
+				::DispatchMessageW(&msg);
 			}
 			msg.message = WM_NULL;
 		}
-		else {
-			// Wait some ms, so the thread doesn't soak up CPU
-			::WaitForSingleObject(::GetCurrentThread(), 20);
+
+		// Wait some ms, so the thread doesn't soak up CPU
+		//else 
+		//{
+		//	::WaitForSingleObject(::GetCurrentThread(), 20);
+		//}
+
+		// Draw on screen.
+		else
+		{
+			cb_display();
 		}
-	}
+
+	} while (this->running());
 }

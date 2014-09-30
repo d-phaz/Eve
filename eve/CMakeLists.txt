@@ -57,7 +57,8 @@ source_group( "Application" FILES ${APP_SRCS} )
 #################################################
 set( CORE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Macro.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Macro.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Renderer.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/SystemDefinition.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${CORE_SRCS} )

@@ -85,6 +85,11 @@ namespace eve
 
 
 		protected:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+
+
+		protected:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
@@ -128,6 +133,7 @@ namespace eve
 			virtual void cb_evtWindowClose(void) = 0;
 
 
+		protected:
 			/** \brief Draw on screen. (pure virtual) */
 			virtual void cb_display(void) = 0;
 
