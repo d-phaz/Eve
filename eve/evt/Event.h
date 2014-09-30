@@ -121,7 +121,7 @@ namespace eve
 		*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 		*/
 		template<class ListenerClass>
-		void register_events_key(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void register_events_key(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class from key events.
 		* Listener class must provide key event handler methods using the following signatures:
@@ -130,7 +130,7 @@ namespace eve
 		*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 		*/
 		template<class ListenerClass>
-		void unregister_events_key(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void unregister_events_key(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 
 
 
@@ -195,7 +195,7 @@ namespace eve
 		*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 		*/
 		template<class ListenerClass>
-		void register_events_mouse(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void register_events_mouse(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class from mouse events.
 		* Listener class must provide mouse event handler methods using the following signatures:
@@ -206,7 +206,7 @@ namespace eve
 		*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 		*/
 		template<class ListenerClass>
-		void unregister_events_mouse(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void unregister_events_mouse(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 
 
 
@@ -278,7 +278,7 @@ namespace eve
 		*		void cb_evtTouchMoved(eve::evt::TouchEventArgs & p_args)
 		*/
 		template<class ListenerClass>
-		void register_events_touch(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void register_events_touch(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class to touch events.
 		* Listener class must provide touch event handler methods using the following signatures:
@@ -289,7 +289,7 @@ namespace eve
 		*		void cb_evtTouchCanceled(eve::evt::TouchEventArgs & p_args)
 		*/
 		template<class ListenerClass>
-		void unregister_events_touch(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void unregister_events_touch(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 
 
 
@@ -346,7 +346,7 @@ namespace eve
 		*		void cb_evtWindowClose(void)
 		*/
 		template<class ListenerClass>
-		void register_events_window(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void register_events_window(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
@@ -356,7 +356,7 @@ namespace eve
 		*		void cb_evtWindowClose(void)
 		*/
 		template<class ListenerClass>
-		void unregister_events_window(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void unregister_events_window(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 
 
 
@@ -388,14 +388,14 @@ namespace eve
 		*		void cb_evtApplicationExit(void)
 		*/
 		template<class ListenerClass>
-		void register_events_application(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void register_events_application(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 		/**
 		* \brief Unregister listener class to application events.
 		* Listener class must provide application event handler methods using the following signatures:
 		*		void cb_evtApplicationExit(void)
 		*/
 		template<class ListenerClass>
-		void unregister_events_application(ListenerClass * listener, int32_t prio = orderAfterApp);
+		void unregister_events_application(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 
 	} // namespace evt
 
@@ -408,20 +408,20 @@ namespace eve
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::register_events_key(ListenerClass * listener, int32_t prio)
+void eve::evt::register_events_key(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtKey::keyPressed,	listener, &ListenerClass::cb_evtKeyDown,	prio);
-	eve::evt::add_listener(eve::evt::EvtKey::keyReleased,	listener, &ListenerClass::cb_evtKeyUp,		prio);
-	eve::evt::add_listener(eve::evt::EvtKey::keyInput,		listener, &ListenerClass::cb_evtKeyInput,	prio);
+	eve::evt::add_listener(eve::evt::EvtKey::keyPressed,	p_pListener, &ListenerClass::cb_evtKeyDown,	p_prio);
+	eve::evt::add_listener(eve::evt::EvtKey::keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtKey::keyInput,		p_pListener, &ListenerClass::cb_evtKeyInput,	p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::unregister_events_key(ListenerClass * listener, int32_t prio)
+void eve::evt::unregister_events_key(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtKey::keyPressed,		listener, &ListenerClass::cb_evtKeyDown,	prio);
-	eve::evt::remove_listener(eve::evt::EvtKey::keyReleased,	listener, &ListenerClass::cb_evtKeyUp,		prio);
-	eve::evt::remove_listener(eve::evt::EvtKey::keyInput,		listener, &ListenerClass::cb_evtKeyInput,	prio);
+	eve::evt::remove_listener(eve::evt::EvtKey::keyPressed,		p_pListener, &ListenerClass::cb_evtKeyDown,	p_prio);
+	eve::evt::remove_listener(eve::evt::EvtKey::keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtKey::keyInput,		p_pListener, &ListenerClass::cb_evtKeyInput,	p_prio);
 }
 
 
@@ -432,24 +432,24 @@ void eve::evt::unregister_events_key(ListenerClass * listener, int32_t prio)
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::register_events_mouse(ListenerClass * listener, int32_t prio)
+void eve::evt::register_events_mouse(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtMouse::mouseDown,			listener, &ListenerClass::cb_evtMouseDown,			prio);
-	eve::evt::add_listener(eve::evt::EvtMouse::mouseUp,				listener, &ListenerClass::cb_evtMouseUp,			prio);
-	eve::evt::add_listener(eve::evt::EvtMouse::mouseDoubleClick,	listener, &ListenerClass::cb_evtMouseDoubleClick,	prio);
-	eve::evt::add_listener(eve::evt::EvtMouse::mouseMotion,			listener, &ListenerClass::cb_evtMotion,				prio);
-	eve::evt::add_listener(eve::evt::EvtMouse::mousePassiveMotion,	listener, &ListenerClass::cb_evtPassiveMotion,		prio);
+	eve::evt::add_listener(eve::evt::EvtMouse::mouseDown,			p_pListener, &ListenerClass::cb_evtMouseDown,			p_prio);
+	eve::evt::add_listener(eve::evt::EvtMouse::mouseUp,				p_pListener, &ListenerClass::cb_evtMouseUp,			p_prio);
+	eve::evt::add_listener(eve::evt::EvtMouse::mouseDoubleClick,	p_pListener, &ListenerClass::cb_evtMouseDoubleClick,	p_prio);
+	eve::evt::add_listener(eve::evt::EvtMouse::mouseMotion,			p_pListener, &ListenerClass::cb_evtMotion,				p_prio);
+	eve::evt::add_listener(eve::evt::EvtMouse::mousePassiveMotion,	p_pListener, &ListenerClass::cb_evtPassiveMotion,		p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::unregister_events_mouse(ListenerClass * listener, int32_t prio)
+void eve::evt::unregister_events_mouse(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtMouse::mouseDown,			listener, &ListenerClass::cb_evtMouseDown,			prio);
-	eve::evt::remove_listener(eve::evt::EvtMouse::mouseUp,				listener, &ListenerClass::cb_evtMouseUp,			prio);
-	eve::evt::remove_listener(eve::evt::EvtMouse::mouseDoubleClick,		listener, &ListenerClass::cb_evtMouseDoubleClick,	prio);
-	eve::evt::remove_listener(eve::evt::EvtMouse::mouseMotion,			listener, &ListenerClass::cb_evtMotion,				prio);
-	eve::evt::remove_listener(eve::evt::EvtMouse::mousePassiveMotion,	listener, &ListenerClass::cb_evtPassiveMotion,		prio);
+	eve::evt::remove_listener(eve::evt::EvtMouse::mouseDown,			p_pListener, &ListenerClass::cb_evtMouseDown,			p_prio);
+	eve::evt::remove_listener(eve::evt::EvtMouse::mouseUp,				p_pListener, &ListenerClass::cb_evtMouseUp,			p_prio);
+	eve::evt::remove_listener(eve::evt::EvtMouse::mouseDoubleClick,		p_pListener, &ListenerClass::cb_evtMouseDoubleClick,	p_prio);
+	eve::evt::remove_listener(eve::evt::EvtMouse::mouseMotion,			p_pListener, &ListenerClass::cb_evtMotion,				p_prio);
+	eve::evt::remove_listener(eve::evt::EvtMouse::mousePassiveMotion,	p_pListener, &ListenerClass::cb_evtPassiveMotion,		p_prio);
 }
 
 
@@ -460,24 +460,24 @@ void eve::evt::unregister_events_mouse(ListenerClass * listener, int32_t prio)
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::register_events_touch(ListenerClass * listener, int32_t prio)
+void eve::evt::register_events_touch(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtTouch::touchDown,		listener, &ListenerClass::cb_evtTouchDown,		prio);
-	eve::evt::add_listener(eve::evt::EvtTouch::touchUp,			listener, &ListenerClass::cb_evtTouchUp,		prio);
-	eve::evt::add_listener(eve::evt::EvtTouch::touchDoubleTap,	listener, &ListenerClass::cb_evtTouchDoubleTap, prio);
-	eve::evt::add_listener(eve::evt::EvtTouch::touchMoved,		listener, &ListenerClass::cb_evtTouchMoved,		prio);
-	eve::evt::add_listener(eve::evt::EvtTouch::touchCanceled,	listener, &ListenerClass::cb_evtTouchCanceled,	prio);
+	eve::evt::add_listener(eve::evt::EvtTouch::touchDown,		p_pListener, &ListenerClass::cb_evtTouchDown,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtTouch::touchUp,			p_pListener, &ListenerClass::cb_evtTouchUp,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtTouch::touchDoubleTap,	p_pListener, &ListenerClass::cb_evtTouchDoubleTap, p_prio);
+	eve::evt::add_listener(eve::evt::EvtTouch::touchMoved,		p_pListener, &ListenerClass::cb_evtTouchMoved,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtTouch::touchCanceled,	p_pListener, &ListenerClass::cb_evtTouchCanceled,	p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::unregister_events_touch(ListenerClass * listener, int32_t prio)
+void eve::evt::unregister_events_touch(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtTouch::touchDown,		listener, &ListenerClass::cb_evtTouchDown,		prio);
-	eve::evt::remove_listener(eve::evt::EvtTouch::touchUp,			listener, &ListenerClass::cb_evtTouchUp,		prio);
-	eve::evt::remove_listener(eve::evt::EvtTouch::touchDoubleTap,	listener, &ListenerClass::cb_evtTouchDoubleTap, prio);
-	eve::evt::remove_listener(eve::evt::EvtTouch::touchMoved,		listener, &ListenerClass::cb_evtTouchMoved,		prio);
-	eve::evt::remove_listener(eve::evt::EvtTouch::touchCanceled,	listener, &ListenerClass::cb_evtTouchCanceled,	prio);
+	eve::evt::remove_listener(eve::evt::EvtTouch::touchDown,		p_pListener, &ListenerClass::cb_evtTouchDown,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtTouch::touchUp,			p_pListener, &ListenerClass::cb_evtTouchUp,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtTouch::touchDoubleTap,	p_pListener, &ListenerClass::cb_evtTouchDoubleTap, p_prio);
+	eve::evt::remove_listener(eve::evt::EvtTouch::touchMoved,		p_pListener, &ListenerClass::cb_evtTouchMoved,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtTouch::touchCanceled,	p_pListener, &ListenerClass::cb_evtTouchCanceled,	p_prio);
 }
 
 
@@ -488,22 +488,22 @@ void eve::evt::unregister_events_touch(ListenerClass * listener, int32_t prio)
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::register_events_window(ListenerClass * listener, int32_t prio)
+void eve::evt::register_events_window(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtWindow::windowResized,		listener, &ListenerClass::cb_evtWindowReshape,		prio);
-	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusGot,		listener, &ListenerClass::cb_evtWindowFocusGot,		prio);
-	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusLost,	listener, &ListenerClass::cb_evtWindowFocusLost,	prio);
-	eve::evt::add_listener(eve::evt::EvtWindow::windowClose,		listener, &ListenerClass::cb_evtWindowClose,		prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusLost,	p_pListener, &ListenerClass::cb_evtWindowFocusLost,	p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowClose,		p_pListener, &ListenerClass::cb_evtWindowClose,		p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::evt::unregister_events_window(ListenerClass * listener, int32_t prio)
+void eve::evt::unregister_events_window(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowResized,		listener, &ListenerClass::cb_evtWindowReshape,		prio);
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusGot,		listener, &ListenerClass::cb_evtWindowFocusGot,		prio);
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusLost,		listener, &ListenerClass::cb_evtWindowFocusLost,	prio);
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowClose,			listener, &ListenerClass::cb_evtWindowClose,		prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusLost,		p_pListener, &ListenerClass::cb_evtWindowFocusLost,	p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowClose,			p_pListener, &ListenerClass::cb_evtWindowClose,		p_prio);
 }
 
 
@@ -514,16 +514,16 @@ void eve::evt::unregister_events_window(ListenerClass * listener, int32_t prio)
 
 //=================================================================================================
 template<class ListenerClass>
-void register_events_application(ListenerClass * listener, int32_t prio)
+void eve::evt::register_events_application(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtApp::appExit, listener, &ListenerClass::cb_evtApplicationExit, prio);
+	eve::evt::add_listener(eve::evt::EvtApp::appExit, p_pListener, &ListenerClass::cb_evtApplicationExit, p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void unregister_events_application(ListenerClass * listener, int32_t prio)
+void eve::evt::unregister_events_application(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtApp::appExit, listener, &ListenerClass::cb_evtApplicationExit, prio);
+	eve::evt::remove_listener(eve::evt::EvtApp::appExit, p_pListener, &ListenerClass::cb_evtApplicationExit, p_prio);
 }
 
 #endif // __EVE_EVT_EVENT_H__

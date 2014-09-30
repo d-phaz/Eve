@@ -113,6 +113,8 @@ set( SYSTEM_SRCS
 	 
 set( SYSTEM_SRCS	
 	 ${SYSTEM_SRCS}  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Event.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Event.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Mouse.h )
 	 
 set( SYSTEM_SRCS
