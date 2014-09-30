@@ -47,14 +47,14 @@ eve::thr::ThreadedWorkIO::ThreadedWorkIO(void)
 
 
 //=================================================================================================
-void eve::thr::ThreadedWorkIO::releaseThreadedData(void)
+void eve::thr::ThreadedWorkIO::release(void)
 {
 	// Release callbacks
 	EVE_RELEASE_PTR_CPP(m_cbStart);
 	EVE_RELEASE_PTR_CPP(m_cbExit);
 
 	// Call parent class
-	eve::thr::ThreadedWork::releaseThreadedData();
+	eve::thr::ThreadedWork::release();
 }
 
 

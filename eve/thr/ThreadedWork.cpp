@@ -54,13 +54,16 @@ eve::thr::ThreadedWork::ThreadedWork(void)
 
 
 //=================================================================================================
-void eve::thr::ThreadedWork::initThreadedData(void)
+void eve::thr::ThreadedWork::init(void)
 {
+	// Call parent class.
+	eve::thr::Thread::init();
+
 	m_pWorkers = new std::deque<eve::thr::Worker *>();
 }
 
 //=================================================================================================
-void eve::thr::ThreadedWork::releaseThreadedData(void)
+void eve::thr::ThreadedWork::release(void)
 {
 	eve::thr::Worker * wk = nullptr;
 	for (auto & it : (*m_pWorkers))
@@ -71,6 +74,23 @@ void eve::thr::ThreadedWork::releaseThreadedData(void)
 	}
 	m_pWorkers->clear();
 	EVE_RELEASE_PTR_CPP(m_pWorkers);
+
+	// Call parent class.
+	eve::thr::Thread::release();
+}
+
+
+
+//=================================================================================================
+void eve::thr::ThreadedWork::initThreadedData(void)
+{
+	// Nothing to do for now.
+}
+
+//=================================================================================================
+void eve::thr::ThreadedWork::releaseThreadedData(void)
+{
+	// Nothing to do for now.
 }
 
 

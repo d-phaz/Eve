@@ -135,10 +135,10 @@ uint32_t eve::thr::Thread::routine(void * p_pThread)
 	// Run thread (pure virtual function).
 	objectPtr->run();
 
-	// Since we're out of run loop set status to not started.
-	objectPtr->resetStarted();
 	// Release and delete threaded data.
 	objectPtr->releaseThreadedData();
+	// Since we're out of run loop set status to not started.
+	objectPtr->resetStarted();
 
 	// No error occurred so return 0 (zero).
 	return 0;

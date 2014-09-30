@@ -97,8 +97,11 @@ namespace eve
 
 
 		private:
-			/** \brief Release and delete threaded data. (pure virtual) */
-			virtual void releaseThreadedData(void) override;
+			/**
+			* \brief Release and delete class members. (pure virtual)
+			* Stop this object's thread execution (if any) immediately.
+			*/
+			virtual void release(void) override;
 
 
 		private:
