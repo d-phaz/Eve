@@ -39,6 +39,8 @@ eve::sys::Event::Event(void)
 	: eve::mem::Pointer()
 
 	// Members init
+	, m_fileDropped()
+
 	, m_keyPressed()
 	, m_keyReleased()
 	, m_keyInput()
@@ -50,10 +52,50 @@ eve::sys::Event::Event(void)
 	, m_mouseUp()
 	
 	, m_windowResized()
+	, m_windowMoved()
 	, m_windowFocusGot()
 	, m_windowFocusLost()
 	, m_windowClose()
 {}
+
+
+//=================================================================================================
+void eve::sys::Event::init(void)
+{
+	this->enableEvents();
+}
+
+//=================================================================================================
+void eve::sys::Event::release(void)
+{
+	this->disableEvents();
+}
+
+
+
+//=================================================================================================
+void eve::sys::Event::enableEventsFile(void)
+{
+	m_fileDropped.enable();
+}
+
+//=================================================================================================
+void eve::sys::Event::disableEventsFile(void)
+{
+	m_fileDropped.disable();
+}
+
+//=================================================================================================
+void eve::sys::Event::notifyFileDropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files)
+{
+	eve::evt::FileEventArgs fileEventArgs;
+	fileEventArgs.x = p_x;
+	fileEventArgs.y = p_y;
+	fileEventArgs.count = p_count;
+	fileEventArgs.files = p_files;
+
+	eve::evt::notify_event(m_fileDropped, fileEventArgs);
+}
 
 
 
@@ -156,9 +198,10 @@ void eve::sys::Event::notifyMouseDoubleClick(int32_t p_button, int32_t x, int32_
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMouseMotion(int32_t x, int32_t y)
+void eve::sys::Event::notifyMouseMotion(int32_t p_button, int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
+	mouseEventArgs.button = p_button;
 	mouseEventArgs.x = x;
 	mouseEventArgs.y = y;
 
@@ -181,6 +224,7 @@ void eve::sys::Event::notifyMousePassiveMotion(int32_t x, int32_t y)
 void eve::sys::Event::enableEventsWindow(void)
 {
 	m_windowResized.enable();
+	m_windowMoved.enable();
 	m_windowFocusGot.enable();
 	m_windowFocusLost.enable();
 	m_windowClose.enable();
@@ -190,6 +234,7 @@ void eve::sys::Event::enableEventsWindow(void)
 void eve::sys::Event::disableEventsWindow(void)
 {
 	m_windowResized.disable();
+	m_windowMoved.disable();
 	m_windowFocusGot.disable();
 	m_windowFocusLost.disable();
 	m_windowClose.disable();
@@ -206,13 +251,23 @@ void eve::sys::Event::notifyWindowResize(uint32_t p_width, uint32_t p_height)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyWindowFocus_got(void)
+void  eve::sys::Event::notifyWindowMove(int32_t p_x, int32_t p_y)
+{
+	static eve::evt::MoveEventArgs moveEventArgs;
+	moveEventArgs.x = p_x;
+	moveEventArgs.y = p_y;
+
+	eve::evt::notify_event(m_windowMoved, moveEventArgs);
+}
+
+//=================================================================================================
+void eve::sys::Event::notifyWindowFocusGot(void)
 {
 	eve::evt::notify_event(m_windowFocusGot);
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyWindowFocus_lost(void)
+void eve::sys::Event::notifyWindowFocusLost(void)
 {
 	eve::evt::notify_event(m_windowFocusLost);
 }
@@ -228,14 +283,16 @@ void eve::sys::Event::notifyWindowClose(void)
 //=================================================================================================
 void eve::sys::Event::enableEvents(void)
 {
+	this->enableEventsFile();
 	this->enableEventsKey();
 	this->enableEventsMouse();
-	this->enableEventsMouse();
+	this->enableEventsWindow();
 }
 
 //=================================================================================================
 void eve::sys::Event::disableEvents(void)
 {
+	this->disableEventsFile();
 	this->disableEventsKey();
 	this->disableEventsMouse();
 	this->disableEventsWindow();

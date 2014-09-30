@@ -33,6 +33,40 @@
 #include "eve/evt/Event.h"
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//		FILE EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+eve::evt::FileEvent		eve::evt::EvtFile::fileDropped;
+
+//=================================================================================================
+void eve::evt::enable_events_file(void)
+{
+	eve::evt::EvtFile::fileDropped.enable();
+}
+
+//=================================================================================================
+void eve::evt::disable_events_file(void)
+{
+	eve::evt::EvtFile::fileDropped.disable();
+}
+
+
+
+//=================================================================================================
+void eve::evt::notify_file_dropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files)
+{
+	static eve::evt::FileEventArgs fileEventArgs;
+	fileEventArgs.x = p_x;
+	fileEventArgs.y = p_y;
+	fileEventArgs.count = p_count;
+	fileEventArgs.files = p_files;
+
+	eve::evt::notify_event(eve::evt::EvtFile::fileDropped, fileEventArgs);
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		KEY EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,8 +97,8 @@ void eve::evt::disable_events_key(void)
 void eve::evt::notify_key_pressed(uint8_t p_key)
 {
 	static eve::evt::KeyEventArgs keyEventArgs;
-
 	keyEventArgs.key = p_key;
+
 	eve::evt::notify_event(eve::evt::EvtKey::keyPressed, keyEventArgs);
 }
 
@@ -72,8 +106,8 @@ void eve::evt::notify_key_pressed(uint8_t p_key)
 void eve::evt::notify_key_released(uint8_t p_key)
 {
 	static eve::evt::KeyEventArgs keyEventArgs;
-
 	keyEventArgs.key = p_key;
+
 	eve::evt::notify_event(eve::evt::EvtKey::keyReleased, keyEventArgs);
 }
 
@@ -81,8 +115,8 @@ void eve::evt::notify_key_released(uint8_t p_key)
 void eve::evt::notify_key_input( uint8_t p_key )
 {
 	static eve::evt::KeyEventArgs keyEventArgs;
-
 	keyEventArgs.key = p_key;
+
 	eve::evt::notify_event(eve::evt::EvtKey::keyInput, keyEventArgs);
 }
 
@@ -123,10 +157,10 @@ void eve::evt::disable_events_mouse(void)
 void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
-
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
+
 	eve::evt::notify_event(eve::evt::EvtMouse::mouseDown, mouseEventArgs);
 }
 
@@ -134,10 +168,10 @@ void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 void eve::evt::notify_mouse_up( int32_t p_button, int32_t x, int32_t y )
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
-
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
+
 	eve::evt::notify_event(eve::evt::EvtMouse::mouseUp, mouseEventArgs);
 }
 
@@ -145,30 +179,31 @@ void eve::evt::notify_mouse_up( int32_t p_button, int32_t x, int32_t y )
 void eve::evt::notify_mouse_double_click( int32_t p_button, int32_t x, int32_t y )
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
-
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
+
 	eve::evt::notify_event(eve::evt::EvtMouse::mouseDoubleClick, mouseEventArgs);
 }
 
 //=================================================================================================
-void eve::evt::notify_mouse_motion( int32_t x, int32_t y )
+void eve::evt::notify_mouse_motion(int32_t p_button, int32_t x, int32_t y)
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
-
+	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
+
 	eve::evt::notify_event(eve::evt::EvtMouse::mouseMotion, mouseEventArgs);
 }
 
 //=================================================================================================
-void eve::evt::notify_mouse_passive_motion( int32_t x, int32_t y )
+void eve::evt::notify_mouse_passive_motion(int32_t x, int32_t y)
 {
 	static eve::evt::MouseEventArgs mouseEventArgs;
-
 	mouseEventArgs.x = x;
 	mouseEventArgs.y = y;
+	
 	eve::evt::notify_event(eve::evt::EvtMouse::mousePassiveMotion, mouseEventArgs);
 }
 
@@ -211,6 +246,7 @@ void eve::evt::disable_events_touch(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 eve::evt::TEvent<eve::evt::ResizeEventArgs> 	eve::evt::EvtWindow::windowResized;
+eve::evt::TEvent<eve::evt::MoveEventArgs> 		eve::evt::EvtWindow::windowMoved;
 eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusGot;
 eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusLost;
 eve::evt::TEvent<void>							eve::evt::EvtWindow::windowClose;
@@ -219,6 +255,7 @@ eve::evt::TEvent<void>							eve::evt::EvtWindow::windowClose;
 void eve::evt::enable_events_window(void)
 {
 	eve::evt::EvtWindow::windowResized.enable();
+	eve::evt::EvtWindow::windowMoved.enable();
 	eve::evt::EvtWindow::windowFocusGot.enable();
 	eve::evt::EvtWindow::windowFocusLost.enable();
 	eve::evt::EvtWindow::windowClose.enable();
@@ -228,6 +265,7 @@ void eve::evt::enable_events_window(void)
 void eve::evt::disable_events_window(void)
 {
 	eve::evt::EvtWindow::windowResized.disable();
+	eve::evt::EvtWindow::windowMoved.disable();
 	eve::evt::EvtWindow::windowFocusGot.disable();
 	eve::evt::EvtWindow::windowFocusLost.disable();
 	eve::evt::EvtWindow::windowClose.disable();
@@ -236,13 +274,23 @@ void eve::evt::disable_events_window(void)
 
 
 //=================================================================================================
-void eve::evt::notify_window_resize(uint32_t p_width, uint32_t p_height)
+void eve::evt::notify_window_resize(int32_t p_width, int32_t p_height)
 {
 	static eve::evt::ResizeEventArgs resizeEventArgs;
-
 	resizeEventArgs.width  = p_width;
 	resizeEventArgs.height = p_height;
+
 	eve::evt::notify_event(eve::evt::EvtWindow::windowResized, resizeEventArgs);
+}
+
+//=================================================================================================
+void notify_window_move(int32_t p_x, int32_t p_y)
+{
+	static eve::evt::MoveEventArgs moveEventArgs;
+	moveEventArgs.x = p_x;
+	moveEventArgs.y = p_y;
+
+	eve::evt::notify_event(eve::evt::EvtWindow::windowMoved, moveEventArgs);
 }
 
 //=================================================================================================

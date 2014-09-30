@@ -32,8 +32,12 @@
 // Main header
 #include "eve/sys/win32/MessagePump.h"
 
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "eve/thr/Includes.h"
+#ifndef __EVE_SYSTEM_EVENT_H__ 
+#include "eve/sys/shared/Event.h"
+#endif
+
+#ifndef __EVE_SYSTEM_MOUSE_H__
+#include "eve/sys/shared/Mouse.h"
 #endif
 
 
@@ -55,6 +59,7 @@ eve::sys::MessagePump::MessagePump(HWND p_handle)
 
 	// Members init
 	, m_handle(p_handle)
+	, m_pEvent(nullptr)
 {}
 
 
@@ -62,6 +67,9 @@ eve::sys::MessagePump::MessagePump(HWND p_handle)
 //=================================================================================================
 void eve::sys::MessagePump::init(void)
 {
+	// Event manager.
+	m_pEvent = EVE_CREATE_PTR(eve::sys::Event);
+
 	// Register as event handler.
 	eve::sys::MessagePump::register_handler(m_handle, this);
 
@@ -82,6 +90,9 @@ void eve::sys::MessagePump::release(void)
 	// Unregister from handler map.
 	eve::sys::MessagePump::unregister_handler(m_handle);
 	m_handle = 0;
+
+	// Event manager.
+	EVE_RELEASE_PTR(m_pEvent);
 }
 
 
@@ -153,5 +164,335 @@ LRESULT CALLBACK eve::sys::MessagePump::cb_wndProc(HWND p_hWnd, UINT p_uMsg, WPA
 //=================================================================================================
 std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	return std::pair<LRESULT, bool>(0, false);
+	LRESULT res = TRUE;
+	bool handled = true;
+
+	switch (p_uMsg)
+    {
+        case WM_MOUSEMOVE:		res = this->handleMouseMotion(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_LBUTTONDOWN:	
+		case WM_MBUTTONDOWN:	
+		case WM_RBUTTONDOWN:	
+		case WM_XBUTTONDOWN:
+        case WM_MOUSEWHEEL:		
+		case WM_MOUSEHWHEEL:	res = this->handleMouseDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_LBUTTONUP:	
+		case WM_MBUTTONUP:	
+		case WM_RBUTTONUP:	
+		case WM_XBUTTONUP:		res = this->handleMouseUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_LBUTTONDBLCLK:	
+		case WM_MBUTTONDBLCLK:	
+		case WM_RBUTTONDBLCLK:	
+		case WM_XBUTTONDBLCLK:	res = this->handleMouseDoubleClick(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_KEYDOWN:	
+		case WM_SYSKEYDOWN:		res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_KEYUP:		
+		case WM_SYSKEYUP:		res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_DEADCHAR:	
+		case WM_SYSDEADCHAR:
+		case WM_CHAR:			res = this->handleChar(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_PAINT:			res = this->handlePaint(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_ERASEBKGND:		res = this->handleEraseBackground(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_DROPFILES:		res = this->handleDrop(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_ENTERSIZEMOVE:	res = this->handleEnterSizeMove(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_EXITSIZEMOVE:	res = this->handleExitSizeMove(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_SIZING:			res = this->handleSizing(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_SIZE:			res = this->handleSize(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_MOVE:			res = this->handleMove(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_MOVING:			res = this->handleMoving(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_SETFOCUS:		res = this->handleFocusGot(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_KILLFOCUS:		res = this->handleFocusLost(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_CLOSE:			res = this->handleClose(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+		case WM_COMPACTING:		res = this->handleCompacting(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
+        default:				res = false;	break;
+    }
+	return std::pair<LRESULT, bool>(res, handled);
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handlePaint(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	// Do nothing, painting is handled by engines.
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleEraseBackground(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	// Block further system actions.
+	return TRUE;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	POINT pt;
+	pt.x = LOWORD(p_lParam);
+	pt.y = HIWORD(p_lParam);
+	::ScreenToClient(p_hWnd, &pt);
+
+	eve::sys::MouseButton btn;
+	switch (p_uMsg)
+	{
+	case WM_LBUTTONDOWN:		btn = eve::sys::btn_Left;		break;
+	case WM_MBUTTONDOWN:		btn = eve::sys::btn_Middle;		break;
+	case WM_RBUTTONDOWN:		btn = eve::sys::btn_Right;		break;
+	case WM_XBUTTONDOWN:		btn = eve::sys::btn_X;			break;
+	case WM_MOUSEWHEEL:			btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_WheelDown : eve::sys::btn_WheelUp;	break;
+	case WM_MOUSEHWHEEL:		btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_ScrollLeft : eve::sys::btn_ScrollRight;	break;
+	default:					btn = eve::sys::btn_Unused;		break;
+	}
+
+	m_pEvent->notifyMouseDown(btn, pt.x, pt.y);
+
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	POINT pt;
+	pt.x = LOWORD(p_lParam);
+	pt.y = HIWORD(p_lParam);
+	::ScreenToClient(p_hWnd, &pt);
+
+	eve::sys::MouseButton btn;
+	switch (p_uMsg)
+	{
+	case WM_LBUTTONUP:		btn = eve::sys::btn_Left;		break;
+	case WM_MBUTTONUP:		btn = eve::sys::btn_Middle;		break;
+	case WM_RBUTTONUP:		btn = eve::sys::btn_Right;		break;
+	case WM_XBUTTONUP:		btn = eve::sys::btn_X;			break;
+	default:				btn = eve::sys::btn_Unused;		break;
+	}
+
+	m_pEvent->notifyMouseUp(btn, pt.x, pt.y);
+
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMouseDoubleClick(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	POINT pt;
+	pt.x = LOWORD(p_lParam);
+	pt.y = HIWORD(p_lParam);
+	::ScreenToClient(p_hWnd, &pt);
+
+	eve::sys::MouseButton btn;
+	switch (p_uMsg)
+	{
+	case WM_LBUTTONDBLCLK:		btn = eve::sys::btn_Left;		break;
+	case WM_MBUTTONDBLCLK:		btn = eve::sys::btn_Middle;		break;
+	case WM_RBUTTONDBLCLK:		btn = eve::sys::btn_Right;		break;
+	case WM_XBUTTONDBLCLK:		btn = eve::sys::btn_X;			break;
+	default:					btn = eve::sys::btn_Unused;		break;
+	}
+
+	m_pEvent->notifyMouseDoubleClick(btn, pt.x, pt.y);
+
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	POINT pt;
+	pt.x = LOWORD(p_lParam);
+	pt.y = HIWORD(p_lParam);
+	::ScreenToClient(p_hWnd, &pt);
+
+	eve::sys::MouseButton btn;
+	switch (p_wParam)
+	{
+	case MK_LBUTTON:		btn = eve::sys::btn_Left;		break;
+	case MK_MBUTTON:		btn = eve::sys::btn_Middle;		break;
+	case MK_RBUTTON:		btn = eve::sys::btn_Right;		break;
+	default:				btn = eve::sys::btn_Unused;		break;
+	}
+
+	if (btn == eve::sys::btn_Unused)
+	{
+		m_pEvent->notifyMousePassiveMotion(pt.x, pt.y);
+	}
+	else
+	{
+		m_pEvent->notifyMouseMotion(btn, pt.x, pt.y);
+	}
+
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleFocusGot(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	m_pEvent->notifyWindowFocusGot();
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleFocusLost(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	m_pEvent->notifyWindowFocusLost();
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleEnterSizeMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	// Nothing to do for now.
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleExitSizeMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	// Nothing to do for now.
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleSizing(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	//RECT rect;
+	//::GetClientRect(p_hWnd, &rect);
+	//
+	//uint32_t width  = (uint32_t)(rect.right - rect.left);
+	//uint32_t height = (uint32_t)(rect.bottom - rect.top);
+	//m_pEvent->notifyWindowResize(width, height);
+
+	// Nothing to do for now.
+	return TRUE;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleSize(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	int32_t width  = (int32_t)LOWORD(p_lParam); 
+	int32_t height = (int32_t)HIWORD(p_lParam);
+	m_pEvent->notifyWindowResize(width, height);
+
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMoving(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	// Nothing to do for now.
+	return TRUE;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	int32_t xPos = (int32_t)LOWORD(p_lParam);
+	int32_t yPos = (int32_t)HIWORD(p_lParam);
+	m_pEvent->notifyWindowMove(xPos, yPos);
+
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleDrop(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	HDROP query = (HDROP)p_wParam;
+	
+	// Get mouse position on drop.
+	POINT pt;
+	::DragQueryPoint( query, &pt ); 
+	
+	// Get file(s) info.
+	uint32_t count = ::DragQueryFileW( query, 0xFFFFFFFF, 0, 0 );
+	
+	// Files vector.
+	std::vector<std::wstring> vecFiles;
+	vecFiles.reserve(count);
+
+	uint32_t n = 0;
+	wchar_t * name = 0;
+	while ( n < count ) 
+	{
+		uint32_t nChar = ::DragQueryFileW( query, n, NULL, 0 );
+			
+		name = (wchar_t*)malloc((nChar + 1) * sizeof(wchar_t));
+		::DragQueryFileW(query, n, name, nChar + 1);
+
+		vecFiles.push_back(std::wstring(name));
+		free(name);
+
+		n++;
+	}
+	
+	::DragFinish( query );
+	
+	m_pEvent->notifyFileDropped(pt.x, pt.y, count, vecFiles);
+
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleCompacting(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	EVE_LOG_WARNING("System detected more than 12.5 percent of system time over a 30- to 60-second interval is being spent compacting memory. \nSystem memory is low.");
+	return 0;
+}
+
+
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleClose(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	m_pEvent->notifyWindowClose();
+	return 0;
 }

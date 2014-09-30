@@ -103,7 +103,7 @@
 //		case WM_MBUTTONDOWN:	// (ret 0)
 //		case WM_RBUTTONDOWN:	// (ret 0)
 //		case WM_XBUTTONDOWN:	// (ret 0)
-//        case WM_MOUSEWHEEL:		// (ret 0) Wheel
+//        case WM_MOUSEWHEEL:	// (ret 0) Wheel
 //		case WM_MOUSEHWHEEL:	// (ret 0) Horizontal Scroll
 //			L_result = handleMouseDown( p_listener, hwnd, message, wparam, lparam );
 //			break;
@@ -171,8 +171,8 @@
 //
 //		
 //		//// not sure that's in use !!!
-//		//case WM_MOVE :		
-//		//case WM_MOVING :	
+//		//case WM_MOVE :		// (ret 0) Sent after a window has been moved. Shall we deal with that??	
+//		//case WM_MOVING :		// (ret TRUE) an application can monitor the position of the drag rectangle and, if needed, change its position.
 //		//	L_result = handleIdle(window, hwnd, message, wparam, lparam);
 //		//	break;
 //		//// not sure that's in use !!!
@@ -193,8 +193,7 @@
 //		//	L_result = handleFocus( p_listener, hwnd, message, wparam, lparam );
 //		//	break;
 //
-//		case WM_MOVE: // (ret 0) Sent after a window has been moved. Shall we deal with that??
-//		case WM_MOVING:	// (ret TRUE) an application can monitor the position of the drag rectangle and, if needed, change its position.
+//
 //		case WM_COMPACTING:	// (ret 0) Indicates system memory is low.
 //
 //        default:

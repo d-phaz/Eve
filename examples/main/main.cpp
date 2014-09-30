@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 	EVE_LOG_PROGRESS("App execution in progress.");
 	EVE_LOG_DEBUG("Woups... debug log info.");
 	EVE_LOG_ERROR("Any error occurred?");
-	eve::mess::Server::release_instance();
+	//eve::mess::Server::release_instance();
 
 
 	//-------------------------------------------
@@ -131,13 +131,13 @@ int main(int argc, char **argv)
 
 	// Thread Scoped pointer example //
 
-	//// Create scoped thread pointer.
-	//eve::mem::Scoped<eve::thr::ThreadDummy> scThr;
-	//// Start thread.
-	//scThr->start();
+	// Create scoped thread pointer.
+	eve::mem::Scoped<eve::thr::ThreadDummy> scThr;
+	// Start thread.
+	scThr->start();
 
-	//// Sleep using milliseconds.
-	//eve::thr::sleep_milli(1000);
+	// Sleep using milliseconds.
+	eve::thr::sleep_milli(1000);
 
 
 	//-------------------------------------------

@@ -39,6 +39,19 @@ set( CMAKE_AUTOMOC_RELAXED_MODE TRUE )
 
 # Parse files in project.
 ###################################################################################################
+set( SOURCE_FILES )
+
+
+# App.
+#################################################
+set( APP_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/app/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/app/App.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/app/App.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${APP_SRCS} )
+source_group( "Application" FILES ${APP_SRCS} )
+
 
 # Core.
 #################################################
@@ -47,7 +60,7 @@ set( CORE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Macro.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/SystemDefinition.h )
 
-set( SOURCE_FILES ${CORE_SRCS} )
+set( SOURCE_FILES ${SOURCE_FILES} ${CORE_SRCS} )
 source_group( "Core" FILES ${CORE_SRCS} )
 
 

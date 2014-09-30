@@ -30,58 +30,11 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_MOUSE_H__
-#define __EVE_SYSTEM_MOUSE_H__
+#ifndef __EVE_APPLICATION_INCLUDES_H__
+#define __EVE_APPLICATION_INCLUDES_H__
 
+#ifndef __EVE_APPLICATION_APP_H__
+#include "eve/app/App.h"
+#endif
 
-namespace eve
-{
-	namespace sys
-	{
-
-		/** \brief Mouse button enumeration. */
-		enum MouseButton
-		{
-			btn_Unused,
-			/// Unknown mouse button
-			btn_Unknown,
-			/// Left mouse button
-			btn_Left,
-			/// Middle mouse button
-			btn_Middle,
-			/// Right mouse button
-			btn_Right,
-			/// Mouse wheel up
-			btn_WheelUp,
-			/// Mouse wheel down
-			btn_WheelDown,
-			/// Scroll left
-			btn_ScrollLeft,
-			/// Scroll right
-			btn_ScrollRight,
-			/// X UIButton
-			btn_X
-
-		}; // enum MouseButton
-
-
-		/** \brief Mouse button state enumeration. */
-		enum MouseButtonState
-		{
-			btnState_Unused,
-			/// Unknown state
-			btnState_Unknown,
-			/// Down state
-			btnState_Down,
-			/// Up state
-			btnState_Up,
-			/// Double Click state
-			btnState_DbleClick
-
-		}; // enum MouseButtonState
-
-	} // namespace sys
-
-} // namespace eve
-
-#endif // __EVE_SYSTEM_MOUSE_H__
+#endif // __EVE_APPLICATION_INCLUDES_H__

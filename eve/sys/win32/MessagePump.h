@@ -46,6 +46,9 @@
 #endif
 
 
+namespace eve{ namespace sys{ class Event; } }
+
+
 namespace eve
 {
 	namespace sys
@@ -76,6 +79,9 @@ namespace eve
 		private:
 			WNDPROC							m_prevWndProc;			//!< Previous window procedure called by message pump.
 			HWND							m_handle;				//!< System window handle.
+
+		private:
+			eve::sys::Event *				m_pEvent;				//!< Manage listeners and dispatch message pump events.
 
 
 			//////////////////////////////////////
@@ -128,35 +134,125 @@ namespace eve
 		private:
 			/** \brief System event handler. */
 			std::pair<LRESULT, bool> handleEvent(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			
 
+
+			/** \brief System paint message handler; does nothing except catch message and prevent further action. */
+			LRESULT handlePaint(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief System erase background handler; does nothing except catch message and prevent further action. */
+			LRESULT handleEraseBackground(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+			/** \brief Keyboard key down event handler. */
+			LRESULT handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Keyboard key up event handler. */
+			LRESULT handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Keyboard char key pressed event handler (text input). */
+			LRESULT handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+			
+			/** \brief Mouse down event handler. */
+			LRESULT handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Mouse up event handler. */
+			LRESULT handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Mouse double click event handler. */
+			LRESULT handleMouseDoubleClick(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Mouse move event handler. */
+			LRESULT handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+			/** \brief Focus gained event handler. */
+			LRESULT handleFocusGot(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Focus lost event handler. */
+			LRESULT handleFocusLost(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+			/** \brief Window enter size move event handler. */
 			LRESULT handleEnterSizeMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Window exit size move event handler. */
 			LRESULT handleExitSizeMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Window sizing event handler. */
 			LRESULT handleSizing(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Window size changed event handler. */
 			LRESULT handleSize(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 
-			LRESULT handlePaint(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleEraseBkgnd(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			
-			LRESULT handleKey(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			
-			LRESULT handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleMouseEnter(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleMouseLeave(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 
-			LRESULT handleFocus(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleGetMinMaxInfo(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Window moving event handler. */
+			LRESULT handleMoving(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Window moved event handler. */
+			LRESULT handleMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+			/** \brief File dropped event handler. */
 			LRESULT handleDrop(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+			/** \brief System compacting cause running out of memory event handler. */
+			LRESULT handleCompacting(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+			/** \brief Window close event handler. */
 			LRESULT handleClose(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
-			LRESULT handleIdle(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+
+
+		public:
+			/**
+			* \brief Register listener class to events.
+			* Listener class must provide event handler methods using the following signatures:
+			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
+			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowFocusGot(void)
+			*		void cb_evtWindowFocusLost(void)
+			*		void cb_evtWindowClose(void)
+			*/
+			template<class ListenerClass>
+			void registerListener(ListenerClass * p_pListener);
+			/**
+			* \brief Unregister listener class to events.
+			* Listener class must provide event handler methods using the following signatures:
+			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
+			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
+			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+			*		void cb_evtWindowFocusGot(void)
+			*		void cb_evtWindowFocusLost(void)
+			*		void cb_evtWindowClose(void)
+			*/
+			template<class ListenerClass>
+			void unregisterListener(ListenerClass * p_pListener);
 
 		}; // class MessagePump
 
 	} // namespace sys
 
 } // namespace eve
+
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::sys::MessagePump::registerListener(ListenerClass * p_pListener)
+{
+	m_pEvent->registerEvents(p_pListener);
+}
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::sys::MessagePump::unregisterListener(ListenerClass * p_pListener)
+{
+	m_pEvent->unregisterEvents(p_pListener);
+}
 
 #endif // __EVE_SYSTEM_MESSAGE_PUMP_H__

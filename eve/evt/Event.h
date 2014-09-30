@@ -71,6 +71,63 @@ namespace eve
 
 
 		///////////////////////////////////////////////////////////////////////////////////////////
+		//		FILE EVENTS
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		/**
+		* \class eve::evt::FileEventArgs
+		* \brief File drop event arguments.
+		* \note extends eve::evt::Args
+		*/
+		class FileEventArgs
+			: public eve::evt::Args
+		{
+		public:
+			int32_t						x;
+			int32_t						y;
+			uint32_t					count;
+			std::vector<std::wstring>	files;
+		};
+
+		/** \brief File event type definition. */
+		typedef eve::evt::TEvent<eve::evt::FileEventArgs> FileEvent;
+
+		/**
+		* \class eve::evt::EvtFile
+		* \brief Stock global static file events.
+		*/
+		class EvtFile
+		{
+		public:
+			static FileEvent 		fileDropped;			//!< File dropped event.
+		};
+
+		/** \brief Enable file events dispatch. */
+		void enable_events_file(void);
+		/** \brief Disable file events dispatch. */
+		void disable_events_file(void);
+
+		/** \brief Notify file dropped event to all listeners. */
+		void notify_file_dropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files);
+
+		/**
+		* \brief Register listener class to file events.
+		* Listener class must provide file event handler methods using the following signatures:
+		*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
+		*/
+		template<class ListenerClass>
+		void register_events_file(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+		/**
+		* \brief Unregister listener class from file events.
+		* Listener class must provide file event handler methods using the following signatures:
+		*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
+		*/
+		template<class ListenerClass>
+		void unregister_events_file(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////
 		//		KEY EVENTS
 		///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,9 +158,9 @@ namespace eve
 			static KeyEvent 		keyInput;				//!< Text input event.
 		};
 
-		/** \! Enable key events dispatch. */
+		/** \brief Enable key events dispatch. */
 		void enable_events_key(void);
-		/** \! Disable key events dispatch. */
+		/** \brief Disable key events dispatch. */
 		void disable_events_key(void);
 
 		/** \brief Notify key pressed event to all listeners. */
@@ -169,9 +226,9 @@ namespace eve
 			static MouseEvent 		mouseUp;				//!< Mouse button released event.
 		};
 
-		/** \! Enable mouse events dispatch. */
+		/** \brief Enable mouse events dispatch. */
 		void enable_events_mouse(void);
-		/** \! Disable mouse events dispatch. */
+		/** \brief Disable mouse events dispatch. */
 		void disable_events_mouse(void);
 
 		/** \brief Notify mouse down event to all listeners. */
@@ -181,7 +238,7 @@ namespace eve
 		/** \brief Notify mouse double click event to all listeners. */
 		void notify_mouse_double_click(int32_t p_button, int32_t x, int32_t y);
 		/** \brief Notify mouse motion (mouse button pressed) event to all listeners. */
-		void notify_mouse_motion(int32_t x, int32_t y);
+		void notify_mouse_motion(int32_t p_button, int32_t x, int32_t y);
 		/** \brief Notify mouse passive motion (no mouse button pressed) event to all listeners. */
 		void notify_mouse_passive_motion(int32_t x, int32_t y);
 
@@ -264,9 +321,9 @@ namespace eve
 			static TouchEvent		touchCanceled;			//!< Touch canceled event.
 		};
 		
-		/** \! Enable touch events dispatch. */
+		/** \brief Enable touch events dispatch. */
 		void enable_events_touch(void);
-		/** \! Disable touch events dispatch. */
+		/** \brief Disable touch events dispatch. */
 		void disable_events_touch(void);
 
 		/**
@@ -311,6 +368,19 @@ namespace eve
 		};
 
 		/**
+		* \class eve::evt::MoveEventArgs
+		* \brief Window move event arguments.
+		* \note extends eve::evt::Args
+		*/
+		class MoveEventArgs
+			: public eve::evt::Args
+		{
+		public:
+			int32_t x;
+			int32_t y;
+		};
+
+		/**
 		* \class eve::evt::EvtWindow
 		* \brief Stock global static window events.
 		*/
@@ -318,18 +388,21 @@ namespace eve
 		{
 		public:
 			static eve::evt::TEvent<eve::evt::ResizeEventArgs> 		windowResized;			//!< Window resized event.
+			static eve::evt::TEvent<eve::evt::MoveEventArgs> 		windowMoved;			//!< Window moved event.
 			static eve::evt::TEvent<void>							windowFocusGot;			//!< Window gain focus event.
 			static eve::evt::TEvent<void>							windowFocusLost;		//!< Window lost focus event.
 			static eve::evt::TEvent<void>							windowClose;			//!< Window closed event.
 		};
 
-		/** \! Enable window events dispatch. */
+		/** \brief Enable window events dispatch. */
 		void enable_events_window(void);
-		/** \! Disable window events dispatch. */
+		/** \brief Disable window events dispatch. */
 		void disable_events_window(void);
 
 		/** \brief Notify window resize event to all listeners.*/
-		void notify_window_resize(uint32_t p_width, uint32_t p_height);
+		void notify_window_resize(int32_t p_width, int32_t p_height);
+		/** \brief Notify window move event to all listeners.*/
+		void notify_window_move(int32_t p_x, int32_t p_y);
 		/** \brief Notify window gain focus event to all listeners.*/
 		void notify_window_focus_got(void);
 		/** \brief Notify window lost focus event to all listeners.*/
@@ -341,6 +414,7 @@ namespace eve
 		* \brief Register listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
 		*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+		*		void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg)
 		*		void cb_evtWindowFocusGot(void)
 		*		void cb_evtWindowFocusLost(void)
 		*		void cb_evtWindowClose(void)
@@ -351,6 +425,7 @@ namespace eve
 		* \brief Unregister listener class to window events.
 		* Listener class must provide window event handler methods using the following signatures:
 		*		void cb_evtWindowReshape(eve::evt::ResizeEventArgs & p_arg)
+		*		void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg)
 		*		void cb_evtWindowFocusGot(void)
 		*		void cb_evtWindowFocusLost(void)
 		*		void cb_evtWindowClose(void)
@@ -374,9 +449,9 @@ namespace eve
 			static eve::evt::TEvent<void>							appExit;				//!< Application exit event.
 		};
 
-		/** \! Enable application events dispatch. */
+		/** \brief Enable application events dispatch. */
 		void enable_events_application(void);
-		/** \! Disable application events dispatch. */
+		/** \brief Disable application events dispatch. */
 		void disable_events_application(void);
 
 		/** \brief Notify application exit event to all listeners.*/
@@ -402,6 +477,25 @@ namespace eve
 } // namespace eve
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//		FILE EVENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::evt::register_events_file(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::add_listener(eve::evt::EvtFile::fileDropped, p_pListener, &ListenerClass::cb_evtFileDrop, p_prio);
+}
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::evt::unregister_events_file(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::remove_listener(eve::evt::EvtFile::fileDropped, p_pListener, &ListenerClass::cb_evtFileDrop, p_prio);
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		KEY EVENTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -410,7 +504,7 @@ namespace eve
 template<class ListenerClass>
 void eve::evt::register_events_key(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtKey::keyPressed,	p_pListener, &ListenerClass::cb_evtKeyDown,	p_prio);
+	eve::evt::add_listener(eve::evt::EvtKey::keyPressed,	p_pListener, &ListenerClass::cb_evtKeyDown,		p_prio);
 	eve::evt::add_listener(eve::evt::EvtKey::keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
 	eve::evt::add_listener(eve::evt::EvtKey::keyInput,		p_pListener, &ListenerClass::cb_evtKeyInput,	p_prio);
 }
@@ -491,9 +585,10 @@ template<class ListenerClass>
 void eve::evt::register_events_window(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowMoved,		p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
 	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
-	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusLost,	p_pListener, &ListenerClass::cb_evtWindowFocusLost,	p_prio);
-	eve::evt::add_listener(eve::evt::EvtWindow::windowClose,		p_pListener, &ListenerClass::cb_evtWindowClose,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowFocusLost,	p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);
+	eve::evt::add_listener(eve::evt::EvtWindow::windowClose,		p_pListener, &ListenerClass::cb_evtWindowClose,			p_prio);
 }
 
 //=================================================================================================
@@ -501,9 +596,10 @@ template<class ListenerClass>
 void eve::evt::unregister_events_window(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowResized,		p_pListener, &ListenerClass::cb_evtWindowReshape,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowMoved,			p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusLost,		p_pListener, &ListenerClass::cb_evtWindowFocusLost,	p_prio);
-	eve::evt::remove_listener(eve::evt::EvtWindow::windowClose,			p_pListener, &ListenerClass::cb_evtWindowClose,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusLost,		p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);
+	eve::evt::remove_listener(eve::evt::EvtWindow::windowClose,			p_pListener, &ListenerClass::cb_evtWindowClose,			p_prio);
 }
 
 
