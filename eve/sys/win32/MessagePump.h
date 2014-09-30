@@ -125,6 +125,11 @@ namespace eve
 
 
 		private:
+			/** \brief Convert WPARAM to unicode character. */
+			uint32_t wparam2unicode(WPARAM p_wParam);
+
+
+		private:
 			/** \brief Static window procedure used to intercept and dispatch events, this method requires this exact signature. */
 			static LRESULT CALLBACK wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 			/** \brief Handler dedicated window procedure. */
@@ -142,10 +147,10 @@ namespace eve
 			LRESULT handleEraseBackground(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 
 
-			/** \brief Keyboard key down event handler. */
-			LRESULT handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 			/** \brief Keyboard key up event handler. */
 			LRESULT handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Keyboard key down event handler. */
+			LRESULT handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 			/** \brief Keyboard char key pressed event handler (text input). */
 			LRESULT handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 

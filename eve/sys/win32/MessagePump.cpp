@@ -36,6 +36,10 @@
 #include "eve/sys/shared/Event.h"
 #endif
 
+#ifndef __EVE_SYSTEM_KEYBOARD_H__
+#include "eve/sys/win32//Keyboard.h"
+#endif
+
 #ifndef __EVE_SYSTEM_MOUSE_H__
 #include "eve/sys/shared/Mouse.h"
 #endif
@@ -128,6 +132,28 @@ eve::sys::MessagePump * eve::sys::MessagePump::get_handler(HWND p_hWnd)
 
 
 //=================================================================================================
+uint32_t eve::sys::MessagePump::wparam2unicode(WPARAM p_wParam)
+{
+	uint16_t lo  = p_wParam & 0xFFFF;
+	uint16_t hi  = (p_wParam & 0xFFFF0000) >> 16;
+	uint32_t ret = 0;
+	
+	// Convert from UTF-16 to Unicode code point
+	if (lo < 0xD8000 || lo > 0xDFFF)
+	{
+		ret = lo;
+	}
+	else
+	{
+		ret = ((lo & 0x3FF) << 10) | (hi & 0x3FF) + 0x10000;
+	}
+	
+	return ret;
+}
+
+
+
+//=================================================================================================
 LRESULT CALLBACK eve::sys::MessagePump::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	eve::sys::MessagePump * handler = eve::sys::MessagePump::get_handler(hWnd);
@@ -143,12 +169,9 @@ LRESULT CALLBACK eve::sys::MessagePump::wndProc(HWND hWnd, UINT uMsg, WPARAM wPa
 //=================================================================================================
 LRESULT CALLBACK eve::sys::MessagePump::cb_wndProc(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	LRESULT L_result = 0;
-	std::pair<LRESULT, bool> result;
-
 	// Handle event here.
-	result = this->handleEvent(p_hWnd, p_uMsg, p_wParam, p_lParam);
-	L_result = result.first;
+	std::pair<LRESULT, bool> result = this->handleEvent(p_hWnd, p_uMsg, p_wParam, p_lParam);
+	LRESULT L_result = result.first;
 	
 	// If event was not handled fall back to default system handler method.
 	if (!result.second) 
@@ -188,11 +211,11 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 		case WM_RBUTTONDBLCLK:	
 		case WM_XBUTTONDBLCLK:	res = this->handleMouseDoubleClick(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
-		case WM_KEYDOWN:	
-		case WM_SYSKEYDOWN:		res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_KEYDOWN:		res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		//case WM_SYSKEYDOWN:	res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
-		case WM_KEYUP:		
-		case WM_SYSKEYUP:		res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_KEYUP:			res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		//case WM_SYSKEYUP:		res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
 		case WM_DEADCHAR:	
 		case WM_SYSDEADCHAR:
@@ -218,7 +241,7 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 
 		case WM_COMPACTING:		res = this->handleCompacting(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
-        default:				res = false;	break;
+		default:				handled = false;	break;
     }
 	return std::pair<LRESULT, bool>(res, handled);
 }
@@ -242,15 +265,25 @@ LRESULT eve::sys::MessagePump::handleEraseBackground(HWND p_hWnd, UINT p_uMsg, W
 
 
 //=================================================================================================
-LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
+	bool filter;	
+	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
+	if(!filter) {
+		m_pEvent->notifyKeyPressed(translated);
+	}
 
 	return 0;
 }
 
 //=================================================================================================
-LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
+	bool filter;
+	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
+	if (!filter) {
+		m_pEvent->notifyKeyReleased(translated);
+	}
 
 	return 0;
 }
@@ -258,7 +291,7 @@ LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-
+	m_pEvent->notifyKeyInput(this->wparam2unicode(p_wParam));
 	return 0;
 }
 

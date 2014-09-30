@@ -613,6 +613,10 @@ namespace eve
 			key_ctrl_z
 		};
 
+
+		/** \brief Convert system key event to eve::sys::Key. */
+		Key translate_key(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam, bool & p_bFilter);
+
 	} // namespace sys
 
 } // namespace eve
