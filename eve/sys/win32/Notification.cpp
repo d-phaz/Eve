@@ -29,50 +29,30 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#define __EVE_SYSTEM_CURSOR_H__
-
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
+// Main header
+#include "eve/sys/win32/Notification.h"
 
 
-namespace eve
+//=================================================================================================
+bool eve::sys::notify_prompt_user(const std::wstring & p_title, const std::wstring & p_text)
 {
-	namespace sys
-	{
-		/** \brief Cursor type enumeration. */
-		enum Cursor
-		{
-			cursor_Unused,
-			cursor_None ,
-			cursor_Inherit,
-			cursor_Arrow,
-			cursor_Info,
-			cursor_Wait,
-			cursor_Cross,
-			cursor_Text,
-			cursor_UpDown,
-			cursor_LeftRight,
-			cursor_CornerTopLeft,
-			cursor_CornerTopRight,
-			cursor_CornerBottomLeft,
-			cursor_CornerBottomRight,
-			cursor_Cycle
-		};
+	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OKCANCEL | MB_ICONWARNING) == IDOK);
+}
 
-		/** \brief Set cursor. Cursor is applied to window at mouse position. */
-		void set_cursor(eve::sys::Cursor p_cursorType);
+//=================================================================================================
+bool eve::sys::notify_warning(const std::wstring & p_title, const std::wstring & p_text)
+{
+	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONWARNING) == IDOK);
+}
 
+//=================================================================================================
+bool eve::sys::notify_error(const std::wstring & p_title, const std::wstring & p_text)
+{
+	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONERROR) == IDOK);
+}
 
-		/** \brief Get cursor position in screen coordinates. */
-		void get_cursor_position(int32_t * p_x, int32_t * p_y);
-		/** \brief Set cursor position. */
-		void setCursorPosition(int32_t p_x, int32_t p_y);
-
-	} // namespace sys
-
-} // namespace eve
-
-#endif // __EVE_SYSTEM_CURSOR_H__
+//=================================================================================================
+void eve::sys::notify_fatal_error(const std::wstring & p_text)
+{
+	::FatalAppExitW(-1, p_text.c_str());
+}

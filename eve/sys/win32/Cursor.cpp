@@ -74,3 +74,21 @@ void eve::sys::set_cursor(eve::sys::Cursor p_cursorType)
 		break;
 	}
 }
+
+
+
+//=============================================================================================
+void eve::sys::get_cursor_position(int32_t * p_x, int32_t * p_y)
+{
+	POINT pt;
+	::GetCursorPos(&pt);
+
+	*p_x = pt.x;
+	*p_y = pt.y;
+}
+
+//=============================================================================================
+void eve::sys::setCursorPosition(int32_t p_x, int32_t p_y)
+{
+	::SetCursorPos(p_x, p_y);
+}

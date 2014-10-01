@@ -37,6 +37,10 @@
 #include "eve/sys/win32/Cursor.h"
 #endif
 
+#ifndef __EVE_SYSTEM_DISPLAY_H__
+#include "eve/sys/win32/Display.h"
+#endif
+
 #ifndef __EVE_SYSTEM_KEYBOARD_H__
 #include "eve/sys/win32/Keyboard.h"
 #endif
@@ -47,6 +51,10 @@
 
 #ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
 #include "eve/sys/win32/MessagePump.h"
+#endif
+
+#ifndef __EVE_SYSTEM_NOTIFICATION_H__
+#include "eve/sys/win32/Notification.h"
 #endif
 
 #ifndef __EVE_SYSTEM_WINDOW_H__

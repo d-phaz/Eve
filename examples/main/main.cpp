@@ -110,12 +110,12 @@ int main(int argc, char **argv)
 
 	// Messaging example //
 
-	eve::mess::Server::create_instance();
-	EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
-	EVE_LOG_WARNING("Warning level %i.", 3);
-	EVE_LOG_PROGRESS("App execution in progress.");
-	EVE_LOG_DEBUG("Woups... debug log info.");
-	EVE_LOG_ERROR("Any error occurred?");
+	//eve::mess::Server::create_instance();
+	//EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
+	//EVE_LOG_WARNING("Warning level %i.", 3);
+	//EVE_LOG_PROGRESS("App execution in progress.");
+	//EVE_LOG_DEBUG("Woups... debug log info.");
+	//EVE_LOG_ERROR("Any error occurred?");
 	//eve::mess::Server::release_instance();
 
 
@@ -139,13 +139,13 @@ int main(int argc, char **argv)
 
 	// Thread Scoped pointer example //
 
-	// Create scoped thread pointer.
-	eve::mem::Scoped<eve::thr::ThreadDummy> scThr;
-	// Start thread.
-	scThr->start();
+	//// Create scoped thread pointer.
+	//eve::mem::Scoped<eve::thr::ThreadDummy> scThr;
+	//// Start thread.
+	//scThr->start();
 
-	// Sleep using milliseconds.
-	eve::thr::sleep_milli(1000);
+	//// Sleep using milliseconds.
+	//eve::thr::sleep_milli(1000);
 
 
 	//-------------------------------------------
@@ -153,8 +153,8 @@ int main(int argc, char **argv)
 
 	// Event example //
 
-	Example ex;
-	eve::evt::notify_mouse_down(0, 10, 20);
+	//Example ex;
+	//eve::evt::notify_mouse_down(0, 10, 20);
 
 
 	//-------------------------------------------
@@ -168,6 +168,20 @@ int main(int argc, char **argv)
 	//while (true);
 
 	//EVE_RELEASE_PTR(win);
+
+
+	//-------------------------------------------
+
+
+	// Notification example //
+
+	if (eve::sys::notify_prompt_user(EVE_TXT("Notification Example"), EVE_TXT("Shall we launch notification example?")))
+	{
+		while (!eve::sys::notify_warning(EVE_TXT("Warning"), EVE_TXT("Be carreful this is a WARNING!!!")));
+		while (!eve::sys::notify_error(EVE_TXT("Error"), EVE_TXT("Woups an ERROR occured.")));
+
+		eve::sys::notify_fatal_error(EVE_TXT("Fatal error occured, exiting application."));
+	}
 
 	return 0;
 }

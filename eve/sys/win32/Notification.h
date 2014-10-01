@@ -30,11 +30,19 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#define __EVE_SYSTEM_CURSOR_H__
+#ifndef __EVE_SYSTEM_NOTIFICATION_H__
+#define __EVE_SYSTEM_NOTIFICATION_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
+#endif
+
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
 #endif
 
 
@@ -42,37 +50,32 @@ namespace eve
 {
 	namespace sys
 	{
-		/** \brief Cursor type enumeration. */
-		enum Cursor
-		{
-			cursor_Unused,
-			cursor_None ,
-			cursor_Inherit,
-			cursor_Arrow,
-			cursor_Info,
-			cursor_Wait,
-			cursor_Cross,
-			cursor_Text,
-			cursor_UpDown,
-			cursor_LeftRight,
-			cursor_CornerTopLeft,
-			cursor_CornerTopRight,
-			cursor_CornerBottomLeft,
-			cursor_CornerBottomRight,
-			cursor_Cycle
-		};
+		/**
+		* \brief Create and display user notification window.
+		* Return true at user validation, false at user cancellation.
+		*/
+		bool notify_prompt_user(const std::wstring & p_title, const std::wstring & p_text);
 
-		/** \brief Set cursor. Cursor is applied to window at mouse position. */
-		void set_cursor(eve::sys::Cursor p_cursorType);
+		/** 
+		* \brief Create and display warning window.
+		* Return true at user validation.
+		*/
+		bool notify_warning(const std::wstring & p_title, const std::wstring & p_text);
 
+		/**
+		* \brief Create and display error window.
+		* Return true at user validation.
+		*/
+		bool notify_error(const std::wstring & p_title, const std::wstring & p_text);
 
-		/** \brief Get cursor position in screen coordinates. */
-		void get_cursor_position(int32_t * p_x, int32_t * p_y);
-		/** \brief Set cursor position. */
-		void setCursorPosition(int32_t p_x, int32_t p_y);
+		/**
+		* \brief Create and display fatal error window.
+		* Application exits after user validation (crash).
+		*/
+		void notify_fatal_error(const std::wstring & p_text);
 
 	} // namespace sys
 
 } // namespace eve
 
-#endif // __EVE_SYSTEM_CURSOR_H__
+#endif // __EVE_SYSTEM_NOTIFICATION_H__

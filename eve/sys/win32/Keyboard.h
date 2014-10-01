@@ -617,6 +617,22 @@ namespace eve
 		/** \brief Convert system key event to eve::sys::Key. */
 		Key translate_key(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam, bool & p_bFilter);
 
+
+		/** \brief Get ctrl key pressed state at the time a key is pressed. */
+		bool get_key_state_ctrl(void);
+		/** \brief Get alt key pressed state at the time a key is pressed. */
+		bool get_key_state_alt(void);
+		/** \brief Get shift key pressed state at the time a key is pressed. */
+		bool get_key_state_shift(void);
+
+
+		/** \brief Get ctrl key pressed state at the time the function is called. */
+		bool get_async_key_state_ctrl(void);
+		/** \brief Get alt key pressed state at the time the function is called. */
+		bool get_async_key_state_alt(void);
+		/** \brief Get shift key pressed state at the time the function is called. */
+		bool get_async_key_state_shift(void);
+
 	} // namespace sys
 
 } // namespace eve

@@ -30,11 +30,19 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#define __EVE_SYSTEM_CURSOR_H__
+#ifndef __EVE_SYSTEM_DISPLAY_H__
+#define __EVE_SYSTEM_DISPLAY_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
+#endif
+
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
 #endif
 
 
@@ -42,37 +50,25 @@ namespace eve
 {
 	namespace sys
 	{
-		/** \brief Cursor type enumeration. */
-		enum Cursor
-		{
-			cursor_Unused,
-			cursor_None ,
-			cursor_Inherit,
-			cursor_Arrow,
-			cursor_Info,
-			cursor_Wait,
-			cursor_Cross,
-			cursor_Text,
-			cursor_UpDown,
-			cursor_LeftRight,
-			cursor_CornerTopLeft,
-			cursor_CornerTopRight,
-			cursor_CornerBottomLeft,
-			cursor_CornerBottomRight,
-			cursor_Cycle
-		};
-
-		/** \brief Set cursor. Cursor is applied to window at mouse position. */
-		void set_cursor(eve::sys::Cursor p_cursorType);
+		/** \brief Get main monitor width. */
+		int32_t get_main_monitor_width(void);
+		/** \brief Get main monitor height. */
+		int32_t get_main_monitor_height(void);
 
 
-		/** \brief Get cursor position in screen coordinates. */
-		void get_cursor_position(int32_t * p_x, int32_t * p_y);
-		/** \brief Set cursor position. */
-		void setCursorPosition(int32_t p_x, int32_t p_y);
+		/** \brief Get main display width. */
+		int32_t get_main_display_width(void);
+		/** \brief Get main display height. */
+		int32_t get_main_display_height(void);
+
+
+		/** \brief Get the width of the portion of the screen that is not obscured by the system taskbar or by application desktop toolbars. */
+		int32_t get_work_area_width(void);
+		/** \brief Get the height of the portion of the screen that is not obscured by the system taskbar or by application desktop toolbars. */
+		int32_t get_work_area_height(void);
 
 	} // namespace sys
 
 } // namespace eve
 
-#endif // __EVE_SYSTEM_CURSOR_H__
+#endif // __EVE_SYSTEM_DISPLAY_H__

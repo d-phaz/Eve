@@ -29,50 +29,33 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#define __EVE_SYSTEM_CURSOR_H__
+// Main header
+#include "eve/sys/win32/Display.h"
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
+//=================================================================================================
+int32_t eve::sys::get_main_monitor_width(void)		{ return ::GetSystemMetrics(SM_CXFULLSCREEN); }
+int32_t eve::sys::get_main_monitor_height(void)		{ return ::GetSystemMetrics(SM_CYFULLSCREEN); }
+
+//=================================================================================================
+int32_t eve::sys::get_main_display_width(void)		{ return ::GetSystemMetrics(SM_CXSCREEN); }
+int32_t eve::sys::get_main_display_height(void)		{ return ::GetSystemMetrics(SM_CYSCREEN); }
 
 
-namespace eve
+
+//=================================================================================================
+int32_t eve::sys::get_work_area_width(void)
 {
-	namespace sys
-	{
-		/** \brief Cursor type enumeration. */
-		enum Cursor
-		{
-			cursor_Unused,
-			cursor_None ,
-			cursor_Inherit,
-			cursor_Arrow,
-			cursor_Info,
-			cursor_Wait,
-			cursor_Cross,
-			cursor_Text,
-			cursor_UpDown,
-			cursor_LeftRight,
-			cursor_CornerTopLeft,
-			cursor_CornerTopRight,
-			cursor_CornerBottomLeft,
-			cursor_CornerBottomRight,
-			cursor_Cycle
-		};
+	RECT rect;
+	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
 
-		/** \brief Set cursor. Cursor is applied to window at mouse position. */
-		void set_cursor(eve::sys::Cursor p_cursorType);
+	return static_cast<int32_t>(rect.right - rect.left);
+}
 
+//=================================================================================================
+int32_t eve::sys::get_work_area_height(void)
+{
+	RECT rect;
+	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
 
-		/** \brief Get cursor position in screen coordinates. */
-		void get_cursor_position(int32_t * p_x, int32_t * p_y);
-		/** \brief Set cursor position. */
-		void setCursorPosition(int32_t p_x, int32_t p_y);
-
-	} // namespace sys
-
-} // namespace eve
-
-#endif // __EVE_SYSTEM_CURSOR_H__
+	return static_cast<int32_t>(rect.bottom - rect.top);
+}
