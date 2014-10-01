@@ -59,7 +59,7 @@ eve::sys::MessagePump * eve::sys::MessagePump::create_ptr(HWND p_handle)
 //=================================================================================================
 eve::sys::MessagePump::MessagePump(HWND p_handle)
 	// Inheritance
-	: eve::thr::Thread()
+	: eve::mem::Pointer()
 
 	// Members init
 	, m_handle(p_handle)
@@ -71,9 +71,6 @@ eve::sys::MessagePump::MessagePump(HWND p_handle)
 //=================================================================================================
 void eve::sys::MessagePump::init(void)
 {
-	// Call parent class
-	eve::thr::Thread::init();
-
 	// Event manager.
 	m_pEvent = EVE_CREATE_PTR(eve::sys::Event);
 
@@ -100,55 +97,6 @@ void eve::sys::MessagePump::release(void)
 	// Unregister from handler map.
 	eve::sys::MessagePump::unregister_handler(m_handle);
 	m_handle = 0;
-
-	// Call parent class
-	eve::thr::Thread::release();
-}
-
-
-
-//=================================================================================================
-void eve::sys::MessagePump::initThreadedData(void)
-{
-	// Nothing to do for now.
-}
-
-//=================================================================================================
-void eve::sys::MessagePump::releaseThreadedData(void)
-{
-	// Nothing to do for now.
-}
-
-//=================================================================================================
-void eve::sys::MessagePump::run(void)
-{
-	bool bGotMsg;
-	MSG msg;
-	msg.message = WM_NULL;
-
-	do {
-		// Grab new message.
-		bGotMsg = (::PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
-
-		// Test message.
-		if (bGotMsg && msg.message != WM_NULL)
-		{
-			// Translate and dispatch message.
-			{
-				::TranslateMessage(&msg);
-				::DispatchMessageW(&msg);
-			}
-			msg.message = WM_NULL;
-		}
-
-		// Wait some ms, so the thread doesn't soak up CPU.
-		else 
-		{
-			//::WaitForSingleObject(::GetCurrentThread(), 20);
-			::WaitForSingleObject(m_hThread, 20);
-		}
-
-	} while (this->running());
 }
 
 

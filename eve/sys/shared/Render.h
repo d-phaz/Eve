@@ -30,12 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_NODE_H__
-#define __EVE_SYSTEM_NODE_H__
-
-#ifndef __EVE_EVT_INCLUDES_H__
-#include "eve/evt/Includes.h"
-#endif
+#ifndef __EVE_SYSTEM_RENDER_H__
+#define __EVE_SYSTEM_RENDER_H__
 
 #ifndef __EVE_THREADING_THREAD_H__
 #include "eve/thr/Thread.h"
@@ -43,9 +39,6 @@
 
 
 namespace eve { namespace core	{ class Renderer; } }
-namespace eve { namespace sys	{ class MessagePump; } }
-namespace eve { namespace sys	{ class Render; } }
-namespace eve { namespace sys	{ class Window; } }
 
 
 namespace eve
@@ -53,14 +46,13 @@ namespace eve
 	namespace sys
 	{
 		/** 
-		* \class eve::sys::Node
+		* \class eve::sys::Render
 		*
-		* \brief Abstract base threaded system node class.
-		* Stock and manage render engines.
+		* \brief Render engines threaded manager.
 		*
 		* \note extends eve::thr::Thread
 		*/
-		class Node
+		class Render
 			: public eve::thr::Thread
 		{
 
@@ -71,21 +63,20 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::sys::Window *						m_pWindow;			//<! System window.
-			eve::sys::Render *						m_pRender;			//!< Render manager.
-			eve::sys::MessagePump *					m_pMessagePump;		//!< System message pump.
+			std::vector<eve::core::Renderer*> *		m_pVecRenderers;	//!< Render Engine(s) container.
+			
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Node);
-			EVE_PROTECT_DESTRUCTOR(Node);
+			EVE_DISABLE_COPY(Render);
+			EVE_PROTECT_DESTRUCTOR(Render);
 
 		protected:
 			/** \brief Class constructor. */
-			Node(void);
+			Render(void);
 
 
 		protected:
@@ -109,59 +100,23 @@ namespace eve
 
 
 		public:
-			/** 
+			/**
 			* \brief Register a renderer pointer.
 			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
-			* Return false if renderer is already registered. 
+			* Return false if renderer is already registered.
 			*/
-			bool registerRenderer(eve::core::Renderer * p_pRenderer);
-			/** 
+			bool registerRenderer(eve::core::Renderer * p_pRenderer, void * p_handle );
+			/**
 			* \brief Unregister a renderer pointer.
-			* Return false if renderer is not registered. 
+			* Return false if renderer is not registered.
 			*/
 			bool unregisterRenderer(eve::core::Renderer * p_pRenderer);
-			/** 
+			/**
 			* \brief Unregister and release a renderer pointer.
-			* Return false if renderer is not registered. 
+			* Return false if renderer is not registered.
 			*/
 			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
 
-
-		public:
-			/** \brief File drop event handler. (pure virtual) */
-			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args) = 0;
-
-
-			/** \brief Key down event handler. (pure virtual) */
-			virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) = 0;
-			/** \brief Key up event handler. (pure virtual) */
-			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args) = 0;
-			/** \brief Text input event handler. (pure virtual) */
-			virtual void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args) = 0;
-
-
-			/** \brief Mouse down event handler. (pure virtual) */
-			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) = 0;
-			/** \brief Mouse up event handler. (pure virtual) */
-			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) = 0;
-			/** \brief Mouse double click event handler. (pure virtual) */
-			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args) = 0;
-			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
-			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) = 0;
-			/** \brief Mouse passive motion (no button pressed) event handler. (pure virtual) */
-			virtual void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args) = 0;
-
-
-			/** \brief Window resize event handler. (pure virtual) */
-			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg) = 0;
-			/** \brief Window move event handler. (pure virtual) */
-			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg) = 0;
-			/** \brief Window gain focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusGot(void) = 0;
-			/** \brief Window loose focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusLost(void) = 0;
-			/** \brief Window close event handler. (pure virtual) */
-			virtual void cb_evtWindowClose(void) = 0;
 
 		}; // class Node
 
@@ -169,4 +124,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_SYSTEM_NODE_H__
+#endif // __EVE_SYSTEM_RENDER_H__

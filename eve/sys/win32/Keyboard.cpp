@@ -402,6 +402,6 @@ bool eve::sys::get_key_state_alt(void)			{ return (::GetKeyState(VK_MENU) == 1);
 bool eve::sys::get_key_state_shift(void)		{ return (::GetKeyState(VK_SHIFT) == 1);	}
 
 //=================================================================================================
-bool eve::sys::get_async_key_state_ctrl(void)	{ return (::GetAsyncKeyState(VK_CONTROL) & 0x8000); }
-bool eve::sys::get_async_key_state_alt(void)	{ return (::GetAsyncKeyState(VK_MENU) & 0x8000);	}
-bool eve::sys::get_async_key_state_shift(void)	{ return (::GetAsyncKeyState(VK_SHIFT) & 0x8000);	}
+bool eve::sys::get_async_key_state_ctrl(void)	{ return ((::GetAsyncKeyState(VK_CONTROL) & 0x8000)	!= 0); }
+bool eve::sys::get_async_key_state_alt(void)	{ return ((::GetAsyncKeyState(VK_MENU) & 0x8000)	!= 0); }
+bool eve::sys::get_async_key_state_shift(void)	{ return ((::GetAsyncKeyState(VK_SHIFT) & 0x8000)	!= 0); }

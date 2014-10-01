@@ -45,6 +45,10 @@
 #include "eve/thr/Includes.h"
 #endif
 
+
+namespace eve{ namespace app{ class App; } }
+
+
 namespace eve
 {
 	namespace mess
@@ -61,6 +65,11 @@ namespace eve
 		{
 
 			friend class eve::mem::Pointer;
+			friend class eve::app::App;
+
+			//////////////////////////////////////
+			//				TYPE				//
+			//////////////////////////////////////
 
 		public:
 			typedef void(*handlerMethod)(const wchar_t *p_funcName, const wchar_t *p_format, ...);
@@ -94,7 +103,7 @@ namespace eve
 			EVE_DISABLE_COPY(Server)
 			EVE_PROTECT_DESTRUCTOR(Server)
 
-		public:
+		private:
 			/** \brief Create unique instance. */
 			static Server * create_instance(const std::wstring & p_logFilePath=EVE_TXT(""));
 			/** \brief Release unique instance */

@@ -29,24 +29,33 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __EVE_SYSTEM_INCLUDES_H__
+#include "eve/app/App.h"
 #include "eve/sys/Includes.h"
-#endif
 
 
-
-int main(int argc, char **argv)
+class Example final
+	: public eve::sys::View
 {
-	
-	// Notification example //
+	friend class eve::mem::Pointer;
 
+	EVE_DISABLE_COPY(Example);
+	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+
+public:
+	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
+
+};
+
+void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+{
 	if (eve::sys::notify_prompt_user(EVE_TXT("Notification Example"), EVE_TXT("Launch notification example?")))
 	{
-		while (!eve::sys::notify_warning(EVE_TXT("Warning"), EVE_TXT("Be carreful this is a WARNING!!!")));
-		while (!eve::sys::notify_error(EVE_TXT("Error"), EVE_TXT("Woups an ERROR occured.")));
+		while (!eve::sys::notify_warning(EVE_TXT("Warning"), EVE_TXT("Be careful this is a WARNING!!!")));
+		while (!eve::sys::notify_error(EVE_TXT("Error"), EVE_TXT("Woups an ERROR occurred.")));
 
-		eve::sys::notify_fatal_error(EVE_TXT("Fatal error occured, exiting application."));
+		eve::sys::notify_fatal_error(EVE_TXT("Fatal error occurred, exiting application."));
 	}
-
-	return 0;
 }
+
+// Launch application for view "Example".
+EVE_APPLICATION(Example);

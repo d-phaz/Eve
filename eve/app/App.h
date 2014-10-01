@@ -33,17 +33,29 @@
 #ifndef __EVE_APPLICATION_APP_H__
 #define __EVE_APPLICATION_APP_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
+#ifndef __EVE_SYSTEM_CURSOR_H__
+#include "eve/sys/win32/Cursor.h"
 #endif
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
+#ifndef __EVE_SYSTEM_KEYBOARD_H__
+#include "eve/sys/win32/Keyboard.h"
 #endif
 
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
+#ifndef __EVE_SYSTEM_MOUSE_H__
+#include "eve/sys/shared/Mouse.h"
 #endif
+
+#ifndef __EVE_SYSTEM_NOTIFICATION_H__
+#include "eve/sys/win32/Notification.h"
+#endif
+
+#ifndef __EVE_SYSTEM_VIEW_H__
+#include "eve/sys/shared/View.h"
+#endif
+
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "eve/thr/SpinLock.h"
+#endif 
 
 
 namespace eve
@@ -68,7 +80,14 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			static eve::app::App *		m_p_instance;		//!< Class unique instance.
+			static eve::app::App *				m_p_instance;		//!< Class unique instance.
+
+		private:
+			bool								m_bRunning;			//!< Application main loop running state.
+
+		private:
+			std::vector<eve::sys::View*> *		m_pVecViews;		//!< Application view(s) container.
+			eve::thr::SpinLock *				m_pFence;			//!< Application view(s) container protection fence.
 
 
 			//////////////////////////////////////
@@ -76,16 +95,19 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(App);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(App);
+			EVE_PROTECT_DESTRUCTOR(App);
+
+			
+		public:
+			/** \brief Create unique instance. */
+			static eve::app::App * create_instance(void);
+			/** \brief Release unique instance */
+			static void release_instance(void);
 
 
 		private:
-			/** \brief Create unique instance. */
-			static eve::app::App * create_instance(void);
-			/** \brief Get unique instance. */
-			static eve::app::App * get_instance(void);
-			/** \brief Release unique instance */
-			static void release_instance(void);
+			/** \brief Class constructor. */
+			App(void);
 
 
 		private:
@@ -96,6 +118,29 @@ namespace eve
 
 
 		public:
+			/** \brief Launch application main loop. */
+			void runApp(void);
+
+
+		public:
+			/** 
+			* \brief Add view to application.
+			* View is created and returned as a TView pointer.
+			* App takes ownership of newly created view.
+			* Template class TView must inherit eve::sys::View.
+			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
+			*/
+			template<class TView>
+			TView * addView(void);
+			/** 
+			* \brief Remove and release target view.
+			* Return true if target view was contained.
+			*/
+			bool removeView(eve::sys::View * p_pView);
+
+
+		public:
+			/** \brief Application exit event handler. */
 			void cb_evtApplicationExit(void);
 
 		}; // class App
@@ -104,29 +149,47 @@ namespace eve
 
 } // namespace eve
 
-#if defined(EVE_OS_DARWIN)
-#define EVE_APPLICATION( APP, RENDERER )									\
+
+//=================================================================================================
+template<class TView>
+TView * eve::app::App::addView(void)
+{
+	EVE_ASSERT( (std::is_base_of<eve::sys::View, TView>::value) );
+
+	TView * view = EVE_CREATE_PTR(TView);
+	view->start();
+
+	m_pFence->lock();
+	m_pVecViews->push_back(view);
+	m_pFence->unlock();
+
+	return view;
+}
+
+
+
+#if defined(EVE_OS_WIN)
+#define EVE_APPLICATION( VIEW )																	\
+	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
+	{																									\
+		eve::app::App *	pApp = eve::app::App::create_instance();										\
+		pApp->addView<VIEW>();																			\
+		pApp->runApp();																					\
+		eve::app::App::release_instance();																\
+		return 0;																						\
+	}
+
+#elif defined(EVE_OS_DARWIN)
+#define EVE_APPLICATION( VIEW )												\
 	int main(int argc, char * const argv[]) 								\
 	{																		\
-		//cinder::app::AppBasic::prepareLaunch();								\
-		//cinder::app::AppBasic *app = new APP;								\
-		//cinder::app::RendererRef ren(new RENDERER);							\
-		//cinder::app::AppBasic::executeLaunch(app, ren, #APP, argc, argv);	\
-		//cinder::app::AppBasic::cleanupLaunch();								\
+		eve::app::App *	pApp = eve::app::App::create_instance();			\
+		pApp->addView<VIEW>();												\
+		pApp->runApp();														\
+		eve::app::App::release_instance();									\
 		return 0;															\
 	}
 
-#elif defined(EVE_OS_WIN)
-#define EVE_APPLICATION( APP, RENDERER )																	\
-	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 		\
-	{																										\
-		//cinder::app::AppBasic::prepareLaunch();																\
-		//cinder::app::AppBasic *app = new APP;																\
-		//cinder::app::RendererRef ren(new RENDERER);															\
-		//cinder::app::AppBasic::executeLaunch(app, ren, #APP);												\
-		//cinder::app::AppBasic::cleanupLaunch();																\
-		return 0;																							\
-	}
 #endif
 
 

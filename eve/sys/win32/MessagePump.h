@@ -37,8 +37,8 @@
 #include "eve/sys/shared/Event.h"
 #endif
 
-#ifndef __EVE_THREADING_THREAD_H__
-#include "eve/thr/Thread.h"
+#ifndef __EVE_MEMORY_POINTER_H__
+#include "eve/mem/Pointer.h"
 #endif 
 
 
@@ -52,10 +52,10 @@ namespace eve
 		* \brief Manage event translation and dispatch.
 		* Message pump events are linked to window handle (aka HWND).
 		*
-		* \note extends eve::thr::Thread
+		* \note extends eve::mem::Pointer
 		*/
 		class MessagePump final
-			: public eve::thr::Thread
+			: public eve::mem::Pointer
 		{
 
 			friend class eve::mem::Pointer;
@@ -105,16 +105,6 @@ namespace eve
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
-
-
-		protected:
-			/** \brief Alloc and init threaded data. (pure virtual) */
-			virtual void initThreadedData(void) override;
-			/** \brief Release and delete threaded data. (pure virtual) */
-			virtual void releaseThreadedData(void) override;
-
-			/** \brief Run is the main loop for this thread (\sa start()). (pure virtual) */
-			virtual void run(void) override;
 
 
 		private:

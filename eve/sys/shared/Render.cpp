@@ -30,47 +30,48 @@
 */
 
 // Main class header
-#include "eve/sys/win32/Node.h"
-
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
-#endif
-
-#ifndef __EVE_SYSTEM_RENDER_H__
 #include "eve/sys/shared/Render.h"
-#endif
 
-#ifndef __EVE_SYSTEM_WINDOW_H__
-#include "eve/sys/win32/Window.h"
+#ifndef __EVE_CORE_RENDERER_H__
+#include "eve/core/Renderer.h"
 #endif
 
 
 //=================================================================================================
-eve::sys::Node::Node(void)
+eve::sys::Render::Render(void)
 	// Inheritance
 	: eve::thr::Thread()
 
 	// Members init
-	, m_pWindow(nullptr)
-	, m_pRender(nullptr)
-	, m_pMessagePump(nullptr)
+	, m_pVecRenderers(nullptr)
 {}
 
 
 
 //=================================================================================================
-void eve::sys::Node::init(void)
+void eve::sys::Render::init(void)
 {
 	// Call parent class
 	eve::thr::Thread::init();
 
-	// Start execution
-	this->start();
+	// Render engines.
+	m_pVecRenderers = new std::vector<eve::core::Renderer*>();
 }
 
 //=================================================================================================
-void eve::sys::Node::release(void)
+void eve::sys::Render::release(void)
 {
+	// Render engines.
+	eve::core::Renderer * re = nullptr;
+	while (!m_pVecRenderers->empty())
+	{
+		re = m_pVecRenderers->back();
+		m_pVecRenderers->pop_back();
+
+		EVE_RELEASE_PTR(re);
+	}
+	EVE_RELEASE_PTR_CPP(m_pVecRenderers);
+
 	// Call parent class
 	eve::thr::Thread::release();
 }
@@ -78,61 +79,35 @@ void eve::sys::Node::release(void)
 
 
 //=================================================================================================
-void eve::sys::Node::initThreadedData(void)
+void eve::sys::Render::initThreadedData(void)
 {
-	m_pWindow = eve::sys::Window::create_ptr(50, 50, 800, 600);
-
-	m_pRender = EVE_CREATE_PTR(eve::sys::Render);
-	m_pRender->start();
-
-	m_pMessagePump = eve::sys::MessagePump::create_ptr(m_pWindow->getHandle());
-	m_pMessagePump->registerListener(this);
+	// Nothing to do for now.
 }
 
 //=================================================================================================
-void eve::sys::Node::releaseThreadedData(void)
+void eve::sys::Render::releaseThreadedData(void)
 {
-	m_pMessagePump->unregisterListener(this);
-	EVE_RELEASE_PTR(m_pMessagePump);
-
-	m_pRender->stop();
-	EVE_RELEASE_PTR(m_pRender);
-
-	EVE_RELEASE_PTR(m_pWindow);
+	// Nothing to do for now.
 }
 
 
 
 //=================================================================================================
-void eve::sys::Node::run(void)
+void eve::sys::Render::run(void)
 {
-	bool bGotMsg;
-	MSG msg;
-	msg.message = WM_NULL;
-
-	do 
+	do
 	{
-		// Grab new message.
-		bGotMsg = (::PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
+		// Launch render as there is no message to handle.
+		m_pFence->lock();
 
-		// Test message.
-		if (bGotMsg && msg.message != WM_NULL)
+		for (auto & itr : (*m_pVecRenderers))
 		{
-			// Translate and dispatch message.
-			{
-				::TranslateMessage(&msg);
-				::DispatchMessageW(&msg);
-			}
-			msg.message = WM_NULL;
-		}
-		else
-		{
-			// Wait some ms, so the thread doesn't soak up CPU.
-			::WaitForSingleObject(::GetCurrentThread(), 20);
+			itr->cb_beforeDisplay();
+			itr->cb_display();
+			itr->cb_afterDisplay();
 		}
 
-		// Free up CPU
-		::Sleep(5);
+		m_pFence->unlock();
 
 	} while (this->running());
 }
@@ -140,19 +115,55 @@ void eve::sys::Node::run(void)
 
 
 //=================================================================================================
-bool eve::sys::Node::registerRenderer(eve::core::Renderer * p_pRenderer)
+bool eve::sys::Render::registerRenderer(eve::core::Renderer * p_pRenderer, void * p_handle)
 {
-	return m_pRender->registerRenderer(p_pRenderer, m_pWindow->getHandle());;
+	m_pFence->lock();
+
+	std::vector<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	bool breturn = (itr == m_pVecRenderers->end());
+	if (breturn)
+	{
+		m_pVecRenderers->push_back(p_pRenderer);
+		p_pRenderer->registerToHandle(p_handle);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
 }
 
 //=================================================================================================
-bool eve::sys::Node::unregisterRenderer(eve::core::Renderer * p_pRenderer)
+bool eve::sys::Render::unregisterRenderer(eve::core::Renderer * p_pRenderer)
 {
-	return m_pRender->unregisterRenderer(p_pRenderer);
+	m_pFence->lock();
+
+	std::vector<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	bool breturn = (itr != m_pVecRenderers->end());
+	if (breturn)
+	{
+		m_pVecRenderers->erase(itr);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
 }
 
 //=================================================================================================
-bool eve::sys::Node::releaseRenderer(eve::core::Renderer * p_pRenderer)
+bool eve::sys::Render::releaseRenderer(eve::core::Renderer * p_pRenderer)
 {
-	return m_pRender->releaseRenderer(p_pRenderer);
+	m_pFence->lock();
+
+	std::vector<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	bool breturn = (itr != m_pVecRenderers->end());
+	if (breturn)
+	{
+		eve::core::Renderer * rder = (*itr);
+		m_pVecRenderers->erase(itr);
+		EVE_RELEASE_PTR(rder);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
 }

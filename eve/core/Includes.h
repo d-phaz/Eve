@@ -56,7 +56,7 @@
 #include <cassert>
 // standard string
 #include <string>
-// list types
+// container types
 #include <set>
 #include <list>
 #include <queue>
@@ -68,6 +68,8 @@
 #include <fstream>
 // utility
 #include <utility>
+// type utility
+#include <type_traits>
 // time
 #include <sys\timeb.h>
 
@@ -76,9 +78,6 @@
 
 	#include <Windows.h>
 	#include <Shtypes.h>
-
-	// Set linker subsystem as Console
-	#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
 
 #endif // defined(EVE_OS_WIN)
 

@@ -47,7 +47,7 @@ namespace eve
 		/** 
 		* \class eve::sys::Node
 		*
-		* \brief Abstract base application view class.
+		* \brief Base application view class.
 		* Stock and manage render engines.
 		*
 		* \note extends eve::sys::Node
@@ -79,44 +79,40 @@ namespace eve
 
 
 		public:
-			/** \brief Application exit event handler. (pure virtual) */
-			virtual void cb_evtApplicationExit(void){}
-
-
 			/** \brief File drop event handler. (pure virtual) */
-			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args){}
+			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args) override{}
 
 
 			/** \brief Key down event handler. (pure virtual) */
-			virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args){}
+			virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override{}
 			/** \brief Key up event handler. (pure virtual) */
-			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args){}
+			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args) override{}
 			/** \brief Text input event handler. (pure virtual) */
-			virtual void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args){}
+			virtual void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args) override{}
 
 
 			/** \brief Mouse down event handler. (pure virtual) */
-			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args){}
+			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override{}
 			/** \brief Mouse up event handler. (pure virtual) */
-			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args){}
+			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) override{}
 			/** \brief Mouse double click event handler. (pure virtual) */
-			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args){}
+			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args) override{}
 			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
-			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args){}
+			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) override{}
 			/** \brief Mouse passive motion (no button pressed) event handler. (pure virtual) */
-			virtual void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args){}
+			virtual void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args) override{}
 
 
 			/** \brief Window resize event handler. (pure virtual) */
-			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg){}
+			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg) override{}
 			/** \brief Window move event handler. (pure virtual) */
-			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg){}
+			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg) override{}
 			/** \brief Window gain focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusGot(void){}
+			virtual void cb_evtWindowFocusGot(void) override{}
 			/** \brief Window loose focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusLost(void){}
+			virtual void cb_evtWindowFocusLost(void) override{}
 			/** \brief Window close event handler. (pure virtual) */
-			virtual void cb_evtWindowClose(void){}
+			virtual void cb_evtWindowClose(void) override{}
 
 		}; // class Node
 
