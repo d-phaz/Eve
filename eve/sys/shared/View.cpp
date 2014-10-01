@@ -29,72 +29,14 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_RENDERER_H__
-#define __EVE_CORE_RENDERER_H__
-
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
+// Main class header
+#include "eve/sys/shared/View.h"
 
 
-namespace eve
-{
-	namespace core
-	{
-		/**
-		* \class eve::sys::Renderer
-		*
-		* \brief Abstract base render engine(s) class.
-		*
-		* \note extends eve::mem::Pointer
-		*/
-		class Renderer
-			: public eve::mem::Pointer
-		{
+//=================================================================================================
+eve::sys::View::View(void)
+	// Inheritance
+	: eve::sys::Node()
 
-			friend class eve::mem::Pointer;
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Renderer);
-			
-		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) = 0;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) = 0;
-
-
-		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) = 0;
-
-
-		public:
-			/** \brief Before display callback. (pure virtual) */
-			virtual void cb_beforeDisplay(void) = 0;
-			/** \brief After display callback. (pure virtual) */
-			virtual void cb_afterDisplay(void) = 0;
-
-			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) = 0;
-
-		}; // class Renderer
-
-	} // namespace core
-
-} // namespace eve
-
-#endif // __EVE_CORE_RENDERER_H__
+	// Members init
+{}

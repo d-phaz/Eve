@@ -64,9 +64,9 @@ namespace eve
 
 
 		protected:
-			std::deque<TEvt *> *            m_pQueueBack;			//!< Back event queue.
-			std::deque<TEvt *> *            m_pQueueFront;			//!< Front event queue.
-			std::deque<TEvt *> *            m_pQueueRef;			//!< Reference event queue used for swapping.
+			std::deque<TEvt> *	            m_pQueueBack;			//!< Back event queue.
+			std::deque<TEvt> *	            m_pQueueFront;			//!< Front event queue.
+			std::deque<TEvt> *	            m_pQueueRef;			//!< Reference event queue used for swapping.
 
 			eve::thr::SpinLock *			m_pFence;				//!< Memory fence as spin lock.
 
@@ -132,8 +132,8 @@ eve::evt::TQueue<TEvt>::TQueue(void)
 template <class TEvt>
 inline void eve::evt::TQueue<TEvt>::init(void)
 {
-	m_pQueueBack	= new std::deque<TEvt *>(200);
-	m_pQueueFront	= new std::deque<TEvt *>(200);
+	m_pQueueBack	= new std::deque<TEvt>(200);
+	m_pQueueFront	= new std::deque<TEvt>(200);
 	m_pFence		= EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 

@@ -42,8 +42,9 @@
 #endif 
 
 
-namespace eve { namespace sys { class MessagePump; } }
-namespace eve { namespace sys { class Window; } }
+namespace eve { namespace core	{ class Renderer; } }
+namespace eve { namespace sys	{ class MessagePump; } }
+namespace eve { namespace sys	{ class Window; } }
 
 
 namespace eve
@@ -68,8 +69,10 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::sys::Window *			m_pWindow;			//<! System window.
-			eve::sys::MessagePump *		m_pMessagePump;		//!< System message pump.
+			eve::sys::Window *						m_pWindow;			//<! System window.
+			eve::sys::MessagePump *					m_pMessagePump;		//!< System message pump.
+
+			std::vector<eve::core::Renderer*> *		m_pVecRenderers;	//!< Render Engine(s) container.
 
 
 			//////////////////////////////////////
@@ -105,8 +108,32 @@ namespace eve
 
 
 		public:
+			/** 
+			* \brief Register a renderer pointer.
+			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
+			* Return false if renderer is already registered. 
+			*/
+			bool registerRenderer(eve::core::Renderer * p_pRenderer);
+			/** 
+			* \brief Unregister a renderer pointer.
+			* Return false if renderer is not registered. 
+			*/
+			bool unregisterRenderer(eve::core::Renderer * p_pRenderer);
+			/** 
+			* \brief Unregister and release a renderer pointer.
+			* Return false if renderer is not registered. 
+			*/
+			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
+
+
+		public:
+			/** \brief Application exit event handler. (pure virtual) */
+			virtual void cb_evtApplicationExit(void) = 0;
+
+
 			/** \brief File drop event handler. (pure virtual) */
 			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args) = 0;
+
 
 			/** \brief Key down event handler. (pure virtual) */
 			virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) = 0;
@@ -114,6 +141,7 @@ namespace eve
 			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args) = 0;
 			/** \brief Text input event handler. (pure virtual) */
 			virtual void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args) = 0;
+
 
 			/** \brief Mouse down event handler. (pure virtual) */
 			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) = 0;
@@ -126,6 +154,7 @@ namespace eve
 			/** \brief Mouse passive motion (no button pressed) event handler. (pure virtual) */
 			virtual void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args) = 0;
 
+
 			/** \brief Window resize event handler. (pure virtual) */
 			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg) = 0;
 			/** \brief Window move event handler. (pure virtual) */
@@ -136,9 +165,6 @@ namespace eve
 			virtual void cb_evtWindowFocusLost(void) = 0;
 			/** \brief Window close event handler. (pure virtual) */
 			virtual void cb_evtWindowClose(void) = 0;
-
-			/** \brief Application exit event handler. (pure virtual) */
-			virtual void cb_evtApplicationExit(void) = 0;
 
 		}; // class Node
 

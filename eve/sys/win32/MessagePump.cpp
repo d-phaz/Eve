@@ -127,13 +127,13 @@ void eve::sys::MessagePump::run(void)
 	msg.message = WM_NULL;
 
 	do {
-		// Grab new message
+		// Grab new message.
 		bGotMsg = (::PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
 
-		// Test message
+		// Test message.
 		if (bGotMsg && msg.message != WM_NULL)
 		{
-			// Translate and dispatch the message
+			// Translate and dispatch message.
 			{
 				::TranslateMessage(&msg);
 				::DispatchMessageW(&msg);
@@ -141,10 +141,11 @@ void eve::sys::MessagePump::run(void)
 			msg.message = WM_NULL;
 		}
 
-		// Wait some ms, so the thread doesn't soak up CPU
+		// Wait some ms, so the thread doesn't soak up CPU.
 		else 
 		{
-			::WaitForSingleObject(::GetCurrentThread(), 20);
+			//::WaitForSingleObject(::GetCurrentThread(), 20);
+			::WaitForSingleObject(m_hThread, 20);
 		}
 
 	} while (this->running());
