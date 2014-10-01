@@ -29,30 +29,24 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "eve/sys/win32/Notification.h"
+#ifndef __EVE_SYSTEM_INCLUDES_H__
+#include "eve/sys/Includes.h"
+#endif
 
 
-//=================================================================================================
-bool eve::sys::notify_prompt_user(const std::wstring & p_title, const std::wstring & p_text)
+
+int main(int argc, char **argv)
 {
-	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OKCANCEL | MB_ICONQUESTION) == IDOK);
-}
+	
+	// Notification example //
 
-//=================================================================================================
-bool eve::sys::notify_warning(const std::wstring & p_title, const std::wstring & p_text)
-{
-	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONWARNING) == IDOK);
-}
+	if (eve::sys::notify_prompt_user(EVE_TXT("Notification Example"), EVE_TXT("Launch notification example?")))
+	{
+		while (!eve::sys::notify_warning(EVE_TXT("Warning"), EVE_TXT("Be carreful this is a WARNING!!!")));
+		while (!eve::sys::notify_error(EVE_TXT("Error"), EVE_TXT("Woups an ERROR occured.")));
 
-//=================================================================================================
-bool eve::sys::notify_error(const std::wstring & p_title, const std::wstring & p_text)
-{
-	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONERROR) == IDOK);
-}
+		eve::sys::notify_fatal_error(EVE_TXT("Fatal error occured, exiting application."));
+	}
 
-//=================================================================================================
-void eve::sys::notify_fatal_error(const std::wstring & p_text)
-{
-	::FatalAppExitW(-1, p_text.c_str());
+	return 0;
 }
