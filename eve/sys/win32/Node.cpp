@@ -59,8 +59,21 @@ void eve::sys::Node::init(void)
 	// Call parent class
 	eve::thr::Thread::init();
 
+	// Register to application events.
+	eve::evt::register_events_application(this);
+
 	// Start execution
 	this->start();
+}
+
+//=================================================================================================
+void eve::sys::Node::release(void)
+{
+	// Unregister to application events.
+	eve::evt::register_events_application(this);
+
+	// Call parent class
+	eve::thr::Thread::release();
 }
 
 
@@ -72,11 +85,13 @@ void eve::sys::Node::initThreadedData(void)
 
 	m_pMessagePump = eve::sys::MessagePump::create_ptr(m_pWindow->getHandle());
 	m_pMessagePump->registerListener(this);
+	m_pMessagePump->start();
 }
 
 //=================================================================================================
 void eve::sys::Node::releaseThreadedData(void)
 {
+	m_pMessagePump->stop();
 	m_pMessagePump->unregisterListener(this);
 	EVE_RELEASE_PTR(m_pMessagePump);
 
@@ -88,37 +103,9 @@ void eve::sys::Node::releaseThreadedData(void)
 //=================================================================================================
 void eve::sys::Node::run(void)
 {
-	bool bGotMsg;
-	MSG msg;
-	msg.message = WM_NULL;
-
 	do {
-		// Grab new message
-		//bGotMsg = (::PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
-		bGotMsg = (::PeekMessageW(&msg, m_pWindow->getHandle(), 0U, 0U, PM_REMOVE) != 0);
-
-		// Test message
-		if (bGotMsg && msg.message != WM_NULL)
-		{
-			// Translate and dispatch the message
-			{
-				::TranslateMessage(&msg);
-				::DispatchMessageW(&msg);
-			}
-			msg.message = WM_NULL;
-		}
-
-		// Wait some ms, so the thread doesn't soak up CPU
-		//else 
-		//{
-		//	::WaitForSingleObject(::GetCurrentThread(), 20);
-		//}
-
-		// Draw on screen.
-		else
-		{
-			cb_display();
-		}
+		
+		Sleep(20);
 
 	} while (this->running());
 }

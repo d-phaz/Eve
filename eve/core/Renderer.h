@@ -78,10 +78,10 @@ namespace eve
 
 
 		public:
-			/** \brief Before display call. (pure virtual) */
-			virtual void beforeDisplay(void) = 0;
-			/** \brief After display call. (pure virtual) */
-			virtual void afterDisplay(void) = 0;
+			/** \brief Before display callback. (pure virtual) */
+			virtual void cb_beforeDisplay(void) = 0;
+			/** \brief After display callback. (pure virtual) */
+			virtual void cb_afterDisplay(void) = 0;
 
 			/** \brief Draw on screen callback. (pure virtual) */
 			virtual void cb_display(void) = 0;

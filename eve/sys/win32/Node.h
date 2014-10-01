@@ -87,6 +87,11 @@ namespace eve
 		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
+			/**
+			* \brief Release and delete class members. (pure virtual)
+			* Stop this object's thread execution (if any) immediately.
+			*/
+			virtual void release(void) override;
 
 
 		protected:
@@ -132,10 +137,8 @@ namespace eve
 			/** \brief Window close event handler. (pure virtual) */
 			virtual void cb_evtWindowClose(void) = 0;
 
-
-		protected:
-			/** \brief Draw on screen. (pure virtual) */
-			virtual void cb_display(void) = 0;
+			/** \brief Application exit event handler. (pure virtual) */
+			virtual void cb_evtApplicationExit(void) = 0;
 
 		}; // class Node
 

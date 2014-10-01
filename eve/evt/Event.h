@@ -463,14 +463,14 @@ namespace eve
 		*		void cb_evtApplicationExit(void)
 		*/
 		template<class ListenerClass>
-		void register_events_application(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+		void register_events_application(ListenerClass * p_pListener, int32_t p_prio = orderApp);
 		/**
 		* \brief Unregister listener class to application events.
 		* Listener class must provide application event handler methods using the following signatures:
 		*		void cb_evtApplicationExit(void)
 		*/
 		template<class ListenerClass>
-		void unregister_events_application(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+		void unregister_events_application(ListenerClass * p_pListener, int32_t p_prio = orderApp);
 
 	} // namespace evt
 
