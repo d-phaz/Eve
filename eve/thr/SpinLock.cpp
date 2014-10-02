@@ -62,7 +62,12 @@ void eve::thr::SpinLock::lock(void)
 {
 	while (m_state.test_and_set(std::memory_order_acquire))
 	{
-		::SwitchToThread();
+		// Sleep(0) will result in a context switch if a higher priority thread is in ready state.
+		::Sleep(0);
+
+		//YieldProcessor();
+
+		//::SwitchToThread();
 		//std::this_thread::yield();
 	}
 }

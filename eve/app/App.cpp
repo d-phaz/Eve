@@ -49,7 +49,7 @@ eve::app::App * eve::app::App::create_instance(void)
 void eve::app::App::release_instance(void)
 {
 	EVE_ASSERT(m_p_instance);
-	EVE_RELEASE_PTR(m_p_instance);
+	EVE_RELEASE_PTR_CPP(m_p_instance);
 }
 
 
@@ -133,6 +133,7 @@ void eve::app::App::runApp(void)
 	} while (m_bRunning);
 	
 	EVE_LOG_INFO("Exiting application main loop.");
+	this->release();
 }
 
 
