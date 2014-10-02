@@ -58,7 +58,7 @@ static wchar_t * get_current_date(void)
 	localtime_s(&timestamp, &curTime);
 
 	memset(strCurrDate, 0, sizeof(strCurrDate));
-	swprintf(strCurrDate, 5, EVE_TXT("[%04d-%02d-%02d %02d:%02d]"), timestamp.tm_year + 1900, timestamp.tm_mon + 1, timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min);
+	swprintf(strCurrDate, sizeof(strCurrDate), EVE_TXT("[%04d-%02d-%02d %02d:%02d]"), timestamp.tm_year + 1900, timestamp.tm_mon + 1, timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min);
 
 	return strCurrDate;
 }
@@ -133,23 +133,52 @@ void eve::mess::Server::init(void)
 //=================================================================================================
 void eve::mess::Server::release(void)
 {
-	
+	// Nothing to do for now.
 }
 
 
 
 //=================================================================================================
-std::wstring eve::mess::Server::format_message(const wchar_t * ptitle, const wchar_t * p_funcName, const wchar_t *p_format)
+int32_t eve::mess::Server::get_buf_size(const wchar_t * format, va_list pargs)
 {
-	std::wstring ret = ptitle;
-	ret += get_current_date();
-	ret += EVE_TXT(" ");
-	ret += p_funcName;
-	ret += EVE_TXT(" ");
-	ret += p_format;
-	ret += EVE_TXT("\n");
+	int32_t retval;
+	va_list argcopy;
+	va_copy(argcopy, pargs);
+	retval = vswprintf(NULL, 0, format, argcopy);
+	va_end(argcopy);
+	return retval;
+}
 
-	return ret;
+//=================================================================================================
+void eve::mess::Server::print_to_output(const wchar_t * p_message)
+{
+#if defined(EVE_OS_WIN)
+	OutputDebugStringW(p_message);
+#else
+	fwprintf(stderr, p_message);
+#endif
+}
+
+
+
+//=================================================================================================
+wchar_t * eve::mess::Server::format_message(const wchar_t * ptitle, const wchar_t * p_funcName, const wchar_t *p_format, va_list p_args)
+{
+	std::wstring mess = ptitle;
+	mess += get_current_date();
+	mess += EVE_TXT(" ");
+	mess += p_funcName;
+	mess += EVE_TXT(" ");
+	mess += p_format;
+	mess += EVE_TXT("\n");
+
+	int size		= eve::mess::Server::get_buf_size(p_format, p_args);
+	size_t msize	= (size + mess.length()) * sizeof(wchar_t);
+	wchar_t * buf	= (wchar_t*)malloc(msize);
+
+	vswprintf(buf, msize, mess.c_str(), p_args);
+
+	return buf;
 }
 
 
@@ -158,19 +187,19 @@ std::wstring eve::mess::Server::format_message(const wchar_t * ptitle, const wch
 void eve::mess::Server::default_log_error(const wchar_t *p_funcName, const wchar_t *p_format, ...)
 {
 #if !defined(NDEBUG)
-	
+
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message( EVE_TXT("[ ERROR   ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(stderr, mess.c_str(), arg);
-	fflush(stderr);
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ ERROR   ]"), p_funcName, p_format, arg);
 	va_end(arg);
 
+	eve::mess::Server::print_to_output(mess);
+	free(mess);
+
 	m_p_mutex->unlock();
+
 #endif
 }
 
@@ -179,16 +208,15 @@ void eve::mess::Server::default_log_info(const wchar_t *p_funcName, const wchar_
 {
 #if !defined(NDEBUG)
 	
-	m_p_mutex->lock();
-	
+	m_p_mutex->lock();	
+
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ INFO    ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(stderr, mess.c_str(), arg);
-	fflush(stderr);
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ INFO    ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	eve::mess::Server::print_to_output(mess);
+	free(mess);
 
 	m_p_mutex->unlock();
 
@@ -199,17 +227,16 @@ void eve::mess::Server::default_log_info(const wchar_t *p_funcName, const wchar_
 void eve::mess::Server::default_log_warning(const wchar_t *p_funcName, const wchar_t *p_format, ...)
 {
 #if !defined(NDEBUG)
-	
+
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ WARNING ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(stderr, mess.c_str(), arg);
-	fflush(stderr);
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ WARNING ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	eve::mess::Server::print_to_output(mess);
+	free(mess);
 
 	m_p_mutex->unlock();
 
@@ -220,17 +247,16 @@ void eve::mess::Server::default_log_warning(const wchar_t *p_funcName, const wch
 void eve::mess::Server::default_log_progress(const wchar_t *p_funcName, const wchar_t *p_format, ...)
 {
 #if !defined(NDEBUG)
-	
+
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ PROGRESS]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(stderr, mess.c_str(), arg);
-	fflush(stderr);
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ PROGRESS]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	eve::mess::Server::print_to_output(mess);
+	free(mess);
 
 	m_p_mutex->unlock();
 
@@ -243,15 +269,14 @@ void eve::mess::Server::default_log_debug(const wchar_t *p_funcName, const wchar
 #if !defined(NDEBUG)
 
 	m_p_mutex->lock();
-	
+
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ DEBUG   ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(stderr, mess.c_str(), arg);
-	fflush(stderr);
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ DEBUG   ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	eve::mess::Server::print_to_output(mess);
+	free(mess);
 
 	m_p_mutex->unlock();
 
@@ -266,13 +291,13 @@ void eve::mess::Server::default_log_in_file_error(const wchar_t *p_funcName, con
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ ERROR   ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(get_error_stream(), mess.c_str(), arg);
-	fflush(get_error_stream());
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ ERROR   ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	fwprintf(get_error_stream(), mess);
+	fflush(get_error_stream());
+	free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -283,13 +308,13 @@ void eve::mess::Server::default_log_in_file_info(const wchar_t *p_funcName, cons
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ INFO    ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(get_info_stream(), mess.c_str(), arg);
-	fflush(get_info_stream());
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ INFO    ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	fwprintf(get_info_stream(), mess);
+	fflush(get_info_stream());
+	free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -300,13 +325,13 @@ void eve::mess::Server::default_log_in_file_warning(const wchar_t *p_funcName, c
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ WARNING ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(get_warning_stream(), mess.c_str(), arg);
-	fflush(get_warning_stream());
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ WARNING ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	fwprintf(get_warning_stream(), mess);
+	fflush(get_warning_stream());
+	free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -317,13 +342,13 @@ void eve::mess::Server::default_log_in_file_progress(const wchar_t *p_funcName, 
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ PROGRESS]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(get_progress_stream(), mess.c_str(), arg);
-	fflush(get_progress_stream());
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ PROGRESS]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	fwprintf(get_progress_stream(), mess);
+	fflush(get_progress_stream());
+	free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -334,13 +359,13 @@ void eve::mess::Server::default_log_in_file_debug(const wchar_t *p_funcName, con
 	m_p_mutex->lock();
 
 	va_list arg;
-
-	std::wstring mess = eve::mess::Server::format_message(EVE_TXT("[ DEBUG   ]"), p_funcName, p_format);
-
 	va_start(arg, p_format);
-	vfwprintf(get_debug_stream(), mess.c_str(), arg);
-	fflush(get_debug_stream());
+	wchar_t * mess = eve::mess::Server::format_message(EVE_TXT("[ DEBUG   ]"), p_funcName, p_format, arg);
 	va_end(arg);
+
+	fwprintf(get_debug_stream(), mess);
+	fflush(get_debug_stream());
+	free(mess);
 
 	m_p_mutex->unlock();
 }

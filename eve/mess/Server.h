@@ -122,9 +122,16 @@ namespace eve
 			virtual void release(void) override;
 
 
+		public:
+			/** \brief Get buffer containing varying arguments size. */
+			static int32_t get_buf_size(const wchar_t * format, va_list pargs);
+			/** \brief Print message to output. */
+			static void print_to_output(const wchar_t * p_message);
+
+
 		private:
-			/** \brief Format message to log. */
-			static std::wstring format_message(const wchar_t * ptitle, const wchar_t * p_funcName, const wchar_t *p_format);
+			/** \brief Format message to log and return a newly allocated buffer, do not forget to free it after use. */
+			static wchar_t * format_message(const wchar_t * ptitle, const wchar_t * p_funcName, const wchar_t *p_format, va_list p_args);
 
 
 		private:

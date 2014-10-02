@@ -48,7 +48,7 @@ public:
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
-	EVE_LOG_INFO("cb_evtMouseDown");
+	EVE_LOG_INFO("cb_evtMouseDown %d %s", 1254, EVE_TXT("POUÈT"));
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
