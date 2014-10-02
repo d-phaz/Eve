@@ -161,6 +161,8 @@ source_group( "System" FILES ${SYSTEM_SRCS} )
 # Thread.
 #################################################
 set( THREADING_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Barrier.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Barrier.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Condition.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Condition.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Includes.h 
