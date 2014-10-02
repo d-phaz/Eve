@@ -171,7 +171,7 @@ endif()
 # Visual Leak Detector.
 ###################################################################################################
 if( WIN32 AND OPTION_BUILD_TYPE_DEBUG )
-	option( OPTION_BUILD_USE_VLD "Use Visual Leak Detector for VS (requires Debugging Tools for Windows)." ON)
+	option( OPTION_BUILD_USE_VLD "Use Visual Leak Detector for Visual Studio (requires Debugging Tools for Windows)." ON)
 endif() 
 
 
