@@ -156,6 +156,7 @@ void eve::mess::Server::print_to_output(const wchar_t * p_message)
 	OutputDebugStringW(p_message);
 #else
 	fwprintf(stderr, p_message);
+	fflush(stderr);
 #endif
 }
 
