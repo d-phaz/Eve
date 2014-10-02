@@ -9,4 +9,4 @@
 
 #define EVE_VERSIONNAME EVE_TXT("@PRODUCT_VERSION@")
 
-#endif 	// __VERSION_H__
+#endif 	// __EVE_VERSION_H__

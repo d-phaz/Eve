@@ -1,29 +1,30 @@
-# Module for locating the Visual Leak Detector.
-# 
-# Cutomizable variables:
+# Module for locating Visual Leak Detector.
+#
+# Customizable variables:
 #   VLD_ROOT_DIR
 #     This variable points to the Visual Leak Detector root directory. By
 #     default, the module looks for the installation directory by examining the
-#     Program Files/Program Files (x86) folders.
+#     Program Files/Program Files (x86) folders and the VLDROOT environment
+#     variable.
 #
-# Read-Only variables:
+# Read-only variables:
 #   VLD_FOUND
 #     Indicates that the library has been found.
 #
-#   VLD_INCLUDE_DIR
+#   VLD_INCLUDE_DIRS
 #     Points to the Visual Leak Detector include directory.
+#
+#   VLD_LIBRARY_DIRS
+#     Points to the Visual Leak Detector directory that contains the libraries.
+#     The content of this variable can be passed to link_directories.
 #
 #   VLD_LIBRARIES
 #     Points to the Visual Leak Detector libraries that can be passed to
 #     target_link_libararies.
 #
-#   VLD_LIBRARIES_DIR
-#     Points to the Visual Leak Detector directory that contains the libraries.
-#     The content of this variable can be passed to link_directories.
-# 
-# Origine:
-# Copyright (c) 2010 Sergiu Dotenco
-# Lisence:
+#
+# Copyright (c) 2012 Sergiu Dotenco
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -44,132 +45,79 @@
 
 INCLUDE (FindPackageHandleStandardArgs)
 
-	SET (_VLD_POSSIBLE_LIB_SUFFIXES
-	  lib)
-	# Version 2.0 uses vld_x86 and vld_x64 instead of simply vld as library names
-	IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
-	  LIST (APPEND _VLD_POSSIBLE_LIB_SUFFIXES lib/Win32)
-	  LIST (APPEND _VLD_POSSIBLE_LIB_SUFFIXES bin/Win32)
-	ELSEIF (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  LIST (APPEND _VLD_POSSIBLE_LIB_SUFFIXES lib/Win64)
-	  LIST (APPEND _VLD_POSSIBLE_LIB_SUFFIXES bin/Win64)
-	ENDIF (CMAKE_SIZEOF_VOID_P EQUAL 4)
-	
-	# Version 2.0 uses vld_x86 and vld_x64 instead of simply vld as library names
-	IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
-	  LIST (APPEND _VLD_POSSIBLE_MANIFEST_SUFFIXES manifest/Win32)
-	ELSEIF (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	  LIST (APPEND _VLD_POSSIBLE_MANIFEST_SUFFIXES manifest/Win64)
-	ENDIF (CMAKE_SIZEOF_VOID_P EQUAL 4)
+SET (_VLD_POSSIBLE_LIB_SUFFIXES lib)
 
-	MESSAGE(STATUS ${_VLD_POSSIBLE_LIB_SUFFIXES} )
-	FIND_PATH (VLD_MANIFEST_DIR
-	  NAMES Microsoft.DTfW.DHL.manifest
-	  PATHS ${OPTION_BUILD_PATH_SOURCE_EXTERNAL}/vld
-	  PATH_SUFFIXES ${_VLD_POSSIBLE_MANIFEST_SUFFIXES}
-	  NO_DEFAULT_PATH
-	  DOC "VLD manifest directory")
+# Version 2.0 uses vld_x86 and vld_x64 instead of simply vld as library names
+IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
+  LIST (APPEND _VLD_POSSIBLE_LIB_SUFFIXES lib/Win32)
+ELSEIF (CMAKE_SIZEOF_VOID_P EQUAL 8)
+  LIST (APPEND _VLD_POSSIBLE_LIB_SUFFIXES lib/Win64)
+ENDIF (CMAKE_SIZEOF_VOID_P EQUAL 4)
 
-IF(OPTION_BUILD_USE_VLD_FROM_BUILD)
+FIND_PATH (VLD_ROOT_DIR
+  NAMES include/vld.h
+  PATHS ENV VLDROOT
+        "$ENV{PROGRAMFILES}/Visual Leak Detector"
+        "$ENV{PROGRAMFILES(X86)}/Visual Leak Detector"
+        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Visual Leak Detector;InstallLocation]"
+        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Visual Leak Detector;InstallLocation]"
+  DOC "VLD root directory")
 
-	FIND_PATH (VLD_ROOT_DIR
-	  NAMES vld.h
-	  PATHS ${OPTION_BUILD_PATH_SOURCE_EXTERNAL}/vld
-	  DOC "VLD root directory")
-	 
-	 
-	FIND_PATH (VLD_INCLUDE_DIR 
-	  NAMES vld.h
-	  PATHS ${VLD_ROOT_DIR}
-	  DOC "VLD include directory")
-	  
-	SET(VLD_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CONFIGURATION_TYPES})
-	SET(VLD_DLL_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CONFIGURATION_TYPES})
+FIND_PATH (VLD_INCLUDE_DIR
+  NAMES vld.h
+  HINTS ${VLD_ROOT_DIR}
+  PATH_SUFFIXES include
+  DOC "VLD include directory")
 
-	FIND_PATH(VLD_LIBRARIES_DIR
-		NAMES vld.lib
-		PATHS ${VLD_LIBRARY_PATH}
-		)	
+FIND_LIBRARY (VLD_LIBRARY_DEBUG
+  NAMES vld
+  HINTS ${VLD_ROOT_DIR}
+  PATH_SUFFIXES ${_VLD_POSSIBLE_LIB_SUFFIXES}
+  DOC "VLD debug library")
 
-	IF (MSVC)
-	  FIND_LIBRARY (VLD_LIBRARIES_DEBUG
-		NAMES vld
-		PATHS ${VLD_LIBRARY_PATH}
-		DOC "VLD libraries")
+IF (VLD_ROOT_DIR)
+  SET (_VLD_VERSION_FILE ${VLD_ROOT_DIR}/CHANGES.txt)
 
-	  SET (VLD_LIBRARIES debug ${VLD_LIBRARIES_DEBUG})
-	ENDIF (MSVC)
-		FIND_PATH(VLD_DLL_DIR
-			NAMES vld.dll
-			PATHS ${VLD_DLL_PATH}
-			)
-  
-ELSE(OPTION_BUILD_USE_VLD_FROM_BUILD)
+  IF (EXISTS ${_VLD_VERSION_FILE})
+    SET (_VLD_VERSION_REGEX
+      "Visual Leak Detector \\(VLD\\) Version (([0-9]+)\\.([0-9]+)([a-z]|(.([0-9]+)))?)")
+    FILE (STRINGS ${_VLD_VERSION_FILE} _VLD_VERSION_TMP REGEX
+      ${_VLD_VERSION_REGEX})
 
-	SET (_VLD_POSSIBLE_DIRS
-	  ${VLD_ROOT_DIR}
-	  "$ENV{PROGRAMFILES}/Visual Leak Detector"
-	  "$ENV{PROGRAMFILES(X86)}/Visual Leak Detector")
+    STRING (REGEX REPLACE ${_VLD_VERSION_REGEX} "\\1" _VLD_VERSION_TMP
+      "${_VLD_VERSION_TMP}")
 
-	SET (_VLD_POSSIBLE_INCLUDE_SUFFIXES
-	  include)
+    STRING (REGEX REPLACE "([0-9]+).([0-9]+).*" "\\1" VLD_VERSION_MAJOR
+      "${_VLD_VERSION_TMP}")
+    STRING (REGEX REPLACE "([0-9]+).([0-9]+).*" "\\2" VLD_VERSION_MINOR
+      "${_VLD_VERSION_TMP}")
 
-	FIND_PATH (VLD_ROOT_DIR
-	  NAMES include/vld.h
-	  PATHS ${_VLD_POSSIBLE_DIRS}
-	  DOC "VLD root directory")
+    SET (VLD_VERSION ${VLD_VERSION_MAJOR}.${VLD_VERSION_MINOR})
 
-	FIND_PATH (VLD_INCLUDE_DIR 
-	  NAMES vld.h
-	  PATHS ${VLD_ROOT_DIR}
-	  PATH_SUFFIXES ${_VLD_POSSIBLE_INCLUDE_SUFFIXES}
-	  DOC "VLD include directory")
+    IF ("${_VLD_VERSION_TMP}" MATCHES "^([0-9]+).([0-9]+).([0-9]+)$")
+      # major.minor.patch version numbering scheme
+      STRING (REGEX REPLACE "([0-9]+).([0-9]+).([0-9]+)" "\\3"
+        VLD_VERSION_PATCH "${_VLD_VERSION_TMP}")
+      SET (VLD_VERSION "${VLD_VERSION}.${VLD_VERSION_PATCH}")
+      SET (VLD_VERSION_COUNT 3)
+    ELSE ("${_VLD_VERSION_TMP}" MATCHES "^([0-9]+).([0-9]+).([0-9]+)$")
+      # major.minor version numbering scheme. The trailing letter is ignored.
+      SET (VLD_VERSION_COUNT 2)
+    ENDIF ("${_VLD_VERSION_TMP}" MATCHES "^([0-9]+).([0-9]+).([0-9]+)$")
+  ENDIF (EXISTS ${_VLD_VERSION_FILE})
+ENDIF (VLD_ROOT_DIR)
 
-	FIND_PATH (VLD_LIBRARIES_DIR
-	  NAMES vld.lib
-	  PATHS ${VLD_ROOT_DIR}
-	  PATH_SUFFIXES ${_VLD_POSSIBLE_LIB_SUFFIXES}
-	  DOC "VLD libraries directory")
+IF (VLD_LIBRARY_DEBUG)
+  SET (VLD_LIBRARY debug ${VLD_LIBRARY_DEBUG} CACHE DOC "VLD library")
+  GET_FILENAME_COMPONENT (_VLD_LIBRARY_DIR ${VLD_LIBRARY_DEBUG} PATH)
+  SET (VLD_LIBRARY_DIR ${_VLD_LIBRARY_DIR} CACHE PATH "VLD library directory")
+ENDIF (VLD_LIBRARY_DEBUG)
 
-	IF (MSVC)
-	  FIND_LIBRARY (VLD_LIBRARIES_DEBUG
-		NAMES vld
-		PATHS ${VLD_ROOT_DIR}
-		PATH_SUFFIXES ${_VLD_POSSIBLE_LIB_SUFFIXES}
-		DOC "VLD libraries")
+SET (VLD_INCLUDE_DIRS ${VLD_INCLUDE_DIR})
+SET (VLD_LIBRARY_DIRS ${VLD_LIBRARY_DIR})
+SET (VLD_LIBRARIES ${VLD_LIBRARY})
 
-	  SET (VLD_LIBRARIES debug ${VLD_LIBRARIES_DEBUG})
-	ENDIF (MSVC)
+MARK_AS_ADVANCED (VLD_INCLUDE_DIR VLD_LIBRARY_DIR VLD_LIBRARY_DEBUG VLD_LIBRARY)
 
-	IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
-		FIND_PATH (VLD_DLL_DIR
-			NAMES vld_x86.dll
-			PATHS ${VLD_ROOT_DIR}
-			PATH_SUFFIXES ${_VLD_POSSIBLE_LIB_SUFFIXES}
-			DOC "VLD libraries directory")
-	ELSEIF (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		FIND_PATH (VLD_DLL_DIR
-			NAMES vld_x64.dll
-			PATHS ${VLD_ROOT_DIR}
-			PATH_SUFFIXES ${_VLD_POSSIBLE_LIB_SUFFIXES}
-			DOC "VLD libraries directory")
-	ENDIF (CMAKE_SIZEOF_VOID_P EQUAL 4)
-	
-ENDIF(OPTION_BUILD_USE_VLD_FROM_BUILD)
-
-FIND_PACKAGE_HANDLE_STANDARD_ARGS (VLD DEFAULT_MSG
-  VLD_INCLUDE_DIR VLD_LIBRARIES)
-
-IF (NOT VLD_FOUND)
-  IF (NOT PACKAGE_FIND_QUIETLY)
-    IF (PACKAGE_FIND_REQUIRED)
-      MESSAGE (FATAL_ERROR 
-        "VLD required but some files were not found. "
-        "Specify the VLD location using VLD_ROOT_DIR")
-    ENDIF (PACKAGE_FIND_REQUIRED)
-  ENDIF (NOT PACKAGE_FIND_QUIETLY)
-ENDIF (NOT VLD_FOUND)
-
-MARK_AS_ADVANCED (VLD_INCLUDE_DIR VLD_LIBRARIES VLD_LIBRARIES_DIR)
- 
-
+FIND_PACKAGE_HANDLE_STANDARD_ARGS (VLD REQUIRED_VARS VLD_ROOT_DIR
+  VLD_INCLUDE_DIR VLD_LIBRARY VERSION_VAR VLD_VERSION)

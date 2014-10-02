@@ -114,8 +114,7 @@ if( WIN32 )
 		list( REMOVE_DUPLICATES CMAKE_C_FLAGS_RELEASE )
 		
 		mark_as_advanced( CMAKE_CXX_FLAGS_RELEASE 
-						  CMAKE_C_FLAGS_RELEASE 
-						  )
+						  CMAKE_C_FLAGS_RELEASE )
 		
 		# Linker
 		set( CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
@@ -127,8 +126,7 @@ if( WIN32 )
 
 		mark_as_advanced( CMAKE_EXE_LINKER_FLAGS_DEBUG 
 						  CMAKE_SHARED_LINKER_FLAGS_DEBUG 
-						  CMAKE_MODULE_LINKER_FLAGS_DEBUG 
-						  )
+						  CMAKE_MODULE_LINKER_FLAGS_DEBUG )
 						  
 		set( CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /SAFESEH:NO")
 		list( REMOVE_DUPLICATES CMAKE_EXE_LINKER_FLAGS_RELEASE )	
@@ -139,30 +137,42 @@ if( WIN32 )
 
 		mark_as_advanced( CMAKE_EXE_LINKER_FLAGS_RELEASE 
 						  CMAKE_SHARED_LINKER_FLAGS_RELEASE 
-						  CMAKE_MODULE_LINKER_FLAGS_RELEASE 
-						  )	
+						  CMAKE_MODULE_LINKER_FLAGS_RELEASE )	
+	
+		# VS 2013 Edit And Continue is not available for x64.
+		set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI" )
+		list( REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG )
+		set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /ZI" )
+		list( REMOVE_DUPLICATES CMAKE_C_FLAGS_DEBUG )
+	
+		mark_as_advanced( CMAKE_CXX_FLAGS_DEBUG 
+						  CMAKE_C_FLAGS_DEBUG )
+	endif()
+
+	# Multi Proc Build
+	if(NOT OPTION_BUILD_TYPE_DEBUG)	
+		option(OPTION_BUILD_USE_MP "Use /MP compiler flag." ON)
+		if(OPTION_BUILD_USE_MP)
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+			set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
+		endif()
 	endif()
 	
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI" )
+	mark_as_advanced( CMAKE_CXX_FLAGS 
+					  CMAKE_C_FLAGS )
+
+	# Warning Level 3 for Debug builds
+	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W3" )
 	list( REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG )
-	set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /ZI" )
-	list( REMOVE_DUPLICATES CMAKE_C_FLAGS_DEBUG )
 	
-	mark_as_advanced( CMAKE_CXX_FLAGS_DEBUG 
-					  CMAKE_C_FLAGS_DEBUG 
-					  )
 endif()
 
 
 # Visual Leak Detector.
 ###################################################################################################
-if( USING_WINDOWS_MSVC )  
-	if( OPTION_BUILD_TYPE_DEBUG )
-		option( OPTION_BUILD_USE_VLD "Use Visual Leak Detector for Visual C++ (requires Debugging Tools for Windows)" ON)
-	else( OPTION_BUILD_TYPE_DEBUG )
-		option( OPTION_BUILD_USE_VLD "Use Visual Leak Detector for Visual C++ (requires Debugging Tools for Windows)" OFF)		
-	endif( OPTION_BUILD_TYPE_DEBUG )
-endif( USING_WINDOWS_MSVC ) 
+if( WIN32 AND OPTION_BUILD_TYPE_DEBUG )
+	option( OPTION_BUILD_USE_VLD "Use Visual Leak Detector for VS (requires Debugging Tools for Windows)." ON)
+endif() 
 
 
 # External dependencies path.
@@ -177,6 +187,7 @@ endif( USING_WINDOWS_MSVC )
 	
 	# message( "\n" )
 # endif()
+
 
 ###################################################################################################
 # NOTE:
@@ -217,10 +228,6 @@ endif( USING_GCC )
 # Visual Studio specifics.
 #################################################
 if( WIN32 )
-
-	# Warning Level 3 for Debug builds
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W3" )
-	list( REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG )
 
 	# With Visual Studio 2005, Microsoft deprecates the standard C library, for
 	# example fopen() and sprintf(), to non-portable functions fopen_s() and

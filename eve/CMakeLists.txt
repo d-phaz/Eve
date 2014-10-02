@@ -3,6 +3,7 @@
 # NOTE:
 # 	BASE_SOURCE_PATH is defined in ROOT\CMakeLists.txt
 # 	PATH_TO_EXTERNAL is defined in ROOT\CMakeLists.txt
+#	OPTION_BUILD_USE_VLD is defined in ROOT\CMakeLists.txt
 ###################################################################################################
 
 
@@ -40,6 +41,7 @@ set( CMAKE_AUTOMOC_RELAXED_MODE TRUE )
 # Parse files in project.
 ###################################################################################################
 set( SOURCE_FILES )
+set( LIBS )
 
 
 # App.
@@ -189,13 +191,32 @@ set( THREADING_SRCS
 set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )
 
-
-# Version.
+	
+# Visual Leak Detector.
 #################################################
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/version/Version.h.in
-                ${CMAKE_CURRENT_SOURCE_DIR}/version/Version.h )
-set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/version/version.h )
-set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/version/version.h PROPERTIES GENERATED true )
+if( WIN32 AND OPTION_BUILD_USE_VLD )
+	include("${BASE_SOURCE_PATH}/CMake/FindVLD.cmake")
+	if( VLD_FOUND )
+		set( USE_VLD "pouet" )
+		include_directories( ${VLD_INCLUDE_DIRS} )
+		set(LIBS ${LIBS} ${VLD_LIBRARIES})
+	endif()
+endif()
+
+
+# Version.h
+#################################################
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h.in
+                ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h )
+set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h PROPERTIES GENERATED true )
+			
+# External.h
+#################################################
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h.in
+				${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
+set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h PROPERTIES GENERATED true )
 
 
 # Include directories.
@@ -211,7 +232,8 @@ link_directories( ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
 # Windows 
 #################################################
 if( WIN32 )
-	set( LIBS	
+	set( LIBS
+		 ${LIBS}
 		 kernel32.lib ) 	 
 
 	if( CMAKE_SIZEOF_VOID_P EQUAL 8 )

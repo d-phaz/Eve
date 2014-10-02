@@ -82,8 +82,12 @@
 #endif // defined(EVE_OS_WIN)
 
 
+#ifndef __EVE_EXTERNAL_H__
+#include "eve/generated/External.h"
+#endif
+
 #ifndef __EVE_VERSION_H__
-#include "eve/version/Version.h"
+#include "eve/generated/Version.h"
 #endif
 
 #ifndef __EVE_CORE_MACRO_H__

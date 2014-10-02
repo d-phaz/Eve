@@ -9,4 +9,4 @@
 
 #define EVE_VERSIONNAME EVE_TXT("0.0.1")
 
-#endif 	// __VERSION_H__
+#endif 	// __EVE_VERSION_H__
