@@ -16,7 +16,6 @@ namespace eve
 		* \class eve::evt::Callback0<class TReturn>
 		*
 		* \brief Abstract base callback class.
-		*
 		* Register any method as a callback.
 		* The method must provide the following signature: TReturn method(void)
 		*/
@@ -35,7 +34,6 @@ namespace eve
 		* \class eve::evt::Callback1<class TReturn>, class TArg1>
 		*
 		* \brief Abstract base callback class.
-		*
 		* Register any method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1)
 		*/
@@ -54,7 +52,6 @@ namespace eve
 		* \class eve::evt::Callback2<class TReturn>, class TArg1, class TArg2>
 		*
 		* \brief Abstract base callback class.
-		*
 		* Register any method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
 		*/
@@ -73,7 +70,6 @@ namespace eve
 		* \class eve::evt::Callback3<class TReturn>, class TArg1, class TArg2, class TArg3>
 		*
 		* \brief Abstract base callback class.
-		*
 		* Register any method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
 		*/
@@ -92,7 +88,6 @@ namespace eve
 		* \class eve::evt::Callback4<class TReturn>, class TArg1, class TArg2, class TArg3, class TArg4>
 		*
 		* \brief Abstract base callback class.
-		*
 		* Register any method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
 		*/
@@ -111,7 +106,6 @@ namespace eve
 		* \class eve::evt::Callback4<class TReturn>, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
 		*
 		* \brief Abstract base callback class.
-		*
 		* Register any method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
 		*/
@@ -137,9 +131,7 @@ namespace eve
 		/**
 		* \class eve::evt::StaticCallback0<class TReturn>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any global or static method as a callback.
+		* \brief Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(void)
 		*
 		* \note extends eve::evt::Callback0<TReturn>
@@ -167,8 +159,8 @@ namespace eve
 
 			virtual bool operator == (const Callback0<TReturn> &p_other) const override
 			{
-				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
-				return (p_callBack != NULL && func == p_callBack->func);
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func);
 			}
 		};
 
@@ -176,9 +168,7 @@ namespace eve
 		/**
 		* \class eve::evt::StaticCallback1<class TReturn, class TArg1>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any global or static method as a callback.
+		* \brief Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1)
 		*
 		* \note extends eve::evt::Callback1<TReturn, TArg1>
@@ -206,8 +196,8 @@ namespace eve
 
 			virtual bool operator == (const Callback1<TReturn, TArg1> &p_other) const override
 			{
-				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
-				return (p_callBack != NULL && func == p_callBack->func);
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func);
 			}
 		};
 
@@ -215,9 +205,7 @@ namespace eve
 		/**
 		* \class eve::evt::StaticCallback2<class TReturn, class TArg1, class TArg2>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any global or static method as a callback.
+		* \brief Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
 		*
 		* \note extends eve::evt::Callback2<TReturn, TArg1, TArg2>
@@ -245,8 +233,8 @@ namespace eve
 
 			virtual bool operator == (const Callback2<TReturn, TArg1, TArg2> &p_other) const override
 			{
-				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
-				return (p_callBack != NULL && func == p_callBack->func);
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func);
 			}
 		};
 
@@ -254,9 +242,7 @@ namespace eve
 		/**
 		* \class eve::evt::StaticCallback3<class TReturn, class TArg1, class TArg2, class TArg3>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any global or static method as a callback.
+		* \brief Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
 		*
 		* \note extends eve::evt::Callback3<TReturn, TArg1, TArg2, TArg3>
@@ -284,8 +270,8 @@ namespace eve
 
 			virtual bool operator == (const Callback3<TReturn, TArg1, TArg2, TArg3> &p_other) const override
 			{
-				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
-				return (p_callBack != NULL && func == p_callBack->func);
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func);
 			}
 		};
 
@@ -293,9 +279,7 @@ namespace eve
 		/**
 		* \class eve::evt::StaticCallback3<class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any global or static method as a callback.
+		* \brief Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
 		*
 		* \note extends eve::evt::Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
@@ -323,8 +307,8 @@ namespace eve
 
 			virtual bool operator == (const Callback4<TReturn, TArg1, TArg2, TArg3, TArg4> &p_other) const override
 			{
-				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
-				return (p_callBack != NULL && func == p_callBack->func);
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func);
 			}
 		};
 
@@ -332,9 +316,7 @@ namespace eve
 		/**
 		* \class eve::evt::StaticCallback5<class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any global or static method as a callback.
+		* \brief Register any global or static method as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
 		*
 		* \note extends eve::evt::Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>
@@ -362,8 +344,8 @@ namespace eve
 
 			virtual bool operator == (const Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5> &p_other) const override
 			{
-				const CurrentType *p_callBack = reinterpret_cast<const CurrentType*>(&p_other);
-				return (p_callBack != NULL && func == p_callBack->func);
+				const CurrentType *cb = reinterpret_cast<const CurrentType*>(&p_other);
+				return (cb != NULL && func == cb->func);
 			}
 		};
 
@@ -463,9 +445,7 @@ namespace eve
 		/**
 		* \class eve::evt::ClassCallback0<class TClass, class TReturn>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any method of any class as a callback.
+		* \brief Register any method of any class as a callback.
 		* The method must provide the following signature: TReturn method(void)
 		*
 		* \note extends eve::evt::Callback0<TReturn>
@@ -504,9 +484,7 @@ namespace eve
 		/**
 		* \class eve::evt::ClassCallback1<class TClass, class TReturn, class TArg1>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any method of any class as a callback.
+		* \brief Register any method of any class as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1)
 		*
 		* \note extends eve::evt::Callback1<TReturn, TArg1>
@@ -545,9 +523,7 @@ namespace eve
 		/**
 		* \class eve::evt::ClassCallback2<class TClass, class TReturn, class TArg1, class TArg2>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any method of any class as a callback.
+		* \brief Register any method of any class as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2)
 		*
 		* \note extends eve::evt::Callback2<TReturn, TArg1, TArg2>
@@ -586,9 +562,7 @@ namespace eve
 		/**
 		* \class eve::evt::ClassCallback3<class TClass, class TReturn, class TArg1, class TArg2, class TArg3>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any method of any class as a callback.
+		* \brief Register any method of any class as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3)
 		*
 		* \note extends eve::evt::Callback3<TReturn, TArg1, TArg2, TArg3>
@@ -627,9 +601,7 @@ namespace eve
 		/**
 		* \class eve::evt::ClassCallback4<class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any method of any class as a callback.
+		* \brief Register any method of any class as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
 		*
 		* \note extends eve::evt::Callback4<TReturn, TArg1, TArg2, TArg3, TArg4>
@@ -668,9 +640,7 @@ namespace eve
 		/**
 		* \class eve::evt::ClassCallback5<class TClass, class TReturn, class TArg1, class TArg2, class TArg3, class TArg4, class TArg5>
 		*
-		* \brief Abstract base callback class.
-		*
-		* Register any method of any class as a callback.
+		* \brief Register any method of any class as a callback.
 		* The method must provide the following signature: TReturn method(TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5)
 		*
 		* \note extends eve::evt::Callback5<TReturn, TArg1, TArg2, TArg3, TArg4, TArg5>

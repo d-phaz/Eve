@@ -46,6 +46,10 @@
 #include "eve/evt/TCallback.h"
 #endif
 
+#ifndef __EVE_EVT_TCALLBACK_AUTO_H__
+#include "eve/evt/TCallbackAuto.h"
+#endif
+
 #ifndef __EVE_EVT_TEVENT_H__
 #include "eve/evt/TEvent.h"
 #endif
