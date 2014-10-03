@@ -36,19 +36,43 @@
 //=================================================================================================
 bool eve::sys::notify_prompt_user(const std::wstring & p_title, const std::wstring & p_text)
 {
-	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OKCANCEL | MB_ICONQUESTION) == IDOK);
+	int32_t ret = ::MessageBoxW(::GetForegroundWindow(), p_text.c_str(), p_title.c_str(), MB_OKCANCEL | MB_ICONQUESTION);
+
+#ifndef NDEBUG
+	if (ret == 0) {
+		EVE_LOG_ERROR("Unable to create user prompt Message Box, error: %s", eve::mess::get_error_msg());
+	}
+#endif
+
+	return (ret == IDOK);
 }
 
 //=================================================================================================
 bool eve::sys::notify_warning(const std::wstring & p_title, const std::wstring & p_text)
 {
-	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONWARNING) == IDOK);
+	int32_t ret = ::MessageBoxW(::GetForegroundWindow(), p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONWARNING);
+
+#ifndef NDEBUG
+	if (ret == 0) {
+		EVE_LOG_ERROR("Unable to create user prompt Message Box, error: %s", eve::mess::get_error_msg());
+	}
+#endif
+
+	return (ret == IDOK);
 }
 
 //=================================================================================================
 bool eve::sys::notify_error(const std::wstring & p_title, const std::wstring & p_text)
 {
-	return (::MessageBoxW(NULL, p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONERROR) == IDOK);
+	int32_t ret = ::MessageBoxW(::GetForegroundWindow(), p_text.c_str(), p_title.c_str(), MB_OK | MB_ICONERROR);
+
+#ifndef NDEBUG
+	if (ret == 0) {
+		EVE_LOG_ERROR("Unable to create user prompt Message Box, error: %s", eve::mess::get_error_msg());
+	}
+#endif
+
+	return (ret == IDOK);
 }
 
 //=================================================================================================

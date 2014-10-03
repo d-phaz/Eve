@@ -43,17 +43,37 @@ class Example final
 
 public:
 	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
+	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
 
 };
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
-	if (eve::sys::notify_prompt_user(EVE_TXT("Notification Example"), EVE_TXT("Launch notification example?")))
+	switch (p_args.button)
 	{
-		while (!eve::sys::notify_warning(EVE_TXT("Warning"), EVE_TXT("Be careful this is a WARNING!!!")));
-		while (!eve::sys::notify_error(EVE_TXT("Error"), EVE_TXT("Woups an ERROR occurred.")));
+	case eve::sys::btn_Left: 
+		eve::sys::notify_prompt_user(EVE_TXT("Notification Example"), EVE_TXT("Launch notification example?")); 
+		break;
 
+	case eve::sys::btn_Middle:
+		eve::sys::notify_warning(EVE_TXT("Warning"), EVE_TXT("Be careful this is a WARNING!!!"));
+		break;
+
+	case eve::sys::btn_Right:
+		eve::sys::notify_error(EVE_TXT("Error"), EVE_TXT("Woups an ERROR occurred."));
+		break;
+
+	case eve::sys::btn_X:
 		eve::sys::notify_fatal_error(EVE_TXT("Fatal error occurred, exiting application."));
+		break;
+	}
+}
+
+void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+{
+	if (p_args.key == eve::sys::key_Escape)
+	{
+		eve::evt::notify_application_exit();
 	}
 }
 
