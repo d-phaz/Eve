@@ -83,7 +83,7 @@ void eve::thr::SpinLock::lock(void)
 	while (true)
 	{
 		// A thread already owning the lock shouldn't be allowed to wait to acquire the lock - re-entrant safe
-		if (m_dest == ::GetCurrentThreadId())
+		if (m_dest == eve::thr::current_thread_ID())
 			break;
 		/*
 		Spinning in a loop of interlocked calls can reduce the available memory bandwidth and slow down the rest of the system. 
@@ -93,7 +93,7 @@ void eve::thr::SpinLock::lock(void)
 		if (::InterlockedCompareExchange(&m_dest, m_exchange, m_compare) == 0)
 		{
 			// Assign CurrentThreadId to m_dest to make it re-entrant safe.
-			m_dest = ::GetCurrentThreadId();
+			m_dest = eve::thr::current_thread_ID();
 			// lock acquired 
 			break;
 		}
@@ -136,13 +136,13 @@ void eve::thr::SpinLock::lock(void)
 void eve::thr::SpinLock::unlock(void)
 {
 #if !defined(NDEBUG)
-	if (m_dest != ::GetCurrentThreadId())
+	if (m_dest != eve::thr::current_thread_ID())
 	{
 		EVE_LOG_ERROR("Unexpected thread-id in release");
 	}
 #endif
 	// lock released
-	::InterlockedCompareExchange(&m_dest, m_compare, ::GetCurrentThreadId());
+	::InterlockedCompareExchange(&m_dest, m_compare, eve::thr::current_thread_ID());
 
 
 	//m_state.clear(std::memory_order_release); // kept for future use

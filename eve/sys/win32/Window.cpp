@@ -109,9 +109,6 @@ eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_
 //=================================================================================================
 void eve::sys::Window::init(void)
 {
-	// Create fence.
-	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
-
 	// Window style
 	m_style		= WS_OVERLAPPEDWINDOW;
 	m_exStyle	= WS_EX_OVERLAPPEDWINDOW;
@@ -197,6 +194,10 @@ void eve::sys::Window::init(void)
 		EVE_ASSERT_FAILURE;
 	}
 
+
+	// Create fence.
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
+
 	// Activate drag and drop.
 	this->setDragAcceptFiles(true);
 
@@ -207,15 +208,15 @@ void eve::sys::Window::init(void)
 //=================================================================================================
 void eve::sys::Window::release(void)
 {
+	// Release fence.
+	EVE_RELEASE_PTR(m_pFence);
+
 	// Destroy system window.
-	if (!::DestroyWindow(m_handle))
+	if (::DestroyWindow(m_handle) == 0)
 	{
 		EVE_LOG_ERROR("DestroyWindow() failed with error %s.", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
-
-	// Release fence.
-	EVE_RELEASE_PTR(m_pFence);
 }
 
 

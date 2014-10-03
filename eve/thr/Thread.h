@@ -145,7 +145,7 @@ namespace eve
 			*
 			* \param p_priority thread desired priority.
 			*/
-			void start(ThreadRoutine p_routine = &eve::thr::Thread::routine, priorities p_priority = InheritPriority);
+			void start(void);
 
 
 		private:
@@ -176,25 +176,25 @@ namespace eve
 
 
 		public:
-			/**
-			* \brief Stop the thread. 
-			* Decrements thread count and resets the thread m_threadID.
-			*/
-			void stop( void );
-
-
-		private:
-			/** \brief Terminate thread. */
-			void terminate(void);
 			/** \brief Wait for thread execution (if any) to complete. */
-			bool complete(void);
-			/** \brief Close thread. */
-			void close(void);
+			bool join(void);
+			/** \brief Signal the thread to stop and wait for execution to complete. */
+			void stop(void);
+		private:
+			/** \brief Detach thread, close its handle and resets the thread ID. */
+			void detach(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////
+
+		private:
+			/** \brief Set thread started state. */
+			virtual void setStarted(void);
+			/** \brief Reset thread started state. */
+			virtual void resetStarted(void);
+
 
 		public:
 			/**
@@ -208,11 +208,12 @@ namespace eve
 			* \brief Set the m_priority for the native thread if supported by the system.
 			*
 			* \param p_priority target priority as priorities enum.
-			* \return true if successful, false otherwise.
+			* \return false if thread is already running.
 			*/
 			bool setPriority( priorities p_priority );
 
 
+		protected:
 			/**
 			* \brief get thread running state.
 			* \return true if thread is running, false otherwise.
@@ -225,16 +226,24 @@ namespace eve
 			bool started( void );
 
 
-		private:
-			/** \brief Set thread started state. */
-			virtual void setStarted ( void );
-			/** \brief Reset thread started state. */
-			virtual void resetStarted ( void );
+		public:
+			/** \brief Get wait time in milliseconds between each run iteration. */
+			const uint32_t getRunWait(void) const;
+			/** 
+			* \brief Set wait time in milliseconds between each run iteration.
+			* \return false if thread is already running.
+			*/
+			bool setRunWait(uint32_t p_wait);
+
 
 		}; // class Thread
 
 	} // namespace thr
 
 } // namespace eve
+
+
+//=================================================================================================
+inline const uint32_t eve::thr::Thread::getRunWait(void) const { return m_runWait; }
 
 #endif // __EVE_THREADING_THREAD_H__

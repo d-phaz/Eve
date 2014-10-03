@@ -68,11 +68,30 @@ void eve::thr::Thread::init(void)
 
 	m_hShutdownEvent	= ::CreateEvent(NULL, TRUE, FALSE, NULL);
 	m_StartEvent		= ::CreateEvent(NULL, TRUE, FALSE, NULL);
+
+
+	// Spawn new thread. Thread is suspended until start() is called.
+	m_hThread = (HANDLE)_beginthreadex(
+		NULL,							// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
+		0,								// DWORD dwStackSize,							// initial thread stack size
+		&eve::thr::Thread::routine,		// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
+		this,							// LPVOID lpParameter,							// argument for new thread
+		CREATE_SUSPENDED,				// DWORD dwCreationFlags,						// creation flags
+		(unsigned*)&m_threadID			// LPDWORD lpThreadId							// pointer to receive thread ID
+		);
+	EVE_ASSERT(m_hThread);
+
+	//m_hThread = new std::thread(run_wrapper, this);
+	//m_threadID = m_hThread->get_id();
+	//EVE_ASSERT(m_hThread);
 }
 
 //=================================================================================================
 void eve::thr::Thread::release(void)
 {	
+	this->stop();
+	this->detach();
+
 	::CloseHandle(m_hShutdownEvent);
 	::CloseHandle(m_StartEvent);
 
@@ -82,38 +101,15 @@ void eve::thr::Thread::release(void)
 
 
 //=================================================================================================
-void eve::thr::Thread::start(ThreadRoutine p_routine, priorities p_priority)
+void eve::thr::Thread::start(void)
 {
-	if (eve::thr::equal_ID(m_threadID, eve::thr::zero_ID()))
+	EVE_ASSERT(!eve::thr::equal_ID(m_threadID, eve::thr::zero_ID()));
+	
+	// Resume thread execution
+	if (::ResumeThread(m_hThread) == (DWORD)-1)
 	{
-		// Spawn new thread. Thread is suspended until priority is set.
-		m_hThread = (HANDLE)_beginthreadex(
-			NULL,							// LPSECURITY_ATTRIBUTES lpThreadAttributes,	// pointer to security attributes
-			0,								// DWORD dwStackSize,							// initial thread stack size
-			p_routine,						// LPTHREAD_START_ROUTINE lpStartAddress,		// pointer to thread function
-			this,							// LPVOID lpParameter,							// argument for new thread
-			CREATE_SUSPENDED,				// DWORD dwCreationFlags,						// creation flags
-			(unsigned*)&m_threadID			// LPDWORD lpThreadId							// pointer to receive thread ID
-			);
-		EVE_ASSERT(m_hThread);
-
-		// Set thread priority
-		if (!setPriority(p_priority))
-		{
-			EVE_LOG_ERROR("Unable to set thread priority, error is %s", eve::mess::get_error_msg());
-			EVE_ASSERT_FAILURE
-		}
-
-		if (::ResumeThread(m_hThread) == (DWORD)-1)
-		{
-			EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mess::get_error_msg());
-			EVE_ASSERT_FAILURE
-		}
-
-
-		//m_hThread = new std::thread(run_wrapper, this);
-		//m_threadID = m_hThread->get_id();
-		//EVE_ASSERT(m_hThread);
+		EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mess::get_error_msg());
+		EVE_ASSERT_FAILURE
 	}
 }
 
@@ -146,118 +142,40 @@ uint32_t eve::thr::Thread::routine(void * p_pThread)
 
 
 
-////=================================================================================================
-//void eve::thr::Thread::run(void)
-//{
-//	do
-//	{
-//		m_pFence->lock();
-//
-//		m_pWorker->work();
-//
-//		m_pFence->unlock();
-//
-//	} while (running());
-//
-//}
-
-
-
 //=================================================================================================
-void eve::thr::Thread::stop(void)
-{
-	EVE_ASSERT( m_hThread )
-	
-	this->terminate();
-	this->complete();
-	this->close();
-}
-
-
-
-//=================================================================================================
-void eve::thr::Thread::terminate(void)
-{
-	if( m_hThread )
-	{
-		if (!eve::thr::equal_ID(m_threadID, eve::thr::zero_ID()))
-		{
-			// Signal the thread to exit
-			::SetEvent( m_hShutdownEvent );
-			// thread may be suspended, so resume before shutting down
-			::ResumeThread( m_hThread );
-
-			DWORD oldTID = m_threadID;
-
-			// exit thread
-			if (eve::thr::equal_ID(eve::thr::current_thread_ID(), oldTID))
-			{
-				// Wait for the thread to exit. If it doesn't shut down
-				// on its own, force it closed with Terminate thread
-				if( WAIT_TIMEOUT == ::WaitForSingleObject(m_hThread, 1000) ) 
-				{
-					::ExitThread( 0 );
-				}
-			} 
-			else 
-			{
-				// this is a somewhat dangerous function; it's not
-				// suggested to Stop() threads a lot.
-				if( WAIT_TIMEOUT == ::WaitForSingleObject(m_hThread, 1000) ) 
-				{
-					if (::TerminateThread(m_hThread, 0) == 0)
-					{
-						// LOG GetLastError
-						EVE_ASSERT_FAILURE
-					}
-				}
-			}
-
-			//// Close the handle and NULL it out
-			//::CloseHandle( m_hThread );
-			//m_hThread = NULL;
-			//m_threadID = eve::thr::zero_ID();
-
-			// Reset the shutdown event
-			::ResetEvent( m_hShutdownEvent );
-		}
-	}
-} // end Stop
-
-
-
-
-//=================================================================================================
-bool eve::thr::Thread::complete(void)
+bool eve::thr::Thread::join(void)
 {
 	bool bReturn = false;
 
 	if (!eve::thr::equal_ID(m_threadID, eve::thr::zero_ID()))
 	{
 		DWORD exitCode;
-
-		while (true)
+		do
 		{
-			if( ::GetExitCodeThread(m_hThread, &exitCode) != 0)
+			if(::GetExitCodeThread(m_hThread, &exitCode) != 0)
 			{
-				if (exitCode != STILL_ACTIVE)
+				if (exitCode == STILL_ACTIVE)
 				{
-					bReturn = true;
-					break;
+					if (::WaitForSingleObject(m_hThread, INFINITE) != WAIT_OBJECT_0) 
+					{
+						EVE_LOG_ERROR("Cannot join thread WaitForSingleObject() failed, error: %s", eve::mess::get_error_msg());
+						EVE_ASSERT_FAILURE;
+					}
 				}
 				else
 				{
-					::WaitForSingleObject( m_hThread, INFINITE );
 					bReturn = true;
+					break;
 				}
 			}
 			else
 			{
 				bReturn = false;
-				EVE_LOG_ERROR("Thread ID is non-zero but its exit code is 0, strange behavior!");
+				EVE_LOG_ERROR("Unable to retrieve thread exit code GetExitCodeThread() failed, error: %s", eve::mess::get_error_msg());
+				EVE_ASSERT_FAILURE;
 				break;
 			}
-		} //while (true)
+		} while (true);
 	} 
 	// Thread already terminated
 	else {
@@ -265,21 +183,43 @@ bool eve::thr::Thread::complete(void)
 	}
 
 	return bReturn;
-} 
+}
 
 //=================================================================================================
-void eve::thr::Thread::close( void )
+void eve::thr::Thread::stop(void)
 {
-	if(m_hThread)
+	EVE_ASSERT(m_hThread)
+
+	if (!eve::thr::equal_ID(m_threadID, eve::thr::zero_ID()))
 	{
-		::CloseHandle(m_hThread);
-		m_hThread = 0;
-		
-		//m_hThread->detach();
-		//delete m_hThread;
-		//m_hThread = nullptr;
+		// Signal the thread to exit.
+		::SetEvent(m_hShutdownEvent);
+		// Thread may be suspended, so resume before shutting down.
+		::ResumeThread(m_hThread);
+
+		// Join thread (wait for loop completion).
+		this->join();
+
+		// Reset the shutdown event.
+		::ResetEvent(m_hShutdownEvent);
 	}
+}
+
+//=================================================================================================
+void eve::thr::Thread::detach( void )
+{
+	EVE_ASSERT(m_hThread);
+
+	// Close thread handle (aka detach).
+	::CloseHandle(m_hThread);
+	m_hThread = 0;
+	// Reset thread ID.
 	m_threadID = eve::thr::zero_ID();
+	
+	// Kept for future use
+	//m_hThread->detach();
+	//delete m_hThread;
+	//m_hThread = nullptr;	
 }
 
 
@@ -287,6 +227,20 @@ void eve::thr::Thread::close( void )
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		GET / SET
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::thr::Thread::setStarted(void)
+{
+	::SetEvent(m_StartEvent);
+}
+
+//=================================================================================================
+void eve::thr::Thread::resetStarted(void)
+{
+	::SetEvent(m_StartEvent);
+}
+
+
 
 //=================================================================================================
 bool eve::thr::Thread::getPriority( priorities & p_priority ) 
@@ -314,11 +268,13 @@ bool eve::thr::Thread::getPriority( priorities & p_priority )
 //=================================================================================================
 bool eve::thr::Thread::setPriority( priorities p_priority )
 {
-	bool ret = false;
+	bool ret = !(this->started());
 
-	int32_t prio;
-	switch( p_priority )
+	if (ret)
 	{
+		int32_t prio;
+		switch (p_priority)
+		{
 		case IdlePriority:			prio = THREAD_PRIORITY_IDLE;						break;
 		case LowestPriority:		prio = THREAD_PRIORITY_LOWEST;						break;
 		case LowPriority:			prio = THREAD_PRIORITY_BELOW_NORMAL;				break;
@@ -329,10 +285,11 @@ bool eve::thr::Thread::setPriority( priorities p_priority )
 
 		case InheritPriority:
 		default:					prio = ::GetThreadPriority(::GetCurrentThread());	break;
+		}
+
+		ret = (::SetThreadPriority(m_hThread, prio) != THREAD_PRIORITY_ERROR_RETURN);
+		EVE_ASSERT(ret)
 	}
-	
-	ret = (::SetThreadPriority(m_hThread, prio) != THREAD_PRIORITY_ERROR_RETURN);
-	EVE_ASSERT(ret)
 
 	return ret;
 }
@@ -367,14 +324,14 @@ bool eve::thr::Thread::started( void )
 	return bret;
 }
 
-//=================================================================================================
-void eve::thr::Thread::setStarted( void )
-{
-	::SetEvent( m_StartEvent );
-}
+
 
 //=================================================================================================
-void eve::thr::Thread::resetStarted( void )
+bool eve::thr::Thread::setRunWait(uint32_t p_wait)
 {
-	::SetEvent( m_StartEvent );
+	bool ret = !(this->started());
+	if (ret) {
+		m_runWait = p_wait;
+	}
+	return ret;
 }
