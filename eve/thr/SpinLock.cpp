@@ -32,13 +32,31 @@
 // Main header
 #include "eve/thr/SpinLock.h"
 
+#ifndef __EVE_SYSTEM_INFO_H__
+#include "eve/sys/win32/Info.h"
+#endif
+
+#ifndef __EVE_MESSAGING_SERVER_H__
+#include "eve/mess/Server.h"
+#endif
+
+
+#define YIELD_ITERATION 30
+#define SLEEP_ITERATION 40
+
 
 //=================================================================================================
 eve::thr::SpinLock::SpinLock(void)
 	// Inheritance
 	: eve::thr::Fence()
 	// Members init
-	, m_state()
+	//, m_state() // kept for future use
+
+	, m_dest(0)
+	, m_exchange(100)
+	, m_compare(0)
+	, m_iter(0)
+	, m_bMultiProc(false)
 {}
 
 
@@ -46,13 +64,14 @@ eve::thr::SpinLock::SpinLock(void)
 //=================================================================================================
 void eve::thr::SpinLock::init(void)
 {
-	m_state.clear();
+	m_bMultiProc = (eve::sys::get_logical_processor_num() > 1);
+	//m_state.clear(); // kept for future use
 }
 
 //=================================================================================================
 void eve::thr::SpinLock::release(void)
 {
-	m_state.clear();
+	//m_state.clear(); // kept for future use
 }
 
 
@@ -60,20 +79,71 @@ void eve::thr::SpinLock::release(void)
 //=================================================================================================
 void eve::thr::SpinLock::lock(void)
 {
-	while (m_state.test_and_set(std::memory_order_acquire))
+	m_iter = 0;
+	while (true)
 	{
-		// Sleep(0) will result in a context switch if a higher priority thread is in ready state.
-		::Sleep(0);
+		// A thread already owning the lock shouldn't be allowed to wait to acquire the lock - re-entrant safe
+		if (m_dest == ::GetCurrentThreadId())
+			break;
+		/*
+		Spinning in a loop of interlocked calls can reduce the available memory bandwidth and slow down the rest of the system. 
+		Interlocked calls are expensive in their use of the system memory bus. 
+		It is better to see if the 'm_dest' value is what it is expected and then retry interlock.
+		*/
+		if (::InterlockedCompareExchange(&m_dest, m_exchange, m_compare) == 0)
+		{
+			// Assign CurrentThreadId to m_dest to make it re-entrant safe.
+			m_dest = ::GetCurrentThreadId();
+			// lock acquired 
+			break;
+		}
 
-		//YieldProcessor();
+		// Spin wait to acquire 
+		while (m_dest != m_compare)
+		{
+			if (m_iter >= YIELD_ITERATION)
+			{
+				// Sleep(0) will result in a context switch if a higher priority thread is in ready state.
+				if (m_iter + YIELD_ITERATION >= SLEEP_ITERATION) 
+				{
+					::Sleep(0);
+				}
 
-		//::SwitchToThread();
-		//std::this_thread::yield();
+				if (m_iter >= YIELD_ITERATION && m_iter < SLEEP_ITERATION)
+				{
+					m_iter = 0;
+					::SwitchToThread();
+				}
+			}
+
+			// Yield processor on multi-processor but if on single processor then give other thread the CPU.
+			m_iter++;
+			if (m_bMultiProc) 
+			{ 
+				::YieldProcessor(/*no op*/); 
+			}
+			else 
+			{ 
+				::SwitchToThread(); 
+			}
+		}
 	}
+
+	// while (m_state.test_and_set(std::memory_order_acquire)) // kept for future use
 }
 
 //=================================================================================================
 void eve::thr::SpinLock::unlock(void)
 {
-	m_state.clear(std::memory_order_release);
+#if !defined(NDEBUG)
+	if (m_dest != ::GetCurrentThreadId())
+	{
+		EVE_LOG_ERROR("Unexpected thread-id in release");
+	}
+#endif
+	// lock released
+	::InterlockedCompareExchange(&m_dest, m_compare, ::GetCurrentThreadId());
+
+
+	//m_state.clear(std::memory_order_release); // kept for future use
 }

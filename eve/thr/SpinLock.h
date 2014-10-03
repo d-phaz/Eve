@@ -57,7 +57,7 @@ namespace eve
 		 *
 		 * \note extends eve::thr::Fence
 		 */
-		class SpinLock
+		class SpinLock final
 			: public eve::thr::Fence
 		{
 
@@ -68,7 +68,13 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			std::atomic_flag	m_state;
+			//std::atomic_flag	m_state; // kept for future use
+
+			volatile uint32_t	m_dest;
+			uint32_t			m_exchange;
+			uint32_t			m_compare;
+			uint32_t			m_iter;
+			bool				m_bMultiProc;
 
 
 			//////////////////////////////////////
@@ -78,12 +84,12 @@ namespace eve
 			EVE_DISABLE_COPY(SpinLock)
 			EVE_PROTECT_DESTRUCTOR(SpinLock)
 			
-		protected:
+		private:
 			/** \brief Class constructor. */
 			SpinLock(void);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
