@@ -101,6 +101,8 @@ namespace eve
 		public:
 			/** \brief Create unique instance. */
 			static eve::app::App * create_instance(void);
+			/** \brief Get unique instance. */
+			static eve::app::App * get_instance(void);
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
@@ -133,10 +135,15 @@ namespace eve
 			template<class TView>
 			TView * addView(void);
 			/** 
-			* \brief Remove and release target view.
+			* \brief Release ownership of target view.
 			* Return true if target view was contained.
 			*/
 			bool removeView(eve::sys::View * p_pView);
+			/**
+			* \brief Remove and release target view.
+			* Return true if target view was contained.
+			*/
+			bool releaseView(eve::sys::View * p_pView);
 
 
 		public:
@@ -168,9 +175,14 @@ TView * eve::app::App::addView(void)
 }
 
 
+/** \def EveApp: Convenience macro to access application instance. */
+#define EveApp	eve::app::App::get_instance()
+
+
 
 #if defined(EVE_OS_WIN)
-#define EVE_APPLICATION( VIEW )																	\
+/** \def EVE_APPLICATION: Convenience macro to create application entry point and launch application. */
+#define EVE_APPLICATION( VIEW )																			\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
 		eve::app::App *	pApp = eve::app::App::create_instance();										\
@@ -181,6 +193,7 @@ TView * eve::app::App::addView(void)
 	}
 
 #elif defined(EVE_OS_DARWIN)
+/** \def EVE_APPLICATION: Convenience macro to create application entry point and launch application. */
 #define EVE_APPLICATION( VIEW )												\
 	int main(int argc, char * const argv[]) 								\
 	{																		\

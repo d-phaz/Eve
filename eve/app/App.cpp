@@ -46,6 +46,13 @@ eve::app::App * eve::app::App::create_instance(void)
 }
 
 //=================================================================================================
+eve::app::App * eve::app::App::get_instance(void)
+{
+	EVE_ASSERT(m_p_instance);
+	return m_p_instance;
+}
+
+//=================================================================================================
 void eve::app::App::release_instance(void)
 {
 	EVE_ASSERT(m_p_instance);
@@ -149,13 +156,32 @@ bool eve::app::App::removeView(eve::sys::View * p_pView)
 	{
 		eve::sys::View * view = (*itr);
 		m_pVecViews->erase(itr);
-		EVE_RELEASE_PTR(view);
 	}
 	
 	m_pFence->unlock();
 
 	return breturn;
 }
+
+//=================================================================================================
+bool eve::app::App::releaseView(eve::sys::View * p_pView)
+{
+	m_pFence->lock();
+
+	std::vector<eve::sys::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
+	bool breturn = (itr != m_pVecViews->end());
+	if (breturn)
+	{
+		eve::sys::View * view = (*itr);
+		m_pVecViews->erase(itr);
+		EVE_RELEASE_PTR(view);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
+}
+
 
 
 
