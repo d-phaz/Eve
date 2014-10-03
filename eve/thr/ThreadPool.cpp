@@ -83,8 +83,8 @@ void eve::thr::ThreadPool::init(void)
 	for (size_t i = 0; i < m_numThread; i++)
 	{
 		thrd = EVE_CREATE_PTR(eve::thr::ThreadedWorkIO);
-		thrd->setCallbackStart(eve::evt::create_callback(this, &eve::thr::ThreadPool::threadSetActive));
-		thrd->setCallbackExit( eve::evt::create_callback(this, &eve::thr::ThreadPool::threadSetSleeping));
+		thrd->setCallbackStart(eve::evt::create_callback_auto(this, &eve::thr::ThreadPool::threadSetActive, thrd));
+		thrd->setCallbackExit(eve::evt::create_callback_auto(this, &eve::thr::ThreadPool::threadSetSleeping, thrd));
 
 		m_pThreadsSleeping->push_back(thrd);
 	}

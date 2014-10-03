@@ -42,6 +42,10 @@
 #include "eve/thr/ThreadPool.h"
 #endif
 
+#ifndef __EVE_EVT_TCALLBACK_AUTO_H__
+#include "eve/evt/TCallbackAuto.h"
+#endif
+
 
 namespace eve
 {
@@ -64,23 +68,14 @@ namespace eve
 		{
 
 			friend class eve::mem::Pointer;
-			
-			//////////////////////////////////////
-			//				TYPES				//
-			//////////////////////////////////////
-
-		public:
-			/** \brief convenience callback type definition. */
-			typedef eve::evt::ClassCallback1<eve::thr::ThreadPool, void, eve::thr::ThreadedWorkIO*> * ThreadedWorkCallback;
-
 
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
 
 		private:
-			eve::thr::ThreadedWorkIO::ThreadedWorkCallback 		m_cbStart;			//!< Callback called at startup.
-			eve::thr::ThreadedWorkIO::ThreadedWorkCallback 		m_cbExit;			//!< Callback called at run exit.
+			eve::evt::CallbackAuto * 		m_cbStart;			//!< Callback called at startup.
+			eve::evt::CallbackAuto * 		m_cbExit;			//!< Callback called at run exit.
 
 
 			//////////////////////////////////////
@@ -117,10 +112,16 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Set callback called at startup. */
-			void setCallbackStart(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb);
-			/** \brief Set callback called at exit. */
-			void setCallbackExit(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb);
+			/** 
+			* \brief Set callback called at startup. 
+			* Gain callback ownership.
+			*/
+			void setCallbackStart(eve::evt::CallbackAuto *  p_cb);
+			/** 
+			* \brief Set callback called at exit.
+			* Gain callback ownership.
+			*/
+			void setCallbackExit(eve::evt::CallbackAuto *  p_cb);
 
 		}; // class ThreadDummy
 
@@ -130,7 +131,7 @@ namespace eve
 
 
 //=================================================================================================
-void eve::thr::ThreadedWorkIO::setCallbackStart(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb)	{ EVE_ASSERT(p_cb); m_cbStart = p_cb; }
-void eve::thr::ThreadedWorkIO::setCallbackExit(eve::thr::ThreadedWorkIO::ThreadedWorkCallback  p_cb)	{ EVE_ASSERT(p_cb); m_cbExit  = p_cb; }
+inline void eve::thr::ThreadedWorkIO::setCallbackStart(eve::evt::CallbackAuto *  p_cb)	{ EVE_ASSERT(p_cb); m_cbStart = p_cb; }
+inline void eve::thr::ThreadedWorkIO::setCallbackExit(eve::evt::CallbackAuto *  p_cb)	{ EVE_ASSERT(p_cb); m_cbExit  = p_cb; }
 
 #endif // __EVE_THREADING_THREADED_WORK_IO_H__

@@ -63,11 +63,11 @@ void eve::thr::ThreadedWorkIO::release(void)
 void eve::thr::ThreadedWorkIO::run(void)
 {
 	// Start callback.
-	m_cbStart->execute(this);
+	m_cbStart->execute();
 	
 	// Call parent class
 	eve::thr::ThreadedWork::run();
 
 	// Exit callback.
-	m_cbExit->execute(this);
+	m_cbExit->execute();
 }
