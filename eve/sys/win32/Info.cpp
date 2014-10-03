@@ -32,9 +32,42 @@
 // Main header
 #include "eve/sys/win32/Info.h"
 
+
+#ifndef __EVE_MESSAGING_ERROR_H__
+#include "eve/mess/Error.h"
+#endif
+
 #ifndef __EVE_MESSAGING_SERVER_H__
 #include "eve/mess/Server.h"
 #endif
+
+
+//=================================================================================================
+bool eve::sys::app_is_x86(void)
+{
+	static bool ret = false;
+
+	static bool checked = false;
+	if (!checked)
+	{
+		BOOL bIsWow64 = FALSE;
+		if (!::IsWow64Process(::GetCurrentProcess(), &bIsWow64))
+		{
+			EVE_LOG_ERROR("Unable to retrieve application x86 state, error: %s.", eve::mess::get_error_msg() );
+		}
+
+		ret = (bIsWow64 == TRUE);
+	}
+
+	return ret;
+}
+
+//=================================================================================================
+bool eve::sys::app_is_x64(void)
+{
+	return (!eve::sys::app_is_x86());
+}
+
 
 
 //=================================================================================================
@@ -44,7 +77,12 @@ eve::sys::ProcArch eve::sys::get_processor_arch(void)
 	if (arch = proc_ArchUnknown)
 	{
 		SYSTEM_INFO sysinfo;
-		::GetSystemInfo(&sysinfo); // x86 -> use GetNativeSystemInfo 
+		if (eve::sys::app_is_x86()) {
+			::GetNativeSystemInfo(&sysinfo);
+		}
+		else {
+			::GetSystemInfo(&sysinfo);
+		}
 
 		switch (sysinfo.wProcessorArchitecture)
 		{
@@ -70,7 +108,12 @@ uint32_t eve::sys::get_logical_processor_num(void)
 	if (num == 0)
 	{
 		SYSTEM_INFO sysinfo;
-		::GetSystemInfo(&sysinfo); // x86 -> use GetNativeSystemInfo 
+		if (eve::sys::app_is_x86()) {
+			::GetNativeSystemInfo(&sysinfo);
+		}
+		else {
+			::GetSystemInfo(&sysinfo);
+		}
 
 		num = sysinfo.dwNumberOfProcessors;
 		if (num == 0)
@@ -90,7 +133,12 @@ uint32_t eve::sys::get_page_size(void)
 	if (pageSize == 0)
 	{
 		SYSTEM_INFO sysinfo;
-		::GetSystemInfo(&sysinfo); // x86 -> use GetNativeSystemInfo
+		if (eve::sys::app_is_x86()) {
+			::GetNativeSystemInfo(&sysinfo);
+		}
+		else {
+			::GetSystemInfo(&sysinfo);
+		}
 
 		pageSize = sysinfo.dwPageSize;
 		if (pageSize == 0)

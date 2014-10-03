@@ -42,6 +42,12 @@ namespace eve
 {
 	namespace sys
 	{
+		/** \brief Return true if the application is running under x86. */
+		bool app_is_x86(void);
+		/** \brief Return true if the application is running under x64. */
+		bool app_is_x64(void);
+
+
 		/** \brief Processor architectures. */
 		enum ProcArch
 		{
@@ -59,8 +65,7 @@ namespace eve
 
 
 		/** \brief Get page size (used by aligned allocations). */
-		uint32_t get_page_size(void);
-		
+		uint32_t get_page_size(void);		
 
 	} // namespace sys
 
