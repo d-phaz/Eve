@@ -111,7 +111,7 @@ void eve::sys::Node::run(void)
 	msg.message = WM_NULL;
 
 	do 
-	{
+	{		
 		// Grab new message.
 		bGotMsg = (::PeekMessageW(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
 
@@ -128,7 +128,7 @@ void eve::sys::Node::run(void)
 		else
 		{
 			// Wait some ms, so the thread doesn't soak up CPU.
-			::WaitForSingleObject(::GetCurrentThread(), 20);
+			::WaitForSingleObject(::GetCurrentThread(), 5);
 		}
 
 		// Free up CPU

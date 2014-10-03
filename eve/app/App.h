@@ -157,11 +157,12 @@ TView * eve::app::App::addView(void)
 	EVE_ASSERT( (std::is_base_of<eve::sys::View, TView>::value) );
 
 	TView * view = EVE_CREATE_PTR(TView);
-	view->start();
 
 	m_pFence->lock();
 	m_pVecViews->push_back(view);
 	m_pFence->unlock();
+
+	view->start();
 
 	return view;
 }
