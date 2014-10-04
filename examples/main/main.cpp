@@ -50,13 +50,15 @@ public:
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
-	EVE_LOG_INFO("cb_evtMouseDown %d %s", 1254, EVE_TXT("POUéT"));
+	EVE_LOG_INFO("cb_evtMouseDown");
 
 	m_pWindow->toggleFullScreen();
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 {
+	EVE_LOG_INFO("cb_evtKeyDown");
+
 	if (p_args.key == eve::sys::key_Escape)
 	{
 		eve::evt::notify_application_exit();
