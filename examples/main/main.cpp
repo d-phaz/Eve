@@ -44,6 +44,7 @@ class Example final
 public:
 	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
 	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
+	virtual void cb_evtWindowClose(void) override;
 
 };
 
@@ -51,7 +52,6 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
 	EVE_LOG_INFO("cb_evtMouseDown %d %s", 1254, EVE_TXT("POUéT"));
 
-	m_pWindow->toggleFullScreen();
 	m_pWindow->toggleFullScreen();
 }
 
@@ -63,82 +63,11 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 	}
 }
 
+void Example::cb_evtWindowClose(void)
+{
+	eve::evt::notify_application_exit();
+}
+
+
 // Launch application for view "Example".
 EVE_APPLICATION(Example);
-
-
-//
-//int main(int argc, char **argv)
-//{
-//	// Hide console window in release mode.
-//#if defined(NDEBUG)
-//	: ShowWindow(::GetConsoleWindow(), SW_HIDE);
-//#endif	
-//
-//
-//	//-------------------------------------------
-//
-//
-//	// Messaging example //
-//
-//	//eve::mess::Server::create_instance();
-//	//EVE_LOG_INFO("eve Version: %s", EVE_VERSIONNAME);
-//	//EVE_LOG_WARNING("Warning level %i.", 3);
-//	//EVE_LOG_PROGRESS("App execution in progress.");
-//	//EVE_LOG_DEBUG("Woups... debug log info.");
-//	//EVE_LOG_ERROR("Any error occurred?");
-//	//eve::mess::Server::release_instance();
-//
-//
-//	//-------------------------------------------
-//
-//
-//	// Thread Pointer example //
-//
-//	//// Create thread pointer.
-//	//eve::thr::ThreadDummy * thr = EVE_CREATE_PTR(eve::thr::ThreadDummy);
-//	//// Start thread.
-//	//thr->start();
-//	//// Sleep using microseconds.
-//	//eve::thr::sleep_micro(1000ULL * 1000ULL);
-//	//// Release pointer.
-//	//EVE_RELEASE_PTR(thr);
-//
-//
-//	//-------------------------------------------
-//
-//
-//	// Thread Scoped pointer example //
-//
-//	//// Create scoped thread pointer.
-//	//eve::mem::Scoped<eve::thr::ThreadDummy> scThr;
-//	//// Start thread.
-//	//scThr->start();
-//
-//	//// Sleep using milliseconds.
-//	//eve::thr::sleep_milli(1000);
-//
-//
-//	//-------------------------------------------
-//
-//
-//	// Event example //
-//
-//	//Example ex;
-//	//eve::evt::notify_mouse_down(0, 10, 20);
-//
-//
-//	//-------------------------------------------
-//
-//
-//	// Window example //
-//
-//	//eve::sys::Window * win = eve::sys::Window::create_ptr(50, 50, 800, 600);
-//	//eve::sys::MessagePump * pump = eve::sys::MessagePump::create_ptr(win->getHandle());
-//
-//	//while (true);
-//
-//	//EVE_RELEASE_PTR(win);
-//
-//	return 0;
-//}
