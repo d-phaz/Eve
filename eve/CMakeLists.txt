@@ -57,7 +57,8 @@ source_group( "Application" FILES ${APP_SRCS} )
 
 # Core.
 #################################################
-set( CORE_SRCS
+set( CORE_SRCS 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Flags.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Macro.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Renderer.h 
@@ -96,6 +97,18 @@ set( FILES_SRCS
 
 set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
 source_group( "Files" FILES ${FILES_SRCS} )
+
+
+# OpenGL.
+#################################################
+set( OPENGL_SRCS 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/Context.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/Context.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/PixelFormat.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/PixelFormat.h  )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
+source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 
 
 # Memory.

@@ -105,7 +105,11 @@ namespace eve
 
 		private:
 			/** \brief Create unique instance. */
-			static Server * create_instance(const std::wstring & p_logFilePath=EVE_TXT(""));
+			static Server * create_instance(const std::wstring & p_logFilePath = EVE_TXT(""));
+		public:
+			/** \brief Get unique instance. */
+			static Server * get_instance(void);
+		private:
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
@@ -237,6 +241,10 @@ namespace eve
 } // namespace eve
 
 
+/** \def EveContextGL: Convenience macro to access messaging Server instance. */
+#define EveLogServer	eve::mess::Server::get_instance()
+
+
 //=================================================================================================
 inline void eve::mess::Server::set_error_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerError	= p_method; 	m_p_mutex->unlock(); }
 inline void eve::mess::Server::set_warning_handler(handlerMethod p_method)		{ m_p_mutex->lock(); m_p_server->m_pHandlerWarning	= p_method; 	m_p_mutex->unlock(); }
@@ -286,7 +294,6 @@ inline FILE * eve::mess::Server::get_warning_stream(void)		{ return m_p_server->
 inline FILE * eve::mess::Server::get_info_stream(void)			{ return m_p_server->m_pStreamInfo;			}
 inline FILE * eve::mess::Server::get_progress_stream(void)		{ return m_p_server->m_pStreamProgress;		}
 inline FILE * eve::mess::Server::get_debug_stream(void)			{ return m_p_server->m_pStreamDebug;		}
-
 
 
 #define EVE_LOG_ERROR(format, ...)		eve::mess::Server::get_error_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);

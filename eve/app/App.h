@@ -157,6 +157,10 @@ namespace eve
 } // namespace eve
 
 
+/** \def EveApp: Convenience macro to access application instance. */
+#define EveApp	eve::app::App::get_instance()
+
+
 //=================================================================================================
 template<class TView>
 TView * eve::app::App::addView(void)
@@ -173,10 +177,6 @@ TView * eve::app::App::addView(void)
 
 	return view;
 }
-
-
-/** \def EveApp: Convenience macro to access application instance. */
-#define EveApp	eve::app::App::get_instance()
 
 
 

@@ -86,6 +86,13 @@ eve::mess::Server * eve::mess::Server::create_instance(const std::wstring & p_lo
 }
 
 //=================================================================================================
+eve::mess::Server * eve::mess::Server::get_instance(void)
+{
+	EVE_ASSERT(m_p_server);
+	return m_p_server;
+}
+
+//=================================================================================================
 void eve::mess::Server::release_instance(void)
 {
 	EVE_ASSERT(m_p_server);
