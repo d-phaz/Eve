@@ -30,6 +30,7 @@
 */
 
 #include "eve/app/App.h"
+#include "eve/sys/win32/Window.h"
 
 
 class Example final
@@ -49,6 +50,9 @@ public:
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
 	EVE_LOG_INFO("cb_evtMouseDown %d %s", 1254, EVE_TXT("POUéT"));
+
+	m_pWindow->toggleFullScreen();
+	m_pWindow->toggleFullScreen();
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)

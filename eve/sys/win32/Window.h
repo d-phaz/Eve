@@ -231,24 +231,4 @@ namespace eve
 //=================================================================================================
 inline const HWND eve::sys::Window::getHandle(void) const		{ return m_handle; }
 
-
-//=================================================================================================
-inline void eve::sys::Window::getSize(uint32_t &p_width, uint32_t &p_height) 
-{ 
-	p_width = m_width; 
-	p_height = m_height; 
-}
-inline const uint32_t eve::sys::Window::getWidth(void)	{ return m_width;	}
-inline const uint32_t eve::sys::Window::getHeight(void) { return m_height;	}
-
-
-//=================================================================================================
-inline void eve::sys::Window::getPosition(int32_t & p_x, int32_t & p_y)
-{
-	p_x = m_x;
-	p_y = m_y;
-}
-inline const int32_t eve::sys::Window::getPositionX(void) { return m_x; }
-inline const int32_t eve::sys::Window::getPositionY(void) { return m_y; }
-
 #endif // __EVE_SYSTEM_WINDOW_H__

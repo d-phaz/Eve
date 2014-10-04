@@ -251,7 +251,14 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handlePaint(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	// Do nothing, painting is handled by engines.
+	// ValidateRect prevents Windows from resending WM_PAINT
+	RECT rect, *ptr = 0;
+	if (::GetUpdateRect(p_hWnd, &rect, FALSE))
+	{
+		::ValidateRect(p_hWnd, &rect);
+		ptr = &rect;
+	}
+
 	return 0;
 }
 
