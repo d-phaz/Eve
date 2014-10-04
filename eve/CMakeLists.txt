@@ -180,8 +180,6 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadDummy.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadDummy.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWork.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWork.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWorkIO.cpp 
