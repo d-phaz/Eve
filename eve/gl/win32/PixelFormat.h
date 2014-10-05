@@ -184,13 +184,13 @@ namespace eve
 			* \param p_pfd Win32 pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
 			* \return usable pixel format as eve::gl::PixelFormat.
 			*/
-			static PixelFormat pfdToSystemPixelFormat(const PIXELFORMATDESCRIPTOR * p_pfd);
+			static PixelFormat pfdToPixelFormat(const PIXELFORMATDESCRIPTOR * p_pfd);
 			/**
 			* \brief convert system PixelFormat to PIXELFORMATDESCRIPTOR.
 			* \param p_pPixelFormat pixel format as eve::gl::PixelFormat pointer.
 			* \return usable Win32 pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
 			*/
-			static PIXELFORMATDESCRIPTOR * systemPixelFormatToPfd(const PixelFormat * p_pPixelFormat);
+			static PIXELFORMATDESCRIPTOR * pixelFormatToPfd(const PixelFormat * p_pPixelFormat);
 			/**
 			* \brief Convert pixel format to eve::gl::PixelFormat (identified by id)
 			* \param p_hdc draw context as HDC.
@@ -508,27 +508,27 @@ inline const int32_t eve::gl::PixelFormat::stencilBufferSize(void) const	{ retur
 
 
 //=================================================================================================
-inline const bool eve::gl::PixelFormat::doubleBuffer(void) const	{ return this->testOption(pf_optDoubleBuffer);		}
-inline const bool eve::gl::PixelFormat::depth(void) const			{ return this->testOption(pf_optDepthBuffer);		}
-inline const bool eve::gl::PixelFormat::rgba(void) const			{ return this->testOption(pf_optRgba);				}
-inline const bool eve::gl::PixelFormat::alpha(void) const			{ return this->testOption(pf_optAlphaChannel);		}
-inline const bool eve::gl::PixelFormat::accum(void) const			{ return this->testOption(pf_optAccumBuffer);		}
-inline const bool eve::gl::PixelFormat::stencil(void) const			{ return this->testOption(pf_optStencilBuffer);		}
-inline const bool eve::gl::PixelFormat::stereo(void) const			{ return this->testOption(pf_optStereoBuffers);		}
-inline const bool eve::gl::PixelFormat::directRendering(void) const { return this->testOption(pf_optDirectRendering);	}
-inline const bool eve::gl::PixelFormat::sampleBuffers(void) const	{ return this->testOption(pf_optSampleBuffers);		}
-inline const bool eve::gl::PixelFormat::hasOverlay(void) const		{ return this->testOption(pf_optHasOverlay);		}
+inline const bool eve::gl::PixelFormat::doubleBuffer(void) const			{ return this->testOption(pf_optDoubleBuffer);		}
+inline const bool eve::gl::PixelFormat::depth(void) const					{ return this->testOption(pf_optDepthBuffer);		}
+inline const bool eve::gl::PixelFormat::rgba(void) const					{ return this->testOption(pf_optRgba);				}
+inline const bool eve::gl::PixelFormat::alpha(void) const					{ return this->testOption(pf_optAlphaChannel);		}
+inline const bool eve::gl::PixelFormat::accum(void) const					{ return this->testOption(pf_optAccumBuffer);		}
+inline const bool eve::gl::PixelFormat::stencil(void) const					{ return this->testOption(pf_optStencilBuffer);		}
+inline const bool eve::gl::PixelFormat::stereo(void) const					{ return this->testOption(pf_optStereoBuffers);		}
+inline const bool eve::gl::PixelFormat::directRendering(void) const			{ return this->testOption(pf_optDirectRendering);	}
+inline const bool eve::gl::PixelFormat::sampleBuffers(void) const			{ return this->testOption(pf_optSampleBuffers);		}
+inline const bool eve::gl::PixelFormat::hasOverlay(void) const				{ return this->testOption(pf_optHasOverlay);		}
 
 
 
 //=================================================================================================
-inline const int32_t eve::gl::PixelFormat::samples(void) const		{ return m_numSamples;		}
-inline const int32_t eve::gl::PixelFormat::swapInterval(void) const { return m_swapInterval;	}
-inline const int32_t eve::gl::PixelFormat::plane(void) const		{ return m_pln;				}
+inline const int32_t eve::gl::PixelFormat::samples(void) const				{ return m_numSamples;		}
+inline const int32_t eve::gl::PixelFormat::swapInterval(void) const			{ return m_swapInterval;	}
+inline const int32_t eve::gl::PixelFormat::plane(void) const				{ return m_pln;				}
 
 
 
 //=================================================================================================
-eve::gl::PixelFormatProfile eve::gl::PixelFormat::profile(void) const { return m_profile; }
+inline eve::gl::PixelFormatProfile eve::gl::PixelFormat::profile(void) const { return m_profile; }
 
 #endif // __EVE_OPENGL_PIXEL_FORMAT_H__

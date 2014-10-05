@@ -126,7 +126,7 @@ void eve::gl::PixelFormat::init( FormatOptions p_options, int32_t p_plane )
 
 
 //=================================================================================================
-eve::gl::PixelFormat eve::gl::PixelFormat::pfdToSystemPixelFormat( const PIXELFORMATDESCRIPTOR* _pfd )
+eve::gl::PixelFormat eve::gl::PixelFormat::pfdToPixelFormat( const PIXELFORMATDESCRIPTOR* _pfd )
 {
     eve::gl::PixelFormat fmt;
 
@@ -171,7 +171,7 @@ eve::gl::PixelFormat eve::gl::PixelFormat::pfdToSystemPixelFormat( const PIXELFO
 }
 
 //=================================================================================================
-PIXELFORMATDESCRIPTOR * eve::gl::PixelFormat::systemPixelFormatToPfd( const eve::gl::PixelFormat * p_sysPixelFormat )
+PIXELFORMATDESCRIPTOR * eve::gl::PixelFormat::pixelFormatToPfd( const eve::gl::PixelFormat * p_sysPixelFormat )
 {
 	// Pixel format descriptor
 	PIXELFORMATDESCRIPTOR * Ptr_Return = (PIXELFORMATDESCRIPTOR*)malloc( sizeof(PIXELFORMATDESCRIPTOR) );

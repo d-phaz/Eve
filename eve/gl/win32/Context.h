@@ -45,6 +45,14 @@
 #include "eve/mess/Includes.h"
 #endif
 
+#ifndef __EVE_OPENGL_PIXEL_FORMAT_H__
+#include "eve/gl/win32/PixelFormat.h"
+#endif
+
+
+
+namespace eve { namespace thr { class SpinLock; } }
+
 
 namespace eve
 {
@@ -70,10 +78,13 @@ namespace eve
 
 		private:
 			static eve::gl::Context *		m_p_instance;			//<! Class unique instance.
+			static eve::thr::SpinLock *		m_p_fence;				//!< Context activation fence.
 			
 			HGLRC							m_hGLRC;				//!< OpenGL rendering context handle.
 			HDC								m_hDC;					//!< Draw context (linked to window) handle.
 
+			eve::gl::PixelFormat			m_pixelFormat;			//!< Pixel format.
+			PIXELFORMATDESCRIPTOR			m_pixelFormatDecriptor;	//!< Pixel format descriptor.
 			int32_t							m_pixelFormatId;		//!< Pixel format ID.
 
 
@@ -88,8 +99,6 @@ namespace eve
 		public:
 			/** \brief Create unique instance. */
 			static eve::gl::Context * create_instance(void);
-			/** \brief Get unique instance. */
-			static eve::gl::Context * get_instance(void);
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
@@ -117,7 +126,7 @@ namespace eve
 			* \param p_pPfd pixel format descriptor as void pointer.
 			* \return Chosen pixel format ID as int32_t.
 			*/
-			int32_t choosePixelFormat(void * p_pPfd);
+			int32_t choosePixelFormat(PIXELFORMATDESCRIPTOR * p_pPfd);
 
 			/** \brief DC attached pixel format may change selected options, grab and stock updated values. */
 			void updateFormatVersion(void);
@@ -129,7 +138,21 @@ namespace eve
 
 		public:
 			/** \brief Get OpenGL rendering context handle. */
-			const HGLRC getHandle(void);
+			static const HGLRC get_handle(void);
+
+
+			/** \brief Get pixel format. */
+			static const eve::gl::PixelFormat & get_pixel_format(void);
+			/** \brief Get pixel format descriptor. */
+			static const PIXELFORMATDESCRIPTOR & get_pixel_format_descriptor(void);
+			/** \brief Get pixel format ID. */
+			static const int32_t get_pixel_format_ID(void);
+
+
+			/** \brief Get unique instance. */
+			static eve::gl::Context * get_instance(void);
+			/** \brief Get fence (SpinLock). */
+			static eve::thr::SpinLock * get_fence(void);
 
 		}; // class Context
 
@@ -143,7 +166,16 @@ namespace eve
 
 
 //=================================================================================================
-inline const HGLRC eve::gl::Context::getHandle(void)	{ return m_hGLRC; }
+inline eve::gl::Context *	eve::gl::Context::get_instance(void)	{ EVE_ASSERT(m_p_instance);		return m_p_instance;	}
+inline eve::thr::SpinLock * eve::gl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence;		}
+
+//=================================================================================================
+inline const HGLRC			eve::gl::Context::get_handle(void)		{ EVE_ASSERT(m_p_instance);		return m_p_instance->m_hGLRC; }
+
+//=================================================================================================
+inline const eve::gl::PixelFormat &		eve::gl::Context::get_pixel_format(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormat;			}
+inline const PIXELFORMATDESCRIPTOR &	eve::gl::Context::get_pixel_format_descriptor(void)	{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatDecriptor;	}
+inline const int32_t					eve::gl::Context::get_pixel_format_ID(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatId;			}
 
 
 
@@ -181,12 +213,22 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(SubContext);
-			EVE_PROTECT_DESTRUCTOR(SubContext);
+			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(SubContext);
+
+		public:
+			/**
+			* \brief Create and return new pointer.
+			* \param p_hWnd linked window handle.
+			*/
+			static eve::gl::SubContext * create_ptr(HWND p_hWnd);
 
 
 		private:
-			/** \brief Class constructor. */
-			SubContext(void);
+			/** 
+			* \brief Class constructor.
+			* \param p_hWnd linked window handle.
+			*/
+			SubContext(HWND p_hWnd);
 
 
 		private:
@@ -197,6 +239,13 @@ namespace eve
 			* Stop this object's thread execution (if any) immediately.
 			*/
 			virtual void release(void) override;
+
+
+		private:
+			/** \brief Stock current context. */
+			static void set_current_context(eve::gl::SubContext * p_pContext);
+			/** \brief Get current context. */
+			static const eve::gl::SubContext * get_current_context(void);
 
 
 		public:
@@ -210,17 +259,13 @@ namespace eve
 			/** \brief Terminate OpenGL operations and swap buffers if multiple buffers are in use.	*/
 			void swapBuffers(void);
 
-
-		private:
-			/** \brief Stock current context. */
-			static void set_current_context(eve::gl::SubContext * p_pContext);
-			/** \brief Get current context. */
-			static const eve::gl::SubContext * get_current_context(void);
-
 		}; // class SubContext
 
 	} // namespace gl
 
 } // namespace eve
+
+//=================================================================================================
+const eve::gl::SubContext * eve::gl::SubContext::get_current_context(void) { return m_p_context_current; }
 
 #endif // __EVE_OPENGL_CONTEXT_H__
