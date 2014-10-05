@@ -30,71 +30,71 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_RENDERER_H__
-#define __EVE_CORE_RENDERER_H__
+#ifndef __EVE_OPENGL_DEBUG_H__
+#define __EVE_OPENGL_DEBUG_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
 #endif
 
 #ifndef __EVE_MESSAGING_INCLUDES_H__
 #include "eve/mess/Includes.h"
 #endif
 
+#ifndef __EVE_OPENGL_EXTERNAL_H__
+#include "eve/ogl/External.h"
+#endif
+
+#ifndef __EVE_OPENGL_MACRO_H__
+#include "eve/ogl/Macro.h"
+#endif
+
 
 namespace eve
 {
-	namespace core
+	namespace ogl
 	{
-		/**
-		* \class eve::core::Renderer
-		*
-		* \brief Abstract base render engine(s) class.
-		*
-		* \note extends eve::mem::Pointer
-		*/
-		class Renderer
-			: public eve::mem::Pointer
-		{
+		/** \brief Test OpenGL error, log it and create error assertion. */
+		void check_error(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line);
 
-			friend class eve::mem::Pointer;
+		/** \brief Test frame buffer integrity, log and create assertion if frame buffer is not complete. */
+		void check_frame_buffer(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line, GLuint p_framebufferId);
 
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Renderer);
-			
-		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) = 0;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) = 0;
-
-
-		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) = 0;
-
-
-		public:
-			/** \brief Before display callback. (pure virtual) */
-			virtual void cb_beforeDisplay(void) = 0;
-			/** \brief After display callback. (pure virtual) */
-			virtual void cb_afterDisplay(void) = 0;
-
-			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) = 0;
-
-		}; // class Renderer
+		/** \brief Test shader program and log state if required. */
+		void check_shader_program(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line, GLuint p_programId);
 
 	} // namespace ogl
 
 } // namespace eve
 
-#endif // __EVE_CORE_RENDERER_H__
+/** 
+* \def EVE_OGL_CHECK_ERROR
+* \brief Convenience macro to check OpenGL errors.
+*/
+#ifndef NDEBUG
+#define EVE_OGL_CHECK_ERROR		eve::ogl::check_error(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), EVE_TXT_ENFORCE(__LINE__))
+#else
+#define EVE_OGL_CHECK_ERROR 
+#endif
+
+/**
+* \def EVE_OGL_CHECK_FBO
+* \brief Convenience macro to check OpenGL Frame buffer object.
+*/
+#ifndef NDEBUG
+#define EVE_OGL_CHECK_FBO(ID)		eve::ogl::check_frame_buffer(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), EVE_TXT_ENFORCE(__LINE__), ID)
+#else
+#define EVE_OGL_CHECK_FBO(ID)
+#endif
+
+/**
+* \def EVE_OGL_CHECK_SHADER
+* \brief Convenience macro to check OpenGL shader program.
+*/
+#ifndef NDEBUG
+#define EVE_OGL_CHECK_SHADER(ID)		eve::ogl::check_shader_program(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), EVE_TXT_ENFORCE(__LINE__), ID)
+#else
+#define EVE_OGL_CHECK_SHADER(ID)
+#endif
+
+#endif // __EVE_OPENGL_RENDER_H__

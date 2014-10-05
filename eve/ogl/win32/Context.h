@@ -46,7 +46,7 @@
 #endif
 
 #ifndef __EVE_OPENGL_PIXEL_FORMAT_H__
-#include "eve/gl/win32/PixelFormat.h"
+#include "eve/ogl/win32/PixelFormat.h"
 #endif
 
 
@@ -56,10 +56,10 @@ namespace eve { namespace thr { class SpinLock; } }
 
 namespace eve
 {
-	namespace gl
+	namespace ogl
 	{
 		/** 
-		* \class eve::gl::Context
+		* \class eve::ogl::Context
 		*
 		* \brief OpenGL master context.
 		* Create and manage rendering context (GLRC) based on available pixel format.
@@ -77,13 +77,13 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			static eve::gl::Context *		m_p_instance;			//<! Class unique instance.
+			static eve::ogl::Context *		m_p_instance;			//<! Class unique instance.
 			static eve::thr::SpinLock *		m_p_fence;				//!< Context activation fence.
 			
 			HGLRC							m_hGLRC;				//!< OpenGL rendering context handle.
 			HDC								m_hDC;					//!< Draw context (linked to window) handle.
 
-			eve::gl::PixelFormat			m_pixelFormat;			//!< Pixel format.
+			eve::ogl::PixelFormat			m_pixelFormat;			//!< Pixel format.
 			PIXELFORMATDESCRIPTOR			m_pixelFormatDecriptor;	//!< Pixel format descriptor.
 			int32_t							m_pixelFormatId;		//!< Pixel format ID.
 
@@ -98,7 +98,7 @@ namespace eve
 
 		public:
 			/** \brief Create unique instance. */
-			static eve::gl::Context * create_instance(void);
+			static eve::ogl::Context * create_instance(void);
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
@@ -118,11 +118,12 @@ namespace eve
 			virtual void release(void) override;
 
 
-		private:
+		public:
 			/** \brief Init GLEW and test required OpenGL version. */
-			void initOpenGL(void);
+			static void init_OpenGL(void);
 
 
+		private:
 			/** 
 			* \brief Choose available pixel format, as close to desired options as possible depending on hardware
 			* \param p_pPfd pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
@@ -145,7 +146,7 @@ namespace eve
 
 
 			/** \brief Get pixel format. */
-			static const eve::gl::PixelFormat & get_pixel_format(void);
+			static const eve::ogl::PixelFormat & get_pixel_format(void);
 			/** \brief Get pixel format descriptor. */
 			static const PIXELFORMATDESCRIPTOR & get_pixel_format_descriptor(void);
 			/** \brief Get pixel format ID. */
@@ -153,43 +154,43 @@ namespace eve
 
 
 			/** \brief Get unique instance. */
-			static eve::gl::Context * get_instance(void);
+			static eve::ogl::Context * get_instance(void);
 			/** \brief Get fence (SpinLock). */
 			static eve::thr::SpinLock * get_fence(void);
 
 		}; // class Context
 
-	} // namespace gl
+	} // namespace ogl
 
 } // namespace eve
 
 
 /** \def EveContextGL: Convenience macro to access OpenGL context instance. */
-#define EveContextGL	eve::gl::Context::get_instance()
+#define EveContextGL	eve::ogl::Context::get_instance()
 
 
 //=================================================================================================
-inline eve::gl::Context *	eve::gl::Context::get_instance(void)	{ EVE_ASSERT(m_p_instance);		return m_p_instance;	}
-inline eve::thr::SpinLock * eve::gl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence;		}
+inline eve::ogl::Context *	eve::ogl::Context::get_instance(void)	{ EVE_ASSERT(m_p_instance);		return m_p_instance;	}
+inline eve::thr::SpinLock * eve::ogl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence;		}
 
 //=================================================================================================
-inline const HGLRC			eve::gl::Context::get_handle(void)		{ EVE_ASSERT(m_p_instance);		return m_p_instance->m_hGLRC; }
+inline const HGLRC			eve::ogl::Context::get_handle(void)		{ EVE_ASSERT(m_p_instance);		return m_p_instance->m_hGLRC; }
 
 //=================================================================================================
-inline const eve::gl::PixelFormat &		eve::gl::Context::get_pixel_format(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormat;			}
-inline const PIXELFORMATDESCRIPTOR &	eve::gl::Context::get_pixel_format_descriptor(void)	{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatDecriptor;	}
-inline const int32_t					eve::gl::Context::get_pixel_format_ID(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatId;			}
+inline const eve::ogl::PixelFormat &	eve::ogl::Context::get_pixel_format(void)				{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormat;			}
+inline const PIXELFORMATDESCRIPTOR &	eve::ogl::Context::get_pixel_format_descriptor(void)	{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatDecriptor;	}
+inline const int32_t					eve::ogl::Context::get_pixel_format_ID(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatId;			}
 
 
 
 namespace eve
 {
-	namespace gl
+	namespace ogl
 	{
 		/**
-		* \class eve::gl::SubContext
+		* \class eve::ogl::SubContext
 		*
-		* \brief OpenGL window binded context linked to master context (aka eve::gl::Context).
+		* \brief OpenGL window binded context linked to master context (aka eve::ogl::Context).
 		*
 		* \note extends mem::Pointer
 		*/
@@ -204,7 +205,7 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			static eve::gl::SubContext *		m_p_context_current;		//<! Current OpenGL context.
+			static eve::ogl::SubContext *		m_p_context_current;		//<! Current OpenGL context.
 
 		private:
 			HDC									m_hDC;						//!< Draw context (linked to window) handle.
@@ -223,7 +224,7 @@ namespace eve
 			* \brief Create and return new pointer.
 			* \param p_hWnd linked window handle.
 			*/
-			static eve::gl::SubContext * create_ptr(HWND p_hWnd);
+			static eve::ogl::SubContext * create_ptr(HWND p_hWnd);
 
 
 		private:
@@ -246,9 +247,9 @@ namespace eve
 
 		private:
 			/** \brief Stock current context. */
-			static void set_current_context(eve::gl::SubContext * p_pContext);
+			static void set_current_context(eve::ogl::SubContext * p_pContext);
 			/** \brief Get current context. */
-			static const eve::gl::SubContext * get_current_context(void);
+			static const eve::ogl::SubContext * get_current_context(void);
 
 
 		public:
@@ -264,11 +265,11 @@ namespace eve
 
 		}; // class SubContext
 
-	} // namespace gl
+	} // namespace ogl
 
 } // namespace eve
 
 //=================================================================================================
-inline const eve::gl::SubContext * eve::gl::SubContext::get_current_context(void) { return m_p_context_current; }
+inline const eve::ogl::SubContext * eve::ogl::SubContext::get_current_context(void) { return m_p_context_current; }
 
 #endif // __EVE_OPENGL_CONTEXT_H__

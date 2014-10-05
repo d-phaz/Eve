@@ -30,21 +30,21 @@
 */
 
 // Main header
-#include "eve/gl/win32/PixelFormat.h"
+#include "eve/ogl/win32/PixelFormat.h"
 
 #ifndef __EVE_OPENGL_EXTERNAL_H__
-#include "eve/gl/External.h"
+#include "eve/ogl/External.h"
 #endif
 
 #ifndef __EVE_OPENGL_MACRO_H__
-#include "eve/gl/Macro.h"
+#include "eve/ogl/Macro.h"
 #endif
 
 
-eve::gl::PixelFormat eve::gl::PixelFormat::m_default_format = eve::gl::PixelFormat();
+eve::ogl::PixelFormat eve::ogl::PixelFormat::m_default_format = eve::ogl::PixelFormat();
 
 //=================================================================================================
-eve::gl::PixelFormat::PixelFormat( void )
+eve::ogl::PixelFormat::PixelFormat( void )
 
 	// Members initialization
 	: m_opts((pf_optDoubleBuffer | pf_optDirectRendering | pf_optRgba | pf_optDepthBuffer | pf_optStencilBuffer | pf_optNoDeprecatedFunctions))
@@ -64,7 +64,7 @@ eve::gl::PixelFormat::PixelFormat( void )
 {}
 
 //=================================================================================================
-eve::gl::PixelFormat::PixelFormat( const eve::gl::PixelFormat & p_parent )
+eve::ogl::PixelFormat::PixelFormat( const eve::ogl::PixelFormat & p_parent )
 
 	// Members init
 	: m_opts			( p_parent.m_opts )
@@ -84,13 +84,13 @@ eve::gl::PixelFormat::PixelFormat( const eve::gl::PixelFormat & p_parent )
 {}
 
 //=================================================================================================
-eve::gl::PixelFormat::~PixelFormat( void )
+eve::ogl::PixelFormat::~PixelFormat( void )
 {}
 
 
 
 //=================================================================================================
-eve::gl::PixelFormat & eve::gl::PixelFormat::operator=( const eve::gl::PixelFormat & p_parent )
+eve::ogl::PixelFormat & eve::ogl::PixelFormat::operator=( const eve::ogl::PixelFormat & p_parent )
 {
 	m_opts			= p_parent.m_opts;
     m_pln			= p_parent.m_pln;
@@ -114,10 +114,10 @@ eve::gl::PixelFormat & eve::gl::PixelFormat::operator=( const eve::gl::PixelForm
 
 
 //=================================================================================================
-void eve::gl::PixelFormat::init( FormatOptions p_options, int32_t p_plane )
+void eve::ogl::PixelFormat::init( FormatOptions p_options, int32_t p_plane )
 {
 	FormatOptions newOpts = p_options;
-	m_opts = eve::gl::PixelFormat::default_format().m_opts;
+	m_opts = eve::ogl::PixelFormat::default_format().m_opts;
     m_opts |= (newOpts & 0xffff);
     m_opts &= ~(newOpts >> 16);
     m_pln = p_plane;
@@ -126,9 +126,9 @@ void eve::gl::PixelFormat::init( FormatOptions p_options, int32_t p_plane )
 
 
 //=================================================================================================
-eve::gl::PixelFormat eve::gl::PixelFormat::pfdToPixelFormat( const PIXELFORMATDESCRIPTOR* _pfd )
+eve::ogl::PixelFormat eve::ogl::PixelFormat::pfdToPixelFormat( const PIXELFORMATDESCRIPTOR* _pfd )
 {
-    eve::gl::PixelFormat fmt;
+    eve::ogl::PixelFormat fmt;
 
 	// Double buffering
     fmt.setDoubleBuffer( _pfd->dwFlags & PFD_DOUBLEBUFFER);
@@ -171,7 +171,7 @@ eve::gl::PixelFormat eve::gl::PixelFormat::pfdToPixelFormat( const PIXELFORMATDE
 }
 
 //=================================================================================================
-PIXELFORMATDESCRIPTOR eve::gl::PixelFormat::pixelFormatToPfd( const eve::gl::PixelFormat * p_sysPixelFormat )
+PIXELFORMATDESCRIPTOR eve::ogl::PixelFormat::pixelFormatToPfd( const eve::ogl::PixelFormat * p_sysPixelFormat )
 {
 	// Pixel format descriptor
 	PIXELFORMATDESCRIPTOR retPfd;
@@ -254,10 +254,10 @@ PIXELFORMATDESCRIPTOR eve::gl::PixelFormat::pixelFormatToPfd( const eve::gl::Pix
 
 
 //=================================================================================================
-eve::gl::PixelFormat eve::gl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, int32_t pfi )
+eve::ogl::PixelFormat eve::ogl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, int32_t pfi )
 {
 	// Return value
-    eve::gl::PixelFormat fmt;
+    eve::ogl::PixelFormat fmt;
 
 	// Attributes
     int32_t * iAttributes = (int32_t*)malloc( sizeof(int32_t)*14 );
@@ -348,7 +348,7 @@ eve::gl::PixelFormat eve::gl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, int3
 
 
 //=================================================================================================
-bool eve::gl::PixelFormat::hasOverlays( void )
+bool eve::ogl::PixelFormat::hasOverlays( void )
 {
     static bool ret = false;
 
@@ -393,7 +393,7 @@ bool eve::gl::PixelFormat::hasOverlays( void )
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-void eve::gl::PixelFormat::set_default_format( const eve::gl::PixelFormat & p_format )
+void eve::ogl::PixelFormat::set_default_format( const eve::ogl::PixelFormat & p_format )
 {
 	m_default_format = p_format;
 }
@@ -401,7 +401,7 @@ void eve::gl::PixelFormat::set_default_format( const eve::gl::PixelFormat & p_fo
 
 
 //=================================================================================================
-void eve::gl::PixelFormat::setDepthBufferSize( int32_t p_size )
+void eve::ogl::PixelFormat::setDepthBufferSize( int32_t p_size )
 {
     if( p_size > 0 ) 
 	{
@@ -411,7 +411,7 @@ void eve::gl::PixelFormat::setDepthBufferSize( int32_t p_size )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setRedBufferSize( int32_t p_size )
+void eve::ogl::PixelFormat::setRedBufferSize( int32_t p_size )
 {
     if( p_size > 0 ) {
 		m_redSize = p_size;
@@ -419,7 +419,7 @@ void eve::gl::PixelFormat::setRedBufferSize( int32_t p_size )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setGreenBufferSize( int32_t p_size )
+void eve::ogl::PixelFormat::setGreenBufferSize( int32_t p_size )
 {
     if( p_size > 0 ) {
 		m_greenSize = p_size;
@@ -427,7 +427,7 @@ void eve::gl::PixelFormat::setGreenBufferSize( int32_t p_size )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setBlueBufferSize( int32_t p_size )
+void eve::ogl::PixelFormat::setBlueBufferSize( int32_t p_size )
 {
 	if( p_size > 0 ) {
         m_blueSize = p_size;
@@ -435,7 +435,7 @@ void eve::gl::PixelFormat::setBlueBufferSize( int32_t p_size )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setAlphaBufferSize( int32_t p_size )
+void eve::ogl::PixelFormat::setAlphaBufferSize( int32_t p_size )
 {
     if( p_size > 0 ) 
 	{
@@ -446,7 +446,7 @@ void eve::gl::PixelFormat::setAlphaBufferSize( int32_t p_size )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setAccumBufferSize( int32_t p_size )
+void eve::ogl::PixelFormat::setAccumBufferSize( int32_t p_size )
 {
     if( p_size > 0 )
 	{
@@ -457,7 +457,7 @@ void eve::gl::PixelFormat::setAccumBufferSize( int32_t p_size )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setStencilBufferSize( int32_t p_size)
+void eve::ogl::PixelFormat::setStencilBufferSize( int32_t p_size)
 {
     if( p_size > 0 )
 	{
@@ -470,7 +470,7 @@ void eve::gl::PixelFormat::setStencilBufferSize( int32_t p_size)
 
 
 //=================================================================================================
-void eve::gl::PixelFormat::setDoubleBuffer( bool p_enable )
+void eve::ogl::PixelFormat::setDoubleBuffer( bool p_enable )
 {
 	if( p_enable != this->doubleBuffer() ) {
 		this->setOption(p_enable ? pf_optDoubleBuffer : pf_optSingleBuffer);
@@ -478,7 +478,7 @@ void eve::gl::PixelFormat::setDoubleBuffer( bool p_enable )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setDepth( bool p_enable )
+void eve::ogl::PixelFormat::setDepth( bool p_enable )
 {
 	if( p_enable != this->depth() ) {
 		this->setOption(p_enable ? pf_optDepthBuffer : pf_optNoDepthBuffer);
@@ -486,7 +486,7 @@ void eve::gl::PixelFormat::setDepth( bool p_enable )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setRgba(bool p_enable)
+void eve::ogl::PixelFormat::setRgba(bool p_enable)
 {
 	if( p_enable != this->rgba() ) {
 		this->setOption(p_enable ? pf_optRgba : pf_optColorIndex);
@@ -494,7 +494,7 @@ void eve::gl::PixelFormat::setRgba(bool p_enable)
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setAlpha( bool p_enable )
+void eve::ogl::PixelFormat::setAlpha( bool p_enable )
 {
 	if( p_enable != this->alpha() ) {
 		this->setOption(p_enable ? pf_optAlphaChannel : pf_optNoAlphaChannel);
@@ -502,7 +502,7 @@ void eve::gl::PixelFormat::setAlpha( bool p_enable )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setAccum(bool p_enable)
+void eve::ogl::PixelFormat::setAccum(bool p_enable)
 {
 	if( p_enable != this->accum() ) {
 		this->setOption(p_enable ? pf_optAccumBuffer : pf_optNoAccumBuffer);
@@ -510,7 +510,7 @@ void eve::gl::PixelFormat::setAccum(bool p_enable)
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setStencil(bool p_enable)
+void eve::ogl::PixelFormat::setStencil(bool p_enable)
 {
 	if( p_enable != this->stencil() ) {
 		this->setOption(p_enable ? pf_optStencilBuffer : pf_optNoStencilBuffer);
@@ -518,7 +518,7 @@ void eve::gl::PixelFormat::setStencil(bool p_enable)
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setStereo(bool p_enable)
+void eve::ogl::PixelFormat::setStereo(bool p_enable)
 {
 	if( p_enable != this->stereo() ) {
 		this->setOption(p_enable ? pf_optStereoBuffers : pf_optNoStereoBuffers);
@@ -526,7 +526,7 @@ void eve::gl::PixelFormat::setStereo(bool p_enable)
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setDirectRendering(bool p_enable)
+void eve::ogl::PixelFormat::setDirectRendering(bool p_enable)
 {
 	if( p_enable != this->directRendering() ) {
 		this->setOption(p_enable ? pf_optDirectRendering : pf_optIndirectRendering);
@@ -534,7 +534,7 @@ void eve::gl::PixelFormat::setDirectRendering(bool p_enable)
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setSampleBuffers(bool p_enable)
+void eve::ogl::PixelFormat::setSampleBuffers(bool p_enable)
 {
 	if( p_enable != this->sampleBuffers() ) {
 		this->setOption(p_enable ? pf_optSampleBuffers : pf_optNoSampleBuffers);
@@ -542,7 +542,7 @@ void eve::gl::PixelFormat::setSampleBuffers(bool p_enable)
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setSamples( int32_t p_numSamples )
+void eve::ogl::PixelFormat::setSamples( int32_t p_numSamples )
 {
     if( p_numSamples > 0 && p_numSamples != m_numSamples ) 
 	{
@@ -553,13 +553,13 @@ void eve::gl::PixelFormat::setSamples( int32_t p_numSamples )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setSwapInterval( int32_t p_interval )
+void eve::ogl::PixelFormat::setSwapInterval( int32_t p_interval )
 {
     m_swapInterval = p_interval;
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setOverlay( bool p_enable )
+void eve::ogl::PixelFormat::setOverlay( bool p_enable )
 {
 	if( p_enable != this->hasOverlays() ) {
 		this->setOption(p_enable ? pf_optHasOverlay : pf_optNoOverlay);
@@ -567,7 +567,7 @@ void eve::gl::PixelFormat::setOverlay( bool p_enable )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setPlane( int32_t p_plane )
+void eve::ogl::PixelFormat::setPlane( int32_t p_plane )
 {
     m_pln = p_plane;
 }
@@ -575,7 +575,7 @@ void eve::gl::PixelFormat::setPlane( int32_t p_plane )
 
 
 //=================================================================================================
-void eve::gl::PixelFormat::setOption( FormatOptions p_opt )
+void eve::ogl::PixelFormat::setOption( FormatOptions p_opt )
 {
 	FormatOptions options_on = p_opt & 0xffff;
     if( options_on ) {
@@ -587,7 +587,7 @@ void eve::gl::PixelFormat::setOption( FormatOptions p_opt )
 }
 
 //=================================================================================================
-bool eve::gl::PixelFormat::testOption(FormatOptions p_opt) const
+bool eve::ogl::PixelFormat::testOption(FormatOptions p_opt) const
 {
 	bool B_Return;
 	FormatOptions options_on = p_opt & 0xffff;
@@ -602,7 +602,7 @@ bool eve::gl::PixelFormat::testOption(FormatOptions p_opt) const
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setVersion( int32_t p_major, int32_t p_minor )
+void eve::ogl::PixelFormat::setVersion( int32_t p_major, int32_t p_minor )
 {
     if( p_major > 1 && p_minor > 0 )
 	{
@@ -612,7 +612,7 @@ void eve::gl::PixelFormat::setVersion( int32_t p_major, int32_t p_minor )
 }
 
 //=================================================================================================
-void eve::gl::PixelFormat::setProfile(eve::gl::PixelFormatProfile p_profile)
+void eve::ogl::PixelFormat::setProfile(eve::ogl::PixelFormatProfile p_profile)
 {
     m_profile = p_profile;
 }

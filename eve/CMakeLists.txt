@@ -101,17 +101,19 @@ source_group( "Files" FILES ${FILES_SRCS} )
 # OpenGL.
 #################################################
 set( OPENGL_SRCS
-	 gl/External.h 
-	 gl/Macro.h 
-	 gl/Renderer.cpp 
-	 gl/Renderer.h )
+	 ogl/Debug.cpp 
+	 ogl/Debug.h 
+	 ogl/External.h 
+	 ogl/Macro.h 
+	 ogl/Renderer.cpp 
+	 ogl/Renderer.h )
 	 
 set( OPENGL_SRCS 
 	 ${OPENGL_SRCS}
-	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/Context.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/Context.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/PixelFormat.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/gl/win32/PixelFormat.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
 source_group( "OpenGL" FILES ${OPENGL_SRCS} )

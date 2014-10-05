@@ -32,6 +32,10 @@
 // Main header
 #include "eve/app/App.h"
 
+#ifndef __EVE_OPENGL_CONTEXT_H__
+#include "eve/ogl/win32/Context.h"
+#endif
+
 
 eve::app::App *	eve::app::App::m_p_instance = nullptr;
 
@@ -79,6 +83,8 @@ void eve::app::App::init(void)
 {
 	// Messaging server (log).
 	eve::mess::Server::create_instance();
+	// OpenGL master context.
+	eve::ogl::Context::create_instance();
 
 	// Win32 COM
 #if defined(EVE_OS_WIN)
@@ -122,6 +128,8 @@ void eve::app::App::release(void)
 	::CoUninitialize();
 #endif
 
+	// OpenGL master context.
+	eve::ogl::Context::release_instance();
 
 	// Messaging server (log).
 	eve::mess::Server::release_instance();

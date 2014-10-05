@@ -30,35 +30,29 @@
 */
 
 #pragma once
+#ifndef __EVE_OPENGL_RENDER_H__
+#define __EVE_OPENGL_RENDER_H__
+
 #ifndef __EVE_CORE_RENDERER_H__
-#define __EVE_CORE_RENDERER_H__
-
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
+#include "eve/core/Renderer.h"
 #endif
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
 
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
-
+namespace eve { namespace ogl { class SubContext; } }
 
 namespace eve
 {
-	namespace core
+	namespace ogl
 	{
 		/**
-		* \class eve::core::Renderer
+		* \class eve::sys::Renderer
 		*
-		* \brief Abstract base render engine(s) class.
+		* \brief OpenGL render engine.
 		*
-		* \note extends eve::mem::Pointer
+		* \note extends eve::core::Renderer
 		*/
 		class Renderer
-			: public eve::mem::Pointer
+			: public eve::core::Renderer
 		{
 
 			friend class eve::mem::Pointer;
@@ -67,34 +61,47 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
+		protected:
+			eve::ogl::SubContext *		m_pContext;
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
 			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Renderer);
+			EVE_PROTECT_DESTRUCTOR(Renderer);
+
+		protected:
+			/** \class constructor. */
+			Renderer(void);
+
 			
 		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) = 0;
+			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) = 0;
+			virtual void release(void) override;
 
 
 		public:
 			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) = 0;
+			virtual void registerToHandle(void * p_handle) override;
 
 
 		public:
 			/** \brief Before display callback. (pure virtual) */
-			virtual void cb_beforeDisplay(void) = 0;
+			virtual void cb_beforeDisplay(void) override;
 			/** \brief After display callback. (pure virtual) */
-			virtual void cb_afterDisplay(void) = 0;
+			virtual void cb_afterDisplay(void) override;
 
 			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) = 0;
+			virtual void cb_display(void) override;
 
 		}; // class Renderer
 
-	} // namespace ogl
+	} // namespace core
 
 } // namespace eve
 
-#endif // __EVE_CORE_RENDERER_H__
+#endif // __EVE_OPENGL_RENDER_H__

@@ -30,14 +30,14 @@
 */
 
 // Main class header
-#include "eve/gl/win32/Context.h"
+#include "eve/ogl/win32/Context.h"
 
 #ifndef __EVE_OPENGL_EXTERNAL_H__
-#include "eve/gl/External.h"
+#include "eve/ogl/External.h"
 #endif
 
 #ifndef __EVE_OPENGL_MACRO_H__
-#include "eve/gl/Macro.h"
+#include "eve/ogl/Macro.h"
 #endif
 
 #ifndef __EVE_SYSTEM_WINDOW_H__
@@ -59,24 +59,24 @@ bool logEq(bool a, bool b) { return (((!a) && (!b)) || (a && b)); }
 
 
 
-eve::gl::Context * eve::gl::Context::m_p_instance	= nullptr;
-eve::thr::SpinLock * eve::gl::Context::m_p_fence	= nullptr;
+eve::ogl::Context * eve::ogl::Context::m_p_instance	= nullptr;
+eve::thr::SpinLock * eve::ogl::Context::m_p_fence	= nullptr;
 
 //=================================================================================================
-eve::gl::Context * eve::gl::Context::create_instance(void)
+eve::ogl::Context * eve::ogl::Context::create_instance(void)
 {
 	EVE_ASSERT(!m_p_instance);
 	EVE_ASSERT(!m_p_fence);
 
 	m_p_fence = EVE_CREATE_PTR(eve::thr::SpinLock);
 
-	m_p_instance = new eve::gl::Context();
+	m_p_instance = new eve::ogl::Context();
 	m_p_instance->init();
 	return m_p_instance;
 }
 
 //=================================================================================================
-void eve::gl::Context::release_instance(void)
+void eve::ogl::Context::release_instance(void)
 {
 	EVE_ASSERT(m_p_instance);
 	EVE_RELEASE_PTR(m_p_instance);
@@ -88,7 +88,7 @@ void eve::gl::Context::release_instance(void)
 
 
 //=================================================================================================
-eve::gl::Context::Context(void)
+eve::ogl::Context::Context(void)
 	// Members init
 	: m_hGLRC(0)
 	, m_hDC(0)
@@ -100,9 +100,9 @@ eve::gl::Context::Context(void)
 
 
 //=================================================================================================
-void eve::gl::Context::init(void)
+void eve::ogl::Context::init(void)
 {
-	m_pixelFormat = eve::gl::PixelFormat::default_format();
+	m_pixelFormat = eve::ogl::PixelFormat::default_format();
 
 	// Create dummy window.
 	eve::sys::Window * win = eve::sys::Window::create_ptr(0, 0, 1, 1);
@@ -149,7 +149,7 @@ void eve::gl::Context::init(void)
 	}
 
 	// Init OpenGL extension for this context
-	this->initOpenGL();
+	eve::ogl::Context::init_OpenGL();
 	// Stock DC auto updated format.
 	this->updateFormatVersion();
 
@@ -165,7 +165,7 @@ void eve::gl::Context::init(void)
 }
 
 //=================================================================================================
-void eve::gl::Context::release(void)
+void eve::ogl::Context::release(void)
 {
 	// Rendering context handle.
 	if (m_hGLRC)
@@ -186,7 +186,7 @@ void eve::gl::Context::release(void)
 
 
 //=================================================================================================
-void eve::gl::Context::initOpenGL(void)
+void eve::ogl::Context::init_OpenGL(void)
 {
 	glewInit();
 
@@ -207,7 +207,7 @@ void eve::gl::Context::initOpenGL(void)
 		GLint minorVersion;
 		glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
 		glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
-		EVE_LOG_INFO("OpenGL version is %d.%d.", majorVersion, minorVersion);
+		EVE_LOG_INFO("Detected OpenGL version %d.%d.", majorVersion, minorVersion);
 
 		// Test OpenGL version
 		if (majorVersion < EVE_WINDOWS_OPENGL_MAJOR_VERSION)
@@ -231,12 +231,12 @@ void eve::gl::Context::initOpenGL(void)
 
 
 //=================================================================================================
-int32_t eve::gl::Context::choosePixelFormat(void)
+int32_t eve::ogl::Context::choosePixelFormat(void)
 {
 	BYTE pmDepth = 0;
 
 	// Pixel format descriptor
-	m_pixelFormatDecriptor = eve::gl::PixelFormat::pixelFormatToPfd(&m_pixelFormat);
+	m_pixelFormatDecriptor = eve::ogl::PixelFormat::pixelFormatToPfd(&m_pixelFormat);
 	// Choose pixel format
 	int32_t chosenPfi = ::ChoosePixelFormat(m_hDC, &m_pixelFormatDecriptor);
 	if (chosenPfi == 0) 
@@ -248,11 +248,11 @@ int32_t eve::gl::Context::choosePixelFormat(void)
 	// GDI function ChoosePixelFormat() does not handle overlay and direct-rendering requests
 	bool doSearch = (chosenPfi <= 0);
 	PIXELFORMATDESCRIPTOR pfd;
-	eve::gl::PixelFormat fmt;
+	eve::ogl::PixelFormat fmt;
 	if (!doSearch)
 	{
 		::DescribePixelFormat(m_hDC, chosenPfi, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
-		fmt = eve::gl::PixelFormat::pfdToPixelFormat(&pfd);
+		fmt = eve::ogl::PixelFormat::pfdToPixelFormat(&pfd);
 
 		if (m_pixelFormat.hasOverlay() && !fmt.hasOverlay())
 			doSearch = true;
@@ -283,7 +283,7 @@ int32_t eve::gl::Context::choosePixelFormat(void)
 			if (!(pfd.dwFlags & PFD_DRAW_TO_WINDOW))
 				continue;
 
-			fmt = eve::gl::PixelFormat::pfdToPixelFormat(&pfd);
+			fmt = eve::ogl::PixelFormat::pfdToPixelFormat(&pfd);
 			if (m_pixelFormat.hasOverlay() && !fmt.hasOverlay())
 				continue;
 
@@ -326,7 +326,7 @@ int32_t eve::gl::Context::choosePixelFormat(void)
 
 
 //=================================================================================================
-void eve::gl::Context::updateFormatVersion(void)
+void eve::ogl::Context::updateFormatVersion(void)
 {
 	const GLubyte *s = glGetString(GL_VERSION);
 
@@ -385,12 +385,12 @@ void eve::gl::Context::updateFormatVersion(void)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-eve::gl::SubContext * eve::gl::SubContext::m_p_context_current = nullptr;
+eve::ogl::SubContext * eve::ogl::SubContext::m_p_context_current = nullptr;
 
 //=================================================================================================
-eve::gl::SubContext * eve::gl::SubContext::create_ptr(HWND p_hWnd)
+eve::ogl::SubContext * eve::ogl::SubContext::create_ptr(HWND p_hWnd)
 {
-	eve::gl::SubContext * ptr = new eve::gl::SubContext(p_hWnd);
+	eve::ogl::SubContext * ptr = new eve::ogl::SubContext(p_hWnd);
 	ptr->init();
 	return ptr;
 }
@@ -398,7 +398,7 @@ eve::gl::SubContext * eve::gl::SubContext::create_ptr(HWND p_hWnd)
 
 
 //=================================================================================================
-eve::gl::SubContext::SubContext(HWND p_hWnd)
+eve::ogl::SubContext::SubContext(HWND p_hWnd)
 	// Members init
 	: m_hDC(0)
 	, m_hWnd(p_hWnd)
@@ -407,7 +407,7 @@ eve::gl::SubContext::SubContext(HWND p_hWnd)
 
 
 //=================================================================================================
-void eve::gl::SubContext::init(void)
+void eve::ogl::SubContext::init(void)
 {
 	// Get DC from window handle.
 	m_hDC = ::GetDC(m_hWnd);
@@ -419,7 +419,7 @@ void eve::gl::SubContext::init(void)
 
 
 	// Apply pixel format to DC.
-	if (::SetPixelFormat(m_hDC, eve::gl::Context::get_pixel_format_ID(), &eve::gl::Context::get_pixel_format_descriptor()) == 0)
+	if (::SetPixelFormat(m_hDC, eve::ogl::Context::get_pixel_format_ID(), &eve::ogl::Context::get_pixel_format_descriptor()) == 0)
 	{
 		EVE_LOG_ERROR("Unable to link pixel format to DC, SetPixelFormat() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
@@ -427,11 +427,15 @@ void eve::gl::SubContext::init(void)
 
 
 	// Make context current (has to be activated here to enforce DC bound).
-	if (::wglMakeCurrent(m_hDC, eve::gl::Context::get_handle()) == 0)
+	if (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()) == 0)
 	{
 		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
+
+	// Init OpenGL extensions for this context.
+	eve::ogl::Context::init_OpenGL();
+
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == 0)
 	{
@@ -441,7 +445,7 @@ void eve::gl::SubContext::init(void)
 }
 
 //=================================================================================================
-void eve::gl::SubContext::release(void)
+void eve::ogl::SubContext::release(void)
 {
 	// Draw context.
 	if (m_hWnd && m_hDC)
@@ -455,28 +459,28 @@ void eve::gl::SubContext::release(void)
 
 
 //=================================================================================================
-void eve::gl::SubContext::set_current_context(eve::gl::SubContext * p_pContext)
+void eve::ogl::SubContext::set_current_context(eve::ogl::SubContext * p_pContext)
 {
 	m_p_context_current = p_pContext;
 }
 
 
 //=================================================================================================
-bool eve::gl::SubContext::makeCurrent(void)
+bool eve::ogl::SubContext::makeCurrent(void)
 {
-	eve::gl::Context::get_fence()->lock();
+	eve::ogl::Context::get_fence()->lock();
 
 	bool ret = true;
 
-	if (eve::gl::Context::get_handle() == ::wglGetCurrentContext())
+	if (eve::ogl::Context::get_handle() == ::wglGetCurrentContext())
 	{
-		EVE_LOG_ERROR("Context already current.", (uintptr_t)eve::gl::Context::get_handle());
+		EVE_LOG_ERROR("Context already current.", (uintptr_t)eve::ogl::Context::get_handle());
 		ret = false;
 	}
 
-	if (ret && (::wglMakeCurrent(m_hDC, eve::gl::Context::get_handle()) == TRUE))
+	if (ret && (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()) == TRUE))
 	{
-		eve::gl::SubContext::set_current_context(this);
+		eve::ogl::SubContext::set_current_context(this);
 	}
 	else
 	{
@@ -488,13 +492,13 @@ bool eve::gl::SubContext::makeCurrent(void)
 }
 
 //=================================================================================================
-bool eve::gl::SubContext::doneCurrent(void)
+bool eve::ogl::SubContext::doneCurrent(void)
 {
 	bool ret = true;
 
 	if (::wglMakeCurrent(0, 0) == TRUE)
 	{
-		eve::gl::SubContext::set_current_context(nullptr);
+		eve::ogl::SubContext::set_current_context(nullptr);
 	}
 	else
 	{
@@ -502,20 +506,20 @@ bool eve::gl::SubContext::doneCurrent(void)
 		ret = false;
 	}
 
-	eve::gl::Context::get_fence()->unlock();
+	eve::ogl::Context::get_fence()->unlock();
 
 	return ret;
 }
 
 //=================================================================================================
-void eve::gl::SubContext::swapBuffers(void)
+void eve::ogl::SubContext::swapBuffers(void)
 {
 	// Multiple rendering buffers
-	if (eve::gl::Context::get_pixel_format().doubleBuffer())
+	if (eve::ogl::Context::get_pixel_format().doubleBuffer())
 	{
-		if (!eve::gl::Context::get_pixel_format().plane())
+		if (!eve::ogl::Context::get_pixel_format().plane())
 		{
-			if (!eve::gl::Context::get_pixel_format().hasOverlay())
+			if (!eve::ogl::Context::get_pixel_format().hasOverlay())
 			{
 				::SwapBuffers(m_hDC);
 			}

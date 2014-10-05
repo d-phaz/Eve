@@ -52,10 +52,10 @@
 
 namespace eve
 {
-	namespace gl
+	namespace ogl
 	{
 		/** 
-		* \def eve::gl::PixelFormatOption
+		* \def eve::ogl::PixelFormatOption
 		* \brief OpenGL Pixel format options.
 		* Options are tested and used if available in the graphic driver(s).
 		*/
@@ -87,15 +87,15 @@ namespace eve
 		};
 
 		/** 
-		* \def eve::gl::FormatOptions
+		* \def eve::ogl::FormatOptions
 		* \brief OpenGL pixel format options flag.
 		*/
-		typedef eve::core::CustomFlags<eve::gl::PixelFormatOption> FormatOptions;
+		typedef eve::core::CustomFlags<eve::ogl::PixelFormatOption> FormatOptions;
 		EVE_DECLARE_OPERATORS_FOR_FLAGS(FormatOptions);
 
 
 		/*!
-		* \def eve::gl::PixelFormatProfile
+		* \def eve::ogl::PixelFormatProfile
 		*
 		* \brief This enum describes the OpenGL context profiles that can be
 		* specified for contexts implementing OpenGL version 3.2 or higher. 
@@ -114,7 +114,7 @@ namespace eve
 
 
 		/** 
-		* \class eve::gl::PixelFormat
+		* \class eve::ogl::PixelFormat
 		*
 		* \brief Pixel format and options used to create OpenGL context.
 		*/
@@ -142,7 +142,7 @@ namespace eve
 			int32_t							m_swapInterval;			//!< Swap intarval.
 			int32_t							m_majorVersion;			//!< Requested OpenGL major version (first digit).
 			int32_t							m_minorVersion;			//!< Requested OpenGL minor version (second digit).
-			eve::gl::PixelFormatProfile		m_profile;				//!< Requested OpenGL profile.
+			eve::ogl::PixelFormatProfile		m_profile;				//!< Requested OpenGL profile.
 
 
 			//////////////////////////////////////
@@ -171,7 +171,7 @@ namespace eve
 			* \brief Creates a PixelFormat object that is a copy of the current defaultFormat.
 			*
 			* If \a p_options is not 0, the default format is modified by the specified format options. 
-			* The \a p_options parameter should be eve::gl::FormatOption values OR'ed together.
+			* The \a p_options parameter should be eve::ogl::FormatOption values OR'ed together.
 			*
 			* The \a p_plane parameter defaults to 0 and is the plane which this format should be associated with. 
 			* Not all OpenGL implementations supports overlay/underlay rendering planes.
@@ -180,22 +180,22 @@ namespace eve
 
 
 			/**
-			* \brief Convert system PIXELFORMATDESCRIPTOR to eve::gl::PixelFormat.
+			* \brief Convert system PIXELFORMATDESCRIPTOR to eve::ogl::PixelFormat.
 			* \param p_pfd Win32 pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
-			* \return usable pixel format as eve::gl::PixelFormat.
+			* \return usable pixel format as eve::ogl::PixelFormat.
 			*/
 			static PixelFormat pfdToPixelFormat(const PIXELFORMATDESCRIPTOR * p_pfd);
 			/**
 			* \brief convert system PixelFormat to PIXELFORMATDESCRIPTOR.
-			* \param p_pPixelFormat pixel format as eve::gl::PixelFormat pointer.
+			* \param p_pPixelFormat pixel format as eve::ogl::PixelFormat pointer.
 			* \return usable Win32 pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
 			*/
 			static PIXELFORMATDESCRIPTOR pixelFormatToPfd(const PixelFormat * p_pPixelFormat);
 			/**
-			* \brief Convert pixel format to eve::gl::PixelFormat (identified by id)
+			* \brief Convert pixel format to eve::ogl::PixelFormat (identified by id)
 			* \param p_hdc draw context as HDC.
 			* \param p_pfi pixel format ID as int32_t.
-			* \return usable pixel format as eve::gl::PixelFormat.
+			* \return usable pixel format as eve::ogl::PixelFormat.
 			*/
 			static PixelFormat pfiToSystemPixelFormat(HDC p_hdc, int32_t p_pfi);
 
@@ -208,8 +208,8 @@ namespace eve
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
-			/** \brief Get default pixel format as eve::gl::PixelFormat. */
-			static const eve::gl::PixelFormat & default_format(void);
+			/** \brief Get default pixel format as eve::ogl::PixelFormat. */
+			static const eve::ogl::PixelFormat & default_format(void);
 			/** \brief Set default pixel format to \a p_format. */
 			static void set_default_format(const PixelFormat & p_format);
 
@@ -467,9 +467,9 @@ namespace eve
 
 
 			/** \brief Sets the format option to \a p_opt. (convenience method) */
-			void setOption(eve::gl::FormatOptions p_opt);
+			void setOption(eve::ogl::FormatOptions p_opt);
 			/** \brief Returns true if format option \a p_opt is set, false otherwise. */
-			bool testOption(eve::gl::FormatOptions p_opt) const;
+			bool testOption(eve::ogl::FormatOptions p_opt) const;
 			
 
 			/**
@@ -481,54 +481,54 @@ namespace eve
 
 
 			/** \brief Set the OpenGL context profile to \a p_profile. */
-			void setProfile(eve::gl::PixelFormatProfile p_profile);
-			/** \brief Get the OpenGL context profile as eve::gl::PixelFormatProfile. */
-			eve::gl::PixelFormatProfile profile(void) const;
+			void setProfile(eve::ogl::PixelFormatProfile p_profile);
+			/** \brief Get the OpenGL context profile as eve::ogl::PixelFormatProfile. */
+			eve::ogl::PixelFormatProfile profile(void) const;
 
 		}; // PixelFormat
 
-	} // namespace gl
+	} // namespace ogl
 
 } // namespace eve
 
 //=================================================================================================
-inline const eve::gl::PixelFormat & eve::gl::PixelFormat::default_format(void) { return m_default_format; }
+inline const eve::ogl::PixelFormat & eve::ogl::PixelFormat::default_format(void) { return m_default_format; }
 
 
 
 //=================================================================================================
-inline const int32_t eve::gl::PixelFormat::depthBufferSize(void) const		{ return m_depthSize;		}
-inline const int32_t eve::gl::PixelFormat::redBufferSize(void) const		{ return m_redSize;			}
-inline const int32_t eve::gl::PixelFormat::greenBufferSize(void) const		{ return m_greenSize;		}
-inline const int32_t eve::gl::PixelFormat::blueBufferSize(void) const		{ return m_blueSize;		}
-inline const int32_t eve::gl::PixelFormat::alphaBufferSize(void) const		{ return m_alphaSize;		}
-inline const int32_t eve::gl::PixelFormat::accumBufferSize(void) const		{ return m_accumSize;		}
-inline const int32_t eve::gl::PixelFormat::stencilBufferSize(void) const	{ return m_stencilSize;		}
+inline const int32_t eve::ogl::PixelFormat::depthBufferSize(void) const		{ return m_depthSize;		}
+inline const int32_t eve::ogl::PixelFormat::redBufferSize(void) const		{ return m_redSize;			}
+inline const int32_t eve::ogl::PixelFormat::greenBufferSize(void) const		{ return m_greenSize;		}
+inline const int32_t eve::ogl::PixelFormat::blueBufferSize(void) const		{ return m_blueSize;		}
+inline const int32_t eve::ogl::PixelFormat::alphaBufferSize(void) const		{ return m_alphaSize;		}
+inline const int32_t eve::ogl::PixelFormat::accumBufferSize(void) const		{ return m_accumSize;		}
+inline const int32_t eve::ogl::PixelFormat::stencilBufferSize(void) const	{ return m_stencilSize;		}
 
 
 
 //=================================================================================================
-inline const bool eve::gl::PixelFormat::doubleBuffer(void) const			{ return this->testOption(pf_optDoubleBuffer);		}
-inline const bool eve::gl::PixelFormat::depth(void) const					{ return this->testOption(pf_optDepthBuffer);		}
-inline const bool eve::gl::PixelFormat::rgba(void) const					{ return this->testOption(pf_optRgba);				}
-inline const bool eve::gl::PixelFormat::alpha(void) const					{ return this->testOption(pf_optAlphaChannel);		}
-inline const bool eve::gl::PixelFormat::accum(void) const					{ return this->testOption(pf_optAccumBuffer);		}
-inline const bool eve::gl::PixelFormat::stencil(void) const					{ return this->testOption(pf_optStencilBuffer);		}
-inline const bool eve::gl::PixelFormat::stereo(void) const					{ return this->testOption(pf_optStereoBuffers);		}
-inline const bool eve::gl::PixelFormat::directRendering(void) const			{ return this->testOption(pf_optDirectRendering);	}
-inline const bool eve::gl::PixelFormat::sampleBuffers(void) const			{ return this->testOption(pf_optSampleBuffers);		}
-inline const bool eve::gl::PixelFormat::hasOverlay(void) const				{ return this->testOption(pf_optHasOverlay);		}
+inline const bool eve::ogl::PixelFormat::doubleBuffer(void) const			{ return this->testOption(pf_optDoubleBuffer);		}
+inline const bool eve::ogl::PixelFormat::depth(void) const					{ return this->testOption(pf_optDepthBuffer);		}
+inline const bool eve::ogl::PixelFormat::rgba(void) const					{ return this->testOption(pf_optRgba);				}
+inline const bool eve::ogl::PixelFormat::alpha(void) const					{ return this->testOption(pf_optAlphaChannel);		}
+inline const bool eve::ogl::PixelFormat::accum(void) const					{ return this->testOption(pf_optAccumBuffer);		}
+inline const bool eve::ogl::PixelFormat::stencil(void) const					{ return this->testOption(pf_optStencilBuffer);		}
+inline const bool eve::ogl::PixelFormat::stereo(void) const					{ return this->testOption(pf_optStereoBuffers);		}
+inline const bool eve::ogl::PixelFormat::directRendering(void) const			{ return this->testOption(pf_optDirectRendering);	}
+inline const bool eve::ogl::PixelFormat::sampleBuffers(void) const			{ return this->testOption(pf_optSampleBuffers);		}
+inline const bool eve::ogl::PixelFormat::hasOverlay(void) const				{ return this->testOption(pf_optHasOverlay);		}
 
 
 
 //=================================================================================================
-inline const int32_t eve::gl::PixelFormat::samples(void) const				{ return m_numSamples;		}
-inline const int32_t eve::gl::PixelFormat::swapInterval(void) const			{ return m_swapInterval;	}
-inline const int32_t eve::gl::PixelFormat::plane(void) const				{ return m_pln;				}
+inline const int32_t eve::ogl::PixelFormat::samples(void) const				{ return m_numSamples;		}
+inline const int32_t eve::ogl::PixelFormat::swapInterval(void) const			{ return m_swapInterval;	}
+inline const int32_t eve::ogl::PixelFormat::plane(void) const				{ return m_pln;				}
 
 
 
 //=================================================================================================
-inline eve::gl::PixelFormatProfile eve::gl::PixelFormat::profile(void) const { return m_profile; }
+inline eve::ogl::PixelFormatProfile eve::ogl::PixelFormat::profile(void) const { return m_profile; }
 
 #endif // __EVE_OPENGL_PIXEL_FORMAT_H__

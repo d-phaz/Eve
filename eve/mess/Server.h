@@ -296,10 +296,10 @@ inline FILE * eve::mess::Server::get_progress_stream(void)		{ return m_p_server-
 inline FILE * eve::mess::Server::get_debug_stream(void)			{ return m_p_server->m_pStreamDebug;		}
 
 
-#define EVE_LOG_ERROR(format, ...)		eve::mess::Server::get_error_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
-#define EVE_LOG_WARNING(format, ...)	eve::mess::Server::get_warning_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
-#define EVE_LOG_INFO(format, ...)		eve::mess::Server::get_info_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
-#define EVE_LOG_PROGRESS(format, ...)	eve::mess::Server::get_progress_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
-#define EVE_LOG_DEBUG(format, ...)		eve::mess::Server::get_debug_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__);
+#define EVE_LOG_ERROR(format, ...)		eve::mess::Server::get_error_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__)
+#define EVE_LOG_WARNING(format, ...)	eve::mess::Server::get_warning_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__)
+#define EVE_LOG_INFO(format, ...)		eve::mess::Server::get_info_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__)
+#define EVE_LOG_PROGRESS(format, ...)	eve::mess::Server::get_progress_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__)
+#define EVE_LOG_DEBUG(format, ...)		eve::mess::Server::get_debug_handler()(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT(format), __VA_ARGS__)
 
 #endif // __EVE_MESSAGING_SERVER_H__

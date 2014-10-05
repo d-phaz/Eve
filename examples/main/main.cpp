@@ -30,7 +30,7 @@
 */
 
 #include "eve/app/App.h"
-#include "eve/gl/Renderer.h"
+#include "eve/ogl/Renderer.h"
 #include "eve/sys/win32/Window.h"
 
 
@@ -40,7 +40,7 @@ class Example final
 	friend class eve::mem::Pointer;
 
 private:
-	eve::gl::Renderer *		m_pRendererOpenGL;
+	eve::ogl::Renderer *		m_pRendererOpenGL;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -64,7 +64,7 @@ void Example::initThreadedData(void)
 	// Call parent class.
 	eve::sys::View::initThreadedData();
 
-	m_pRendererOpenGL = EVE_CREATE_PTR(eve::gl::Renderer);
+	m_pRendererOpenGL = EVE_CREATE_PTR(eve::ogl::Renderer);
 	this->registerRenderer(m_pRendererOpenGL);
 }
 

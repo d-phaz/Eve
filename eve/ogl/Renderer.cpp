@@ -29,69 +29,67 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_OPENGL_RENDER_H__
-#define __EVE_OPENGL_RENDER_H__
+// Main header.
+#include "eve/ogl/Renderer.h"
 
-#ifndef __EVE_CORE_RENDERER_H__
-#include "eve/core/Renderer.h"
+#ifndef __EVE_OPENGL_CONTEXT_H__
+#include "eve/ogl/win32/Context.h"
 #endif
 
 
-namespace eve
+//=================================================================================================
+eve::ogl::Renderer::Renderer(void)
+
+	// Inheritance
+	: eve::core::Renderer()
+
+	// Members init
+	, m_pContext(nullptr)
+{}
+
+
+
+//=================================================================================================
+void eve::ogl::Renderer::init(void)
 {
-	namespace gl
-	{
-		/**
-		* \class eve::sys::Renderer
-		*
-		* \brief OpenGL render engine.
-		*
-		* \note extends eve::core::Renderer
-		*/
-		class Renderer
-			: public eve::core::Renderer
-		{
+	
+}
 
-			friend class eve::mem::Pointer;
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_DESTRUCTOR(Renderer);
-
-		protected:
-			/** \class constructor. */
-			Renderer(void);
-
-			
-		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) override;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) override;
+//=================================================================================================
+void eve::ogl::Renderer::release(void)
+{
+	EVE_RELEASE_PTR(m_pContext);
+}
 
 
-		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) override;
+
+//=================================================================================================
+void eve::ogl::Renderer::registerToHandle(void * p_handle)
+{
+	// Create OpenGL context for target window handle.
+	m_pContext = eve::ogl::SubContext::create_ptr(reinterpret_cast<HWND>(p_handle));
+}
 
 
-		public:
-			/** \brief Before display callback. (pure virtual) */
-			virtual void cb_beforeDisplay(void) override;
-			/** \brief After display callback. (pure virtual) */
-			virtual void cb_afterDisplay(void) override;
 
-			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) override;
+//=================================================================================================
+void eve::ogl::Renderer::cb_beforeDisplay(void)
+{
+	m_pContext->makeCurrent();
 
-		}; // class Renderer
+}
 
-	} // namespace core
+//=================================================================================================
+void eve::ogl::Renderer::cb_afterDisplay(void)
+{
 
-} // namespace eve
+	m_pContext->swapBuffers();
+	m_pContext->doneCurrent();
+}
 
-#endif // __EVE_OPENGL_RENDER_H__
+
+//=================================================================================================
+void eve::ogl::Renderer::cb_display(void)
+{
+
+}
