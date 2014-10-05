@@ -175,20 +175,6 @@ if( WIN32 AND OPTION_BUILD_TYPE_DEBUG )
 endif() 
 
 
-# External dependencies path.
-###################################################################################################
-# if( WIN32 )
-	# message( "\n" )
-
-	# set( PATH_TO_EXTERNAL "" CACHE PATH "PATH_TO_EXTERNAL" )
-	# if( PATH_TO_EXTERNAL STREQUAL "" )
-		# message( "Please set PATH_TO_EXTERNAL to external dependencies directory." )
-	# endif()
-	
-	# message( "\n" )
-# endif()
-
-
 ###################################################################################################
 # NOTE:
 #	These are set in root/PRODUCT_INFO.cmake
