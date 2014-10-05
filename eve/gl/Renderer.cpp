@@ -29,72 +29,64 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_RENDERER_H__
-#define __EVE_CORE_RENDERER_H__
+// Main header.
+#include "eve/gl/Renderer.h"
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
-
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
+#ifndef __EVE_OPENGL_CONTEXT_H__
+#include "eve/gl/win32/Context.h"
 #endif
 
 
-namespace eve
+//=================================================================================================
+eve::gl::Renderer::Renderer(void)
+
+	// Inheritance
+	: eve::core::Renderer()
+{}
+
+
+
+//=================================================================================================
+void eve::gl::Renderer::init(void)
 {
-	namespace core
+	static bool master_context_ready = false;
+	if (!master_context_ready)
 	{
-		/**
-		* \class eve::core::Renderer
-		*
-		* \brief Abstract base render engine(s) class.
-		*
-		* \note extends eve::mem::Pointer
-		*/
-		class Renderer
-			: public eve::mem::Pointer
-		{
+		eve::gl::Context::create_instance();
+	}
+}
 
-			friend class eve::mem::Pointer;
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Renderer);
-			
-		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) = 0;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) = 0;
+//=================================================================================================
+void eve::gl::Renderer::release(void)
+{
+	eve::gl::Context::release_instance();
+}
 
 
-		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) = 0;
+
+//=================================================================================================
+void eve::gl::Renderer::registerToHandle(void * p_handle)
+{
+
+}
 
 
-		public:
-			/** \brief Before display callback. (pure virtual) */
-			virtual void cb_beforeDisplay(void) = 0;
-			/** \brief After display callback. (pure virtual) */
-			virtual void cb_afterDisplay(void) = 0;
 
-			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) = 0;
+//=================================================================================================
+void eve::gl::Renderer::cb_beforeDisplay(void)
+{
 
-		}; // class Renderer
+}
 
-	} // namespace core
+//=================================================================================================
+void eve::gl::Renderer::cb_afterDisplay(void)
+{
 
-} // namespace eve
+}
 
-#endif // __EVE_CORE_RENDERER_H__
+
+//=================================================================================================
+void eve::gl::Renderer::cb_display(void)
+{
+
+}

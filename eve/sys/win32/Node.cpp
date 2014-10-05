@@ -81,6 +81,7 @@ void eve::sys::Node::release(void)
 void eve::sys::Node::initThreadedData(void)
 {
 	m_pWindow = eve::sys::Window::create_ptr(50, 50, 800, 600);
+	m_pWindow->show();
 
 	m_pRender = EVE_CREATE_PTR(eve::sys::Render);
 	m_pRender->start();

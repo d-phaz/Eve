@@ -30,6 +30,7 @@
 */
 
 #include "eve/app/App.h"
+#include "eve/gl/Renderer.h"
 #include "eve/sys/win32/Window.h"
 
 
@@ -38,8 +39,18 @@ class Example final
 {
 	friend class eve::mem::Pointer;
 
+private:
+	eve::gl::Renderer *		m_pRendererOpenGL;
+
+
 	EVE_DISABLE_COPY(Example);
 	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+
+private:
+	/** \brief Alloc and init threaded data. (pure virtual) */
+	virtual void initThreadedData(void) override;
+	/** \brief Release and delete threaded data. (pure virtual) */
+	virtual void releaseThreadedData(void) override;
 
 public:
 	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
@@ -48,18 +59,40 @@ public:
 
 };
 
+void Example::initThreadedData(void)
+{
+	// Call parent class.
+	eve::sys::View::initThreadedData();
+
+	m_pRendererOpenGL = EVE_CREATE_PTR(eve::gl::Renderer);
+	this->registerRenderer(m_pRendererOpenGL);
+}
+
+void Example::releaseThreadedData(void)
+{
+	this->unregisterRenderer(m_pRendererOpenGL);
+	EVE_RELEASE_PTR(m_pRendererOpenGL);
+
+	// Call parent class.
+	eve::sys::View::releaseThreadedData();
+}
+
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
-	EVE_LOG_INFO("cb_evtMouseDown");
+	EVE_LOG_INFO("Mouse down received.");
 
 	m_pWindow->toggleFullScreen();
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 {
-	EVE_LOG_INFO("cb_evtKeyDown");
+	EVE_LOG_INFO("Key down received.");
 
-	if (p_args.key == eve::sys::key_Escape)
+	if (p_args.key == eve::sys::key_Return)
+	{
+		Example * pView = EveApp->addView<Example>();
+	}
+	else if (p_args.key == eve::sys::key_Escape)
 	{
 		eve::evt::notify_application_exit();
 	}
@@ -67,6 +100,8 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 
 void Example::cb_evtWindowClose(void)
 {
+	EVE_LOG_INFO("Window close received.");
+
 	eve::evt::notify_application_exit();
 }
 

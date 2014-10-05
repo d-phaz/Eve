@@ -36,6 +36,18 @@
 #include "eve/gl/External.h"
 #endif
 
+#ifndef __EVE_OPENGL_MACRO_H__
+#include "eve/gl/Macro.h"
+#endif
+
+#ifndef __EVE_SYSTEM_WINDOW_H__
+#include "eve/sys/win32/Window.h"
+#endif
+
+#ifndef __EVE_SYSTEM_NOTIFICATION_H__
+#include "eve/sys/win32/Notification.h"
+#endif
+
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
 #include "eve/thr/SpinLock.h"
 #endif 
@@ -92,7 +104,64 @@ void eve::gl::Context::init(void)
 {
 	m_pixelFormat = eve::gl::PixelFormat::default_format();
 
-	this->chooseContext();
+	// Create dummy window.
+	eve::sys::Window * win = eve::sys::Window::create_ptr(0, 0, 1, 1);
+
+	// Initialize OpenGL drawing device.
+	m_hDC = ::GetDC(win->getHandle());
+	if (m_hDC == 0)
+	{
+		EVE_LOG_ERROR("Paint device cannot be null. GetDC() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+	// Initialize and choose best fitting Pixel Format.
+	m_pixelFormatId = this->choosePixelFormat();
+	if (m_pixelFormatId == 0)
+	{
+		EVE_LOG_ERROR("Unable to get pixel format for device.");
+		EVE_ASSERT_FAILURE;
+	}
+
+
+	// Apply pixel format to DC.
+	if (::SetPixelFormat(m_hDC, m_pixelFormatId, &m_pixelFormatDecriptor) == FALSE)
+	{
+		EVE_LOG_ERROR("Unable to link pixel format to DC, SetPixelFormat() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+
+	// Create context (GLRC).
+	m_hGLRC = ::wglCreateContext(m_hDC);
+	if (m_hGLRC == 0)
+	{
+		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContext() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+
+	// Make context current (has to be activated here to enforce DC bound).
+	if (::wglMakeCurrent(m_hDC, m_hGLRC) == 0)
+	{
+		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s.", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+	// Init OpenGL extension for this context
+	this->initOpenGL();
+	// Stock DC auto updated format.
+	this->updateFormatVersion();
+
+	// Release context.
+	if (::wglMakeCurrent(0, 0) == 0)
+	{
+		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+	// Release dummy window.
+	EVE_RELEASE_PTR(win);
 }
 
 //=================================================================================================
@@ -117,77 +186,62 @@ void eve::gl::Context::release(void)
 
 
 //=================================================================================================
-bool eve::gl::Context::chooseContext(void)
+void eve::gl::Context::initOpenGL(void)
 {
-	bool ret = true;
+	glewInit();
 
-	// Initialize OpenGL drawing device.
-	m_hDC = ::GetDC(0);
-	if (m_hDC == 0)
+	static bool firstLaunch = true;
+	if (firstLaunch)
 	{
-		EVE_LOG_ERROR("Paint device cannot be null. GetDC() failed: %s", eve::mess::get_error_msg());
-		EVE_ASSERT_FAILURE;
-		ret = false;
+		GLenum err = glGetError();
+		if (err != GL_NO_ERROR)
+		{
+			// Log error
+			EVE_LOG_ERROR("OpenGL extensions initialization failed (GLEW).");
+			// Create fatal error window and exit app
+			eve::sys::notify_fatal_error(EVE_TXT("OpenGL initialization failed.\n \n Please check your hardware and drivers capabilities."));
+		}
+
+		// Retrieve OpenGL version
+		GLint majorVersion;
+		GLint minorVersion;
+		glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+		glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+		EVE_LOG_INFO("OpenGL version is %d.%d.", majorVersion, minorVersion);
+
+		// Test OpenGL version
+		if (majorVersion < EVE_WINDOWS_OPENGL_MAJOR_VERSION)
+		{
+			// Create fatal error window and exit app
+			eve::sys::notify_fatal_error(EVE_TXT("OpenGL initialization failed.\n \n Please check your hardware and drivers capabilities."));
+		}
+		else
+		{
+			if (minorVersion < EVE_WINDOWS_OPENGL_MINOR_VERSION)
+			{
+				// Create fatal error window and exit app
+				eve::sys::notify_fatal_error(EVE_TXT("OpenGL initialization failed.\n \n Please check your hardware and drivers capabilities."));
+			}
+		}
+
+		firstLaunch = false;
 	}
-
-	// Initialize and choose best fitting Pixel Format.
-	m_pixelFormatId = this->choosePixelFormat(&m_pixelFormatDecriptor);
-	if (m_pixelFormatId == 0)
-	{
-		EVE_LOG_ERROR("Unable to get pixel format for device.");
-		EVE_ASSERT_FAILURE;
-		ret = false;
-	}
-
-
-	// Apply pixel format to DC.
-	if (::SetPixelFormat(m_hDC, m_pixelFormatId, &m_pixelFormatDecriptor) == 0)
-	{
-		EVE_LOG_ERROR("Unable to link pixel format to DC, SetPixelFormat() failed: %s", eve::mess::get_error_msg());
-		EVE_ASSERT_FAILURE;
-		ret = false;
-	}
-
-
-	// Create context (GLRC).
-	m_hGLRC = ::wglCreateContext(m_hDC);
-	if (m_hGLRC == 0)
-	{
-		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContext() failed: %s", eve::mess::get_error_msg());
-		EVE_ASSERT_FAILURE;
-		ret = false;
-	}
-
-
-	// Make context current (has to be activated here to enforce DC bound).
-	if (::wglMakeCurrent(m_hDC, m_hGLRC) == 0)
-	{
-		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed: %s.", eve::mess::get_error_msg());
-		EVE_ASSERT_FAILURE;
-	}
-
-	// Stock DC auto updated format.
-	this->updateFormatVersion();
-
-	return ret;
 }
 
+
+
 //=================================================================================================
-int32_t eve::gl::Context::choosePixelFormat(PIXELFORMATDESCRIPTOR * p_pPfd)
+int32_t eve::gl::Context::choosePixelFormat(void)
 {
 	BYTE pmDepth = 0;
 
-
 	// Pixel format descriptor
-	PIXELFORMATDESCRIPTOR * p = p_pPfd;
-	p = eve::gl::PixelFormat::pixelFormatToPfd(&m_pixelFormat);
-
-
+	m_pixelFormatDecriptor = eve::gl::PixelFormat::pixelFormatToPfd(&m_pixelFormat);
 	// Choose pixel format
-	int32_t chosenPfi = ::ChoosePixelFormat(m_hDC, p);
+	int32_t chosenPfi = ::ChoosePixelFormat(m_hDC, &m_pixelFormatDecriptor);
 	if (chosenPfi == 0) 
 	{
-		EVE_LOG_ERROR("Unable to retrieve pixel format, ChoosePixelFormat() failed: %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to retrieve pixel format, ChoosePixelFormat() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -359,7 +413,7 @@ void eve::gl::SubContext::init(void)
 	m_hDC = ::GetDC(m_hWnd);
 	if (m_hDC == 0)
 	{
-		EVE_LOG_ERROR("Paint device cannot be null. GetDC() failed: %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Paint device cannot be null. GetDC() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -367,7 +421,7 @@ void eve::gl::SubContext::init(void)
 	// Apply pixel format to DC.
 	if (::SetPixelFormat(m_hDC, eve::gl::Context::get_pixel_format_ID(), &eve::gl::Context::get_pixel_format_descriptor()) == 0)
 	{
-		EVE_LOG_ERROR("Unable to link pixel format to DC, SetPixelFormat() failed: %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to link pixel format to DC, SetPixelFormat() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -375,13 +429,13 @@ void eve::gl::SubContext::init(void)
 	// Make context current (has to be activated here to enforce DC bound).
 	if (::wglMakeCurrent(m_hDC, eve::gl::Context::get_handle()) == 0)
 	{
-		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed: %s.", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == 0)
 	{
-		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed: %s.", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 }
@@ -426,7 +480,7 @@ bool eve::gl::SubContext::makeCurrent(void)
 	}
 	else
 	{
-		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed: %s.", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
 		ret = false;
 	}
 
@@ -444,7 +498,7 @@ bool eve::gl::SubContext::doneCurrent(void)
 	}
 	else
 	{
-		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed: %s.", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed %s", eve::mess::get_error_msg().c_str());
 		ret = false;
 	}
 

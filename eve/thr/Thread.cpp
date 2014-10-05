@@ -108,7 +108,7 @@ void eve::thr::Thread::start(void)
 	// Resume thread execution
 	if (::ResumeThread(m_hThread) == (DWORD)-1)
 	{
-		EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE
 	}
 }
@@ -158,7 +158,7 @@ bool eve::thr::Thread::join(void)
 				{
 					if (::WaitForSingleObject(m_hThread, INFINITE) != WAIT_OBJECT_0) 
 					{
-						EVE_LOG_ERROR("Cannot join thread WaitForSingleObject() failed, error: %s", eve::mess::get_error_msg());
+						EVE_LOG_ERROR("Cannot join thread WaitForSingleObject() failed, error: %s", eve::mess::get_error_msg().c_str());
 						EVE_ASSERT_FAILURE;
 					}
 				}
@@ -171,7 +171,7 @@ bool eve::thr::Thread::join(void)
 			else
 			{
 				bReturn = false;
-				EVE_LOG_ERROR("Unable to retrieve thread exit code GetExitCodeThread() failed, error: %s", eve::mess::get_error_msg());
+				EVE_LOG_ERROR("Unable to retrieve thread exit code GetExitCodeThread() failed, error: %s", eve::mess::get_error_msg().c_str());
 				EVE_ASSERT_FAILURE;
 				break;
 			}

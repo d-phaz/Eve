@@ -214,9 +214,6 @@ void eve::sys::Window::init(void)
 
 	// Activate drag and drop.
 	this->setDragAcceptFiles(true);
-
-	// Show Window.
-	::ShowWindow(m_handle, SW_SHOWNORMAL);
 }
 
 //=================================================================================================
@@ -239,7 +236,7 @@ void eve::sys::Window::release(void)
 void eve::sys::Window::show(void)
 {
 	m_pFence->lock();
-	::ShowWindowAsync(m_handle, SW_SHOWNORMAL);
+	::ShowWindow(m_handle, SW_SHOWNORMAL);
 	m_pFence->unlock();
 }
 
@@ -247,7 +244,7 @@ void eve::sys::Window::show(void)
 void eve::sys::Window::hide(void)
 {
 	m_pFence->lock();
-	::ShowWindowAsync(m_handle, SW_HIDE);
+	::ShowWindow(m_handle, SW_HIDE);
 	m_pFence->unlock();
 }
 
@@ -257,7 +254,7 @@ void eve::sys::Window::hide(void)
 void eve::sys::Window::minimize(void)
 {
 	m_pFence->lock();
-	::ShowWindowAsync(m_handle, SW_SHOWMINIMIZED);
+	::ShowWindow(m_handle, SW_SHOWMINIMIZED);
 	m_pFence->unlock();
 }
 
@@ -265,7 +262,7 @@ void eve::sys::Window::minimize(void)
 void eve::sys::Window::restore(void)
 {
 	m_pFence->lock();
-	::ShowWindowAsync(m_handle, SW_RESTORE);
+	::ShowWindow(m_handle, SW_RESTORE);
 	m_pFence->unlock();
 }
 

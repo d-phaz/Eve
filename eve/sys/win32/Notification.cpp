@@ -40,7 +40,7 @@ bool eve::sys::notify_prompt_user(const std::wstring & p_title, const std::wstri
 
 #ifndef NDEBUG
 	if (ret == 0) {
-		EVE_LOG_ERROR("Unable to create user prompt Message Box, error: %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to create user prompt Message Box %s", eve::mess::get_error_msg().c_str());
 	}
 #endif
 
@@ -54,7 +54,7 @@ bool eve::sys::notify_warning(const std::wstring & p_title, const std::wstring &
 
 #ifndef NDEBUG
 	if (ret == 0) {
-		EVE_LOG_ERROR("Unable to create user prompt Message Box, error: %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to create user prompt Message Box %s", eve::mess::get_error_msg().c_str());
 	}
 #endif
 
@@ -68,7 +68,7 @@ bool eve::sys::notify_error(const std::wstring & p_title, const std::wstring & p
 
 #ifndef NDEBUG
 	if (ret == 0) {
-		EVE_LOG_ERROR("Unable to create user prompt Message Box, error: %s", eve::mess::get_error_msg());
+		EVE_LOG_ERROR("Unable to create user prompt Message Box %s", eve::mess::get_error_msg().c_str());
 	}
 #endif
 

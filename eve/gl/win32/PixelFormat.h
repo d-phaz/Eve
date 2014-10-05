@@ -190,7 +190,7 @@ namespace eve
 			* \param p_pPixelFormat pixel format as eve::gl::PixelFormat pointer.
 			* \return usable Win32 pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
 			*/
-			static PIXELFORMATDESCRIPTOR * pixelFormatToPfd(const PixelFormat * p_pPixelFormat);
+			static PIXELFORMATDESCRIPTOR pixelFormatToPfd(const PixelFormat * p_pPixelFormat);
 			/**
 			* \brief Convert pixel format to eve::gl::PixelFormat (identified by id)
 			* \param p_hdc draw context as HDC.

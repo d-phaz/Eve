@@ -102,7 +102,9 @@ source_group( "Files" FILES ${FILES_SRCS} )
 #################################################
 set( OPENGL_SRCS
 	 gl/External.h 
-	 gl/Macro.h )
+	 gl/Macro.h 
+	 gl/Renderer.cpp 
+	 gl/Renderer.h )
 	 
 set( OPENGL_SRCS 
 	 ${OPENGL_SRCS}
@@ -222,35 +224,6 @@ if( WIN32 AND OPTION_BUILD_USE_VLD )
 	endif()
 endif()
 
-	
-# GLEW.
-#################################################
-if( WIN32 )
-	if( ${CMAKE_SIZEOF_VOID_P} EQUAL 4 )
-		if( OPTION_BUILD_TYPE_DEBUG )
-			set( GLEW_LIBS 
-				 ${BASE_SOURCE_PATH}/external/lib_x86/Debug/glewd.lib 
-				 ${BASE_SOURCE_PATH}/external/lib_x86/Debug/glewmxsd.lib )
-		elseif( OPTION_BUILD_TYPE_RELEASE ) 
-			set( GLEW_LIBS 
-				 ${BASE_SOURCE_PATH}/external/lib_x86/Release/glew.lib 
-				 ${BASE_SOURCE_PATH}/external/lib_x86/Release/glewmxs.lib )		
-		endif()
-	elseif( ${CMAKE_SIZEOF_VOID_P} EQUAL 8 )
-		if( OPTION_BUILD_TYPE_DEBUG )
-			set( GLEW_LIBS 
-				 ${BASE_SOURCE_PATH}/external/lib_x64/Debug/glewd.lib 
-				 ${BASE_SOURCE_PATH}/external/lib_x64/Debug/glewmxsd.lib )
-		elseif( OPTION_BUILD_TYPE_RELEASE ) 
-			set( GLEW_LIBS 
-				 ${BASE_SOURCE_PATH}/external/lib_x64/Release/glew.lib 
-				 ${BASE_SOURCE_PATH}/external/lib_x64/Release/glewmxs.lib )		
-		endif()
-	endif()
-	
-set( LIBS ${LIBS} ${GLEW_LIBS})
-endif()
-
 
 # Version.h
 #################################################
@@ -282,15 +255,16 @@ link_directories( ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
 if( WIN32 )
 	set( LIBS
 		 ${LIBS}
-		 kernel32.lib ) 	 
+		 kernel32.lib
+		 OpenGL32.lib 
+		 glu32.lib 
+		 User32.lib ) 	 
 
 	if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 		link_directories( ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR} )
-	endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-		
-	if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
 		link_directories( ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR} )
-	endif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+	endif()
 endif( WIN32 )
 
 
@@ -324,6 +298,19 @@ if( APPLE )
     find_required_library( CoreFoundation )
     find_required_library( CoreServices )
     find_required_library( Security )
+endif()
+
+	
+# GLEW.
+#################################################
+if( WIN32 )
+	if( OPTION_BUILD_TYPE_DEBUG )
+		set( GLEW_LIBS  glewd.lib  glewmxsd.lib )
+	elseif( OPTION_BUILD_TYPE_RELEASE ) 
+		set( GLEW_LIBS  glew.lib  glewmxs.lib )		
+	endif()
+	ADD_DEFINITIONS( -DGLEW_STATIC=1 )
+	set( LIBS ${LIBS} ${GLEW_LIBS})
 endif()
 
 

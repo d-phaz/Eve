@@ -53,7 +53,7 @@ bool eve::sys::app_is_x86(void)
 		BOOL bIsWow64 = FALSE;
 		if (!::IsWow64Process(::GetCurrentProcess(), &bIsWow64))
 		{
-			EVE_LOG_ERROR("Unable to retrieve application x86 state, error: %s.", eve::mess::get_error_msg() );
+			EVE_LOG_ERROR("Unable to retrieve application x86 state %s.", eve::mess::get_error_msg().c_str());
 		}
 
 		ret = (bIsWow64 == TRUE);

@@ -119,14 +119,17 @@ namespace eve
 
 
 		private:
-			/** \brief Choose available and compliant context properties. */
-			bool chooseContext(void);
+			/** \brief Init GLEW and test required OpenGL version. */
+			void initOpenGL(void);
+
+
 			/** 
 			* \brief Choose available pixel format, as close to desired options as possible depending on hardware
-			* \param p_pPfd pixel format descriptor as void pointer.
+			* \param p_pPfd pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
 			* \return Chosen pixel format ID as int32_t.
 			*/
-			int32_t choosePixelFormat(PIXELFORMATDESCRIPTOR * p_pPfd);
+			int32_t choosePixelFormat(void);
+
 
 			/** \brief DC attached pixel format may change selected options, grab and stock updated values. */
 			void updateFormatVersion(void);
@@ -266,6 +269,6 @@ namespace eve
 } // namespace eve
 
 //=================================================================================================
-const eve::gl::SubContext * eve::gl::SubContext::get_current_context(void) { return m_p_context_current; }
+inline const eve::gl::SubContext * eve::gl::SubContext::get_current_context(void) { return m_p_context_current; }
 
 #endif // __EVE_OPENGL_CONTEXT_H__

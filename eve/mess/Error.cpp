@@ -53,11 +53,11 @@
 								   (LPWSTR)&msg, 0, NULL);
 			if (len > 0)
 			{
-				_snwprintf(buffer, 2048, EVE_TXT("error (%d): %s"), p_err, msg);
+				_snwprintf(buffer, 2048 * sizeof(wchar_t), EVE_TXT("error (%d): %s."), p_err, msg);
 			}
 			else
 			{
-				_snwprintf(buffer, 2048, EVE_TXT("error code: %d."), p_err);
+				_snwprintf(buffer, 2048 * sizeof(wchar_t), EVE_TXT("error code: %d."), p_err);
 			}
 
 			returnString = std::wstring(buffer);

@@ -47,7 +47,7 @@ eve::gl::PixelFormat eve::gl::PixelFormat::m_default_format = eve::gl::PixelForm
 eve::gl::PixelFormat::PixelFormat( void )
 
 	// Members initialization
-	: m_opts((pf_optDirectRendering | pf_optRgba | pf_optDepthBuffer | pf_optStencilBuffer | pf_optNoDeprecatedFunctions))
+	: m_opts((pf_optDoubleBuffer | pf_optDirectRendering | pf_optRgba | pf_optDepthBuffer | pf_optStencilBuffer | pf_optNoDeprecatedFunctions))
 	, m_pln(0)
 	, m_depthSize(24)
 	, m_accumSize(-1)
@@ -171,85 +171,84 @@ eve::gl::PixelFormat eve::gl::PixelFormat::pfdToPixelFormat( const PIXELFORMATDE
 }
 
 //=================================================================================================
-PIXELFORMATDESCRIPTOR * eve::gl::PixelFormat::pixelFormatToPfd( const eve::gl::PixelFormat * p_sysPixelFormat )
+PIXELFORMATDESCRIPTOR eve::gl::PixelFormat::pixelFormatToPfd( const eve::gl::PixelFormat * p_sysPixelFormat )
 {
 	// Pixel format descriptor
-	PIXELFORMATDESCRIPTOR * Ptr_Return = (PIXELFORMATDESCRIPTOR*)malloc( sizeof(PIXELFORMATDESCRIPTOR) );
-	memset(Ptr_Return, 0, sizeof(PIXELFORMATDESCRIPTOR));
+	PIXELFORMATDESCRIPTOR retPfd;
 
-	Ptr_Return->nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	Ptr_Return->nVersion = 1;
+	retPfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	retPfd.nVersion = 1;
 
 	// Draw flags
-	Ptr_Return->dwFlags  = PFD_SUPPORT_OPENGL;
+	retPfd.dwFlags  = PFD_SUPPORT_OPENGL;
 	//p->dwFlags |= PFD_DRAW_TO_BITMAP;
-	Ptr_Return->dwFlags |= PFD_DRAW_TO_WINDOW;
+	retPfd.dwFlags |= PFD_DRAW_TO_WINDOW;
 
 	// Direct Rendering
 	if ( !p_sysPixelFormat->directRendering() ) {
-		Ptr_Return->dwFlags |= PFD_GENERIC_FORMAT;
+		retPfd.dwFlags |= PFD_GENERIC_FORMAT;
 	}
 
 	// Double Buffering
 	if ( p_sysPixelFormat->doubleBuffer() ) {
-		Ptr_Return->dwFlags |= PFD_DOUBLEBUFFER;
+		retPfd.dwFlags |= PFD_DOUBLEBUFFER;
 	}
 
 	// Stereo
 	if( p_sysPixelFormat->stereo() ) {
-		Ptr_Return->dwFlags |= PFD_STEREO;
+		retPfd.dwFlags |= PFD_STEREO;
 	}
 
 	// Depth
 	if( p_sysPixelFormat->depth() ) {
-		Ptr_Return->cDepthBits = (p_sysPixelFormat->depthBufferSize() == -1 ? 32 : p_sysPixelFormat->depthBufferSize());
+		retPfd.cDepthBits = (p_sysPixelFormat->depthBufferSize() == -1 ? 32 : p_sysPixelFormat->depthBufferSize());
 	}
 	else {
-		Ptr_Return->dwFlags |= PFD_DEPTH_DONTCARE;
+		retPfd.dwFlags |= PFD_DEPTH_DONTCARE;
 	}
 
 
 	// RGBA
 	if( p_sysPixelFormat->rgba() ) 
 	{
-		Ptr_Return->iPixelType = PFD_TYPE_RGBA;
+		retPfd.iPixelType = PFD_TYPE_RGBA;
 
 		if (p_sysPixelFormat->redBufferSize() != -1)
-			Ptr_Return->cRedBits = p_sysPixelFormat->redBufferSize();
+			retPfd.cRedBits = p_sysPixelFormat->redBufferSize();
 		if (p_sysPixelFormat->greenBufferSize() != -1)
-			Ptr_Return->cGreenBits = p_sysPixelFormat->greenBufferSize();
+			retPfd.cGreenBits = p_sysPixelFormat->greenBufferSize();
 		if (p_sysPixelFormat->blueBufferSize() != -1)
-			Ptr_Return->cBlueBits = p_sysPixelFormat->blueBufferSize();
+			retPfd.cBlueBits = p_sysPixelFormat->blueBufferSize();
 
-		Ptr_Return->cColorBits = 32;
+		retPfd.cColorBits = 32;
 	} 
 	else 
 	{
-		Ptr_Return->iPixelType = PFD_TYPE_COLORINDEX;
-		Ptr_Return->cColorBits = 8;
+		retPfd.iPixelType = PFD_TYPE_COLORINDEX;
+		retPfd.cColorBits = 8;
 	}
 
 	// Alpha
 	if( p_sysPixelFormat->alpha() ) {
-		Ptr_Return->cAlphaBits = p_sysPixelFormat->alphaBufferSize() == -1 ? 8 : p_sysPixelFormat->alphaBufferSize();
+		retPfd.cAlphaBits = p_sysPixelFormat->alphaBufferSize() == -1 ? 8 : p_sysPixelFormat->alphaBufferSize();
 	}
 
 	// Accum buffer
 	if (p_sysPixelFormat->accum()) 
 	{
 		BYTE value = (p_sysPixelFormat->accumBufferSize() == -1 ? 16 : p_sysPixelFormat->accumBufferSize());
-		Ptr_Return->cAccumRedBits = Ptr_Return->cAccumGreenBits = Ptr_Return->cAccumBlueBits = Ptr_Return->cAccumAlphaBits = value;
+		retPfd.cAccumRedBits = retPfd.cAccumGreenBits = retPfd.cAccumBlueBits = retPfd.cAccumAlphaBits = value;
 	}
 
 	// Stencil
 	if( p_sysPixelFormat->stencil() ) {
-		Ptr_Return->cStencilBits = (p_sysPixelFormat->stencilBufferSize() == -1 ? 8 : p_sysPixelFormat->stencilBufferSize());
+		retPfd.cStencilBits = (p_sysPixelFormat->stencilBufferSize() == -1 ? 8 : p_sysPixelFormat->stencilBufferSize());
 	}
 
 	// iLayerType is ignored, backward compatibility only
-	Ptr_Return->iLayerType = PFD_MAIN_PLANE;
+	retPfd.iLayerType = PFD_MAIN_PLANE;
 
-	return Ptr_Return;
+	return retPfd;
 }
 
 

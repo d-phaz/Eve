@@ -119,13 +119,24 @@ macro( add_project PROJECT_NAME_IN )
 	# Libraries.
 	###################################################################################################	 
 	link_directories( ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
+	set( LIBS )
 
 	# Windows 
 	#################################################
 	if( WIN32 )
-		set( LIBS	
+		set( LIBS
+			 ${LIBS}
 			 kernel32.lib
+			 OpenGL32.lib 
+			 glu32.lib 
+			 User32.lib 
 			 ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${PRODUCT_PRODUCT_NAME}.lib ) 
+
+		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+			link_directories( ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR} )
+		elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+			link_directories( ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR} )
+		endif()
 	endif( WIN32 )
 	
 	# OSX 
@@ -151,6 +162,34 @@ macro( add_project PROJECT_NAME_IN )
 		find_required_library( CoreFoundation )
 		find_required_library( CoreServices )
 		find_required_library( Security )
+	endif()
+	
+	# GLEW.
+	#################################################
+	if( WIN32 )
+		if( OPTION_BUILD_TYPE_DEBUG )
+			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+				set( GLEW_LIBS 
+					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glewd.lib
+					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glewmxsd.lib )
+			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+				set( GLEW_LIBS 
+					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewd.lib
+					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewmxsd.lib )
+			endif()			
+		elseif( OPTION_BUILD_TYPE_RELEASE ) 
+			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+				set( GLEW_LIBS 
+					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glew.lib
+					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glewmxs.lib )
+			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+				set( GLEW_LIBS 
+					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glew.lib
+					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewmxs.lib )
+			endif()	
+		endif()
+		ADD_DEFINITIONS( -DGLEW_STATIC=1 )
+		set( LIBS ${LIBS} ${GLEW_LIBS})
 	endif()
 
 	# # POCO
