@@ -130,9 +130,6 @@ set( OPENGL_SRCS
 	 ogl/Debug.h 
 	 ogl/Fbo.h 
 	 ogl/Fbo.cpp 
-	 ogl/Format.h 
-	 ogl/Format.cpp 
-	 ogl/Format.h 
 	 ogl/Macro.h 
 	 ogl/Object.cpp 
 	 ogl/Object.h 

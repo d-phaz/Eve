@@ -12,10 +12,57 @@ namespace eve
 {
 	namespace ogl
 	{
+		/**
+		* \class eve::ogl::FormatFBO
+		*
+		* \brief OpenGL frame buffer object format class.
+		* Used to create OpenGL frame buffer object based on properties.
+		*
+		* \note extends eve::ogl::Format
+		*/
+		class FormatFBO final
+			: public eve::ogl::Format
+		{
+		public:
+			uint32_t		m_width;				//!< FBO texture(s) width.
+			uint32_t		m_height;				//!< FBO texture(s) height.
+
+			GLenum			m_texDataType;			//!< Texture data type.
+			GLenum			m_depthDataType;		//!< Depth texture data type.
+
+			size_t			m_texNum;				//!< FBO texture(s) amount.
+			bool			m_bHasDepth;			//!< FBO depth texture creation required state.
+
+		public:
+			/** \brief Class constructor. */
+			FormatFBO(void);
+			/** \brief Class destructor. */
+			virtual ~FormatFBO(void);
+
+			/** \brief Copy constructor. */
+			FormatFBO(const eve::ogl::FormatFBO & p_other);
+			/** \brief Assignation operator. */
+			const FormatFBO & operator = (const FormatFBO & p_other);
+
+		}; // class FormatFBO
+
+
 		/** 
 		* \class eve::ogl::Fbo
 		*
 		* \brief Create and manage multiple texture Frame Buffer Object.
+		* 
+		* Texture creation is ordered, they are created on:
+		*		GL_COLOR_ATTACHMENT0
+		*		GL_COLOR_ATTACHMENT1
+		*		GL_COLOR_ATTACHMENT2
+		*		etc...
+		*
+		* Depth texture is created on GL_DEPTH_ATTACHMENT.
+		*
+		* Default texture data type is GL_UNSIGNED_BYTE.
+		*
+		* All texture use LINEAR filtering and are clamped to edges on ST axes.
 		*
 		* \note extends eve::ogl::Object
 		*/
@@ -35,6 +82,9 @@ namespace eve
 
 			uint32_t				m_width;				//!< FBO texture(s) width.
 			uint32_t				m_height;				//!< FBO texture(s) height.
+
+			GLenum					m_texDataType;			//!< Texture data type.
+			GLenum					m_depthDataType;		//!< Depth texture data type.
 
 			GLuint *				m_pSlotTextureIds;		//!< OpenGL texture(s) ID(s).
 			size_t					m_slotNum;								

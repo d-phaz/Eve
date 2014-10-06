@@ -19,10 +19,6 @@
 #include "eve/ogl/Debug.h"
 #endif
 
-#ifndef __EVE_OPENGL_FORMAT_H__
-#include "eve/ogl/Format.h"
-#endif
-
 
 namespace eve { namespace ogl { class Renderer; } }
 
@@ -31,6 +27,20 @@ namespace eve
 {
 	namespace ogl
 	{
+		/**
+		* \class eve::ogl::Format
+		*
+		* \brief Abstract base OpenGL object format class.
+		* Used to create OpenGL object based on properties.
+		*/
+		class Format
+		{
+			EVE_DISABLE_COPY(Format);
+			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Format);
+
+		}; // class Format
+
+
 		/** 
 		* \class eve::ogl::Object
 		*

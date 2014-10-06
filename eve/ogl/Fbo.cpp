@@ -4,6 +4,53 @@
 
 
 //=================================================================================================
+eve::ogl::FormatFBO::FormatFBO(void)
+	// Inheritance
+	: eve::ogl::Format()
+	// members init
+	, m_width(0)
+	, m_height(0)
+	, m_texNum(1)
+	, m_texDataType(GL_UNSIGNED_BYTE)
+	, m_depthDataType(GL_UNSIGNED_BYTE)
+	, m_bHasDepth(false)
+{}
+
+//=================================================================================================
+eve::ogl::FormatFBO::~FormatFBO(void)
+{}
+
+//=================================================================================================
+eve::ogl::FormatFBO::FormatFBO(const eve::ogl::FormatFBO & p_other)
+	// Inheritance
+	: eve::ogl::Format()
+	// members init
+	, m_width(p_other.m_width)
+	, m_height(p_other.m_height)
+	, m_texDataType(p_other.m_texDataType)
+	, m_depthDataType(p_other.m_depthDataType)
+	, m_texNum(p_other.m_texNum)
+	, m_bHasDepth(p_other.m_bHasDepth)
+{}
+
+//=================================================================================================
+const eve::ogl::FormatFBO & eve::ogl::FormatFBO::operator = (const eve::ogl::FormatFBO & p_other)
+{
+	if (this != &p_other)
+	{
+		this->m_width			= p_other.m_width;
+		this->m_height			= p_other.m_height;
+		this->m_texDataType		= p_other.m_texDataType;
+		this->m_depthDataType	= p_other.m_depthDataType;
+		this->m_texNum			= p_other.m_texNum;
+		this->m_bHasDepth		= p_other.m_bHasDepth;
+	}
+	return *this;
+}
+
+
+
+//=================================================================================================
 eve::ogl::Fbo::Fbo(void)
 	// Inheritance
 	: eve::ogl::Object()
@@ -11,6 +58,8 @@ eve::ogl::Fbo::Fbo(void)
 	, m_glFramebufferId(0)
 	, m_width(0)
 	, m_height(0)
+	, m_texDataType(GL_UNSIGNED_BYTE)
+	, m_depthDataType(GL_UNSIGNED_BYTE)
 	, m_pSlotTextureIds(0)
 	, m_slotNum(0)
 	, m_texNum(0)
@@ -24,10 +73,12 @@ void eve::ogl::Fbo::setAttributes(eve::ogl::Format * p_format)
 {
 	eve::ogl::FormatFBO * format = reinterpret_cast<eve::ogl::FormatFBO*>(p_format);
 
-	m_width		= format->m_width;
-	m_height	= format->m_height;
-	m_texNum	= format->m_texNum;
-	m_bHasDepth = format->m_bHasDepth;
+	m_width				= format->m_width;
+	m_height			= format->m_height;
+	m_texDataType		= format->m_texDataType;
+	m_depthDataType		= format->m_depthDataType;
+	m_texNum			= format->m_texNum;
+	m_bHasDepth			= format->m_bHasDepth;
 }
 
 
@@ -70,7 +121,7 @@ void eve::ogl::Fbo::oglInit(void)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		// Initialize texture data
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, m_texDataType, NULL);
 		// Release current texture id to default
 		glBindTexture(GL_TEXTURE_2D, 0);
 		EVE_OGL_CHECK_ERROR;
@@ -94,8 +145,7 @@ void eve::ogl::Fbo::oglInit(void)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		// Initialize texture data
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
-		//glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, m_depthDataType, NULL);
 		// Release current texture id to default
 		glBindTexture(GL_TEXTURE_2D, 0);
 		EVE_OGL_CHECK_ERROR;
@@ -124,7 +174,7 @@ void eve::ogl::Fbo::oglUpdate(void)
 	for (uint32_t i = 0; i < m_texNum; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_pSlotTextureIds[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, m_texDataType, NULL);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		EVE_OGL_CHECK_ERROR;
 	}
@@ -133,7 +183,7 @@ void eve::ogl::Fbo::oglUpdate(void)
 	if (m_bHasDepth)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_pSlotTextureIds[m_texNum]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, m_depthDataType, NULL);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		EVE_OGL_CHECK_ERROR;
 	}
