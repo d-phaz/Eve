@@ -51,7 +51,7 @@ void eve::ogl::check_error(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_l
 		default:								mess = EVE_TXT("UNKNOWN");							break;
 		}
 
-		EVE_LOG_ERROR("OpenGL Error: %s in function %s in file %s at line %i \n", mess.c_str(), p_pFunction, p_pFile, p_line);
+		EVE_LOG_ERROR("OpenGL Error: %s in function %s in file %s at line %d.", mess.c_str(), p_pFunction, p_pFile, p_line);
 		EVE_ASSERT_FAILURE;
 	}
 }
@@ -81,7 +81,7 @@ void eve::ogl::check_frame_buffer(wchar_t * p_pFunction, wchar_t * p_pFile, int3
 #endif
 		}
 
-		EVE_LOG_ERROR("OpenGL Error: %s in function %s in file %s at line %i \n", mess.c_str(), p_pFunction, p_pFile, p_line);
+		EVE_LOG_ERROR("OpenGL Error: %s in function %s in file %s at line %d.", mess.c_str(), p_pFunction, p_pFile, p_line);
 		EVE_ASSERT_FAILURE;
 	}
 }
@@ -108,7 +108,7 @@ void eve::ogl::check_shader_program(wchar_t * p_pFunction, wchar_t * p_pFile, in
 		wchar_t * wbuf = (wchar_t*)malloc(size * sizeof(wchar_t));
 		mbstowcs(wbuf, buf, size);
 
-		EVE_LOG_ERROR("OpenGL Error: in function %s in file %s at line %i Shader program link failed: %s.", p_pFunction, p_pFile, p_line, wbuf);
+		EVE_LOG_ERROR("OpenGL Error: in function %s in file %s at line %d Shader program link failed: %s.", p_pFunction, p_pFile, p_line, wbuf);
 
 		free(wbuf);
 		free(buf);

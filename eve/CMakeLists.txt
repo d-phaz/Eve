@@ -128,7 +128,11 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 set( OPENGL_SRCS
 	 ogl/Debug.cpp 
 	 ogl/Debug.h 
-	 ogl/External.h 
+	 ogl/Fbo.h 
+	 ogl/Fbo.cpp 
+	 ogl/Format.h 
+	 ogl/Format.cpp 
+	 ogl/Format.h 
 	 ogl/Macro.h 
 	 ogl/Object.cpp 
 	 ogl/Object.h 

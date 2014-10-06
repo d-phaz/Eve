@@ -19,6 +19,10 @@
 #include "eve/ogl/Debug.h"
 #endif
 
+#ifndef __EVE_OPENGL_FORMAT_H__
+#include "eve/ogl/Format.h"
+#endif
+
 
 namespace eve { namespace ogl { class Renderer; } }
 
@@ -64,6 +68,11 @@ namespace eve
 
 		protected:
 			/** 
+			* \brief Get attributes from eve::ogl::Format. (pure virtual)
+			* Object attributes MUST be retrieved before init() call.
+			*/
+			virtual void setAttributes(eve::ogl::Format * p_format) = 0;
+			/** 
 			* \brief link object to target renderer.
 			* Object MUST be linked to a renderer before init() call.
 			*/
@@ -71,34 +80,34 @@ namespace eve
 
 
 		protected:
-			/** \brief Alloc and init class members. (pure virtual) */
+			/** \brief Alloc and init non OpenGL class members. (pure virtual) */
 			virtual void init(void) = 0;
-			/** \brief Release and delete class members. (pure virtual) */
+			/** \brief Release and delete non OpenGL class members. (pure virtual) */
 			virtual void release(void) = 0;
 
 
 		protected:
-			/** Request OpenGL init. */
+			/** \brief Request OpenGL init. */
 			void requestOglInit(void);
-			/** Request OpenGL update. */
+			/** \brief Request OpenGL update. */
 			void requestOglUpdate(void);
-			/** Request pointer release. */
+			/** \brief Request pointer release. */
 			void requestRelease(void);
 
 
 		protected:
-			/** Init OpenGL components. */
+			/** \brief Init OpenGL components. */
 			virtual void oglInit(void) = 0;
-			/** Update OpenGL components. */
+			/** \brief Update OpenGL components. */
 			virtual void oglUpdate(void) = 0;
-			/** \! Deallocate and release class members. */
+			/** \brief Deallocate and release OpenGL components. */
 			virtual void oglRelease(void) = 0;
 
 
 		public:
 			/** \brief Create and return OpenGL object of type TOGLClass. */
 			template<class TOGLClass>
-			static TOGLClass * create_object(eve::ogl::Renderer * p_pRenderer);
+			static TOGLClass * create_object(const eve::ogl::Format & p_format, eve::ogl::Renderer * p_pRenderer);
 
 		}; // class Object
 
@@ -108,11 +117,12 @@ namespace eve
 
 //=================================================================================================
 template<class TOGLClass>
-inline TOGLClass * eve::ogl::Object::create_object(eve::ogl::Renderer * p_pRenderer)
+inline TOGLClass * eve::ogl::Object::create_object(const eve::ogl::Format & p_format, eve::ogl::Renderer * p_pRenderer)
 {
 	EVE_ASSERT((std::is_base_of<eve::ogl::Object, TOGLClass>::value));
 
 	TOGLClass * obj = new TOGLClass();
+	obj->setAttributes(&p_format);
 	obj->linkToRenderer(p_pRenderer);
 	obj->init();
 	obj->requestOglInit();
@@ -124,6 +134,6 @@ inline TOGLClass * eve::ogl::Object::create_object(eve::ogl::Renderer * p_pRende
 * \def EVE_OGL_CREATE
 * \brief Convenience macro to create OpenGL object. 
 */
-#define EVE_OGL_CREATE(CLASS, RENDERER) eve::ogl::Object::create_object<CLASS>(RENDERER);
+#define EVE_OGL_CREATE(CLASS, FORMAT, RENDERER) eve::ogl::Object::create_object<CLASS>(FORMAT, RENDERER);
 
 #endif // __EVE_OPENGL_OBJECT_H__

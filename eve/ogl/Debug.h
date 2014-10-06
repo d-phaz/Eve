@@ -72,7 +72,7 @@ namespace eve
 * \brief Convenience macro to check OpenGL errors.
 */
 #ifndef NDEBUG
-#define EVE_OGL_CHECK_ERROR		eve::ogl::check_error(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), EVE_TXT_ENFORCE(__LINE__))
+#define EVE_OGL_CHECK_ERROR		eve::ogl::check_error(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), __LINE__)
 #else
 #define EVE_OGL_CHECK_ERROR 
 #endif
@@ -82,7 +82,7 @@ namespace eve
 * \brief Convenience macro to check OpenGL Frame buffer object.
 */
 #ifndef NDEBUG
-#define EVE_OGL_CHECK_FBO(ID)		eve::ogl::check_frame_buffer(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), EVE_TXT_ENFORCE(__LINE__), ID)
+#define EVE_OGL_CHECK_FBO(ID)		eve::ogl::check_frame_buffer(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), __LINE__, ID)
 #else
 #define EVE_OGL_CHECK_FBO(ID)
 #endif
@@ -92,7 +92,7 @@ namespace eve
 * \brief Convenience macro to check OpenGL shader program.
 */
 #ifndef NDEBUG
-#define EVE_OGL_CHECK_SHADER(ID)		eve::ogl::check_shader_program(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), EVE_TXT_ENFORCE(__LINE__), ID)
+#define EVE_OGL_CHECK_SHADER(ID)		eve::ogl::check_shader_program(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), __LINE__, ID)
 #else
 #define EVE_OGL_CHECK_SHADER(ID)
 #endif
