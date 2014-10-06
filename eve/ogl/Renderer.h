@@ -37,11 +37,14 @@
 #include "eve/core/Renderer.h"
 #endif
 
+#ifndef __EVE_OPENGL_FBO_H__
+#include "eve/ogl/Fbo.h"
+#endif
 
-namespace eve { namespace ogl { class Object; } }
+
 namespace eve { namespace ogl { class SubContext; } }
-
 namespace eve { namespace thr { class SpinLock;  } }
+
 
 namespace eve
 {
@@ -120,6 +123,28 @@ namespace eve
 
 			/** \brief Draw on screen callback. (pure virtual) */
 			virtual void cb_display(void) override;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			//		CREATE
+			///////////////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Create and return new FBO pointer based on eve::oglFormat. */
+			eve::ogl::Fbo * createFBO(eve::ogl::FormatFBO & p_format);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set render size. */
+			virtual void setSize(uint32_t p_width, uint32_t p_height);
+			/** \brief Set render width. */
+			virtual void setWidth(uint32_t p_width);
+			/** \brief Set render height. */
+			virtual void setHeight(uint32_t p_height);
 
 		}; // class Renderer
 

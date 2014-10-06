@@ -72,6 +72,7 @@ namespace eve
 
 			friend class eve::mem::Pointer;
 			friend class eve::ogl::Renderer;
+			friend class eve::ogl::Object;
 
 			//////////////////////////////////////
 			//				DATA				//

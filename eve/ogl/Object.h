@@ -117,7 +117,7 @@ namespace eve
 		public:
 			/** \brief Create and return OpenGL object of type TOGLClass. */
 			template<class TOGLClass>
-			static TOGLClass * create_object(const eve::ogl::Format & p_format, eve::ogl::Renderer * p_pRenderer);
+			static TOGLClass * create_object(eve::ogl::Format & p_format, eve::ogl::Renderer * p_pRenderer);
 
 		}; // class Object
 
@@ -127,7 +127,7 @@ namespace eve
 
 //=================================================================================================
 template<class TOGLClass>
-inline TOGLClass * eve::ogl::Object::create_object(const eve::ogl::Format & p_format, eve::ogl::Renderer * p_pRenderer)
+inline TOGLClass * eve::ogl::Object::create_object(eve::ogl::Format & p_format, eve::ogl::Renderer * p_pRenderer)
 {
 	EVE_ASSERT((std::is_base_of<eve::ogl::Object, TOGLClass>::value));
 

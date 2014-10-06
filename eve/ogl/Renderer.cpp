@@ -191,3 +191,47 @@ void eve::ogl::Renderer::cb_display(void)
 {
 
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		CREATE
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+eve::ogl::Fbo * eve::ogl::Renderer::createFBO(eve::ogl::FormatFBO & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Fbo, p_format, this);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::ogl::Renderer::setSize(uint32_t p_width, uint32_t p_height)
+{
+	// Call parent class
+	eve::core::Renderer::setSize(p_width, p_height);
+
+	// Propagate to FBOs
+}
+
+//=================================================================================================
+void eve::ogl::Renderer::setWidth(uint32_t p_width)
+{
+	// Call parent class
+	eve::core::Renderer::setWidth(p_width);
+
+	// Propagate to FBOs
+}
+
+//=================================================================================================
+void eve::ogl::Renderer::setHeight(uint32_t p_height)
+{
+	// Call parent class
+	eve::core::Renderer::setHeight(p_height);
+
+	// Propagate to FBOs
+}

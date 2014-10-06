@@ -64,11 +64,25 @@ namespace eve
 			friend class eve::mem::Pointer;
 
 			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			uint32_t		m_width;				//!< Render width.
+			uint32_t		m_height;				//!< Render height.
+
+
+			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Renderer);
+			EVE_PROTECT_DESTRUCTOR(Renderer);
+
+		protected:
+			/** \brief Class constructor. */
+			Renderer(void);
+
 			
 		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
@@ -91,10 +105,39 @@ namespace eve
 			/** \brief Draw on screen callback. (pure virtual) */
 			virtual void cb_display(void) = 0;
 
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			
+		public:
+			/** \brief Get render size. */
+			void getSize(uint32_t & p_width, uint32_t & p_height);
+			/** \brief Get render width. */
+			const uint32_t getWidth(void) const;
+			/** \brief Get render height. */
+			const uint32_t getHeight(void) const;
+
+			/** \brief Set render size. */
+			virtual void setSize(uint32_t p_width, uint32_t p_height);
+			/** \brief Set render width. */
+			virtual void setWidth(uint32_t p_width);
+			/** \brief Set render height. */
+			virtual void setHeight(uint32_t p_height);
+
 		}; // class Renderer
 
 	} // namespace ogl
 
 } // namespace eve
+
+//=================================================================================================
+inline void eve::core::Renderer::getSize(uint32_t & p_width, uint32_t & p_height)
+{
+	p_width = m_width;
+	p_height = m_height;
+}
+inline const uint32_t eve::core::Renderer::getWidth(void) const  { return m_width;  }
+inline const uint32_t eve::core::Renderer::getHeight(void) const { return m_height; }
 
 #endif // __EVE_CORE_RENDERER_H__
