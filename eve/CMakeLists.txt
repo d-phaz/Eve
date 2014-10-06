@@ -98,27 +98,6 @@ set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
 source_group( "Files" FILES ${FILES_SRCS} )
 
 
-# OpenGL.
-#################################################
-set( OPENGL_SRCS
-	 ogl/Debug.cpp 
-	 ogl/Debug.h 
-	 ogl/External.h 
-	 ogl/Macro.h 
-	 ogl/Renderer.cpp 
-	 ogl/Renderer.h )
-	 
-set( OPENGL_SRCS 
-	 ${OPENGL_SRCS}
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.h  )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
-source_group( "OpenGL" FILES ${OPENGL_SRCS} )
-
-
 # Memory.
 #################################################
 set( MEMORY_SRCS
@@ -142,6 +121,29 @@ set( MESSAGING_SRCS
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MESSAGING_SRCS} )
 source_group( "Messaging" FILES ${MESSAGING_SRCS} )
+
+
+# OpenGL.
+#################################################
+set( OPENGL_SRCS
+	 ogl/Debug.cpp 
+	 ogl/Debug.h 
+	 ogl/External.h 
+	 ogl/Macro.h 
+	 ogl/Object.cpp 
+	 ogl/Object.h 
+	 ogl/Renderer.cpp 
+	 ogl/Renderer.h )
+	 
+set( OPENGL_SRCS 
+	 ${OPENGL_SRCS}
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.h  )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
+source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 
 
 # System.

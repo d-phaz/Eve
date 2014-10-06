@@ -165,7 +165,10 @@ namespace eve
 } // namespace eve
 
 
-/** \def EveContextGL: Convenience macro to access OpenGL context instance. */
+/** 
+* \def EveContextGL
+* \brief Convenience macro to access OpenGL context instance. 
+*/
 #define EveContextGL	eve::ogl::Context::get_instance()
 
 

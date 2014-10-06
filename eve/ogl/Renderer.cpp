@@ -36,6 +36,14 @@
 #include "eve/ogl/win32/Context.h"
 #endif
 
+#ifndef __EVE_OPENGL_OBJECT_H__
+#include "eve/ogl/Object.h"
+#endif
+
+#ifndef __EVE_THREADING_SPIN_LOCK_H__
+#include "eve/thr/SpinLock.h"
+#endif 
+
 
 //=================================================================================================
 eve::ogl::Renderer::Renderer(void)
@@ -45,6 +53,11 @@ eve::ogl::Renderer::Renderer(void)
 
 	// Members init
 	, m_pContext(nullptr)
+
+	, m_pQueueInit(nullptr)
+	, m_pQueueUpdate(nullptr)
+	, m_pQueueRelease(nullptr)
+	, m_pQueueFence(nullptr)
 {}
 
 
@@ -52,12 +65,26 @@ eve::ogl::Renderer::Renderer(void)
 //=================================================================================================
 void eve::ogl::Renderer::init(void)
 {
-	
+	m_pQueueInit		= new std::deque<eve::ogl::Object *>();
+	m_pQueueUpdate		= new std::deque<eve::ogl::Object *>();
+	m_pQueueRelease		= new std::deque<eve::ogl::Object *>();
+	m_pQueueFence		= EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
 //=================================================================================================
 void eve::ogl::Renderer::release(void)
 {
+	m_pQueueInit->clear();
+	EVE_RELEASE_PTR_CPP(m_pQueueInit);
+
+	m_pQueueUpdate->clear();
+	EVE_RELEASE_PTR_CPP(m_pQueueUpdate);
+	
+	m_pQueueRelease->clear();
+	EVE_RELEASE_PTR_CPP(m_pQueueRelease);
+
+	EVE_RELEASE_PTR(m_pQueueFence);
+
 	EVE_RELEASE_PTR(m_pContext);
 }
 
@@ -73,16 +100,87 @@ void eve::ogl::Renderer::registerToHandle(void * p_handle)
 
 
 //=================================================================================================
+void eve::ogl::Renderer::putInQueueInit(eve::ogl::Object * p_pObject)
+{
+	EVE_ASSERT(p_pObject);
+
+	m_pQueueFence->lock();
+	m_pQueueInit->push_back(p_pObject);
+	m_pQueueFence->unlock();
+}
+
+//=================================================================================================
+void eve::ogl::Renderer::putInQueueUpdate(eve::ogl::Object * p_pObject)
+{
+	EVE_ASSERT(p_pObject);
+
+	m_pQueueFence->lock();
+	m_pQueueUpdate->push_back(p_pObject);
+	m_pQueueFence->unlock();
+}
+
+//=================================================================================================
+void eve::ogl::Renderer::putInQueueRelease(eve::ogl::Object * p_pObject)
+{
+	EVE_ASSERT(p_pObject);
+
+	m_pQueueFence->lock();
+	m_pQueueRelease->push_back(p_pObject);
+	m_pQueueFence->unlock();
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Renderer::processQueues(void)
+{
+	m_pQueueFence->lock();
+
+	while (!m_pQueueInit->empty())
+	{
+		m_pQueueInit->front()->oglInit();
+		m_pQueueInit->pop_front();
+	}
+	while (!m_pQueueUpdate->empty())
+	{
+		m_pQueueUpdate->front()->oglUpdate();
+		m_pQueueUpdate->pop_front();
+	}
+	while (!m_pQueueRelease->empty())
+	{
+		eve::ogl::Object * obj = m_pQueueRelease->front();
+		m_pQueueRelease->pop_front();
+		obj->oglRelease();
+		EVE_RELEASE_PTR(obj);
+	}
+
+	m_pQueueFence->unlock();
+}
+
+//=================================================================================================
+void eve::ogl::Renderer::clearQueues(void)
+{
+	m_pQueueFence->lock();
+
+	m_pQueueInit->clear();
+	m_pQueueUpdate->clear();
+	m_pQueueRelease->clear();
+
+	m_pQueueFence->unlock();
+}
+
+
+
+//=================================================================================================
 void eve::ogl::Renderer::cb_beforeDisplay(void)
 {
 	m_pContext->makeCurrent();
-
+	this->processQueues();
 }
 
 //=================================================================================================
 void eve::ogl::Renderer::cb_afterDisplay(void)
 {
-
 	m_pContext->swapBuffers();
 	m_pContext->doneCurrent();
 }

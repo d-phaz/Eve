@@ -157,7 +157,10 @@ namespace eve
 } // namespace eve
 
 
-/** \def EveApp: Convenience macro to access application instance. */
+/** 
+* \def EveApp 
+* \brief Convenience macro to access application instance. 
+*/
 #define EveApp	eve::app::App::get_instance()
 
 
@@ -181,7 +184,10 @@ TView * eve::app::App::addView(void)
 
 
 #if defined(EVE_OS_WIN)
-/** \def EVE_APPLICATION: Convenience macro to create application entry point and launch application. */
+/** 
+* \def EVE_APPLICATION 
+* \brief Convenience macro to create application entry point and launch application. 
+*/
 #define EVE_APPLICATION( VIEW )																			\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
@@ -193,7 +199,10 @@ TView * eve::app::App::addView(void)
 	}
 
 #elif defined(EVE_OS_DARWIN)
-/** \def EVE_APPLICATION: Convenience macro to create application entry point and launch application. */
+/** 
+* \def EVE_APPLICATION 
+* \brief Convenience macro to create application entry point and launch application. 
+*/
 #define EVE_APPLICATION( VIEW )												\
 	int main(int argc, char * const argv[]) 								\
 	{																		\
