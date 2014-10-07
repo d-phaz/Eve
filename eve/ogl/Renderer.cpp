@@ -74,17 +74,24 @@ void eve::ogl::Renderer::init(void)
 //=================================================================================================
 void eve::ogl::Renderer::release(void)
 {
+	// Force queues process.
+	m_pContext->makeCurrent();
+	this->processQueues();
+	m_pContext->swapBuffers();
+	m_pContext->doneCurrent();
+
+	// Empty and release queues
 	m_pQueueInit->clear();
 	EVE_RELEASE_PTR_CPP(m_pQueueInit);
-
 	m_pQueueUpdate->clear();
 	EVE_RELEASE_PTR_CPP(m_pQueueUpdate);
-	
 	m_pQueueRelease->clear();
 	EVE_RELEASE_PTR_CPP(m_pQueueRelease);
 
+	// Release fence.
 	EVE_RELEASE_PTR(m_pQueueFence);
 
+	// Release context.
 	EVE_RELEASE_PTR(m_pContext);
 }
 
@@ -196,6 +203,12 @@ void eve::ogl::Renderer::cb_display(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		CREATE
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+eve::ogl::Texture * eve::ogl::Renderer::createTexture(eve::ogl::FormatTex & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Texture, p_format, this);
+}
 
 //=================================================================================================
 eve::ogl::Fbo * eve::ogl::Renderer::createFBO(eve::ogl::FormatFBO & p_format)

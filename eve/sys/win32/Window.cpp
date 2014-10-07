@@ -307,7 +307,7 @@ void eve::sys::Window::toggleFullScreen(void)
 		// Initialize windowed size for restoration
 		if (::GetWindowRect(m_handle, &m_windowedRect) == 0)
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, GetWindowRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, GetWindowRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -321,7 +321,7 @@ void eve::sys::Window::toggleFullScreen(void)
 		mi.cbSize = sizeof(mi);
 		if (!::GetMonitorInfo(hMonitor, &mi)) 
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, GetMonitorInfo() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, GetMonitorInfo() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Update size and position from monitor rect.
@@ -334,12 +334,12 @@ void eve::sys::Window::toggleFullScreen(void)
 		// Set window style to full-screen style (no title bar, no thick-frame, no border)
 		if (::SetWindowLongW(m_handle, GWL_STYLE, m_style_fullscreen) == 0)
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLongW() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLongW() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		if (::SetWindowLongW(m_handle, GWL_EXSTYLE, m_ex_style_fullscreen) == 0)
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLongW() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, SetWindowLongW() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -348,7 +348,7 @@ void eve::sys::Window::toggleFullScreen(void)
 						   m_x, m_y, m_width, m_height,
 						   SWP_FRAMECHANGED | SWP_SHOWWINDOW) == 0)
 		{
-			EVE_LOG_ERROR("Can't set full screen mode, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set full screen mode, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -366,12 +366,12 @@ void eve::sys::Window::toggleFullScreen(void)
 		// Set window style back to windowed style.
 		if (::SetWindowLongW(m_handle, GWL_STYLE, m_style) == 0)
 		{
-			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLongW failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLongW failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		if (::SetWindowLongW(m_handle, GWL_EXSTYLE, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLongW failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowLongW failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -380,7 +380,7 @@ void eve::sys::Window::toggleFullScreen(void)
 						   m_x, m_y, m_width, m_height,
 						   SWP_FRAMECHANGED | SWP_SHOWWINDOW) == 0)
 		{
-			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowPos failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't switch to windowed mode, SetWindowPos failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -399,7 +399,7 @@ void eve::sys::Window::warpMouse(int32_t p_deportX, int32_t p_deportY)
 
 	if (::SetCursorPos(m_x + p_deportX, m_y + p_deportY) == 0) 
 	{
-		EVE_LOG_ERROR("Can't set cursor position, SetCursorPos failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't set cursor position, SetCursorPos failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -422,7 +422,7 @@ void eve::sys::Window::setDragAcceptFiles(bool p_bStatus)
 	DWORD err = ::GetLastError();
 	if (err != 0) 
 	{
-		EVE_LOG_ERROR("Can't register whether window accepts dropped files, DragAcceptFiles failed: %s", eve::mess::get_error_msg(err).c_str());
+		EVE_LOG_ERROR("Can't register whether window accepts dropped files, DragAcceptFiles failed %s", eve::mess::get_error_msg(err).c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -460,13 +460,13 @@ void eve::sys::Window::setSize(uint32_t p_width, uint32_t p_height)
 		RECT tRect;
 		if (::SetRect(&tRect, 0, 0, p_width, p_height) == 0) 
 		{
-			EVE_LOG_ERROR("Can't set size, SetRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set size, SetRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Adjust rect to windowed style.
 		if (::AdjustWindowRectEx(&tRect, m_style, false, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't set size, AdjustWindowRectEx() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set size, AdjustWindowRectEx() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -475,7 +475,7 @@ void eve::sys::Window::setSize(uint32_t p_width, uint32_t p_height)
 						   0, 0, tRect.right - tRect.left, tRect.bottom - tRect.top,
 						   SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window size, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window size, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}
@@ -498,20 +498,20 @@ void eve::sys::Window::setWidth(uint32_t p_width)
 		RECT tRect;
 		if (::GetClientRect(m_handle, &tRect) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window width, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window width, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Create new sized rect.
 		RECT tNewRect;
 		if (::SetRect(&tNewRect, 0, 0, p_width, tRect.bottom-tRect.top) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window width, SetRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window width, SetRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Adjust rect to windowed style.
 		if (::AdjustWindowRectEx(&tNewRect, m_style, false, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't set width, AdjustWindowRectEx() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set width, AdjustWindowRectEx() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -520,7 +520,7 @@ void eve::sys::Window::setWidth(uint32_t p_width)
 						   0, 0, tNewRect.right, tNewRect.bottom,
 						   SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window width, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window width, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}
@@ -543,20 +543,20 @@ void eve::sys::Window::setHeight(uint32_t p_height)
 		RECT tRect;
 		if (::GetClientRect(m_handle, &tRect) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window height, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window height, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Create new sized rect.
 		RECT tNewRect;
 		if (::SetRect(&tNewRect, 0, 0, tRect.right-tRect.left, p_height) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window height, SetRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window height, SetRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Adjust rect to windowed style.
 		if (::AdjustWindowRectEx(&tNewRect, m_style, false, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't set height, AdjustWindowRectEx() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set height, AdjustWindowRectEx() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -565,7 +565,7 @@ void eve::sys::Window::setHeight(uint32_t p_height)
 						   0, 0, tNewRect.right, tNewRect.bottom,
 						   SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window height, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window height, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}
@@ -587,7 +587,7 @@ void eve::sys::Window::getSize(uint32_t &p_width, uint32_t &p_height)
 	RECT tRect;
 	if (::GetClientRect(m_handle, &tRect) == 0)
 	{
-		EVE_LOG_ERROR("Can't get Window size, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't get Window size, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
@@ -603,7 +603,7 @@ const uint32_t eve::sys::Window::getWidth(void)
 	RECT tRect;
 	if (::GetClientRect(m_handle, &tRect) == 0)
 	{
-		EVE_LOG_ERROR("Can't get Window width, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't get Window width, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 	m_pFence->unlock();
@@ -617,7 +617,7 @@ const uint32_t eve::sys::Window::getHeight(void)
 	RECT tRect;
 	if (::GetClientRect(m_handle, &tRect) == 0)
 	{
-		EVE_LOG_ERROR("Can't get Window height, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't get Window height, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 	m_pFence->unlock();
@@ -638,20 +638,20 @@ void eve::sys::Window::setPosition(int32_t p_x, int32_t p_y)
 		RECT tRect;
 		if (::GetClientRect(m_handle, &tRect) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Create new sized rect.
 		RECT tNewRect;
 		if (::SetRect(&tNewRect, p_x, p_y, tRect.right-tRect.left, tRect.bottom-tRect.top) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, SetRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, SetRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Adjust rect to windowed style.
 		if (::AdjustWindowRectEx(&tNewRect, m_style, false, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't set position, AdjustWindowRectEx() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set position, AdjustWindowRectEx() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -660,7 +660,7 @@ void eve::sys::Window::setPosition(int32_t p_x, int32_t p_y)
 						   tNewRect.left, tNewRect.top, tNewRect.right - tNewRect.left, tNewRect.bottom - tNewRect.top,
 						   SWP_FRAMECHANGED | SWP_NOZORDER) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}
@@ -683,20 +683,20 @@ void eve::sys::Window::setPositionX(int32_t p_x )
 		RECT tRect;
 		if (::GetClientRect(m_handle, &tRect) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Create new sized rect.
 		RECT tNewRect;
 		if (::SetRect(&tNewRect, p_x, tRect.top, tRect.right - tRect.left, tRect.bottom - tRect.top) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, SetRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, SetRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Adjust rect to windowed style.
 		if (::AdjustWindowRectEx(&tNewRect, m_style, false, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't set position, AdjustWindowRectEx() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set position, AdjustWindowRectEx() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -705,7 +705,7 @@ void eve::sys::Window::setPositionX(int32_t p_x )
 						   tNewRect.left, tNewRect.top, tNewRect.right - tNewRect.left, tNewRect.bottom - tNewRect.top,
 						   SWP_FRAMECHANGED | SWP_NOZORDER) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}
@@ -728,20 +728,20 @@ void eve::sys::Window::setPositionY(int32_t p_y )
 		RECT tRect;
 		if (::GetClientRect(m_handle, &tRect) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Create new sized rect.
 		RECT tNewRect;
 		if (::SetRect(&tNewRect, tRect.left, p_y, tRect.right - tRect.left, tRect.bottom - tRect.top) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, SetRect() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, SetRect() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 		// Adjust rect to windowed style.
 		if (::AdjustWindowRectEx(&tNewRect, m_style, false, m_exStyle) == 0)
 		{
-			EVE_LOG_ERROR("Can't set position, AdjustWindowRectEx() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set position, AdjustWindowRectEx() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 
@@ -750,7 +750,7 @@ void eve::sys::Window::setPositionY(int32_t p_y )
 						   tNewRect.left, tNewRect.top, tNewRect.right - tNewRect.left, tNewRect.bottom - tNewRect.top,
 						   SWP_FRAMECHANGED | SWP_NOZORDER) == 0)
 		{
-			EVE_LOG_ERROR("Can't set Window position, SetWindowPos() failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window position, SetWindowPos() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}
@@ -770,7 +770,7 @@ void eve::sys::Window::getPosition(int32_t & p_x, int32_t & p_y)
 	RECT tRect;
 	if (::GetClientRect(m_handle, &tRect) == 0)
 	{
-		EVE_LOG_ERROR("Can't get Window position, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't get Window position, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 	m_pFence->unlock();
@@ -786,7 +786,7 @@ const int32_t eve::sys::Window::getPositionX(void)
 	RECT tRect;
 	if (::GetClientRect(m_handle, &tRect) == 0)
 	{
-		EVE_LOG_ERROR("Can't get Window position, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't get Window position, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 	m_pFence->unlock();
@@ -801,7 +801,7 @@ const int32_t eve::sys::Window::getPositionY(void)
 	RECT tRect;
 	if (::GetClientRect(m_handle, &tRect) == 0)
 	{
-		EVE_LOG_ERROR("Can't get Window position, GetClientRect() failed: %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Can't get Window position, GetClientRect() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 	m_pFence->unlock();
@@ -822,7 +822,7 @@ void eve::sys::Window::setTitle(const std::wstring & p_title)
 		// Set window title
 		if (!::SetWindowTextW(m_handle, m_title.c_str()))
 		{
-			EVE_LOG_ERROR("Can't set Window title, SetWindowText failed: %s", eve::mess::get_error_msg().c_str());
+			EVE_LOG_ERROR("Can't set Window title, SetWindowText() failed %s", eve::mess::get_error_msg().c_str());
 			EVE_ASSERT_FAILURE;
 		}
 	}

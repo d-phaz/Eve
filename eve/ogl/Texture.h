@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_FBO_H__
-#define __EVE_OPENGL_FBO_H__
+#ifndef __EVE_OPENGL_TEXTURE_H__
+#define __EVE_OPENGL_TEXTURE_H__
 
 #ifndef __EVE_OPENGL_OBJECT_H__
 #include "eve/ogl/Object.h"
@@ -43,60 +43,57 @@ namespace eve
 	namespace ogl
 	{
 		/**
-		* \class eve::ogl::FormatFBO
+		* \class eve::ogl::FormatTex
 		*
-		* \brief OpenGL frame buffer object format class.
-		* Used to create OpenGL frame buffer object based on properties.
+		* \brief OpenGL texture format class.
+		* Used to create OpenGL texture based on properties.
+		*
+		* Default texture format is GL_RGBA (4 channels).
+		* Default texture data type is GL_UNSIGNED_BYTE.
+		*
+		* By default texture use LINEAR filtering and are clamped to edges on ST axes.
 		*
 		* \note extends eve::ogl::Format
 		*/
-		class FormatFBO final
+		class FormatTex final
 			: public eve::ogl::Format
 		{
 		public:
-			uint32_t		width;				//!< FBO texture(s) width.
-			uint32_t		height;				//!< FBO texture(s) height.
-
-			GLenum			texDataType;		//!< Texture data type.
-			GLenum			depthDataType;		//!< Depth texture data type.
-
-			size_t			texNum;				//!< FBO texture(s) amount.
-			bool			bHasDepth;			//!< FBO depth texture creation required state.
+			GLenum				format;				//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
+			GLsizei				width;				//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
+			GLsizei				height;				//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
+			GLenum				type;				//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
+			
+			GLint				filter;				//!< Specifies the filter used to interpolate texels.
+			GLint				wrap;				//!< Specifies texture wrap mode.
 
 		public:
 			/** \brief Class constructor. */
-			FormatFBO(void);
+			FormatTex(void);
 			/** \brief Class destructor. */
-			virtual ~FormatFBO(void);
+			virtual ~FormatTex(void);
 
 			/** \brief Copy constructor. */
-			FormatFBO(const eve::ogl::FormatFBO & p_other);
+			FormatTex(const eve::ogl::FormatTex & p_other);
 			/** \brief Assignation operator. */
-			const eve::ogl::FormatFBO & operator = (const eve::ogl::FormatFBO & p_other);
+			const eve::ogl::FormatTex & operator = (const eve::ogl::FormatTex & p_other);
 
 		}; // class FormatFBO
 
 
 		/** 
-		* \class eve::ogl::Fbo
+		* \class eve::ogl::Texture
 		*
-		* \brief Create and manage multiple texture Frame Buffer Object.
-		* 
-		* Texture creation is ordered, they are created on:
-		*		GL_COLOR_ATTACHMENT0
-		*		GL_COLOR_ATTACHMENT1
-		*		GL_COLOR_ATTACHMENT2
-		*		etc...
+		* \brief Create and manage OpenGL TexImage2D object.
 		*
-		* Depth texture is created on GL_DEPTH_ATTACHMENT.
-		*
+		* Default texture format is GL_RGBA (4 channels).
 		* Default texture data type is GL_UNSIGNED_BYTE.
 		*
-		* All texture use LINEAR filtering and are clamped to edges on ST axes.
+		* By default texture use LINEAR filtering and are clamped to edges on ST axes.
 		*
 		* \note extends eve::ogl::Object
 		*/
-		class Fbo final
+		class Texture final
 			: public eve::ogl::Object
 		{
 
@@ -109,31 +106,28 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			GLuint					m_id;					//!< Specifies OpenGL unique FBO ID.
+			GLuint						m_id;		//!< Specifies OpenGL unique texture ID.
 
-			uint32_t				m_width;				//!< FBO texture(s) width.
-			uint32_t				m_height;				//!< FBO texture(s) height.
+			GLenum						m_format;	//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
+			GLsizei						m_width;	//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
+			GLsizei						m_height;	//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
+			GLenum						m_type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
+			std::shared_ptr<GLvoid>		m_pData;	//!< Specifies a pointer to the image data in memory.
 
-			GLenum					m_texDataType;			//!< Texture data type.
-			GLenum					m_depthDataType;		//!< Depth texture data type.
-
-			GLuint *				m_pSlotTextureIds;		//!< OpenGL texture(s) ID(s).
-			size_t					m_slotNum;								
-
-			size_t					m_texNum;
-			bool					m_bHasDepth;
+			GLint						m_filter;	//!< Specifies the filter used to interpolate texels.
+			GLint						m_wrap;		//!< Specifies texture wrap mode.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Fbo);
-			EVE_PROTECT_DESTRUCTOR(Fbo);
+			EVE_DISABLE_COPY(Texture);
+			EVE_PROTECT_DESTRUCTOR(Texture);
 			
 		private:
 			/** \brief Class constructor. */
-			Fbo(void);
+			Texture(void);
 
 
 		protected:
@@ -161,30 +155,10 @@ namespace eve
 
 
 		public:
-			/** \brief Bind (activate) FBO. */
-			void bind(void);
-			/** \brief Unbind (deactivate) FBO. */
-			static void unbind(void);
-
-
-			/** \brief Write data to FBO in selected texture slot(s). */
-			void write(GLsizei p_slotsAmount, GLenum * p_pTargetSlots);
-			/** \brief Write data to FBO in selected texture slot. */
-			void write(GLenum p_slot);
-
-
-			/** \brief Bind (activate) FBO and write data in selected texture slot(s). */
-			void bindAndWrite(GLsizei p_slotsAmount, GLenum * p_pTargetSlots);
-			/** \brief Bind (activate) FBO and write data in selected texture slot. */
-			void bindAndWrite(GLenum p_targetSlot);
-
-
-			/** \brief Bind (activate) target texture. */
-			void bindTexture(GLenum p_activeIndex, GLuint p_targetSlot);
-			/** \brief Bind (activate) depth texture. */
-			void bindDepthTexture(void);
-			/** \brief Unbind (deactivate) target texture. */
-			static void unbindTexture(GLenum p_activeIndex);
+			/** \brief Bind (activate) texture. */
+			void bind(GLenum p_index);
+			/** \brief Unbind (deactivate) texture. */
+			static void unbind(GLenum p_index);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,10 +166,13 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Get OpenGL FBO unique id. */
+			/** \brief Set texture data from host memory pointer. */
+			void setData(std::shared_ptr<GLvoid> p_pData);
+
+
+		public:
+			/** \brief Get OpenGL texture unique id. (pure virtual) */
 			virtual const GLuint getId(void) const override;
-			/** \brief Get target slot OpenGL texture id. */
-			const GLuint getTextureId(uint32_t p_id);
 
 
 		public:
@@ -205,14 +182,7 @@ namespace eve
 			const uint32_t getWidth(void) const;
 			/** \brief Get FBO height. */
 			const uint32_t getHeight(void) const;
-
-			/** \brief Set FBO and texture(s) size. */
-			void setSize(uint32_t p_width, uint32_t p_height);
-			/** \brief Set FBO and texture(s) width. */
-			void setWidth(uint32_t p_width);
-			/** \brief Set FBO and texture(s) height. */
-			void setHeight(uint32_t p_height);
-
+			
 		}; // class Fbo
 
 	} // namespace ogl
@@ -225,17 +195,16 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Fbo::getId(void) const				{ return m_id; }
-inline const GLuint eve::ogl::Fbo::getTextureId( uint32_t p_id )	{ return m_pSlotTextureIds[ p_id ]; }
+inline const GLuint eve::ogl::Texture::getId(void) const	{ return m_id; }
 
 
 //=================================================================================================
-inline void eve::ogl::Fbo::getSize(uint32_t & p_width, uint32_t & p_height)
+inline void eve::ogl::Texture::getSize(uint32_t & p_width, uint32_t & p_height)
 {
 	p_width  = m_width;
 	p_height = m_height;
 }
-inline const uint32_t eve::ogl::Fbo::getWidth(void) const  { return m_width;  }
-inline const uint32_t eve::ogl::Fbo::getHeight(void) const { return m_height; }
+inline const uint32_t eve::ogl::Texture::getWidth(void) const  { return m_width; }
+inline const uint32_t eve::ogl::Texture::getHeight(void) const { return m_height; }
 
-#endif // __EVE_OPENGL_FBO_H__
+#endif // __EVE_OPENGL_TEXTURE_H__

@@ -41,6 +41,10 @@
 #include "eve/ogl/Fbo.h"
 #endif
 
+#ifndef __EVE_OPENGL_TEXTURE_H__
+#include "eve/ogl/Texture.h"
+#endif
+
 
 namespace eve { namespace ogl { class SubContext; } }
 namespace eve { namespace thr { class SpinLock;  } }
@@ -130,7 +134,9 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Create and return new FBO pointer based on eve::oglFormat. */
+			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
+			eve::ogl::Texture * createTexture(eve::ogl::FormatTex & p_format);
+			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFBO. */
 			eve::ogl::Fbo * createFBO(eve::ogl::FormatFBO & p_format);
 
 

@@ -41,6 +41,8 @@ class Example final
 
 private:
 	eve::ogl::Renderer *		m_pRendererOpenGL;
+	eve::ogl::Fbo * fbo;
+	eve::ogl::Texture * tex;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -66,12 +68,23 @@ void Example::initThreadedData(void)
 
 	m_pRendererOpenGL = EVE_CREATE_PTR(eve::ogl::Renderer);
 	this->registerRenderer(m_pRendererOpenGL);
+
+	eve::ogl::FormatFBO fmtFbo;
+	fmtFbo.width	= 800;
+	fmtFbo.height	= 600;
+	fbo = m_pRendererOpenGL->createFBO(fmtFbo);
+
+	eve::ogl::FormatTex fmtTex;
+	fmtTex.width	= 800;
+	fmtTex.height	= 600;
+	tex = m_pRendererOpenGL->createTexture(fmtTex);
 }
 
 void Example::releaseThreadedData(void)
 {
-	this->unregisterRenderer(m_pRendererOpenGL);
-	EVE_RELEASE_PTR(m_pRendererOpenGL);
+	tex->requestRelease();
+	fbo->requestRelease();
+	this->releaseRenderer(m_pRendererOpenGL);
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();

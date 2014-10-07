@@ -135,7 +135,9 @@ set( OPENGL_SRCS
 	 ogl/Object.cpp 
 	 ogl/Object.h 
 	 ogl/Renderer.cpp 
-	 ogl/Renderer.h )
+	 ogl/Renderer.h 
+	 ogl/Texture.cpp 
+	 ogl/Texture.h )
 	 
 set( OPENGL_SRCS 
 	 ${OPENGL_SRCS}
