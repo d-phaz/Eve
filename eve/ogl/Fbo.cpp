@@ -94,6 +94,8 @@ eve::ogl::Fbo::Fbo(void)
 	, m_slotNum(0)
 	, m_texNum(0)
 	, m_bHasDepth(false)
+	, m_black(0)
+	, m_layers(GL_COLOR)
 {}
 
 
@@ -117,17 +119,20 @@ void eve::ogl::Fbo::setAttributes(eve::ogl::Format * p_format)
 void eve::ogl::Fbo::init(void)
 {
 	m_slotNum = m_texNum;
-	if (m_bHasDepth) {
+	if (m_bHasDepth) 
+	{
+		m_layers = (GL_COLOR | GL_DEPTH);
 		m_slotNum += 1;
 	}
-
-	m_pSlotTextureIds = (GLuint*)malloc(sizeof(GLuint)* m_slotNum);
+	m_pSlotTextureIds	= (GLuint*)malloc(sizeof(GLuint)* m_slotNum);
+	m_black				= (float*)calloc(4, sizeof(float));
 }
 
 //=================================================================================================
 void eve::ogl::Fbo::release(void)
 {
 	EVE_RELEASE_PTR_C(m_pSlotTextureIds);
+	EVE_RELEASE_PTR_C(m_black);
 }
 
 
@@ -192,9 +197,10 @@ void eve::ogl::Fbo::oglInit(void)
 	// Test FBO state.
 	EVE_OGL_CHECK_FBO(m_id);
 	// Clear empty textures to avoid memory corruption
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearBufferfv(m_layers, 0, m_black);
 	// Detach FBO.
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	EVE_OGL_CHECK_ERROR;
 }
 
 //=================================================================================================
@@ -237,7 +243,9 @@ void eve::ogl::Fbo::oglRelease(void)
 //=================================================================================================
 void eve::ogl::Fbo::bind(void)
 {
+	glViewport(0, 0, m_width, m_height);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
+	glClearBufferfv(m_layers, 0, m_black);
 	EVE_OGL_CHECK_ERROR;
 }
 
@@ -269,20 +277,24 @@ void eve::ogl::Fbo::write(GLenum p_slot)
 //=================================================================================================
 void eve::ogl::Fbo::bindAndWrite(GLsizei p_slotsAmount, GLenum * p_pTargetSlots)
 {
+	glViewport(0, 0, m_width, m_height);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
+	glClearBufferfv(m_layers, 0, m_black);
 	EVE_OGL_CHECK_ERROR;
 
-	glDrawBuffers(p_slotsAmount, p_pTargetSlots);
+	glDrawBuffers(p_slotsAmount, p_pTargetSlots); // test if required 
 	EVE_OGL_CHECK_ERROR;
 }
 
 //=================================================================================================
 void eve::ogl::Fbo::bindAndWrite(GLenum p_targetSlot)
 {
+	glViewport(0, 0, m_width, m_height);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
+	glClearBufferfv(m_layers, 0, m_black);
 	EVE_OGL_CHECK_ERROR;
 
-	glDrawBuffer(GL_COLOR_ATTACHMENT0 + p_targetSlot);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0 + p_targetSlot); // test if required 
 	EVE_OGL_CHECK_ERROR;
 }
 

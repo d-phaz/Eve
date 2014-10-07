@@ -81,6 +81,8 @@ namespace eve
 			eve::thr::SpinLock *						m_pQueueFence;			//!< Init/Update/Release queues fence.
 
 
+			eve::ogl::Fbo * fbo;
+
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////

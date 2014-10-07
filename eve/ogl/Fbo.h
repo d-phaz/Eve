@@ -118,10 +118,13 @@ namespace eve
 			GLenum					m_depthDataType;		//!< Depth texture data type.
 
 			GLuint *				m_pSlotTextureIds;		//!< OpenGL texture(s) ID(s).
-			size_t					m_slotNum;								
+			size_t					m_slotNum;				//!< Total amount of texture slots (including depth).						
 
-			size_t					m_texNum;
-			bool					m_bHasDepth;
+			size_t					m_texNum;				//!< Texture amount (no depth included).
+			bool					m_bHasDepth;			//!< Does FBO has depth texture?
+
+			float *					m_black;				//!< Black color (0, 0, 0, 0), used to clear buffer.
+			GLenum					m_layers;				//!< Layers to clean, can be GL_COLOR and/or GL_DEPTH 
 
 
 			//////////////////////////////////////

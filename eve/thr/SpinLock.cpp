@@ -80,11 +80,11 @@ void eve::thr::SpinLock::release(void)
 void eve::thr::SpinLock::lock(void)
 {
 	m_iter = 0;
-	while (true)
+	do
 	{
 		// A thread already owning the lock shouldn't be allowed to wait to acquire the lock - re-entrant safe
-		if (m_dest == eve::thr::current_thread_ID())
-			break;
+		if (m_dest == eve::thr::current_thread_ID()) break;
+
 		/*
 		Spinning in a loop of interlocked calls can reduce the available memory bandwidth and slow down the rest of the system. 
 		Interlocked calls are expensive in their use of the system memory bus. 
@@ -94,11 +94,11 @@ void eve::thr::SpinLock::lock(void)
 		{
 			// Assign CurrentThreadId to m_dest to make it re-entrant safe.
 			m_dest = eve::thr::current_thread_ID();
-			// lock acquired 
+			// lock acquired.
 			break;
 		}
 
-		// Spin wait to acquire 
+		// Spin wait to acquire.
 		while (m_dest != m_compare)
 		{
 			if (m_iter >= YIELD_ITERATION)
@@ -120,14 +120,14 @@ void eve::thr::SpinLock::lock(void)
 			m_iter++;
 			if (m_bMultiProc) 
 			{ 
-				::YieldProcessor(/*no op*/); 
+				::YieldProcessor(); 
 			}
 			else 
 			{ 
 				::SwitchToThread(); 
 			}
 		}
-	}
+	} while (true);
 
 	// while (m_state.test_and_set(std::memory_order_acquire)) // kept for future use
 }
