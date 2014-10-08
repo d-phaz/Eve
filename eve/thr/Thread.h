@@ -125,7 +125,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Thread(void);
+			explicit Thread(void);
 
 
 		protected:

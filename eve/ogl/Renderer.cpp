@@ -216,6 +216,12 @@ eve::ogl::Fbo * eve::ogl::Renderer::createFBO(eve::ogl::FormatFBO & p_format)
 	return EVE_OGL_CREATE(eve::ogl::Fbo, p_format, this);
 }
 
+//=================================================================================================
+eve::ogl::Shader * eve::ogl::Renderer::createShader(eve::ogl::FormatShader & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Shader, p_format, this);
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

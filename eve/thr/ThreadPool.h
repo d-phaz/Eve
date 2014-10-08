@@ -103,7 +103,7 @@ namespace eve
 
 		private:
 			/** \brief Class constructor.	*/
-			ThreadPool(size_t p_numThread);
+			explicit ThreadPool(size_t p_numThread);
 
 
 		private:

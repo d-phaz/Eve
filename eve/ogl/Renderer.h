@@ -45,6 +45,10 @@
 #include "eve/ogl/Texture.h"
 #endif
 
+#ifndef __EVE_OPENGL_SHADER_H__
+#include "eve/ogl/Shader.h"
+#endif
+
 
 namespace eve { namespace ogl { class SubContext; } }
 namespace eve { namespace thr { class SpinLock;  } }
@@ -92,7 +96,7 @@ namespace eve
 
 		protected:
 			/** \class constructor. */
-			Renderer(void);
+			explicit Renderer(void);
 
 			
 		protected:
@@ -140,6 +144,8 @@ namespace eve
 			eve::ogl::Texture * createTexture(eve::ogl::FormatTex & p_format);
 			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFBO. */
 			eve::ogl::Fbo * createFBO(eve::ogl::FormatFBO & p_format);
+			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
+			eve::ogl::Shader * createShader(eve::ogl::FormatShader & p_format);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////

@@ -75,7 +75,7 @@ namespace eve
         
 		protected:
 			/** \brief Class constructor. */
-			Lock(void);
+			explicit Lock(void);
 
 
 		protected:

@@ -88,7 +88,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			ThreadedWorkIO(void);
+			explicit ThreadedWorkIO(void);
 
 
 		private:

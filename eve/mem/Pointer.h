@@ -59,7 +59,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Pointer(void);
+			explicit Pointer(void);
 
 
 		protected:

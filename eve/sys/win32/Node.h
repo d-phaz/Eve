@@ -85,7 +85,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Node(void);
+			explicit Node(void);
 
 
 		protected:

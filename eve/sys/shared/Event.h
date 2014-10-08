@@ -100,7 +100,7 @@ namespace eve
 
 		private:
 			/** \brief Class constructor. */
-			Event(void);
+			explicit Event(void);
 
 
 		private:

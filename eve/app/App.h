@@ -109,7 +109,7 @@ namespace eve
 
 		private:
 			/** \brief Class constructor. */
-			App(void);
+			explicit App(void);
 
 
 		private:

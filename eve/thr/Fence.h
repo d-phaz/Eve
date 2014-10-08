@@ -63,7 +63,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Fence(void);
+			explicit Fence(void);
 
 
 		public:

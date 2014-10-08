@@ -68,7 +68,7 @@ namespace eve
 
 		public:
 			/** \brief Class constructor. */
-			ScopedFence(TFence * p_pFence);
+			explicit ScopedFence(TFence * p_pFence);
 			/** \brief Class destructor. */
 			virtual ~ScopedFence(void);
 

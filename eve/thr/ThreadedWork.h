@@ -84,7 +84,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor.	*/
-			ThreadedWork(void);
+			explicit ThreadedWork(void);
 
 
 		protected:

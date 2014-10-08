@@ -105,7 +105,7 @@ namespace eve
 
 		private:
 			/** \brief Class constructor. */
-			Context(void);
+			explicit Context(void);
 
 
 		private:

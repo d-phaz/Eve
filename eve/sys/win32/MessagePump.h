@@ -97,7 +97,7 @@ namespace eve
 			* \brief Class constructor.
 			* \param p_handle linked system window handle.
 			*/
-			MessagePump(HWND p_handle);
+			explicit MessagePump(HWND p_handle);
 
 
 		private:

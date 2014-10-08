@@ -81,7 +81,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Renderer(void);
+			explicit Renderer(void);
 
 			
 		protected:

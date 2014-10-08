@@ -116,7 +116,7 @@ namespace eve
 
 		private:
 			/** \brief Class constructor. */
-			Server(void);
+			explicit Server(void);
 
 
 		private:

@@ -86,7 +86,7 @@ namespace eve
 			
 		private:
 			/** \brief Class constructor. */
-			SpinLock(void);
+			explicit SpinLock(void);
 
 
 		private:

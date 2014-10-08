@@ -50,7 +50,7 @@ private:										\
 */
 #define EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR( targetClass )		\
 protected:														\
-	targetClass(void){};										\
+	explicit targetClass(void){};								\
 	virtual ~targetClass(void){};
 
 
@@ -60,7 +60,7 @@ protected:														\
 */
 #define EVE_PROTECT_CONSTRUCTOR( targetClass )		\
 protected:											\
-	targetClass(void){};
+	explicit targetClass(void){};
 
 
 /**

@@ -70,7 +70,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Worker(void);
+			explicit Worker(void);
 
 
 		public:

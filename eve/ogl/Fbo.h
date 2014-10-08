@@ -136,7 +136,7 @@ namespace eve
 			
 		private:
 			/** \brief Class constructor. */
-			Fbo(void);
+			explicit Fbo(void);
 
 
 		protected:

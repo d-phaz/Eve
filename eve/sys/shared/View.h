@@ -75,7 +75,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			View(void);
+			explicit View(void);
 
 
 		public:

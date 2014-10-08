@@ -74,7 +74,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Mutex(void);
+			explicit Mutex(void);
 
 
 		protected:

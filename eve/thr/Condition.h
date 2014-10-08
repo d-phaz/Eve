@@ -81,7 +81,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Condition(void);
+			explicit Condition(void);
 
 
 		protected:

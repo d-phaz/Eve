@@ -119,7 +119,7 @@ namespace eve
 			* \param p_width is the Window width.
 			* \param p_height is the Window height.
 			*/
-			Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
+			explicit Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
 
 
 		private:

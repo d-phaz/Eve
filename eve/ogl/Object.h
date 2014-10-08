@@ -103,7 +103,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			Object(void);
+			explicit Object(void);
 
 
 		protected:

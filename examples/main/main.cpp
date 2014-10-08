@@ -41,8 +41,9 @@ class Example final
 
 private:
 	eve::ogl::Renderer *		m_pRendererOpenGL;
-	eve::ogl::Fbo * fbo;
-	eve::ogl::Texture * tex;
+	eve::ogl::Fbo *				fbo;
+	eve::ogl::Texture *			tex;
+	eve::ogl::Shader *			shader;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -78,10 +79,14 @@ void Example::initThreadedData(void)
 	fmtTex.width	= 800;
 	fmtTex.height	= 600;
 	tex = m_pRendererOpenGL->createTexture(fmtTex);
+
+	eve::ogl::FormatShader fmtShader;
+	shader = m_pRendererOpenGL->createShader(fmtShader);
 }
 
 void Example::releaseThreadedData(void)
 {
+	shader->requestRelease();
 	tex->requestRelease();
 	fbo->requestRelease();
 	this->releaseRenderer(m_pRendererOpenGL);
