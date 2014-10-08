@@ -111,7 +111,7 @@ void eve::mem::Pointer::release_ptr(T * p_pPtr)
 * \brief Create new eve::mem::Pointer or derived pointer.
 */
 #define EVE_CREATE_PTR( T )	\
-	eve::mem::Pointer::create_ptr<T>();
+	eve::mem::Pointer::create_ptr<T>()
 
 
 /**

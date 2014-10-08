@@ -40,7 +40,7 @@ class Example final
 	friend class eve::mem::Pointer;
 
 private:
-	eve::ogl::Renderer *		m_pRendererOpenGL;
+	eve::ogl::Renderer *		renderer;
 	eve::ogl::Fbo *				fbo;
 	eve::ogl::Texture *			tex;
 	eve::ogl::Shader *			shader;
@@ -67,21 +67,21 @@ void Example::initThreadedData(void)
 	// Call parent class.
 	eve::sys::View::initThreadedData();
 
-	m_pRendererOpenGL = EVE_CREATE_PTR(eve::ogl::Renderer);
-	this->registerRenderer(m_pRendererOpenGL);
+	renderer = EVE_CREATE_PTR(eve::ogl::Renderer);
+	this->registerRenderer(renderer);
 
 	eve::ogl::FormatFBO fmtFbo;
 	fmtFbo.width	= 800;
 	fmtFbo.height	= 600;
-	fbo = m_pRendererOpenGL->createFBO(fmtFbo);
+	fbo = renderer->createFBO(fmtFbo);
 
 	eve::ogl::FormatTex fmtTex;
 	fmtTex.width	= 800;
 	fmtTex.height	= 600;
-	tex = m_pRendererOpenGL->createTexture(fmtTex);
+	tex = renderer->createTexture(fmtTex);
 
 	eve::ogl::FormatShader fmtShader;
-	shader = m_pRendererOpenGL->createShader(fmtShader);
+	shader = renderer->createShader(fmtShader);
 }
 
 void Example::releaseThreadedData(void)
@@ -89,7 +89,7 @@ void Example::releaseThreadedData(void)
 	shader->requestRelease();
 	tex->requestRelease();
 	fbo->requestRelease();
-	this->releaseRenderer(m_pRendererOpenGL);
+	this->releaseRenderer(renderer);
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
