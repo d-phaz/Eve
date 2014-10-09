@@ -54,6 +54,21 @@ namespace eve
 			shader_Tessellation		//!< GL_VERTEX_SHADER | GL_TESS_CONTROL_SHADER | GL_TESS_EVALUATION_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
 		};
 
+		/**
+		* \def eve::ogl::ProgramType
+		* \brief convenience enumeration to access in array program id.
+		*/
+		enum ProgramType
+		{
+			prgm_Vertex,
+			prgm_Control,
+			prgm_Evaluation,
+			prgm_Geometry,
+			prgm_Fragment,
+
+			prgm_Max
+		};
+
 
 		/**
 		* \class eve::ogl::FormatShader
@@ -108,26 +123,6 @@ namespace eve
 			friend class eve::mem::Pointer;
 			friend class eve::ogl::Renderer;
 			friend class eve::ogl::Object;
-
-			//////////////////////////////////////
-			//				TYPE				//
-			//////////////////////////////////////
-
-		protected:
-			/** 
-			* \def eve::ogl::Shader::ProgramType
-			* \brief convenience enumeration to access in array program id.
-			*/
-			enum ProgramType
-			{
-				prgm_Vertex,
-				prgm_Control,
-				prgm_Evaluation,
-				prgm_Geometry,
-				prgm_Fragment,
-
-				prgm_Max
-			};
 
 
 			//////////////////////////////////////
@@ -193,8 +188,11 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 			
 		public:
-			/** \brief Get OpenGL texture unique id. (pure virtual) */
+			/** \brief Get OpenGL shader unique id. (pure virtual) */
 			virtual const GLuint getId(void) const override;
+
+			/** \brief Get OpenGL program id depending on target type. */
+			const GLuint getProgramId(eve::ogl::ProgramType p_type) const;
 			
 		}; // class Fbo
 
@@ -209,5 +207,8 @@ namespace eve
 
 //=================================================================================================
 inline const GLuint eve::ogl::Shader::getId(void) const	{ return m_id; }
+
+//=================================================================================================
+inline const GLuint eve::ogl::Shader::getProgramId(eve::ogl::ProgramType p_type) const { EVE_ASSERT(m_prgmId[p_type] != 0); return m_prgmId[p_type]; }
 
 #endif // __EVE_OPENGL_TEXTURE_H__

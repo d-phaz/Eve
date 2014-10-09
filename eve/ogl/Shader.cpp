@@ -111,7 +111,7 @@ void eve::ogl::Shader::setAttributes(eve::ogl::Format * p_format)
 void eve::ogl::Shader::init(void)
 {
 	// Set name array content to 0 to avoid OpenGL deletion issues.
-	m_prgmId = (GLuint *)calloc(eve::ogl::Shader::prgm_Max, sizeof(GLuint));
+	m_prgmId = (GLuint *)calloc(eve::ogl::prgm_Max, sizeof(GLuint));
 }
 
 //=================================================================================================
@@ -135,9 +135,9 @@ void eve::ogl::Shader::oglInit(void)
 	{
 		src = m_vertex.c_str();
 		m_prgmId[prgm_Vertex] = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &src);
-		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::Shader::prgm_Vertex]);
+		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Vertex]);
 
-		glUseProgramStages(m_id, GL_VERTEX_SHADER_BIT, m_prgmId[eve::ogl::Shader::prgm_Vertex]);
+		glUseProgramStages(m_id, GL_VERTEX_SHADER_BIT, m_prgmId[eve::ogl::prgm_Vertex]);
 		EVE_OGL_CHECK_ERROR;
 	}
 
@@ -145,9 +145,9 @@ void eve::ogl::Shader::oglInit(void)
 	{
 		src = m_control.c_str();
 		m_prgmId[prgm_Control] = glCreateShaderProgramv(GL_TESS_CONTROL_SHADER, 1, &src);
-		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::Shader::prgm_Control]);
+		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Control]);
 
-		glUseProgramStages(m_id, GL_TESS_CONTROL_SHADER_BIT, m_prgmId[eve::ogl::Shader::prgm_Control]);
+		glUseProgramStages(m_id, GL_TESS_CONTROL_SHADER_BIT, m_prgmId[eve::ogl::prgm_Control]);
 		EVE_OGL_CHECK_ERROR;
 	}
 
@@ -155,9 +155,9 @@ void eve::ogl::Shader::oglInit(void)
 	{
 		src = m_eval.c_str();
 		m_prgmId[prgm_Evaluation] = glCreateShaderProgramv(GL_TESS_EVALUATION_SHADER, 1, &src);
-		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::Shader::prgm_Evaluation]);
+		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Evaluation]);
 
-		glUseProgramStages(m_id, GL_TESS_EVALUATION_SHADER_BIT, m_prgmId[eve::ogl::Shader::prgm_Evaluation]);
+		glUseProgramStages(m_id, GL_TESS_EVALUATION_SHADER_BIT, m_prgmId[eve::ogl::prgm_Evaluation]);
 		EVE_OGL_CHECK_ERROR;
 	}
 
@@ -165,9 +165,9 @@ void eve::ogl::Shader::oglInit(void)
 	{
 		src = m_geom.c_str();
 		m_prgmId[prgm_Geometry] = glCreateShaderProgramv(GL_GEOMETRY_SHADER, 1, &src);
-		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::Shader::prgm_Geometry]);
+		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Geometry]);
 
-		glUseProgramStages(m_id, GL_GEOMETRY_SHADER_BIT, m_prgmId[eve::ogl::Shader::prgm_Geometry]);
+		glUseProgramStages(m_id, GL_GEOMETRY_SHADER_BIT, m_prgmId[eve::ogl::prgm_Geometry]);
 		EVE_OGL_CHECK_ERROR;
 	}
 
@@ -175,9 +175,9 @@ void eve::ogl::Shader::oglInit(void)
 	{
 		src = m_fragment.c_str();
 		m_prgmId[prgm_Fragment] = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &src);
-		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::Shader::prgm_Fragment]);
+		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Fragment]);
 
-		glUseProgramStages(m_id, GL_FRAGMENT_SHADER_BIT, m_prgmId[eve::ogl::Shader::prgm_Fragment]);
+		glUseProgramStages(m_id, GL_FRAGMENT_SHADER_BIT, m_prgmId[eve::ogl::prgm_Fragment]);
 		EVE_OGL_CHECK_ERROR;
 	}
 }
@@ -192,11 +192,11 @@ void eve::ogl::Shader::oglUpdate(void)
 //=================================================================================================
 void eve::ogl::Shader::oglRelease(void)
 {
-	glDeleteProgram(m_prgmId[eve::ogl::Shader::prgm_Vertex]);
-	glDeleteProgram(m_prgmId[eve::ogl::Shader::prgm_Control]);
-	glDeleteProgram(m_prgmId[eve::ogl::Shader::prgm_Evaluation]);
-	glDeleteProgram(m_prgmId[eve::ogl::Shader::prgm_Geometry]);
-	glDeleteProgram(m_prgmId[eve::ogl::Shader::prgm_Fragment]);
+	glDeleteProgram(m_prgmId[eve::ogl::prgm_Vertex]);
+	glDeleteProgram(m_prgmId[eve::ogl::prgm_Control]);
+	glDeleteProgram(m_prgmId[eve::ogl::prgm_Evaluation]);
+	glDeleteProgram(m_prgmId[eve::ogl::prgm_Geometry]);
+	glDeleteProgram(m_prgmId[eve::ogl::prgm_Fragment]);
 	EVE_OGL_CHECK_ERROR;
 
 	glDeleteProgramPipelines(1, &m_id);

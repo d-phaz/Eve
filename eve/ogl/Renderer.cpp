@@ -222,6 +222,12 @@ eve::ogl::Shader * eve::ogl::Renderer::createShader(eve::ogl::FormatShader & p_f
 	return EVE_OGL_CREATE(eve::ogl::Shader, p_format, this);
 }
 
+//=================================================================================================
+eve::ogl::Uniform * eve::ogl::Renderer::createUniform(eve::ogl::FormatUniform & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Uniform, p_format, this);
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

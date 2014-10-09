@@ -49,6 +49,10 @@
 #include "eve/ogl/Shader.h"
 #endif
 
+#ifndef __EVE_OPENGL_UNIFORM_H__
+#include "eve/ogl/Uniform.h"
+#endif
+
 
 namespace eve { namespace ogl { class SubContext; } }
 namespace eve { namespace thr { class SpinLock;  } }
@@ -84,8 +88,6 @@ namespace eve
 			std::deque<eve::ogl::Object *> *            m_pQueueRelease;		//<! OpenGL objects release queue.
 			eve::thr::SpinLock *						m_pQueueFence;			//!< Init/Update/Release queues fence.
 
-
-			eve::ogl::Fbo * fbo;
 
 			//////////////////////////////////////
 			//				METHOD				//
@@ -143,9 +145,11 @@ namespace eve
 			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
 			eve::ogl::Texture * createTexture(eve::ogl::FormatTex & p_format);
 			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFBO. */
-			eve::ogl::Fbo * createFBO(eve::ogl::FormatFBO & p_format);
+			eve::ogl::Fbo *		createFBO(eve::ogl::FormatFBO & p_format);
 			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
-			eve::ogl::Shader * createShader(eve::ogl::FormatShader & p_format);
+			eve::ogl::Shader *	createShader(eve::ogl::FormatShader & p_format);
+			/** \brief Create and return new eve::ogl::Uniform pointer based on eve::ogl::FormatUniform. */
+			eve::ogl::Uniform * createUniform(eve::ogl::FormatUniform & p_format);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////

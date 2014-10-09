@@ -54,6 +54,10 @@ namespace eve
 			: public eve::ogl::Format
 		{
 		public:
+			GLuint					prgmId;				//!< Specifies OPENGL linked shader program ID.
+			GLuint					binding;			//!< Specifies buffer GLSL binding index.
+			bool					dynamic;			//!< Specifies whether the buffer use dynamic draw (per draw call update).
+			std::shared_ptr<float>	data;				//!< Specifies host data to send to buffer, ownership is shared.
 
 		public:
 			/** \brief Class constructor. */
@@ -91,6 +95,15 @@ namespace eve
 
 		private:
 			GLuint						m_id;					//!< Specifies OpenGL unique uniform buffer ID.
+			GLint						m_blockSize;			//!< Specifies uniform block size.
+			GLenum						m_usage;				//!< Specifies wether the buffer use GL_STATIC_DRAW or GL_DYNAMIC_DRAW.
+
+			GLuint						m_prgmId;				//!< Specifies OPENGL linked shader program ID. 
+			GLuint						m_binding;				//!< Specifies buffer GLSL binding index.
+			bool						m_bDynamic;				//!< Specifies whether the buffer use dynamic draw (per draw call update).
+
+			std::shared_ptr<float>		m_pData;				//!< Specifies host data to send to buffer, ownership is shared.
+			uint8_t *					m_pOglData;				//!< Specifies device buffer data address.
 
 
 		private:
@@ -155,9 +168,9 @@ namespace eve
 
 		public:
 			/** \brief Bind (activate). */
-			void bind(GLenum p_index);
+			void bind(void);
 			/** \brief Unbind (deactivate). */
-			static void unbind(GLenum p_index);
+			void unbind(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,6 +194,10 @@ namespace eve
 		public:
 			/** \brief Get OpenGL texture unique id. (pure virtual) */
 			virtual const GLuint getId(void) const override;
+
+		public:
+			/** \brief Set buffer data. */
+			void setData(const std::shared_ptr<float> & p_data);
 			
 		}; // class Fbo
 
