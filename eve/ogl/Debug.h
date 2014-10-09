@@ -37,10 +37,6 @@
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
-
 #ifndef __EVE_OPENGL_EXTERNAL_H__
 #include "eve/ogl/External.h"
 #endif
@@ -54,6 +50,9 @@ namespace eve
 {
 	namespace ogl
 	{
+		/** \brief Initialize OpenGL debug stream. */
+		void init_debug_stream(void);
+
 		/** \brief Test OpenGL error, log it and create error assertion. */
 		void check_error(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line);
 

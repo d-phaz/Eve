@@ -109,7 +109,7 @@ void eve::thr::Thread::start(void)
 	if (::ResumeThread(m_hThread) == (DWORD)-1)
 	{
 		EVE_LOG_ERROR("Unable to resume thread, error is %s", eve::mess::get_error_msg().c_str());
-		EVE_ASSERT_FAILURE
+		EVE_ASSERT_FAILURE;
 	}
 }
 
@@ -188,7 +188,7 @@ bool eve::thr::Thread::join(void)
 //=================================================================================================
 void eve::thr::Thread::stop(void)
 {
-	EVE_ASSERT(m_hThread)
+	EVE_ASSERT(m_hThread);
 
 	if (!eve::thr::equal_ID(m_threadID, eve::thr::zero_ID()))
 	{
@@ -288,7 +288,7 @@ bool eve::thr::Thread::setPriority( priorities p_priority )
 		}
 
 		ret = (::SetThreadPriority(m_hThread, prio) != THREAD_PRIORITY_ERROR_RETURN);
-		EVE_ASSERT(ret)
+		EVE_ASSERT(ret);
 	}
 
 	return ret;

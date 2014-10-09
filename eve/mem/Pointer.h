@@ -99,7 +99,7 @@ T * eve::mem::Pointer::create_ptr(void)
 template<class T>
 void eve::mem::Pointer::release_ptr(T * p_pPtr)
 {
-	EVE_ASSERT(p_pPtr)
+	EVE_ASSERT(p_pPtr);
 
 	p_pPtr->release();
 	delete p_pPtr;

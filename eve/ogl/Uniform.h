@@ -121,13 +121,16 @@ namespace eve
 			// Thus, if you want to put the data for multiple uniform blocks in a single buffer object, 
 			// you must make sure that the data for each within that block matches this alignment.
 
-			static int32_t				m_max_vertex_uniform_blocks;			//!< OpenGL maximum vertex uniform blocks.
-			static int32_t				m_max_geometry_uniform_blocks;			//!< OpenGL maximum geometry uniform blocks.
-			static int32_t				m_max_fragment_uniform_blocks;			//!< OpenGL maximum fragment uniform blocks.
+			static int32_t				m_max_vertex_uniform_blocks;			//!< Specifies OpenGL maximum vertex uniform blocks.
+			static int32_t				m_max_control_uniform_blocks;			//!< Specifies OpenGL maximum control uniform blocks.
+			static int32_t				m_max_evaluation_uniform_blocks;		//!< Specifies OpenGL maximum control uniform blocks.
+			static int32_t				m_max_geometry_uniform_blocks;			//!< Specifies OpenGL maximum geometry uniform blocks.
+			static int32_t				m_max_fragment_uniform_blocks;			//!< Specifies OpenGL maximum fragment uniform blocks.
 
-			static int32_t				m_max_uniform_block_size;				//!< OpenGL maximum uniform blocks size.
+			static int32_t				m_max_uniform_buffer_binding;			//!< Specifies OpenGl maximum buffer binding amount.
+			static int32_t				m_max_uniform_block_size;				//!< Specifies OpenGL maximum uniform blocks size.
 
-			static int32_t				m_uniform_buffer_offset_alignment;		//!< OpenGL uniform buffer offset alignment.
+			static int32_t				m_uniform_buffer_offset_alignment;		//!< Specifies OpenGL uniform buffer offset alignment.
 
 
 			//////////////////////////////////////
@@ -179,12 +182,18 @@ namespace eve
 
 		public:
 			/** \brief get OpenGL maximum vertex uniform blocks. */
-			static const int32_t get_max_vertex_uniform_blocks(void);			
+			static const int32_t get_max_vertex_uniform_blocks(void);
+			/** \brief Get OpenGL maximum control uniform blocks. */
+			static const int32_t get_max_control_uniform_blocks(void);
+			/** \brief Get OpenGL maximum evaluation uniform blocks. */
+			static const int32_t get_max_evaluation_uniform_blocks(void);
 			/** \brief Get OpenGL maximum geometry uniform blocks. */
 			static const int32_t get_max_geometry_uniform_blocks(void);	
 			/** \brief Get OpenGL maximum fragment uniform blocks. */
-			static const int32_t get_max_fragment_uniform_blocks(void);	
+			static const int32_t get_max_fragment_uniform_blocks(void);
 
+			/** \brief Get OpenGL maximum uniform buffer binding. */
+			static const int32_t get_max_uniform_buffer_binding(void);
 			/** \brief Get OpenGL maximum uniform blocks size. */
 			static const int32_t get_max_uniform_block_size(void);				
 
@@ -212,10 +221,13 @@ namespace eve
 
 //=================================================================================================
 inline const int32_t eve::ogl::Uniform::get_max_vertex_uniform_blocks(void)			{ return m_max_vertex_uniform_blocks;			}
+inline const int32_t eve::ogl::Uniform::get_max_control_uniform_blocks(void)		{ return m_max_control_uniform_blocks;			}
+inline const int32_t eve::ogl::Uniform::get_max_evaluation_uniform_blocks(void)		{ return m_max_evaluation_uniform_blocks;		}
 inline const int32_t eve::ogl::Uniform::get_max_geometry_uniform_blocks(void)		{ return m_max_geometry_uniform_blocks;			}
 inline const int32_t eve::ogl::Uniform::get_max_fragment_uniform_blocks(void)		{ return m_max_fragment_uniform_blocks;			}	
 
 //=================================================================================================
+inline const int32_t eve::ogl::Uniform::get_max_uniform_buffer_binding(void)		{ return m_max_uniform_buffer_binding;			}
 inline const int32_t eve::ogl::Uniform::get_max_uniform_block_size(void)			{ return m_max_uniform_block_size;				}
 
 //=================================================================================================

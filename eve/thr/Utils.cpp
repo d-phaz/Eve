@@ -49,7 +49,7 @@ namespace eve
 			SleepEvent()
 			: handle(::CreateEventW(0, 0, 0, 0))
 			{
-				EVE_ASSERT(handle)
+				EVE_ASSERT(handle);
 			}
 
 			HANDLE handle;

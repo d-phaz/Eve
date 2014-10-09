@@ -32,12 +32,8 @@
 // Main class header
 #include "eve/ogl/win32/Context.h"
 
-#ifndef __EVE_OPENGL_EXTERNAL_H__
-#include "eve/ogl/External.h"
-#endif
-
-#ifndef __EVE_OPENGL_MACRO_H__
-#include "eve/ogl/Macro.h"
+#ifndef __EVE_OPENGL_DEBUG_H__
+#include "eve/ogl/Debug.h"
 #endif
 
 #ifndef __EVE_SYSTEM_WINDOW_H__
@@ -223,6 +219,8 @@ void eve::ogl::Context::init_OpenGL(void)
 				eve::sys::notify_fatal_error(EVE_TXT("OpenGL initialization failed.\n \n Please check your hardware and drivers capabilities."));
 			}
 		}
+
+		eve::ogl::init_debug_stream();
 
 		firstLaunch = false;
 	}

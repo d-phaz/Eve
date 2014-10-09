@@ -77,7 +77,7 @@ protected:											\
 * \brief Assertion called in DEBUG mode only.
 */
 #if !defined(NDEBUG)
-#define EVE_ASSERT( expression )	assert(expression);
+#define EVE_ASSERT( expression )	assert(expression)
 #else
 #define EVE_ASSERT( expression )	
 #endif
@@ -88,7 +88,7 @@ protected:											\
 * \brief Failure assertion called in DEBUG mode only.
 */
 #if !defined(NDEBUG)
-#define EVE_ASSERT_FAILURE	assert(0);
+#define EVE_ASSERT_FAILURE	assert(0)
 #else
 #define EVE_ASSERT_FAILURE	
 #endif

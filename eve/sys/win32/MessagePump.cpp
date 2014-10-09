@@ -123,7 +123,7 @@ void eve::sys::MessagePump::unregister_handler(HWND p_hWnd)
 eve::sys::MessagePump * eve::sys::MessagePump::get_handler(HWND p_hWnd)
 {
 	eve::sys::MessagePump::HandlerMap::const_iterator it = m_handlers_map.find(p_hWnd);
-	EVE_ASSERT(it != m_handlers_map.end())
+	EVE_ASSERT(it != m_handlers_map.end());
 
 	eve::sys::MessagePump * ptr = it->second;
 	return ptr;

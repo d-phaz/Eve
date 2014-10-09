@@ -162,6 +162,11 @@ namespace eve
 			static void default_log_in_file_debug(const wchar_t *p_funcName, const wchar_t *p_format, ...);
 
 
+		public:
+			/** \brief OpenGL debug stream output callback, signature MUST be exactly as it is. */
+			static void __stdcall ogl_debug_output(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int32_t length, const char* message, const void* userParam);
+
+
 			///////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////

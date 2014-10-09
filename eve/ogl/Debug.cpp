@@ -32,6 +32,24 @@
 // Main header.
 #include "eve/ogl/Debug.h"
 
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
+
+//=================================================================================================
+void eve::ogl::init_debug_stream(void)
+{
+#if defined(GL_ARB_debug_output)
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+	glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	glDebugMessageCallbackARB(&eve::mess::Server::ogl_debug_output, 0);
+	EVE_OGL_CHECK_ERROR;
+#endif
+}
+
+
+
 //=================================================================================================
 void eve::ogl::check_error(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line)
 {

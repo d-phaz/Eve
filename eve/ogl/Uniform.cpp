@@ -76,9 +76,12 @@ const eve::ogl::FormatUniform & eve::ogl::FormatUniform::operator = (const eve::
 
 //=================================================================================================
 int32_t	eve::ogl::Uniform::m_max_vertex_uniform_blocks			= 0;
+int32_t	eve::ogl::Uniform::m_max_control_uniform_blocks			= 0;
+int32_t	eve::ogl::Uniform::m_max_evaluation_uniform_blocks		= 0;
 int32_t	eve::ogl::Uniform::m_max_geometry_uniform_blocks		= 0;
 int32_t	eve::ogl::Uniform::m_max_fragment_uniform_blocks		= 0;
 
+int32_t eve::ogl::Uniform::m_max_uniform_buffer_binding			= 0;
 int32_t eve::ogl::Uniform::m_max_uniform_block_size				= 0;
 
 int32_t eve::ogl::Uniform::m_uniform_buffer_offset_alignment	= 0;
@@ -137,10 +140,13 @@ void eve::ogl::Uniform::oglInit(void)
 	if (gb_init)
 	{
 		glGetIntegerv(GL_MAX_VERTEX_UNIFORM_BLOCKS, &m_max_vertex_uniform_blocks);
+		glGetIntegerv(GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS, &m_max_control_uniform_blocks);
+		glGetIntegerv(GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS, &m_max_evaluation_uniform_blocks);
 		glGetIntegerv(GL_MAX_GEOMETRY_UNIFORM_BLOCKS, &m_max_geometry_uniform_blocks);
 		glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_BLOCKS, &m_max_fragment_uniform_blocks);
 		EVE_OGL_CHECK_ERROR;
 
+		glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &m_max_uniform_buffer_binding);
 		glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &m_max_uniform_block_size);
 		EVE_OGL_CHECK_ERROR;
 

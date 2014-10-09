@@ -34,6 +34,10 @@
 
 #include <sys/timeb.h>
 
+#ifndef __EVE_OPENGL_DEBUG_H__
+#include "eve/ogl/Debug.h"
+#endif
+
 
 
 //=================================================================================================
@@ -376,6 +380,64 @@ void eve::mess::Server::default_log_in_file_debug(const wchar_t *p_funcName, con
 	free(mess);
 
 	m_p_mutex->unlock();
+}
+
+
+
+//=================================================================================================
+void __stdcall eve::mess::Server::ogl_debug_output(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int32_t length, const char* message, const void* userParam)
+{
+	std::wstring debSource;
+	if (source == GL_DEBUG_SOURCE_API_ARB)
+		debSource = EVE_TXT("OpenGL");
+	else if (source == GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB)
+		debSource = EVE_TXT("Windows");
+	else if (source == GL_DEBUG_SOURCE_SHADER_COMPILER_ARB)
+		debSource = EVE_TXT("Shader Compiler");
+	else if (source == GL_DEBUG_SOURCE_THIRD_PARTY_ARB)
+		debSource = EVE_TXT("Third Party");
+	else if (source == GL_DEBUG_SOURCE_APPLICATION_ARB)
+		debSource = EVE_TXT("Application");
+	else if (source == GL_DEBUG_SOURCE_OTHER_ARB)
+		debSource = EVE_TXT("Other");
+	else
+		EVE_ASSERT_FAILURE;
+
+	std::wstring debType;
+	if (type == GL_DEBUG_TYPE_ERROR)
+		debType = EVE_TXT("error");
+	else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR)
+		debType = EVE_TXT("deprecated behavior");
+	else if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR)
+		debType = EVE_TXT("undefined behavior");
+	else if (type == GL_DEBUG_TYPE_PORTABILITY)
+		debType = EVE_TXT("portability");
+	else if (type == GL_DEBUG_TYPE_PERFORMANCE)
+		debType = EVE_TXT("performance");
+	else if (type == GL_DEBUG_TYPE_OTHER)
+		debType = EVE_TXT("message");
+	else if (type == GL_DEBUG_TYPE_MARKER)
+		debType = EVE_TXT("marker");
+	else if (type == GL_DEBUG_TYPE_PUSH_GROUP)
+		debType = EVE_TXT("push group");
+	else if (type == GL_DEBUG_TYPE_POP_GROUP)
+		debType = EVE_TXT("pop group");
+	else
+		EVE_ASSERT_FAILURE;
+
+	std::wstring debSev;
+	if (severity == GL_DEBUG_SEVERITY_HIGH_ARB)
+		debSev = EVE_TXT("high");
+	else if (severity == GL_DEBUG_SEVERITY_MEDIUM_ARB)
+		debSev = EVE_TXT("medium");
+	else if (severity == GL_DEBUG_SEVERITY_LOW_ARB)
+		debSev = EVE_TXT("low");
+	else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+		debSev = EVE_TXT("notification");
+	else
+		EVE_ASSERT_FAILURE;
+	
+	eve::mess::Server::get_debug_handler()(EVE_TXT("ogl_debug_output()"), EVE_TXT("%s: %s(%s) %d: %s."), debSource, debType, debSev, id, message);
 }
 
 
