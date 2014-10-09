@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_SHADER_H__
-#define __EVE_OPENGL_SHADER_H__
+#ifndef __EVE_OPENGL_UNIFORM_H__
+#define __EVE_OPENGL_UNIFORM_H__
 
 #ifndef __EVE_OPENGL_OBJECT_H__
 #include "eve/ogl/Object.h"
@@ -42,66 +42,41 @@ namespace eve
 {
 	namespace ogl
 	{
-		/** 
-		* \def eve::ogl::PipelineType
-		* \brief Defines shader pipeline types.
-		*/
-		enum PipelineType
-		{
-			shader_Unknown,
-			shader_Pixel,			//!< GL_VERTEX_SHADER | GL_FRAGMENT_SHADER
-			shader_Geometry,		//!< GL_VERTEX_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
-			shader_Tessellation		//!< GL_VERTEX_SHADER | GL_TESS_CONTROL_SHADER | GL_TESS_EVALUATION_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
-		};
-
-
 		/**
-		* \class eve::ogl::FormatShader
+		* \class eve::ogl::FormatUniform
 		*
-		* \brief OpenGL shader format class.
-		* Used to create OpenGL shader based on properties.
+		* \brief OpenGL uniform buffer format class.
+		* Used to create OpenGL uniform buffer based on properties.
 		*
 		* \note extends eve::ogl::Format
 		*/
-		class FormatShader final
+		class FormatUniform final
 			: public eve::ogl::Format
 		{
 		public:
-			std::string					vertex;			//!< Vertex shader program source.
-			std::string					control;		//!< Control shader program source.
-			std::string					eval;			//!< Evaluation shader program source.
-			std::string					geom;			//!< Geometry shader program source.
-			std::string					fragment;		//!< Fragment shader program source.
 
 		public:
 			/** \brief Class constructor. */
-			FormatShader(void);
+			FormatUniform(void);
 			/** \brief Class destructor. */
-			virtual ~FormatShader(void);
+			virtual ~FormatUniform(void);
 
 			/** \brief Copy constructor. */
-			FormatShader(const eve::ogl::FormatShader & p_other);
+			FormatUniform(const eve::ogl::FormatUniform & p_other);
 			/** \brief Assignation operator. */
-			const eve::ogl::FormatShader & operator = (const eve::ogl::FormatShader & p_other);
+			const eve::ogl::FormatUniform & operator = (const eve::ogl::FormatUniform & p_other);
 
-		}; // class FormatShader
+		}; // class FormatUniform
 
 
 		/** 
-		* \class eve::ogl::Shader
+		* \class eve::ogl::Uniform
 		*
-		* \brief Create and manage OpenGL shader pipeline.
-		*
-		* Program use multiple shader:
-		*	GL_VERTEX_SHADER | GL_FRAGMENT_SHADER
-		*	GL_VERTEX_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
-		*	GL_VERTEX_SHADER | GL_TESS_CONTROL_SHADER | GL_TESS_EVALUATION_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
-		*
-		* Use buffer(s) to pass uniform variables.
+		* \brief Create and manage OpenGL uniform buffer.
 		*
 		* \note extends eve::ogl::Object
 		*/
-		class Shader final
+		class Uniform final
 			: public eve::ogl::Object
 		{
 
@@ -109,52 +84,49 @@ namespace eve
 			friend class eve::ogl::Renderer;
 			friend class eve::ogl::Object;
 
-			//////////////////////////////////////
-			//				TYPE				//
-			//////////////////////////////////////
-
-		protected:
-			/** 
-			* \def eve::ogl::Shader::ProgramType
-			* \brief convenience enumeration to access in array program id.
-			*/
-			enum ProgramType
-			{
-				prgm_Vertex,
-				prgm_Control,
-				prgm_Evaluation,
-				prgm_Geometry,
-				prgm_Fragment,
-
-				prgm_Max
-			};
-
 
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
 
 		private:
-			GLuint						m_id;					//!< Specifies OpenGL unique shader program ID.
-			GLuint *					m_prgmId;				//!< Staged programs OpenGL ids.
+			GLuint						m_id;					//!< Specifies OpenGL unique uniform buffer ID.
 
-			std::string					m_vertex;				//!< Vertex shader program source.
-			std::string					m_control;				//!< Control shader program source.
-			std::string					m_eval;					//!< Evaluation shader program source.
-			std::string					m_geom;					//!< Geometry shader program source.
-			std::string					m_fragment;				//!< Fragment shader program source.
+
+		private:
+			// OpenGL documentation:
+
+			// Each shader stage has a limit on the number of separate uniform buffer binding locations.
+			// These are queried using glGetIntegerv with GL_MAX_VERTEX_UNIFORM_BLOCKS, GL_MAX_GEOMETRY_UNIFORM_BLOCKS, GL_MAX_FRAGMENT_UNIFORM_BLOCKS. 
+
+			// There is also a limitation on the available storage per uniform buffer. 
+			// This is queried through GL_MAX_UNIFORM_BLOCK_SIZE.
+			// This is in basic machine units (bytes).
+
+			// If you bind a uniform buffer with glBindBufferRange, the offset field of that parameter must be a multiple of GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT.
+			// This is a global value, not a per-program or per-block one.
+			// Thus, if you want to put the data for multiple uniform blocks in a single buffer object, 
+			// you must make sure that the data for each within that block matches this alignment.
+
+			static int32_t				m_max_vertex_uniform_blocks;			//!< OpenGL maximum vertex uniform blocks.
+			static int32_t				m_max_geometry_uniform_blocks;			//!< OpenGL maximum geometry uniform blocks.
+			static int32_t				m_max_fragment_uniform_blocks;			//!< OpenGL maximum fragment uniform blocks.
+
+			static int32_t				m_max_uniform_block_size;				//!< OpenGL maximum uniform blocks size.
+
+			static int32_t				m_uniform_buffer_offset_alignment;		//!< OpenGL uniform buffer offset alignment.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Shader);
-			EVE_PROTECT_DESTRUCTOR(Shader);
+			EVE_DISABLE_COPY(Uniform);
+			EVE_PROTECT_DESTRUCTOR(Uniform);
 			
 		private:
 			/** \brief Class constructor. */
-			explicit Shader(void);
+			explicit Uniform(void);
 
 
 		protected:
@@ -191,6 +163,20 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief get OpenGL maximum vertex uniform blocks. */
+			static const int32_t get_max_vertex_uniform_blocks(void);			
+			/** \brief Get OpenGL maximum geometry uniform blocks. */
+			static const int32_t get_max_geometry_uniform_blocks(void);	
+			/** \brief Get OpenGL maximum fragment uniform blocks. */
+			static const int32_t get_max_fragment_uniform_blocks(void);	
+
+			/** \brief Get OpenGL maximum uniform blocks size. */
+			static const int32_t get_max_uniform_block_size(void);				
+
+			/** \brief Get OpenGL uniform buffer offset alignment. */
+			static const int32_t get_uniform_buffer_offset_alignment(void);		
 			
 		public:
 			/** \brief Get OpenGL texture unique id. (pure virtual) */
@@ -208,6 +194,19 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Shader::getId(void) const	{ return m_id; }
+inline const int32_t eve::ogl::Uniform::get_max_vertex_uniform_blocks(void)			{ return m_max_vertex_uniform_blocks;			}
+inline const int32_t eve::ogl::Uniform::get_max_geometry_uniform_blocks(void)		{ return m_max_geometry_uniform_blocks;			}
+inline const int32_t eve::ogl::Uniform::get_max_fragment_uniform_blocks(void)		{ return m_max_fragment_uniform_blocks;			}	
+
+//=================================================================================================
+inline const int32_t eve::ogl::Uniform::get_max_uniform_block_size(void)			{ return m_max_uniform_block_size;				}
+
+//=================================================================================================
+inline const int32_t eve::ogl::Uniform::get_uniform_buffer_offset_alignment(void)	{ return m_uniform_buffer_offset_alignment;		}
+
+
+
+//=================================================================================================
+inline const GLuint eve::ogl::Uniform::getId(void) const	{ return m_id; }
 
 #endif // __EVE_OPENGL_TEXTURE_H__

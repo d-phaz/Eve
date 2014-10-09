@@ -131,7 +131,7 @@ void eve::ogl::Shader::oglInit(void)
 
 	char const * src = nullptr;
 
-	if (m_vertex.size() > 0)
+	if (m_vertex.length() > 1)
 	{
 		src = m_vertex.c_str();
 		m_prgmId[prgm_Vertex] = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &src);
@@ -141,7 +141,7 @@ void eve::ogl::Shader::oglInit(void)
 		EVE_OGL_CHECK_ERROR;
 	}
 
-	if (m_control.size() > 0)
+	if (m_control.length() > 1)
 	{
 		src = m_control.c_str();
 		m_prgmId[prgm_Control] = glCreateShaderProgramv(GL_TESS_CONTROL_SHADER, 1, &src);
@@ -151,7 +151,7 @@ void eve::ogl::Shader::oglInit(void)
 		EVE_OGL_CHECK_ERROR;
 	}
 
-	if (m_eval.size() > 0)
+	if (m_eval.length() > 1)
 	{
 		src = m_eval.c_str();
 		m_prgmId[prgm_Evaluation] = glCreateShaderProgramv(GL_TESS_EVALUATION_SHADER, 1, &src);
@@ -161,7 +161,7 @@ void eve::ogl::Shader::oglInit(void)
 		EVE_OGL_CHECK_ERROR;
 	}
 
-	if (m_geom.size() > 0)
+	if (m_geom.length() > 1)
 	{
 		src = m_geom.c_str();
 		m_prgmId[prgm_Geometry] = glCreateShaderProgramv(GL_GEOMETRY_SHADER, 1, &src);
@@ -171,7 +171,7 @@ void eve::ogl::Shader::oglInit(void)
 		EVE_OGL_CHECK_ERROR;
 	}
 
-	if (m_fragment.size() > 0)
+	if (m_fragment.length() > 1)
 	{
 		src = m_fragment.c_str();
 		m_prgmId[prgm_Fragment] = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &src);
