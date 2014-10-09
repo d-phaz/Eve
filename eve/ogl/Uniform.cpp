@@ -168,9 +168,15 @@ void eve::ogl::Uniform::oglInit(void)
 void eve::ogl::Uniform::oglUpdate(void)
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, m_id);
-	glBufferData(GL_UNIFORM_BUFFER, m_blockSize, m_pData.get(), m_usage);
+
+	m_pOglData = glMapBufferRange(GL_UNIFORM_BUFFER, 0, m_blockSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+	*(float*)m_pOglData = *m_pData.get();
+
+	glUnmapBuffer(GL_UNIFORM_BUFFER); 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 	EVE_OGL_CHECK_ERROR;
+
 }
 
 //=================================================================================================
