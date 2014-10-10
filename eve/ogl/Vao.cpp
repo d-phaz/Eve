@@ -172,7 +172,7 @@ void eve::ogl::Vao::oglInit(void)
 
 	glGenVertexArrays(1, &m_id);
 
-	/*glBindVertexArray(m_id);
+	glBindVertexArray(m_id);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
 
@@ -183,36 +183,38 @@ void eve::ogl::Vao::oglInit(void)
 	glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_DIFFUSE);
 
 	if (m_perVertexNumNormal > 0) {
-	glVertexAttribPointer(EVE_OGL_ATTRIBUTE_NORMAL, m_perVertexNumNormal, GL_FLOAT, GL_FALSE, m_verticesStride, EVE_OGL_BUFFER_OFFSET(m_offsetNormals));
-	glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_NORMAL);
+		glVertexAttribPointer(EVE_OGL_ATTRIBUTE_NORMAL, m_perVertexNumNormal, GL_FLOAT, GL_FALSE, m_verticesStride, EVE_OGL_BUFFER_OFFSET(m_offsetNormals));
+		glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_NORMAL);
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindVertexArray(0);*/
-
-	glBindVertexArray(m_id);
-
-		glVertexAttribBinding(EVE_OGL_ATTRIBUTE_POSITION, 0);
-		glVertexAttribFormat(EVE_OGL_ATTRIBUTE_POSITION, m_perVertexNumPosition, GL_FLOAT, GL_FALSE, m_offsetPosition);
-		glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_POSITION);
-
-		glVertexAttribBinding(EVE_OGL_ATTRIBUTE_DIFFUSE, 0);
-		glVertexAttribFormat(EVE_OGL_ATTRIBUTE_DIFFUSE, m_perVertexNumDiffuse, GL_FLOAT, GL_FALSE, m_offsetDiffuse);
-		glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_DIFFUSE);
-
-		if (m_perVertexNumNormal > 0) 
-		{
-			glVertexAttribBinding(EVE_OGL_ATTRIBUTE_NORMAL, 0);
-			glVertexAttribFormat(EVE_OGL_ATTRIBUTE_NORMAL, m_perVertexNumNormal, GL_FLOAT, GL_FALSE, m_offsetNormals);
-			glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_NORMAL);
-		}
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
-		glBindVertexBuffer(0, m_arrayBufferId, 0, m_verticesStride);
-
 	glBindVertexArray(0);
 	EVE_OGL_CHECK_ERROR;
+
+// 	// Vertex attrib binding -> to bench
+// 	glBindVertexArray(m_id);
+// 
+// 	glVertexAttribBinding(EVE_OGL_ATTRIBUTE_POSITION, 0);
+// 	glVertexAttribFormat(EVE_OGL_ATTRIBUTE_POSITION, m_perVertexNumPosition, GL_FLOAT, GL_FALSE, m_offsetPosition);
+// 	glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_POSITION);
+// 
+// 	glVertexAttribBinding(EVE_OGL_ATTRIBUTE_DIFFUSE, 0);
+// 	glVertexAttribFormat(EVE_OGL_ATTRIBUTE_DIFFUSE, m_perVertexNumDiffuse, GL_FLOAT, GL_FALSE, m_offsetDiffuse);
+// 	glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_DIFFUSE);
+// 
+// 	if (m_perVertexNumNormal > 0)
+// 	{
+// 		glVertexAttribBinding(EVE_OGL_ATTRIBUTE_NORMAL, 0);
+// 		glVertexAttribFormat(EVE_OGL_ATTRIBUTE_NORMAL, m_perVertexNumNormal, GL_FLOAT, GL_FALSE, m_offsetNormals);
+// 		glEnableVertexAttribArray(EVE_OGL_ATTRIBUTE_NORMAL);
+// 	}
+// 
+// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
+// 
+// 	glBindVertexArray(0);
+// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+// 	EVE_OGL_CHECK_ERROR;
 
 }
 
@@ -248,9 +250,23 @@ void eve::ogl::Vao::oglRelease(void)
 void eve::ogl::Vao::draw(void)
 {
 	glBindVertexArray(m_id);
-	glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0, 1, 0, 0);
-	//glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
+
+	glDrawElementsInstancedBaseVertex(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, NULL, 1, 0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 	EVE_OGL_CHECK_ERROR;
+
+
+// 	// Vertex attrib binding -> to bench
+// 	glBindVertexArray(m_id);
+// 	glBindVertexBuffer(0, m_arrayBufferId, 0, m_verticesStride);
+// 
+// 	glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0, 1, 0, 0);
+// 	
+// 	//glBindVertexArray(0);
+// 	EVE_OGL_CHECK_ERROR;
 }
 
 
