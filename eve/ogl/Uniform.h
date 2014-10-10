@@ -103,7 +103,7 @@ namespace eve
 			bool						m_bDynamic;				//!< Specifies whether the buffer use dynamic draw (per draw call update).
 
 			std::shared_ptr<float>		m_pData;				//!< Specifies host data to send to buffer, ownership is shared.
-			void *						m_pOglData;				//!< Specifies device buffer data address.
+			float *						m_pOglData;				//!< Specifies device buffer data address.
 
 
 		private:

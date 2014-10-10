@@ -175,14 +175,13 @@ void eve::ogl::Uniform::oglUpdate(void)
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, m_id);
 
-	m_pOglData = glMapBufferRange(GL_UNIFORM_BUFFER, 0, m_blockSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-	*(float*)m_pOglData = *m_pData.get();
+	m_pOglData = reinterpret_cast<float*>(glMapBufferRange(GL_UNIFORM_BUFFER, 0, m_blockSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+	memcpy(m_pOglData, m_pData.get(), m_blockSize);
 
 	glUnmapBuffer(GL_UNIFORM_BUFFER); 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	EVE_OGL_CHECK_ERROR;
-
 }
 
 //=================================================================================================
@@ -200,12 +199,14 @@ void eve::ogl::Uniform::oglRelease(void)
 void eve::ogl::Uniform::bind(void)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, m_binding, m_id);
+	EVE_OGL_CHECK_ERROR;
 }
 
 //=================================================================================================
 void eve::ogl::Uniform::unbind(void)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, m_binding, 0);
+	EVE_OGL_CHECK_ERROR;
 }
 
 

@@ -43,14 +43,14 @@ namespace eve
 	namespace ogl
 	{
 		/**
-		* \class eve::ogl::FormatFBO
+		* \class eve::ogl::FormatFbo
 		*
 		* \brief OpenGL frame buffer object format class.
 		* Used to create OpenGL frame buffer object based on properties.
 		*
 		* \note extends eve::ogl::Format
 		*/
-		class FormatFBO final
+		class FormatFbo final
 			: public eve::ogl::Format
 		{
 		public:
@@ -65,16 +65,16 @@ namespace eve
 
 		public:
 			/** \brief Class constructor. */
-			FormatFBO(void);
+			FormatFbo(void);
 			/** \brief Class destructor. */
-			virtual ~FormatFBO(void);
+			virtual ~FormatFbo(void);
 
 			/** \brief Copy constructor. */
-			FormatFBO(const eve::ogl::FormatFBO & p_other);
+			FormatFbo(const eve::ogl::FormatFbo & p_other);
 			/** \brief Assignation operator. */
-			const eve::ogl::FormatFBO & operator = (const eve::ogl::FormatFBO & p_other);
+			const eve::ogl::FormatFbo & operator = (const eve::ogl::FormatFbo & p_other);
 
-		}; // class FormatFBO
+		}; // class FormatFbo
 
 
 		/** 

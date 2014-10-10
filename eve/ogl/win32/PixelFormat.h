@@ -142,7 +142,7 @@ namespace eve
 			int32_t							m_swapInterval;			//!< Swap intarval.
 			int32_t							m_majorVersion;			//!< Requested OpenGL major version (first digit).
 			int32_t							m_minorVersion;			//!< Requested OpenGL minor version (second digit).
-			eve::ogl::PixelFormatProfile		m_profile;				//!< Requested OpenGL profile.
+			eve::ogl::PixelFormatProfile	m_profile;				//!< Requested OpenGL profile.
 
 
 			//////////////////////////////////////

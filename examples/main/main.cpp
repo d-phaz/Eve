@@ -70,7 +70,7 @@ void Example::initThreadedData(void)
 	renderer = EVE_CREATE_PTR(eve::ogl::Renderer);
 	this->registerRenderer(renderer);
 
-	eve::ogl::FormatFBO fmtFbo;
+	eve::ogl::FormatFbo fmtFbo;
 	fmtFbo.width	= 800;
 	fmtFbo.height	= 600;
 	fbo = renderer->createFBO(fmtFbo);
@@ -86,7 +86,7 @@ void Example::initThreadedData(void)
 
 void Example::releaseThreadedData(void)
 {
-	shader->requestRelease();
+	shader->requestRelease(); 
 	tex->requestRelease();
 	fbo->requestRelease();
 	this->releaseRenderer(renderer);

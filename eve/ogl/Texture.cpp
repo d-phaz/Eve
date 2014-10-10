@@ -44,6 +44,7 @@ eve::ogl::FormatTex::FormatTex(void)
 	, type(GL_UNSIGNED_BYTE)
 	, filter(GL_LINEAR)
 	, wrap(GL_CLAMP_TO_EDGE)
+	, data()
 {}
 
 //=================================================================================================
@@ -61,6 +62,7 @@ eve::ogl::FormatTex::FormatTex(const eve::ogl::FormatTex & p_other)
 	, type(p_other.type)
 	, filter(p_other.filter)
 	, wrap(p_other.wrap)
+	, data(p_other.data)
 {}
 
 //=================================================================================================
@@ -74,6 +76,7 @@ const eve::ogl::FormatTex & eve::ogl::FormatTex::operator = (const eve::ogl::For
 		this->type		= p_other.type;
 		this->filter	= p_other.filter;
 		this->wrap		= p_other.wrap;
+		this->data		= p_other.data;
 	}
 	return *this;
 }
@@ -90,7 +93,7 @@ eve::ogl::Texture::Texture(void)
 	, m_width(0)
 	, m_height(0)
 	, m_type(GL_UNSIGNED_BYTE)
-	, m_pData(0)
+	, m_pData()
 	, m_filter(GL_LINEAR)
 	, m_wrap(GL_CLAMP_TO_EDGE)
 {}
@@ -108,6 +111,7 @@ void eve::ogl::Texture::setAttributes(eve::ogl::Format * p_format)
 	m_type			= format->type;
 	m_filter		= format->filter;
 	m_wrap			= format->wrap;
+	m_pData			= format->data;
 }
 
 

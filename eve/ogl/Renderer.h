@@ -144,8 +144,8 @@ namespace eve
 		public:
 			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
 			eve::ogl::Texture * createTexture(eve::ogl::FormatTex & p_format);
-			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFBO. */
-			eve::ogl::Fbo *		createFBO(eve::ogl::FormatFBO & p_format);
+			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFbo. */
+			eve::ogl::Fbo *		createFBO(eve::ogl::FormatFbo & p_format);
 			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
 			eve::ogl::Shader *	createShader(eve::ogl::FormatShader & p_format);
 			/** \brief Create and return new eve::ogl::Uniform pointer based on eve::ogl::FormatUniform. */

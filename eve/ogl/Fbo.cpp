@@ -34,7 +34,7 @@
 
 
 //=================================================================================================
-eve::ogl::FormatFBO::FormatFBO(void)
+eve::ogl::FormatFbo::FormatFbo(void)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
@@ -47,11 +47,11 @@ eve::ogl::FormatFBO::FormatFBO(void)
 {}
 
 //=================================================================================================
-eve::ogl::FormatFBO::~FormatFBO(void)
+eve::ogl::FormatFbo::~FormatFbo(void)
 {}
 
 //=================================================================================================
-eve::ogl::FormatFBO::FormatFBO(const eve::ogl::FormatFBO & p_other)
+eve::ogl::FormatFbo::FormatFbo(const eve::ogl::FormatFbo & p_other)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
@@ -64,7 +64,7 @@ eve::ogl::FormatFBO::FormatFBO(const eve::ogl::FormatFBO & p_other)
 {}
 
 //=================================================================================================
-const eve::ogl::FormatFBO & eve::ogl::FormatFBO::operator = (const eve::ogl::FormatFBO & p_other)
+const eve::ogl::FormatFbo & eve::ogl::FormatFbo::operator = (const eve::ogl::FormatFbo & p_other)
 {
 	if (this != &p_other)
 	{
@@ -103,7 +103,7 @@ eve::ogl::Fbo::Fbo(void)
 //=================================================================================================
 void eve::ogl::Fbo::setAttributes(eve::ogl::Format * p_format)
 {
-	eve::ogl::FormatFBO * format = reinterpret_cast<eve::ogl::FormatFBO*>(p_format);
+	eve::ogl::FormatFbo * format = reinterpret_cast<eve::ogl::FormatFbo*>(p_format);
 
 	m_width				= format->width;
 	m_height			= format->height;

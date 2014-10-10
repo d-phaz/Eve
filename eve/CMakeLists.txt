@@ -141,7 +141,9 @@ set( OPENGL_SRCS
 	 ogl/Texture.cpp 
 	 ogl/Texture.h 
 	 ogl/Uniform.cpp 
-	 ogl/Uniform.h )
+	 ogl/Uniform.h 
+	 ogl/Vao.cpp 
+	 ogl/Vao.h )
 	 
 set( OPENGL_SRCS 
 	 ${OPENGL_SRCS}
