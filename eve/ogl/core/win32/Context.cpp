@@ -30,10 +30,10 @@
 */
 
 // Main class header
-#include "eve/ogl/win32/Context.h"
+#include "eve/ogl/core/win32/Context.h"
 
 #ifndef __EVE_OPENGL_DEBUG_H__
-#include "eve/ogl/Debug.h"
+#include "eve/ogl/core/Debug.h"
 #endif
 
 #ifndef __EVE_SYSTEM_WINDOW_H__

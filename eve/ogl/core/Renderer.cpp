@@ -30,14 +30,14 @@
 */
 
 // Main header.
-#include "eve/ogl/Renderer.h"
+#include "eve/ogl/core/Renderer.h"
 
 #ifndef __EVE_OPENGL_CONTEXT_H__
-#include "eve/ogl/win32/Context.h"
+#include "eve/ogl/core/win32/Context.h"
 #endif
 
 #ifndef __EVE_OPENGL_OBJECT_H__
-#include "eve/ogl/Object.h"
+#include "eve/ogl/core/Object.h"
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
@@ -205,27 +205,33 @@ void eve::ogl::Renderer::cb_display(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-eve::ogl::Texture * eve::ogl::Renderer::createTexture(eve::ogl::FormatTex & p_format)
+eve::ogl::Texture * eve::ogl::Renderer::create(eve::ogl::FormatTex & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Texture, p_format, this);
 }
 
 //=================================================================================================
-eve::ogl::Fbo * eve::ogl::Renderer::createFBO(eve::ogl::FormatFbo & p_format)
+eve::ogl::Fbo * eve::ogl::Renderer::create(eve::ogl::FormatFbo & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Fbo, p_format, this);
 }
 
 //=================================================================================================
-eve::ogl::Shader * eve::ogl::Renderer::createShader(eve::ogl::FormatShader & p_format)
+eve::ogl::Shader * eve::ogl::Renderer::create(eve::ogl::FormatShader & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Shader, p_format, this);
 }
 
 //=================================================================================================
-eve::ogl::Uniform * eve::ogl::Renderer::createUniform(eve::ogl::FormatUniform & p_format)
+eve::ogl::Uniform * eve::ogl::Renderer::create(eve::ogl::FormatUniform & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Uniform, p_format, this);
+}
+
+//=================================================================================================
+eve::ogl::Vao * eve::ogl::Renderer::create(eve::ogl::FormatVao & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Vao, p_format, this);
 }
 
 

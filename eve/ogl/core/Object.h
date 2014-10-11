@@ -46,7 +46,7 @@
 #endif
 
 #ifndef __EVE_OPENGL_DEBUG_H__
-#include "eve/ogl/Debug.h"
+#include "eve/ogl/core/Debug.h"
 #endif
 
 

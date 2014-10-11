@@ -30,10 +30,10 @@
 */
 
 // Main header
-#include "eve/ogl/Object.h"
+#include "eve/ogl/core/Object.h"
 
 #ifndef __EVE_OPENGL_RENDER_H__
-#include "eve/ogl/Renderer.h"
+#include "eve/ogl/core/Renderer.h"
 #endif
 
 

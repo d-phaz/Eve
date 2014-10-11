@@ -46,7 +46,7 @@
 #endif
 
 #ifndef __EVE_OPENGL_PIXEL_FORMAT_H__
-#include "eve/ogl/win32/PixelFormat.h"
+#include "eve/ogl/core/win32/PixelFormat.h"
 #endif
 
 

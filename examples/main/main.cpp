@@ -30,7 +30,7 @@
 */
 
 #include "eve/app/App.h"
-#include "eve/ogl/Renderer.h"
+#include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 
 
@@ -73,15 +73,15 @@ void Example::initThreadedData(void)
 	eve::ogl::FormatFbo fmtFbo;
 	fmtFbo.width	= 800;
 	fmtFbo.height	= 600;
-	fbo = renderer->createFBO(fmtFbo);
+	fbo = renderer->create(fmtFbo);
 
 	eve::ogl::FormatTex fmtTex;
 	fmtTex.width	= 800;
 	fmtTex.height	= 600;
-	tex = renderer->createTexture(fmtTex);
+	tex = renderer->create(fmtTex);
 
 	eve::ogl::FormatShader fmtShader;
-	shader = renderer->createShader(fmtShader);
+	shader = renderer->create(fmtShader);
 }
 
 void Example::releaseThreadedData(void)

@@ -34,7 +34,7 @@
 #define __EVE_OPENGL_FBO_H__
 
 #ifndef __EVE_OPENGL_OBJECT_H__
-#include "eve/ogl/Object.h"
+#include "eve/ogl/core/Object.h"
 #endif
 
 

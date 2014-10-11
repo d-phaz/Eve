@@ -33,7 +33,7 @@
 #include "eve/app/App.h"
 
 #ifndef __EVE_OPENGL_CONTEXT_H__
-#include "eve/ogl/win32/Context.h"
+#include "eve/ogl/core/win32/Context.h"
 #endif
 
 

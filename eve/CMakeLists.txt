@@ -127,30 +127,30 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 # OpenGL.
 #################################################
 set( OPENGL_SRCS
-	 ogl/Debug.cpp 
-	 ogl/Debug.h 
-	 ogl/Fbo.h 
-	 ogl/Fbo.cpp 
-	 ogl/Macro.h 
-	 ogl/Object.cpp 
-	 ogl/Object.h 
-	 ogl/Renderer.cpp 
-	 ogl/Renderer.h 
-	 ogl/Shader.cpp 
-	 ogl/Shader.h 
-	 ogl/Texture.cpp 
-	 ogl/Texture.h 
-	 ogl/Uniform.cpp 
-	 ogl/Uniform.h 
-	 ogl/Vao.cpp 
-	 ogl/Vao.h )
+	 ogl/core/Debug.cpp 
+	 ogl/core/Debug.h 
+	 ogl/core/Fbo.h 
+	 ogl/core/Fbo.cpp 
+	 ogl/core/Macro.h 
+	 ogl/core/Object.cpp 
+	 ogl/core/Object.h 
+	 ogl/core/Renderer.cpp 
+	 ogl/core/Renderer.h 
+	 ogl/core/Shader.cpp 
+	 ogl/core/Shader.h 
+	 ogl/core/Texture.cpp 
+	 ogl/core/Texture.h 
+	 ogl/core/Uniform.cpp 
+	 ogl/core/Uniform.h 
+	 ogl/core/Vao.cpp 
+	 ogl/core/Vao.h )
 	 
 set( OPENGL_SRCS 
 	 ${OPENGL_SRCS}
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/Context.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/win32/PixelFormat.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/Context.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/Context.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
 source_group( "OpenGL" FILES ${OPENGL_SRCS} )

@@ -30,7 +30,7 @@
 */
 
 // Main header.
-#include "eve/ogl/Debug.h"
+#include "eve/ogl/core/Debug.h"
 
 #ifndef __EVE_MESSAGING_INCLUDES_H__
 #include "eve/mess/Includes.h"

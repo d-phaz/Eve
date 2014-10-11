@@ -30,11 +30,11 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_TEXTURE_H__
-#define __EVE_OPENGL_TEXTURE_H__
+#ifndef __EVE_OPENGL_SHADER_H__
+#define __EVE_OPENGL_SHADER_H__
 
 #ifndef __EVE_OPENGL_OBJECT_H__
-#include "eve/ogl/Object.h"
+#include "eve/ogl/core/Object.h"
 #endif
 
 
@@ -42,60 +42,81 @@ namespace eve
 {
 	namespace ogl
 	{
+		/** 
+		* \def eve::ogl::PipelineType
+		* \brief Defines shader pipeline types.
+		*/
+		enum PipelineType
+		{
+			shader_Unknown,
+			shader_Pixel,			//!< GL_VERTEX_SHADER | GL_FRAGMENT_SHADER
+			shader_Geometry,		//!< GL_VERTEX_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
+			shader_Tessellation		//!< GL_VERTEX_SHADER | GL_TESS_CONTROL_SHADER | GL_TESS_EVALUATION_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
+		};
+
 		/**
-		* \class eve::ogl::FormatTex
+		* \def eve::ogl::ProgramType
+		* \brief convenience enumeration to access in array program id.
+		*/
+		enum ProgramType
+		{
+			prgm_Vertex,
+			prgm_Control,
+			prgm_Evaluation,
+			prgm_Geometry,
+			prgm_Fragment,
+
+			prgm_Max
+		};
+
+
+		/**
+		* \class eve::ogl::FormatShader
 		*
-		* \brief OpenGL texture format class.
-		* Used to create OpenGL texture based on properties.
-		*
-		* Default texture format is GL_RGBA (4 channels).
-		* Default texture data type is GL_UNSIGNED_BYTE.
-		*
-		* By default texture use LINEAR filtering and are clamped to edges on ST axes.
+		* \brief OpenGL shader format class.
+		* Used to create OpenGL shader based on properties.
 		*
 		* \note extends eve::ogl::Format
 		*/
-		class FormatTex final
+		class FormatShader final
 			: public eve::ogl::Format
 		{
 		public:
-			GLenum						format;		//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
-			GLsizei						width;		//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
-			GLsizei						height;		//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
-			GLenum						type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
-			
-			GLint						filter;		//!< Specifies the filter used to interpolate texels.
-			GLint						wrap;		//!< Specifies texture wrap mode.
-			std::shared_ptr<GLvoid>		data;		//!< Specifies a pointer to the image data in memory.
-
+			std::string					vertex;			//!< Vertex shader program source.
+			std::string					control;		//!< Control shader program source.
+			std::string					eval;			//!< Evaluation shader program source.
+			std::string					geom;			//!< Geometry shader program source.
+			std::string					fragment;		//!< Fragment shader program source.
 
 		public:
 			/** \brief Class constructor. */
-			FormatTex(void);
+			FormatShader(void);
 			/** \brief Class destructor. */
-			virtual ~FormatTex(void);
+			virtual ~FormatShader(void);
 
 			/** \brief Copy constructor. */
-			FormatTex(const eve::ogl::FormatTex & p_other);
+			FormatShader(const eve::ogl::FormatShader & p_other);
 			/** \brief Assignation operator. */
-			const eve::ogl::FormatTex & operator = (const eve::ogl::FormatTex & p_other);
+			const eve::ogl::FormatShader & operator = (const eve::ogl::FormatShader & p_other);
 
-		}; // class FormatTex
+		}; // class FormatShader
 
 
 		/** 
-		* \class eve::ogl::Texture
+		* \class eve::ogl::Shader
 		*
-		* \brief Create and manage OpenGL TexImage2D object.
+		* \brief Create and manage OpenGL shader pipeline.
 		*
-		* Default texture format is GL_RGBA (4 channels).
-		* Default texture data type is GL_UNSIGNED_BYTE.
+		* Program use multiple shader:
+		*	GL_VERTEX_SHADER | GL_FRAGMENT_SHADER
+		*	GL_VERTEX_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
+		*	GL_VERTEX_SHADER | GL_TESS_CONTROL_SHADER | GL_TESS_EVALUATION_SHADER | GL_GEOMETRY_SHADER | GL_FRAGMENT_SHADER
 		*
-		* By default texture use LINEAR filtering and are clamped to edges on ST axes.
+		* Use buffer(s) to pass uniform variables.
 		*
 		* \note extends eve::ogl::Object
 		*/
-		class Texture final
+		class Shader final
 			: public eve::ogl::Object
 		{
 
@@ -103,33 +124,32 @@ namespace eve
 			friend class eve::ogl::Renderer;
 			friend class eve::ogl::Object;
 
+
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
 
 		private:
-			GLuint						m_id;		//!< Specifies OpenGL unique texture ID.
+			GLuint						m_id;					//!< Specifies OpenGL unique shader program ID.
+			GLuint *					m_prgmId;				//!< Staged programs OpenGL ids.
 
-			GLenum						m_format;	//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
-			GLsizei						m_width;	//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
-			GLsizei						m_height;	//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
-			GLenum						m_type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
-			std::shared_ptr<GLvoid>		m_pData;	//!< Specifies a pointer to the image data in memory.
-
-			GLint						m_filter;	//!< Specifies the filter used to interpolate texels.
-			GLint						m_wrap;		//!< Specifies texture wrap mode.
+			std::string					m_vertex;				//!< Vertex shader program source.
+			std::string					m_control;				//!< Control shader program source.
+			std::string					m_eval;					//!< Evaluation shader program source.
+			std::string					m_geom;					//!< Geometry shader program source.
+			std::string					m_fragment;				//!< Fragment shader program source.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Texture);
-			EVE_PROTECT_DESTRUCTOR(Texture);
+			EVE_DISABLE_COPY(Shader);
+			EVE_PROTECT_DESTRUCTOR(Shader);
 			
 		private:
 			/** \brief Class constructor. */
-			explicit Texture(void);
+			explicit Shader(void);
 
 
 		protected:
@@ -157,33 +177,22 @@ namespace eve
 
 
 		public:
-			/** \brief Bind (activate) texture. */
+			/** \brief Bind (activate). */
 			void bind(GLenum p_index);
-			/** \brief Unbind (deactivate) texture. */
+			/** \brief Unbind (deactivate). */
 			static void unbind(GLenum p_index);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////
-
+			
 		public:
-			/** \brief Set texture data from host memory pointer. */
-			void setData(std::shared_ptr<GLvoid> p_pData);
-
-
-		public:
-			/** \brief Get OpenGL texture unique id. (pure virtual) */
+			/** \brief Get OpenGL shader unique id. (pure virtual) */
 			virtual const GLuint getId(void) const override;
 
-
-		public:
-			/** \brief Get FBO size. */
-			void getSize(uint32_t & p_width, uint32_t & p_height);
-			/** \brief Get FBO width. */
-			const uint32_t getWidth(void) const;
-			/** \brief Get FBO height. */
-			const uint32_t getHeight(void) const;
+			/** \brief Get OpenGL program id depending on target type. */
+			const GLuint getProgramId(eve::ogl::ProgramType p_type) const;
 			
 		}; // class Fbo
 
@@ -197,16 +206,9 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Texture::getId(void) const	{ return m_id; }
-
+inline const GLuint eve::ogl::Shader::getId(void) const	{ return m_id; }
 
 //=================================================================================================
-inline void eve::ogl::Texture::getSize(uint32_t & p_width, uint32_t & p_height)
-{
-	p_width  = m_width;
-	p_height = m_height;
-}
-inline const uint32_t eve::ogl::Texture::getWidth(void) const  { return m_width; }
-inline const uint32_t eve::ogl::Texture::getHeight(void) const { return m_height; }
+inline const GLuint eve::ogl::Shader::getProgramId(eve::ogl::ProgramType p_type) const { EVE_ASSERT(m_prgmId[p_type] != 0); return m_prgmId[p_type]; }
 
 #endif // __EVE_OPENGL_TEXTURE_H__

@@ -38,19 +38,23 @@
 #endif
 
 #ifndef __EVE_OPENGL_FBO_H__
-#include "eve/ogl/Fbo.h"
+#include "eve/ogl/core/Fbo.h"
 #endif
 
 #ifndef __EVE_OPENGL_TEXTURE_H__
-#include "eve/ogl/Texture.h"
+#include "eve/ogl/core/Texture.h"
 #endif
 
 #ifndef __EVE_OPENGL_SHADER_H__
-#include "eve/ogl/Shader.h"
+#include "eve/ogl/core/Shader.h"
 #endif
 
 #ifndef __EVE_OPENGL_UNIFORM_H__
-#include "eve/ogl/Uniform.h"
+#include "eve/ogl/core/Uniform.h"
+#endif
+
+#ifndef __EVE_OPENGL_VAO_H__
+#include "eve/ogl/core/Vao.h"
 #endif
 
 
@@ -134,7 +138,7 @@ namespace eve
 			virtual void cb_afterDisplay(void) override;
 
 			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) override;
+			virtual void cb_display(void) override; // = 0;
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,13 +147,15 @@ namespace eve
 
 		public:
 			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
-			eve::ogl::Texture * createTexture(eve::ogl::FormatTex & p_format);
+			eve::ogl::Texture * create(eve::ogl::FormatTex & p_format);
 			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFbo. */
-			eve::ogl::Fbo *		createFBO(eve::ogl::FormatFbo & p_format);
+			eve::ogl::Fbo *		create(eve::ogl::FormatFbo & p_format);
 			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
-			eve::ogl::Shader *	createShader(eve::ogl::FormatShader & p_format);
+			eve::ogl::Shader *	create(eve::ogl::FormatShader & p_format);
 			/** \brief Create and return new eve::ogl::Uniform pointer based on eve::ogl::FormatUniform. */
-			eve::ogl::Uniform * createUniform(eve::ogl::FormatUniform & p_format);
+			eve::ogl::Uniform * create(eve::ogl::FormatUniform & p_format);
+			/** \brief Create and return new eve::ogl::Vao pointer based on eve::ogl::FormatVao. */
+			eve::ogl::Vao *		create(eve::ogl::FormatVao & p_format);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
