@@ -133,6 +133,9 @@ void eve::ogl::Texture::release(void)
 //=================================================================================================
 void eve::ogl::Texture::oglInit(void)
 {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	EVE_OGL_CHECK_ERROR;
+
 	glGenTextures(1, &m_id);
 	glBindTexture(GL_TEXTURE_2D, m_id);
 	EVE_OGL_CHECK_ERROR;

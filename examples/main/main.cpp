@@ -97,9 +97,9 @@ void Example::releaseThreadedData(void)
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
-	EVE_LOG_INFO("Mouse down received.");
+	EVE_LOG_INFO("Mouse down received, x:%d y:%d.", p_args.x, p_args.y);
 
-	m_pWindow->toggleFullScreen();
+	//m_pWindow->toggleFullScreen();
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)

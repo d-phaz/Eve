@@ -307,10 +307,11 @@ LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	POINT pt;
-	pt.x = LOWORD(p_lParam);
-	pt.y = HIWORD(p_lParam);
-	::ScreenToClient(p_hWnd, &pt);
+	// Keep mouse tracking even if out of the window.
+	::SetCapture(p_hWnd);	
+
+	int32_t x = LOWORD(p_lParam);
+	int32_t y = HIWORD(p_lParam);
 
 	eve::sys::MouseButton btn;
 	switch (p_uMsg)
@@ -319,12 +320,12 @@ LRESULT eve::sys::MessagePump::handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM 
 	case WM_MBUTTONDOWN:		btn = eve::sys::btn_Middle;		break;
 	case WM_RBUTTONDOWN:		btn = eve::sys::btn_Right;		break;
 	case WM_XBUTTONDOWN:		btn = eve::sys::btn_X;			break;
-	case WM_MOUSEWHEEL:			btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_WheelDown : eve::sys::btn_WheelUp;	break;
+	case WM_MOUSEWHEEL:			btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_WheelDown  : eve::sys::btn_WheelUp;		break;
 	case WM_MOUSEHWHEEL:		btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_ScrollLeft : eve::sys::btn_ScrollRight;	break;
 	default:					btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseDown(btn, pt.x, pt.y);
+	m_pEvent->notifyMouseDown(btn, x, y);
 
 	return 0;
 }
@@ -332,10 +333,11 @@ LRESULT eve::sys::MessagePump::handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM 
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	POINT pt;
-	pt.x = LOWORD(p_lParam);
-	pt.y = HIWORD(p_lParam);
-	::ScreenToClient(p_hWnd, &pt);
+	// Release out of the window mouse tracking.
+	::ReleaseCapture();
+	
+	int32_t x = LOWORD(p_lParam);
+	int32_t y = HIWORD(p_lParam);
 
 	eve::sys::MouseButton btn;
 	switch (p_uMsg)
@@ -347,7 +349,7 @@ LRESULT eve::sys::MessagePump::handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 	default:				btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseUp(btn, pt.x, pt.y);
+	m_pEvent->notifyMouseUp(btn, x, y);
 
 	return 0;
 }
@@ -355,10 +357,8 @@ LRESULT eve::sys::MessagePump::handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleMouseDoubleClick(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	POINT pt;
-	pt.x = LOWORD(p_lParam);
-	pt.y = HIWORD(p_lParam);
-	::ScreenToClient(p_hWnd, &pt);
+	int32_t x = LOWORD(p_lParam);
+	int32_t y = HIWORD(p_lParam);
 
 	eve::sys::MouseButton btn;
 	switch (p_uMsg)
@@ -370,7 +370,7 @@ LRESULT eve::sys::MessagePump::handleMouseDoubleClick(HWND p_hWnd, UINT p_uMsg, 
 	default:					btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseDoubleClick(btn, pt.x, pt.y);
+	m_pEvent->notifyMouseDoubleClick(btn, x, y);
 
 	return 0;
 }
@@ -378,10 +378,8 @@ LRESULT eve::sys::MessagePump::handleMouseDoubleClick(HWND p_hWnd, UINT p_uMsg, 
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	POINT pt;
-	pt.x = LOWORD(p_lParam);
-	pt.y = HIWORD(p_lParam);
-	::ScreenToClient(p_hWnd, &pt);
+	int32_t x = LOWORD(p_lParam);
+	int32_t y = HIWORD(p_lParam);
 
 	eve::sys::MouseButton btn;
 	switch (p_wParam)
@@ -394,11 +392,11 @@ LRESULT eve::sys::MessagePump::handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARA
 
 	if (btn == eve::sys::btn_Unused)
 	{
-		m_pEvent->notifyMousePassiveMotion(pt.x, pt.y);
+		m_pEvent->notifyMousePassiveMotion(x, y);
 	}
 	else
 	{
-		m_pEvent->notifyMouseMotion(btn, pt.x, pt.y);
+		m_pEvent->notifyMouseMotion(btn, x, y);
 	}
 
 	return 0;
@@ -439,14 +437,8 @@ LRESULT eve::sys::MessagePump::handleExitSizeMove(HWND p_hWnd, UINT p_uMsg, WPAR
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleSizing(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	//RECT rect;
-	//::GetClientRect(p_hWnd, &rect);
-	//
-	//uint32_t width  = (uint32_t)(rect.right - rect.left);
-	//uint32_t height = (uint32_t)(rect.bottom - rect.top);
-	//m_pEvent->notifyWindowResize(width, height);
-
-	// Nothing to do for now.
+	// Windows system message pump sends WM_SIZE and WM_SIZING events together.
+	// WM_SIZING is invalidated and we deal with size change(s) in handleSize()
 	return TRUE;
 }
 
@@ -465,7 +457,8 @@ LRESULT eve::sys::MessagePump::handleSize(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleMoving(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	// Nothing to do for now.
+	// Windows system message pump sends WM_MOVE and WM_MOVING events together.
+	// WM_MOVING is invalidated and we deal with window move(s) in handleMove()
 	return TRUE;
 }
 
@@ -524,7 +517,7 @@ LRESULT eve::sys::MessagePump::handleDrop(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleCompacting(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	EVE_LOG_WARNING("System detected more than 12.5 percent of system time over a 30- to 60-second interval is being spent compacting memory. \nSystem memory is low.");
+	EVE_LOG_WARNING("System detected more than 12.5 percent of system time over a 30 to 60 second interval is being spent compacting memory. \nSystem memory is low.");
 	return 0;
 }
 

@@ -39,17 +39,24 @@
 #endif
 
 
-// C standard lib
-#include <cstdlib>
-// C standard definitions
-#include <cstddef>
+// C++ standard lib
+#include <stdlib.h>
+// C++ standard definitions
+#include <stddef.h>
 // standard input/output stream objects
 #include <stdio.h>
 #include <iostream>
 #include <locale>
 #include <sstream>
+#include <fstream>
 // x64 compliant integers
 #include <stdint.h>
+// math
+#include <float.h>
+#include <cmath>
+#include <climits>
+// algorithm
+#include <algorithm>
 // pointers and memory
 #include <memory>
 // assertion
@@ -64,8 +71,6 @@
 #include <vector>
 #include <map>
 #include <hash_map>
-// file handling
-#include <fstream>
 // utility
 #include <utility>
 // type utility

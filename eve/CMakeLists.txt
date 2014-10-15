@@ -99,6 +99,16 @@ set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
 source_group( "Files" FILES ${FILES_SRCS} )
 
 
+# # Math.
+# #################################################
+# set( MATH_SRCS
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/math/TMath.h 
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/math/TMath.cpp )
+
+# set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
+# source_group( "Math" FILES ${MATH_SRCS} )
+
+
 # Memory.
 #################################################
 set( MEMORY_SRCS
