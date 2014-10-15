@@ -85,7 +85,7 @@ namespace eve
 			eve::evt::MouseEvent 								m_mouseUp;				//!< Mouse button released event.
 
 			eve::evt::TEvent<eve::evt::ResizeEventArgs> 		m_windowResized;		//!< Window resized event.
-			 eve::evt::TEvent<eve::evt::MoveEventArgs> 			m_windowMoved;			//!< Window moved event.
+			eve::evt::TEvent<eve::evt::MoveEventArgs> 			m_windowMoved;			//!< Window moved event.
 			eve::evt::TEvent<void>								m_windowFocusGot;		//!< Window gain focus event.
 			eve::evt::TEvent<void>								m_windowFocusLost;		//!< Window lost focus event.
 			eve::evt::TEvent<void>								m_windowClose;			//!< Window closed event.

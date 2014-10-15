@@ -61,15 +61,6 @@ namespace eve
 
 
 
-		/** 
-		* \class eve::evt::Args
-		* \brief Empty base event argument(s) class.
-		*/
-		class Args
-		{};
-
-
-
 		///////////////////////////////////////////////////////////////////////////////////////////
 		//		FILE EVENTS
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -77,10 +68,8 @@ namespace eve
 		/**
 		* \class eve::evt::FileEventArgs
 		* \brief File drop event arguments.
-		* \note extends eve::evt::Args
 		*/
 		class FileEventArgs
-			: public eve::evt::Args
 		{
 		public:
 			int32_t						x;
@@ -134,10 +123,8 @@ namespace eve
 		/**
 		* \class eve::evt::KeyEventArgs
 		* \brief key and text input event arguments.
-		* \note extends eve::evt::Args
 		*/
 		class KeyEventArgs
-			: public eve::evt::Args
 		{
 		public:
 			uint8_t		key;
@@ -198,10 +185,8 @@ namespace eve
 		/**
 		* \class eve::evt::MouseEventArgs
 		* \brief Mouse event arguments.
-		* \note extends eve::evt::Args
 		*/
 		class MouseEventArgs
-			: public eve::evt::Args
 		{
 		public:
 			int32_t		button;
@@ -274,10 +259,8 @@ namespace eve
 		/**
 		* \class eve::evt::TouchEventArgs
 		* \brief Touch event arguments.
-		* \note extends eve::evt::Args
 		*/
 		class TouchEventArgs
-			: public eve::evt::Args
 		{
 		public:
 			enum Type
@@ -357,10 +340,8 @@ namespace eve
 		/**
 		* \class eve::evt::ResizeEventArgs
 		* \brief Window resize event arguments.
-		* \note extends eve::evt::Args
 		*/
 		class ResizeEventArgs
-			: public eve::evt::Args
 		{
 		public:
 			int32_t width;
@@ -370,10 +351,8 @@ namespace eve
 		/**
 		* \class eve::evt::MoveEventArgs
 		* \brief Window move event arguments.
-		* \note extends eve::evt::Args
 		*/
 		class MoveEventArgs
-			: public eve::evt::Args
 		{
 		public:
 			int32_t x;
