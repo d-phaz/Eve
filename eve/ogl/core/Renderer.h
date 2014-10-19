@@ -81,7 +81,7 @@ namespace eve
 			friend class eve::ogl::Object;
 
 			//////////////////////////////////////
-			//				METHOD				//
+			//				DATA				//
 			//////////////////////////////////////
 
 		protected:

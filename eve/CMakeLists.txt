@@ -235,6 +235,16 @@ set( THREADING_SRCS
 set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
 source_group( "Threading" FILES ${THREADING_SRCS} )
 
+
+# Time.
+#################################################
+set( TIME_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${TIME_SRCS} )
+source_group( "Time" FILES ${TIME_SRCS} )
+
 	
 # Visual Leak Detector.
 #################################################
