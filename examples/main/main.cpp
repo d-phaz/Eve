@@ -32,6 +32,7 @@
 #include "eve/app/App.h"
 #include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
+#include "eve/time/Absolute.h"
 
 
 class Example final
@@ -98,8 +99,10 @@ void Example::releaseThreadedData(void)
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
 	EVE_LOG_INFO("Mouse down received, x:%d y:%d.", p_args.x, p_args.y);
+	EVE_LOG_TIME;
 
 	//m_pWindow->toggleFullScreen();
+
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)

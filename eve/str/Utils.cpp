@@ -29,77 +29,46 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+// Main header
+#include "eve/str/Utils.h"
 
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
+//=================================================================================================
+std::string eve::str::to_string(const wchar_t * p_txt)
+{
+	const size_t size = wcslen(p_txt) + 1;
+	char * ch = new char[size];
+	wcstombs(ch, p_txt, size);
+
+	std::string ret(ch);
+	delete[] ch;
+
+	return ret;
+}
+
+//=================================================================================================
+std::string eve::str::to_string(const std::wstring & p_txt)
+{
+	return eve::str::to_string(p_txt.c_str());
+}
 
 
-// C++ standard lib
-#include <stdlib.h>
-// C++ standard definitions
-#include <stddef.h>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-#include <fstream>
-// x64 compliant integers
-#include <stdint.h>
-// math
-#include <float.h>
-#include <cmath>
-#include <climits>
-// algorithm
-#include <algorithm>
-// pointers and memory
-#include <memory>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// container types
-#include <set>
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-#include <hash_map>
-// utility
-#include <utility>
-// type utility
-#include <type_traits>
-// time
-#include <sys\timeb.h>
-#if defined (EVE_OS_DARWIN)
-#include <mach/mach_time.h>
-#endif
 
+//=================================================================================================
+std::wstring eve::str::to_wstring(const char * p_txt)
+{
+	const size_t size = strlen(p_txt) + 1;
+	wchar_t * ch = new wchar_t[size];
+	mbstowcs(ch, p_txt, size);
 
-#if defined(EVE_OS_WIN)
+	std::wstring ret(ch);
+	delete[] ch;
 
-	#include <Windows.h>
-	#include <Shtypes.h>
+	return ret;
+}
 
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_EXTERNAL_H__
-#include "eve/generated/External.h"
-#endif
-
-#ifndef __EVE_VERSION_H__
-#include "eve/generated/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
-#endif // __EVE_CORE_INCLUDES_H__
+//=================================================================================================
+std::wstring eve::str::to_wstring(const std::string & p_txt)
+{
+	return eve::str::to_wstring(p_txt.c_str());
+}

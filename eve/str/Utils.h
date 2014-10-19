@@ -30,76 +30,59 @@
 */
 
 #pragma once
+#ifndef __EVE_STRING_UTILS_H__
+#define __EVE_STRING_UTILS_H__
+
 #ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
 
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
 #endif
 
 
-// C++ standard lib
-#include <stdlib.h>
-// C++ standard definitions
-#include <stddef.h>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-#include <fstream>
-// x64 compliant integers
-#include <stdint.h>
-// math
-#include <float.h>
-#include <cmath>
-#include <climits>
-// algorithm
-#include <algorithm>
-// pointers and memory
-#include <memory>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// container types
-#include <set>
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-#include <hash_map>
-// utility
-#include <utility>
-// type utility
-#include <type_traits>
-// time
-#include <sys\timeb.h>
-#if defined (EVE_OS_DARWIN)
-#include <mach/mach_time.h>
-#endif
+namespace eve
+{
+	namespace str
+	{
+		/** \brief Convert Unicode wchar_t to non-Unicode standard string. */
+		std::string to_string(const wchar_t * p_txt);
+		/** \brief Convert Unicode std::wstring to non-Unicode standard string. */
+		std::string to_string(const std::wstring & p_txt);
 
 
-#if defined(EVE_OS_WIN)
-
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-#endif // defined(EVE_OS_WIN)
+		/** \brief Convert non-Unicode char to Unicode standard wstring. */
+		std::wstring to_wstring(const char * p_txt);
+		/** \brief Convert non-Unicode std::string to Unicode standard wstring. */
+		std::wstring to_wstring(const std::string & p_txt);
 
 
-#ifndef __EVE_EXTERNAL_H__
-#include "eve/generated/External.h"
-#endif
+		/** \brief Convert numerical value to std::string. */
+		template<typename T>
+		std::string num_to_string(T p_value)
+		{
+			std::ostringstream ost;
+			ost << p_value;
 
-#ifndef __EVE_VERSION_H__
-#include "eve/generated/Version.h"
-#endif
+			return ost.str();
+		}
+		/** \brief Convert numerical value to std::wstring. */
+		template<typename T>
+		std::wstring num_to_wstring(T p_value)
+		{
+			std::wostringstream ost;
+			ost << p_value;
 
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
+			return ost.str();
+		}
 
-#endif // __EVE_CORE_INCLUDES_H__
+	} // namespace time
+
+} // namespace eve
+
+#endif // __EVE_TIME_UTILS_H__

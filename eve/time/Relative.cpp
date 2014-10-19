@@ -67,76 +67,27 @@ eve::time::Relative & eve::time::Relative::operator = (const eve::time::Relative
 
 
 //=================================================================================================
-eve::time::Relative eve::time::Relative::operator += (eve::time::Relative p_timeToAdd) throw()
-{ 
-	m_seconds += p_timeToAdd.m_seconds;
-	return *this; 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::operator -= (eve::time::Relative p_timeToSubtract) throw()
-{ 
-	m_seconds -= p_timeToSubtract.m_seconds;
-	return *this; 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::operator += (const double p_secondsToAdd) throw()
-{ 
-	m_seconds += p_secondsToAdd;
-	return *this; 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::operator -= (const double p_secondsToSubtract) throw()
-{ 
-	m_seconds -= p_secondsToSubtract;
-	return *this; 
-}
+eve::time::Relative eve::time::Relative::create_from_milliseconds	(const int32_t p_milliseconds)	throw() { return eve::time::Relative(p_milliseconds * 0.001);				}
+eve::time::Relative eve::time::Relative::create_from_milliseconds	(const int64_t p_milliseconds)	throw() { return eve::time::Relative(p_milliseconds * 0.001);				}
+eve::time::Relative eve::time::Relative::create_from_seconds		(double p_seconds)				throw() { return eve::time::Relative(p_seconds);							}
+eve::time::Relative eve::time::Relative::create_from_minutes		(const double p_minutes)		throw() { return eve::time::Relative(p_minutes * 60.0);						}
+eve::time::Relative eve::time::Relative::create_from_hours			(const double p_hours)			throw() { return eve::time::Relative(p_hours * (60.0 * 60.0));				}
+eve::time::Relative eve::time::Relative::create_from_days			(const double p_days)			throw() { return eve::time::Relative(p_days  * (60.0 * 60.0 * 24.0));		}
+eve::time::Relative eve::time::Relative::create_from_weeks			(const double p_weeks)			throw() { return eve::time::Relative(p_weeks * (60.0 * 60.0 * 24.0 * 7.0)); }
 
 
 
 //=================================================================================================
-eve::time::Relative eve::time::Relative::fromMilliseconds(const int32_t p_milliseconds) throw()
-{ 
-	return eve::time::Relative(p_milliseconds * 0.001);
-}
+eve::time::Relative eve::time::Relative::operator += (const eve::time::Relative & p_time) throw() { m_seconds += p_time.m_seconds; return *this; }
+eve::time::Relative eve::time::Relative::operator -= (const eve::time::Relative & p_time) throw() { m_seconds -= p_time.m_seconds; return *this; }
+eve::time::Relative eve::time::Relative::operator *= (const eve::time::Relative & p_time) throw() { m_seconds *= p_time.m_seconds; return *this; }
+eve::time::Relative eve::time::Relative::operator /= (const eve::time::Relative & p_time) throw() { m_seconds /= p_time.m_seconds; return *this; }
 
 //=================================================================================================
-eve::time::Relative eve::time::Relative::fromMilliseconds(const int64_t p_milliseconds) throw()
-{ 
-	return eve::time::Relative(p_milliseconds * 0.001); 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::fromSeconds(double p_seconds) throw()
-{ 
-	return eve::time::Relative(p_seconds); 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::fromMinutes(const double p_minutes) throw()
-{ 
-	return eve::time::Relative(p_minutes * 60.0); 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::fromHours(const double p_hours) throw()
-{ 
-	return eve::time::Relative(p_hours * (60.0 * 60.0)); 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::fromDays(const double p_days) throw()
-{ 
-	return eve::time::Relative(p_days  * (60.0 * 60.0 * 24.0)); 
-}
-
-//=================================================================================================
-eve::time::Relative eve::time::Relative::fromWeeks(const double p_weeks) throw()
-{ 
-	return eve::time::Relative(p_weeks * (60.0 * 60.0 * 24.0 * 7.0)); 
-}
+eve::time::Relative eve::time::Relative::operator += (const double p_seconds) throw() {	m_seconds += p_seconds; return *this; }
+eve::time::Relative eve::time::Relative::operator -= (const double p_seconds) throw() { m_seconds -= p_seconds; return *this; }
+eve::time::Relative eve::time::Relative::operator *= (const double p_seconds) throw() { m_seconds *= p_seconds; return *this; }
+eve::time::Relative eve::time::Relative::operator /= (const double p_seconds) throw() { m_seconds /= p_seconds; return *this; }
 
 
 
@@ -148,7 +99,7 @@ static inline void translate_time_field(std::wstring & p_result, int32_t p_n, co
 }
 
 //=================================================================================================
-std::wstring eve::time::Relative::getOutput(const std::wstring & p_retZero) const
+std::wstring eve::time::Relative::formatted(const std::wstring & p_retZero) const
 {
 	if (m_seconds < 0.001 && m_seconds > -0.001)
 		return p_retZero;

@@ -166,6 +166,16 @@ set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
 source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 
 
+# String.
+#################################################
+set( STRING_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/str/Utils.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/str/Utils.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${STRING_SRCS} )
+source_group( "String" FILES ${STRING_SRCS} )
+
+
 # System.
 #################################################
 set( SYSTEM_SRCS
@@ -239,8 +249,12 @@ source_group( "Threading" FILES ${THREADING_SRCS} )
 # Time.
 #################################################
 set( TIME_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${TIME_SRCS} )
 source_group( "Time" FILES ${TIME_SRCS} )

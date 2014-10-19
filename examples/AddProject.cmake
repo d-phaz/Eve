@@ -51,18 +51,20 @@ macro( add_project PROJECT_NAME_IN )
 	include_directories( ${BASE_SOURCE_PATH}/external/include )	
 	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
 
-	# Windows resources file.
+	# Create executable
+	set( exe_name "${PROJECT_NAME}_exe" )
+	
 	if( WIN32 )
+		if( OPTION_BUILD_SECURE_SCL )
+			add_definitions( -D_SECURE_SCL=0 -D_HAS_ITERATOR_DEBUGGING=0 )
+		endif()
+	
 		# Generate rc files
 		configure_file( ${BASE_SOURCE_PATH}/${PRODUCT_PRODUCT_NAME}/${PRODUCT_PRODUCT_NAME}.rc.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc @ONLY )
 		# Set properties to generated files
 		set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc PROPERTIES GENERATED TRUE )	
 		set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc )
-	endif()
-
-	# Create executable
-	set( exe_name "${PROJECT_NAME}_exe" )
-	if( WIN32 )
+		
 		add_executable( ${exe_name} WIN32 ${SOURCE_FILES} )
 	endif()
 

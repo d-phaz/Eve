@@ -54,9 +54,8 @@ namespace eve
 		/** 
 		* \class eve::time::Relative
 		*
-		* \brief A relative measure of time. 
-		* The time is stored as a number of seconds, at double-precision floating
-		* point accuracy, and may be positive or negative.
+		* \brief A relative date and time stored as a number of seconds, at double-precision floating point accuracy.
+		* May be positive or negative.
 		*/
 		class Relative
 		{
@@ -96,59 +95,40 @@ namespace eve
 
 
 		public:
+			/** \brief Creates a new Relative object representing a number of milliseconds. */
+			static Relative create_from_milliseconds(int32_t p_milliseconds) throw();
+			/** \brief Creates a new Relative object representing a number of milliseconds. */
+			static Relative create_from_milliseconds(int64_t p_milliseconds) throw();
+			/** \brief Creates a new Relative object representing a number of seconds. */
+			static Relative create_from_seconds(double p_seconds) throw();
+			/** \brief Creates a new Relative object representing a number of minutes. */
+			static Relative create_from_minutes(double p_minutes) throw();
+			/** \brief Creates a new Relative object representing a number of hours. */
+			static Relative create_from_hours(double p_hours) throw();
+			/** \brief Creates a new Relative object representing a number of days. */
+			static Relative create_from_days(double p_days) throw();
+			/** \brief Creates a new Relative object representing a number of weeks. */
+			static Relative create_from_weeks(double p_weeks) throw();
+
+
+		public:
 			/** \brief Adds another Relative to this one. */
-			Relative operator += (Relative p_timeToAdd) throw();
+			Relative operator += (const Relative & p_time) throw();
 			/** \brief Subtracts another Relative from this one. */
-			Relative operator -= (Relative p_timeToSubtract) throw();
+			Relative operator -= (const Relative & p_time) throw();
+			/** \brief Multiply time. */
+			Relative operator *= (const Relative & p_time) throw();
+			/** \brief Divide time. */
+			Relative operator /= (const Relative & p_time) throw();
 
 			/** \brief Adds a number of seconds to this time. */
-			Relative operator += (double p_secondsToAdd) throw();
+			Relative operator += (double p_seconds) throw();
 			/** \brief Subtracts a number of seconds from this time. */
-			Relative operator -= (double p_secondsToSubtract) throw();
-
-
-		public:
-			/** \brief Creates a new Relative object representing a number of milliseconds. */
-			static Relative fromMilliseconds(int32_t p_milliseconds) throw();
-			/** \brief Creates a new Relative object representing a number of milliseconds. */
-			static Relative fromMilliseconds(int64_t p_milliseconds) throw();
-			/** \brief Creates a new Relative object representing a number of seconds. */
-			static Relative fromSeconds(double p_seconds) throw();
-			/** \brief Creates a new Relative object representing a number of minutes. */
-			static Relative fromMinutes(double p_minutes) throw();
-			/** \brief Creates a new Relative object representing a number of hours. */
-			static Relative fromHours(double p_hours) throw();
-			/** \brief Creates a new Relative object representing a number of days. */
-			static Relative fromDays(double p_days) throw();
-			/** \brief Creates a new Relative object representing a number of weeks. */
-			static Relative fromWeeks(double p_weeks) throw();
-
-
-			///////////////////////////////////////////////////////////////////////////////////////////////
-			//		GET / SET
-			///////////////////////////////////////////////////////////////////////////////////////////////
-
-		public:
-			/** \brief Returns the number of milliseconds this time represents. */
-			int64_t getMilliseconds(void) const throw();
-
-			/** \brief Returns the number of milliseconds this time represents. */
-			int32_t getMillisecondsShort(void) const throw();
-
-			/** \brief Returns the number of seconds this time represents. */
-			double getSeconds(void) const throw(){ return m_seconds; }
-
-			/** \brief Returns the number of minutes this time represents. */
-			double getMinutes(void) const throw();
-
-			/** \brief Returns the number of hours this time represents. */
-			double getHours(void) const throw();
-
-			/** \brief Returns the number of days this time represents. */
-			double getDays(void) const throw();
-
-			/** \brief Returns the number of weeks this time represents. */
-			double getWeeks(void) const throw();
+			Relative operator -= (double p_seconds) throw();
+			/** \brief Multiply time. */
+			Relative operator *= (double p_seconds) throw();
+			/** \brief Divide time. */
+			Relative operator /= (double p_seconds) throw();
 
 
 		public:
@@ -166,7 +146,28 @@ namespace eve
 			* length is zero. Depending on your application you might want to use this
 			* to return something more relevant like "empty" or "0 secs", etc.
 			*/
-			std::wstring getOutput(const std::wstring & p_retZero = EVE_TXT("0")) const;
+			std::wstring formatted(const std::wstring & p_retZero = EVE_TXT("0")) const;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Returns the number of milliseconds this time represents. */
+			int64_t getMilliseconds(void) const throw();
+			/** \brief Returns the number of milliseconds this time represents. */
+			int32_t getMillisecondsShort(void) const throw();
+			/** \brief Returns the number of seconds this time represents. */
+			double getSeconds(void) const throw();
+			/** \brief Returns the number of minutes this time represents. */
+			double getMinutes(void) const throw();
+			/** \brief Returns the number of hours this time represents. */
+			double getHours(void) const throw();
+			/** \brief Returns the number of days this time represents. */
+			double getDays(void) const throw();
+			/** \brief Returns the number of weeks this time represents. */
+			double getWeeks(void) const throw();
 
 		}; // class Relative
 
@@ -175,34 +176,65 @@ namespace eve
 } // namespace eve
 
 
-//==============================================================================
+//=================================================================================================
 inline int64_t eve::time::Relative::getMilliseconds(void) const throw()			{ return static_cast<int64_t>(m_seconds * 1000.0);	}
 inline int32_t eve::time::Relative::getMillisecondsShort(void) const throw()	{ return static_cast<int32_t>(m_seconds * 1000.0);	}
-inline double eve::time::Relative::getMinutes(void) const throw()				{ return m_seconds * m_mult_minute;					}
-inline double eve::time::Relative::getHours(void) const throw()					{ return m_seconds * m_mult_hours;					}
-inline double eve::time::Relative::getDays(void) const throw()					{ return m_seconds * m_mult_days;					}
-inline double eve::time::Relative::getWeeks(void) const throw()					{ return m_seconds * m_mult_weeks;					}
+inline double  eve::time::Relative::getSeconds(void) const throw()				{ return m_seconds;									}
+inline double  eve::time::Relative::getMinutes(void) const throw()				{ return m_seconds * m_mult_minute;					}
+inline double  eve::time::Relative::getHours(void) const throw()				{ return m_seconds * m_mult_hours;					}
+inline double  eve::time::Relative::getDays(void) const throw()					{ return m_seconds * m_mult_days;					}
+inline double  eve::time::Relative::getWeeks(void) const throw()				{ return m_seconds * m_mult_weeks;					}
 
 
 
-//==============================================================================
+//=================================================================================================
 /** \brief Compares two eve::time::Relative. */
-inline bool operator == (eve::time::Relative t1, eve::time::Relative t2) throw()	{ return t1.getSeconds() == t2.getSeconds(); }
+inline bool operator == (const eve::time::Relative & t1, const eve::time::Relative & t2) throw()	{ return t1.getSeconds() == t2.getSeconds(); }
 /** \brief Compares two eve::time::Relative. */
-inline bool operator != (eve::time::Relative t1, eve::time::Relative t2) throw()	{ return t1.getSeconds() != t2.getSeconds(); }
+inline bool operator != (const eve::time::Relative & t1, const eve::time::Relative & t2) throw()	{ return t1.getSeconds() != t2.getSeconds(); }
 /** \brief Compares two eve::time::Relative. */
-inline bool operator >  (eve::time::Relative t1, eve::time::Relative t2) throw()	{ return t1.getSeconds() >  t2.getSeconds(); }
+inline bool operator >  (const eve::time::Relative & t1, const eve::time::Relative & t2) throw()	{ return t1.getSeconds() >  t2.getSeconds(); }
 /** \brief Compares two eve::time::Relative. */
-inline bool operator <  (eve::time::Relative t1, eve::time::Relative t2) throw()	{ return t1.getSeconds() <  t2.getSeconds(); }
+inline bool operator <  (const eve::time::Relative & t1, const eve::time::Relative & t2) throw()	{ return t1.getSeconds() <  t2.getSeconds(); }
 /** \brief Compares two eve::time::Relative. */
-inline bool operator >= (eve::time::Relative t1, eve::time::Relative t2) throw()	{ return t1.getSeconds() >= t2.getSeconds(); }
+inline bool operator >= (const eve::time::Relative & t1, const eve::time::Relative & t2) throw()	{ return t1.getSeconds() >= t2.getSeconds(); }
 /** \brief Compares two eve::time::Relative. */
-inline bool operator <= (eve::time::Relative t1, eve::time::Relative t2) throw()	{ return t1.getSeconds() <= t2.getSeconds(); }
+inline bool operator <= (const eve::time::Relative & t1, const eve::time::Relative & t2) throw()	{ return t1.getSeconds() <= t2.getSeconds(); }
 
-//==============================================================================
+//=================================================================================================
+/** \brief Compares eve::time::Relative to double (seconds). */
+inline bool operator == (const eve::time::Relative & t1, double p_seconds) throw()	{ return t1.getSeconds() == p_seconds; }
+/** \brief Compares eve::time::Relative to double (seconds). */
+inline bool operator != (const eve::time::Relative & t1, double p_seconds) throw()	{ return t1.getSeconds() != p_seconds; }
+/** \brief Compares eve::time::Relative to double (seconds). */
+inline bool operator >  (const eve::time::Relative & t1, double p_seconds) throw()	{ return t1.getSeconds() >  p_seconds; }
+/** \brief Compares eve::time::Relative to double (seconds). */
+inline bool operator <  (const eve::time::Relative & t1, double p_seconds) throw()	{ return t1.getSeconds() <  p_seconds; }
+/** \brief Compares eve::time::Relative to double (seconds). */
+inline bool operator >= (const eve::time::Relative & t1, double p_seconds) throw()	{ return t1.getSeconds() >= p_seconds; }
+/** \brief Compares eve::time::Relative to double (seconds). */
+inline bool operator <= (const eve::time::Relative & t1, double p_seconds) throw()	{ return t1.getSeconds() <= p_seconds; }
+
+
+
+//=================================================================================================
 /** \brief Adds two eve::time::Relative together. */
-inline eve::time::Relative  operator + (eve::time::Relative t1, eve::time::Relative t2) throw()		{ return t1 += t2; }
+inline eve::time::Relative  operator + (eve::time::Relative & t1, eve::time::Relative & t2) throw()		{ return t1 += t2; }
 /** \brief Subtracts two eve::time::Relative. */
-inline eve::time::Relative  operator - (eve::time::Relative t1, eve::time::Relative t2) throw()		{ return t1 -= t2; }
+inline eve::time::Relative  operator - (eve::time::Relative & t1, eve::time::Relative & t2) throw()		{ return t1 -= t2; }
+/** \brief Multiply two eve::time::Relative. */
+inline eve::time::Relative  operator * (eve::time::Relative & t1, eve::time::Relative & t2) throw()		{ return t1 *= t2; }
+/** \brief Divide two eve::time::Relative. */
+inline eve::time::Relative  operator / (eve::time::Relative & t1, eve::time::Relative & t2) throw()		{ return t1 /= t2; }
 
-#endif //__EVE_TIME_RELATIVE_H__
+//=================================================================================================
+/** \brief Adds double (seconds) to eve::time::Relative. */
+inline eve::time::Relative  operator + (eve::time::Relative & t1, double p_seconds) throw()		{ return t1 += p_seconds; }
+/** \brief Subtracts double (seconds) from eve::time::Relative. */
+inline eve::time::Relative  operator - (eve::time::Relative & t1, double p_seconds) throw()		{ return t1 -= p_seconds; }
+/** \brief Multiply eve::time::Relative by double (seconds). */
+inline eve::time::Relative  operator * (eve::time::Relative & t1, double p_seconds) throw()		{ return t1 *= p_seconds; }
+/** \brief Divide eve::time::Relative by double (seconds). */
+inline eve::time::Relative  operator / (eve::time::Relative & t1, double p_seconds) throw()		{ return t1 /= p_seconds; }
+
+#endif // __EVE_TIME_RELATIVE_H__

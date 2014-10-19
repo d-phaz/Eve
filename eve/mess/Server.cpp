@@ -68,6 +68,8 @@ static wchar_t * get_current_date(void)
 }
 
 
+
+//=================================================================================================
 eve::mess::Server *		eve::mess::Server::m_p_server	= nullptr;
 eve::thr::SpinLock *	eve::mess::Server::m_p_mutex	= nullptr;
 
