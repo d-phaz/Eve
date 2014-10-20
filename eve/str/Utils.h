@@ -81,7 +81,7 @@ namespace eve
 			return ost.str();
 		}
 
-	} // namespace time
+	} // namespace str
 
 } // namespace eve
 

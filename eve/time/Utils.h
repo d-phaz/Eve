@@ -37,14 +37,6 @@
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
-
-#ifndef __EVE_MESSAGING_INCLUDES_H__
-#include "eve/mess/Includes.h"
-#endif
-
 
 namespace eve
 {
@@ -106,80 +98,6 @@ namespace eve
 		*	%%  is replaced by %.
 		*/
 		std::wstring formatted(const std::wstring & p_format, const struct tm * const tm);
-
-
-
-// 		//==============================================================================
-// 		// High-resolution timers..
-// 
-// 		/**
-// 		* \brief Returns the current high-resolution counter's tick-count.
-// 		* This is a similar to getMillisecondCounter(), but with a higher resolution.
-// 		*/
-// 		static int64_t getHighResolutionTicks(void) throw();
-// 
-// 		/** Returns the resolution of the high-resolution counter in ticks per second.
-// 
-// 		@see getHighResolutionTicks, highResolutionTicksToSeconds,
-// 		secondsToHighResolutionTicks
-// 		*/
-// 		static int64_t getHighResolutionTicksPerSecond() throw();
-// 
-// 		/** Converts a number of high-resolution ticks into seconds.
-// 
-// 		@see getHighResolutionTicks, getHighResolutionTicksPerSecond,
-// 		secondsToHighResolutionTicks
-// 		*/
-// 		static double highResolutionTicksToSeconds(int64_t ticks) throw();
-// 
-// 		/** Converts a number seconds into high-resolution ticks.
-// 
-// 		@see getHighResolutionTicks, getHighResolutionTicksPerSecond,
-// 		highResolutionTicksToSeconds
-// 		*/
-// 		static	int64_t secondsToHighResolutionTicks(double seconds) throw();
-// 
-// 
-// 		/** Returns the number of millisecs since a fixed event (usually system startup).
-// 
-// 		This returns a monotonically increasing value which it unaffected by changes to the
-// 		system clock. It should be accurate to within a few millisecs, depending on platform,
-// 		hardware, etc.
-// 
-// 		Being a 32-bit return value, it will of course wrap back to 0 after 2^32 seconds of
-// 		uptime, so be careful to take that into account. If you need a 64-bit time, you can
-// 		use currentTimeMillis() instead.
-// 
-// 		@see getApproximateMillisecondCounter
-// 		*/
-// 		static uint32_t getMillisecondCounter() throw();
-// 
-// 		/** Returns the number of millisecs since a fixed event (usually system startup).
-// 
-// 		This has the same function as getMillisecondCounter(), but returns a more accurate
-// 		value, using a higher-resolution timer if one is available.
-// 
-// 		@see getMillisecondCounter
-// 		*/
-// 		static double getMillisecondCounterHiRes() throw();
-// 
-// 		/** Waits until the getMillisecondCounter() reaches a given value.
-// 
-// 		This will make the thread sleep as efficiently as it can while it's waiting.
-// 		*/
-// 		static void waitForMillisecondCounter(uint32_t targetTime) throw();
-// 
-// 		/** Less-accurate but faster version of getMillisecondCounter().
-// 
-// 		This will return the last value that getMillisecondCounter() returned, so doesn't
-// 		need to make a system call, but is less accurate - it shouldn't be more than
-// 		100ms away from the correct time, though, so is still accurate enough for a
-// 		lot of purposes.
-// 
-// 		@see getMillisecondCounter
-// 		*/
-// 		static uint32_t getApproximateMillisecondCounter() throw();
-
 
 	} // namespace time
 

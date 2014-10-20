@@ -253,6 +253,8 @@ set( TIME_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Timer.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Timer.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.h )
 
