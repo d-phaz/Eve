@@ -76,6 +76,13 @@ namespace eve
 			int32_t						y;
 			uint32_t					count;
 			std::vector<std::wstring>	files;
+
+			/** \brief Default constructor. */
+			FileEventArgs(void);
+			/** \brief Copy constructor. */
+			FileEventArgs(const FileEventArgs & p_other);
+			/** \brief Assignation operator. */
+			FileEventArgs & operator = (const FileEventArgs & p_other);
 		};
 
 		/** \brief File event type definition. */
@@ -128,6 +135,13 @@ namespace eve
 		{
 		public:
 			uint8_t		key;
+
+			/** \brief Default constructor. */
+			KeyEventArgs(void);
+			/** \brief Copy constructor. */
+			KeyEventArgs(const KeyEventArgs & p_other);
+			/** \brief Assignation operator. */
+			KeyEventArgs & operator = (const KeyEventArgs & p_other);
 		};
 
 		/** \brief Key event type definition. */
@@ -192,6 +206,13 @@ namespace eve
 			int32_t		button;
 			int32_t		x;
 			int32_t		y;
+
+			/** \brief Default constructor. */
+			MouseEventArgs(void);
+			/** \brief Copy constructor. */
+			MouseEventArgs(const MouseEventArgs & p_other);
+			/** \brief Assignation operator. */
+			MouseEventArgs & operator = (const MouseEventArgs & p_other);
 		};
 
 		/** \brief Mouse event type definition. */
@@ -265,6 +286,7 @@ namespace eve
 		public:
 			enum Type
 			{
+				unknown,
 				down,
 				up,
 				move,
@@ -285,6 +307,13 @@ namespace eve
 			float		yspeed;
 			float		xaccel;
 			float		yaccel;
+
+			/** \brief Default constructor. */
+			TouchEventArgs(void);
+			/** \brief Copy constructor. */
+			TouchEventArgs(const TouchEventArgs & p_other);
+			/** \brief Assignation operator. */
+			TouchEventArgs & operator = (const TouchEventArgs & p_other);
 		}; 
 
 		/** \brief Touch event type definition. */
@@ -346,6 +375,13 @@ namespace eve
 		public:
 			int32_t width;
 			int32_t height;
+
+			/** \brief Default constructor. */
+			ResizeEventArgs(void);
+			/** \brief Copy constructor. */
+			ResizeEventArgs(const ResizeEventArgs & p_other);
+			/** \brief Assignation operator. */
+			ResizeEventArgs & operator = (const ResizeEventArgs & p_other);
 		};
 
 		/**
@@ -357,6 +393,13 @@ namespace eve
 		public:
 			int32_t x;
 			int32_t y;
+
+			/** \brief Default constructor. */
+			MoveEventArgs(void);
+			/** \brief Copy constructor. */
+			MoveEventArgs(const MoveEventArgs & p_other);
+			/** \brief Assignation operator. */
+			MoveEventArgs & operator = (const MoveEventArgs & p_other);
 		};
 
 		/**
@@ -411,6 +454,118 @@ namespace eve
 		*/
 		template<class ListenerClass>
 		void unregister_events_window(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+		//		TIME EVENTS
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		/**
+		* \class eve::evt::MoveEventArgs
+		* \brief Time event arguments.
+		*/
+		class TimeEventArgs
+		{
+		public:
+			int64_t time;
+
+			/** \brief Default constructor. */
+			TimeEventArgs(void);
+			/** \brief Copy constructor. */
+			TimeEventArgs(const TimeEventArgs & p_other);
+			/** \brief Assignation operator. */
+			TimeEventArgs & operator = (const TimeEventArgs & p_other);
+		};
+
+		/**
+		* \class eve::evt::EvtTime
+		* \brief Stock global static time events.
+		*/
+		class EvtTime
+		{
+		public:
+			static eve::evt::TEvent<TimeEventArgs>					newTime;			//!< New time event.
+		};
+
+		/** \brief Enable time events dispatch. */
+		void enable_events_time(void);
+		/** \brief Disable time events dispatch. */
+		void disable_events_time(void);
+
+		/** \brief Notify time event to all listeners.*/
+		void notify_time(int64_t p_time);
+
+		/**
+		* \brief Register listener class to time events.
+		* Listener class must provide time event handler methods using the following signatures:
+		*		void cb_evtTime(eve::evt:TimeEventArgs & p_arg)
+		*/
+		template<class ListenerClass>
+		void register_events_time(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+		/**
+		* \brief Unregister listener class to time events.
+		* Listener class must provide time event handler methods using the following signatures:
+		*		void cb_evtTime(eve::evt:TimeEventArgs & p_arg)
+		*/
+		template<class ListenerClass>
+		void unregister_events_time(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+		//		FRAME EVENTS
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		/**
+		* \class eve::evt::FrameEventArgs
+		* \brief New frame event arguments.
+		*/
+		class FrameEventArgs
+		{
+		public:
+			int64_t frame;
+
+			/** \brief Default constructor. */
+			FrameEventArgs(void);
+			/** \brief Copy constructor. */
+			FrameEventArgs(const FrameEventArgs & p_other);
+			/** \brief Assignation operator. */
+			FrameEventArgs & operator = (const FrameEventArgs & p_other);
+		};
+
+		/**
+		* \class eve::evt::EvtTime
+		* \brief Stock global static frame events.
+		*/
+		class EvtFrame
+		{
+		public:
+			static eve::evt::TEvent<FrameEventArgs>					newFrame;			//!< New frame event.
+		};
+
+		/** \brief Enable frame events dispatch. */
+		void enable_events_frame(void);
+		/** \brief Disable frame events dispatch. */
+		void disable_events_frame(void);
+
+		/** \brief Notify frame event to all listeners.*/
+		void notify_frame(int64_t p_frame);
+
+		/**
+		* \brief Register listener class to frame events.
+		* Listener class must provide frame event handler methods using the following signatures:
+		*		void cb_evtFrame(eve::evt:FrameEventArgs & p_arg)
+		*/
+		template<class ListenerClass>
+		void register_events_frame(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
+		/**
+		* \brief Unregister listener class to frame events.
+		* Listener class must provide frame event handler methods using the following signatures:
+		*		void cb_evtFrame(eve::evt:FrameEventArgs & p_arg)
+		*/
+		template<class ListenerClass>
+		void unregister_events_frame(ListenerClass * p_pListener, int32_t p_prio = orderAfterApp);
 
 
 
@@ -579,6 +734,46 @@ void eve::evt::unregister_events_window(ListenerClass * p_pListener, int32_t p_p
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusGot,		p_pListener, &ListenerClass::cb_evtWindowFocusGot,		p_prio);
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowFocusLost,		p_pListener, &ListenerClass::cb_evtWindowFocusLost,		p_prio);
 	eve::evt::remove_listener(eve::evt::EvtWindow::windowClose,			p_pListener, &ListenerClass::cb_evtWindowClose,			p_prio);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		TIME EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::evt::register_events_time(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::add_listener(eve::evt::EvtTime::newTime, p_pListener, &ListenerClass::cb_evtTime, p_prio);
+}
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::evt::unregister_events_time(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::remove_listener(eve::evt::EvtTime::newTime, p_pListener, &ListenerClass::cb_evtTime, p_prio);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		TIME EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::evt::register_events_frame(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::add_listener(eve::evt::EvtFrame::newFrame, p_pListener, &ListenerClass::cb_evtFrame, p_prio);
+}
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::evt::unregister_events_frame(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::remove_listener(eve::evt::EvtFrame::newFrame, p_pListener, &ListenerClass::cb_evtFrame, p_prio);
 }
 
 

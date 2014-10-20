@@ -110,6 +110,13 @@ namespace eve
 			virtual void release(void) override;
 
 
+		protected:
+#if defined(EVE_OS_WIN)
+			/** \brief Query performance counter (Windows only). */
+			static int64_t query_performance_counter(void);
+#endif
+
+
 		public:
 			/** \brief Start timer. */
 			void start(void);

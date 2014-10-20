@@ -100,13 +100,13 @@ eve::time::Timer & eve::time::Timer::operator = (const eve::time::Timer & p_othe
 void eve::time::Timer::init(void)
 {
 #if defined(EVE_OS_WIN)
-	//const MMRESULT res = ::timeBeginPeriod(1);
-	//EVE_ASSERT(res == TIMERR_NOERROR);
-
 	// The frequency of the performance counter is fixed at system boot and is consistent across all processors. 
 	// Therefore, the frequency need only be queried upon application initialization, and the result can be cached.
 	::LARGE_INTEGER nativeFreq;
-	::QueryPerformanceFrequency(&nativeFreq);
+	if (::QueryPerformanceFrequency(&nativeFreq) == 0) {
+		EVE_LOG_ERROR("Unable to retrieve time, QueryPerformanceFrequency() failed, %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
 
 	m_invFrequency = 1.0 / nativeFreq.QuadPart;
 
@@ -140,8 +140,7 @@ void eve::time::Timer::init(void)
 void eve::time::Timer::release(void)
 {
 #if defined(EVE_OS_WIN)
-	//const MMRESULT res = ::timeEndPeriod(1);
-	//EVE_ASSERT(res == TIMERR_NOERROR);
+	// Nothing to do for now.
 
 #elif defined(EVE_OS_DARWIN)
 	// Nothing to do for now.
@@ -155,12 +154,27 @@ void eve::time::Timer::release(void)
 
 
 //=================================================================================================
+#if defined(EVE_OS_WIN)
+int64_t eve::time::Timer::query_performance_counter(void)
+{
+	::LARGE_INTEGER rawTime;
+	if (::QueryPerformanceCounter(&rawTime) == 0) 
+	{
+		EVE_LOG_ERROR("Unable to retrieve time, QueryPerformanceCounter() failed, %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+	return static_cast<int64_t>(rawTime.QuadPart);
+}
+#endif
+
+
+
+//=================================================================================================
 void eve::time::Timer::start(void)
 {
 #if defined(EVE_OS_WIN)
-	::LARGE_INTEGER rawTime;
-	::QueryPerformanceCounter(&rawTime);
-	m_startTime = static_cast<int64_t>(rawTime.QuadPart);
+	m_startTime = eve::time::Timer::query_performance_counter();
 
 #elif defined(EVE_OS_DARWIN)
 	m_startTime = static_cast<int64_t>(mach_absolute_time() * m_invFrequency);
@@ -179,9 +193,7 @@ void eve::time::Timer::start(void)
 void eve::time::Timer::stop(void)
 {
 #if defined(EVE_OS_WIN)
-	::LARGE_INTEGER rawTime;
-	::QueryPerformanceCounter(&rawTime);
-	m_endTime = static_cast<int64_t>(rawTime.QuadPart);
+	m_endTime = eve::time::Timer::query_performance_counter();
 
 #elif defined(EVE_OS_DARWIN)
 	m_endTime = static_cast<int64_t>(mach_absolute_time());
@@ -212,9 +224,7 @@ int64_t eve::time::Timer::getElapsedTime(void)
 	else
 	{
 #if defined(EVE_OS_WIN)
-		::LARGE_INTEGER rawTime;
-		::QueryPerformanceCounter(&rawTime);
-		m_milliElapsed = static_cast<int64_t>((rawTime.QuadPart - m_startTime) * 1000.0 * m_invFrequency);
+		m_milliElapsed = static_cast<int64_t>((eve::time::Timer::query_performance_counter() - m_startTime) * 1000.0 * m_invFrequency);
 
 #elif defined(EVE_OS_DARWIN)
 		m_milliElapsed = static_cast<int64_t>((mach_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);

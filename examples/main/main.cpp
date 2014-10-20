@@ -87,7 +87,8 @@ void Example::initThreadedData(void)
 	eve::ogl::FormatShader fmtShader;
 	shader = renderer->create(fmtShader);
 
-	m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
+	//m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
+	m_pTimer = eve::time::Timer::create_ptr(true);
 }
 
 void Example::releaseThreadedData(void)
@@ -110,7 +111,7 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 
 	if (m_pTimer->isRunning())
 	{
-		m_pTimer->stop();
+		//m_pTimer->stop();
 		EVE_LOG_INFO("Timer elapsed time: %d", m_pTimer->getElapsedTime());
 	}
 	else {
