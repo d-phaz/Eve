@@ -132,6 +132,7 @@ macro( add_project PROJECT_NAME_IN )
 			 OpenGL32.lib 
 			 glu32.lib 
 			 User32.lib 
+			 Winmm.lib 
 			 ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${PRODUCT_PRODUCT_NAME}.lib ) 
 
 		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )

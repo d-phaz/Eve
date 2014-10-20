@@ -306,7 +306,8 @@ if( WIN32 )
 		 kernel32.lib
 		 OpenGL32.lib 
 		 glu32.lib 
-		 User32.lib ) 	 
+		 User32.lib 
+		 Winmm.lib ) 	 
 
 	if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 		link_directories( ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR} )

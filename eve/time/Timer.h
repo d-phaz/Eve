@@ -68,8 +68,8 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			int64_t		m_milliStartTime;		//!< Timer start time in milliseconds.
-			int64_t		m_milliEndTime;			//!< Timer end time in milliseconds.
+			int64_t		m_startTime;			//!< Timer start time in milliseconds.
+			int64_t		m_endTime;				//!< Timer end time in milliseconds.
 			int64_t		m_milliElapsed;			//!< Timer elapsed time.
 
 			double		m_invFrequency;			//!< Convenience inverse native frequency factor.
@@ -143,11 +143,11 @@ namespace eve
 } // namespace eve
 
 //=================================================================================================
-inline const bool eve::time::Timer::isRunning(void) const			{ return  m_bRunning;						}
-inline const bool eve::time::Timer::isStopped(void) const			{ return !m_bRunning;						}
+inline const bool eve::time::Timer::isRunning(void) const			{ return  m_bRunning;		}
+inline const bool eve::time::Timer::isStopped(void) const			{ return !m_bRunning;		}
 
 //=================================================================================================
-inline const int64_t eve::time::Timer::getStartTime(void) const		{ return m_milliStartTime;					}
-inline const int64_t eve::time::Timer::getEndTime(void) const		{ return m_milliEndTime;					}
+inline const int64_t eve::time::Timer::getStartTime(void) const		{ return m_startTime;		}
+inline const int64_t eve::time::Timer::getEndTime(void) const		{ return m_endTime;			}
 
 #endif //__EVE_TIME_TIMER_H__

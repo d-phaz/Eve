@@ -33,6 +33,7 @@
 #include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 #include "eve/time/Absolute.h"
+#include "eve/time/Timer.h"
 
 
 class Example final
@@ -45,6 +46,8 @@ private:
 	eve::ogl::Fbo *				fbo;
 	eve::ogl::Texture *			tex;
 	eve::ogl::Shader *			shader;
+
+	eve::time::Timer *			m_pTimer;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -83,10 +86,14 @@ void Example::initThreadedData(void)
 
 	eve::ogl::FormatShader fmtShader;
 	shader = renderer->create(fmtShader);
+
+	m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
 }
 
 void Example::releaseThreadedData(void)
 {
+	EVE_RELEASE_PTR(m_pTimer);
+
 	shader->requestRelease(); 
 	tex->requestRelease();
 	fbo->requestRelease();
@@ -100,6 +107,15 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
 	EVE_LOG_INFO("Mouse down received, x:%d y:%d.", p_args.x, p_args.y);
 	EVE_LOG_TIME;
+
+	if (m_pTimer->isRunning())
+	{
+		m_pTimer->stop();
+		EVE_LOG_INFO("Timer elapsed time: %d", m_pTimer->getElapsedTime());
+	}
+	else {
+		m_pTimer->start();
+	}
 
 	//m_pWindow->toggleFullScreen();
 
