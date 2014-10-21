@@ -45,7 +45,7 @@ namespace eve
 		* \brief Sleep thread for given amount of milliseconds.
 		* \param p_milliseconds milliseconds amount to sleep.
 		*/
-		void sleep_milli(const int32_t p_milliseconds);
+		void sleep_milli(int32_t p_milliseconds);
 		/**
 		* \brief Sleep thread for given amount of iterations, switch hand to other threads.
 		* \param p_iters iterations amount.

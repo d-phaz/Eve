@@ -54,7 +54,7 @@ eve::time::Timer::Timer(void)
 	// members init
 	, m_startTime(0)
 	, m_endTime(0)
-	, m_milliElapsed(0)
+	, m_elapsed(0)
 	, m_invFrequency(1.0)
 	, m_bRunning(false)
 {}
@@ -66,7 +66,7 @@ eve::time::Timer::Timer(const Timer & p_other)
 	// members init
 	, m_startTime(p_other.m_startTime)
 	, m_endTime(p_other.m_endTime)
-	, m_milliElapsed(p_other.m_milliElapsed)
+	, m_elapsed(p_other.m_elapsed)
 	, m_invFrequency(p_other.m_invFrequency)
 	, m_bRunning(false)
 {
@@ -81,10 +81,10 @@ eve::time::Timer & eve::time::Timer::operator = (const eve::time::Timer & p_othe
 {
 	if (&p_other != this)
 	{
-		m_startTime = p_other.m_startTime;
-		m_endTime = p_other.m_endTime;
-		m_milliElapsed = p_other.m_milliElapsed;
-		m_invFrequency = p_other.m_invFrequency;
+		m_startTime		= p_other.m_startTime;
+		m_endTime		= p_other.m_endTime;
+		m_elapsed		= p_other.m_elapsed;
+		m_invFrequency	= p_other.m_invFrequency;
 
 		if (p_other.m_bRunning) {
 			this->start();
@@ -178,6 +178,7 @@ int64_t eve::time::Timer::query_absolute_time(void)
 	}
 	int64_t ret = static_cast<int64_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
 	return (ret / 1000);
+
 #endif
 }
 
@@ -197,6 +198,17 @@ void eve::time::Timer::stop(void)
 	m_bRunning = false;
 }
 
+//=================================================================================================
+int64_t eve::time::Timer::restart(void)
+{
+	m_endTime	= eve::time::Timer::query_absolute_time();
+	m_elapsed	= static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+	m_startTime = m_endTime;
+	m_bRunning	= true;
+
+	return m_elapsed;
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,12 +220,12 @@ int64_t eve::time::Timer::getElapsedTime(void)
 {
 	if (this->isStopped())
 	{
-		m_milliElapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
 	}
 	else
 	{
-		m_milliElapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
 	}
 
-	return m_milliElapsed;
+	return m_elapsed;
 }

@@ -140,10 +140,8 @@ namespace eve
 
 		public:
 			/**
-			* \brief Start the object's thread execution. Increments thread
-			* count, spawns new thread, and stores thread m_threadID.
-			*
-			* \param p_priority thread desired priority.
+			* \brief Start the object's thread execution. 
+			* Increments thread count, spawns new thread, and stores thread m_threadID.
 			*/
 			void start(void);
 

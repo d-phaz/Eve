@@ -33,7 +33,7 @@
 #include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 #include "eve/time/Absolute.h"
-#include "eve/time/Timer.h"
+#include "eve/time/Clock.h"
 
 
 class Example final
@@ -48,6 +48,7 @@ private:
 	eve::ogl::Shader *			shader;
 
 	eve::time::Timer *			m_pTimer;
+	eve::time::Clock *			m_pClock;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -63,6 +64,9 @@ public:
 	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
 	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
 	virtual void cb_evtWindowClose(void) override;
+
+public:
+	void cb_evtClock(void);
 
 };
 
@@ -89,10 +93,17 @@ void Example::initThreadedData(void)
 
 	//m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
 	m_pTimer = eve::time::Timer::create_ptr(true);
+
+	m_pClock = EVE_CREATE_PTR(eve::time::Clock);
+	m_pClock->registerToEvent(this);
+	m_pClock->setPeriodicInterval(20);
+	m_pClock->start();
 }
 
 void Example::releaseThreadedData(void)
 {
+/*	m_pClock->unregisterFromEvent(this);*/
+	EVE_RELEASE_PTR(m_pClock);
 	EVE_RELEASE_PTR(m_pTimer);
 
 	shader->requestRelease(); 
@@ -141,6 +152,12 @@ void Example::cb_evtWindowClose(void)
 	EVE_LOG_INFO("Window close received.");
 
 	eve::evt::notify_application_exit();
+}
+
+void Example::cb_evtClock(void)
+{
+	EVE_LOG_INFO("Clock event triggered, interval is %d.", m_pTimer->getElapsedTime());
+	m_pTimer->restart();
 }
 
 

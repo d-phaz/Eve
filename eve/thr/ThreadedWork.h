@@ -58,7 +58,7 @@ namespace eve
 		* Switch to next worker right after previous one completion.
 		* Worker is released right after its work completion.
 		*
-		* \note extends thr::Thread
+		* \note extends eve::thr::Thread
 		*/
 		class ThreadedWork
 			: public eve::thr::Thread

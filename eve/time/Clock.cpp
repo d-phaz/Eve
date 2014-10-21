@@ -30,107 +30,132 @@
 */
 
 // Main header
-#include "eve/thr/Utils.h"
+#include "eve/time/Clock.h"
 
+
+//=================================================================================================
+eve::time::Clock::Clock(void)
+
+	// Inheritance
+	: eve::thr::Thread()
+
+	// Members init
+	, m_pTimer(nullptr)
+	, m_intervalPeriod(0)
+	, m_intervalSleep(0)
+
+	, m_event()
+{}
 
 
 
 //=================================================================================================
-namespace eve 
+void eve::time::Clock::init(void)
 {
-	namespace thr
-	{
-		/** 
-		 * \struct eve::thr::SleepEvent
-		 * \brief Simple system event HANDLE used by sleep method.
-		 */
-		struct SleepEvent
-		{
-			SleepEvent()
-			: handle(::CreateEventW(0, 0, 0, 0))
-			{
-				EVE_ASSERT(handle);
-			}
+	// Call parent class.
+	eve::thr::Thread::init();
 
-			HANDLE handle;
-		};
-	}
+	m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
 }
-static eve::thr::SleepEvent sleepEvent;
 
 //=================================================================================================
-void eve::thr::sleep_milli(int32_t p_milliseconds)
+void eve::time::Clock::release(void)
 {
-	if (p_milliseconds >= 10)
+	EVE_RELEASE_PTR(m_pTimer);
+
+	// Call parent class.
+	eve::thr::Thread::release();
+}
+
+
+
+//=================================================================================================
+void eve::time::Clock::initThreadedData(void)
+{
+	// Launch timer.
+	m_pTimer->restart();
+}
+
+//=================================================================================================
+void eve::time::Clock::releaseThreadedData(void)
+{
+	// Nothing to do for now.
+}
+
+
+
+//=================================================================================================
+void eve::time::Clock::run(void)
+{
+	do
+	{		
+		m_pFence->lock();
+		
+		// Dispatch event.
+		eve::evt::notify_event(m_event);
+		// Compute elapsed time
+		m_intervalSleep = (m_intervalPeriod + m_intervalSleep) - m_pTimer->getElapsedTime();
+		
+		m_pFence->unlock();
+
+
+		// Restart timer.
+		m_pTimer->restart();
+
+		// Sleep for varying interval.
+		if (m_intervalSleep > 0)
+		{
+			eve::thr::sleep_micro(m_intervalSleep * 1000);
+		}
+
+	} while (this->running());
+}
+
+
+
+//=================================================================================================
+void eve::time::Clock::restart(void)
+{
+	if (!this->started())
 	{
-		::Sleep(p_milliseconds);
+		this->start();
 	}
+#if !defined(NDEBUG)
 	else
 	{
-		// unlike Sleep() this is guaranteed to return to the current thread after
-		// the time expires, so we'll use this for short waits, which are more likely
-		// to need to be accurate
-		::WaitForSingleObject(sleepEvent.handle, p_milliseconds);
+		EVE_LOG_WARNING("Clock already running");
 	}
+#endif
 }
 
 //=================================================================================================
-void eve::thr::sleep_iter(uint32_t p_iters)
+void eve::time::Clock::restart(int64_t p_milliseconds)
 {
-	for (uint32_t i = 0; i < p_iters; i++)
+	if (!this->started())
 	{
-		::SwitchToThread();
-		//std::this_thread::yield();
+		m_intervalPeriod = p_milliseconds;
+		this->start();
 	}
-}
-
-//=================================================================================================
-void eve::thr::sleep_micro(uint64_t p_ticks)
-{
-	LARGE_INTEGER frequency;
-	LARGE_INTEGER currentTime;
-	LARGE_INTEGER endTime;
-
-	::QueryPerformanceCounter(&endTime);
-
-	// Ticks in microseconds (1/1000 ms)
-	::QueryPerformanceFrequency(&frequency);
-	endTime.QuadPart += (p_ticks * frequency.QuadPart) / (1000ULL * 1000ULL);
-
-	do
+#if !defined(NDEBUG)
+	else
 	{
-		::SwitchToThread();
-		//std::this_thread::yield();
-
-		::QueryPerformanceCounter(&currentTime);
-
-	} while (currentTime.QuadPart < endTime.QuadPart);
+		EVE_LOG_WARNING("Clock already running");
+	}
+#endif
 }
 
 
 
-//=================================================================================================
-DWORD eve::thr::current_thread_ID(void)
-{
-	return ::GetCurrentThreadId();
-}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-HANDLE eve::thr::current_thread_handle(void)
+void eve::time::Clock::setPeriodicInterval(int64_t p_milliseconds)
 {
-	return ::GetCurrentThread();
-}
+	EVE_ASSERT(p_milliseconds > 0);
 
-//=================================================================================================
-bool eve::thr::equal_ID(DWORD inLeft, DWORD inRight)
-{
-	return(memcmp(&inLeft, &inRight, sizeof(inLeft)) == 0);
-}
-
-//=================================================================================================
-DWORD eve::thr::zero_ID(void)
-{
-	DWORD a;
-	memset(&a, 0, sizeof(a));
-	return a;
+	m_pFence->lock();
+	m_intervalPeriod = p_milliseconds;
+	m_pFence->unlock();
 }
