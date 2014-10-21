@@ -56,7 +56,7 @@ namespace eve
 		* 
 		* A clock starts a thread that first waits for a given start interval.
 		* Once that interval expires, the clock triggers an event repeatedly in the given periodic interval.
-		* If the interval is 0, the clock is only called once.
+		* If the interval is below 10 milliseconds, please set run wait time to fit your needs (initial run wait time is 10 milliseconds).
 		* 
 		* The exact interval at which the event is triggered depends on many factors like operating system, CPU performance and system load and may differ from the specified interval.
 		* 

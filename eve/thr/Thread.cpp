@@ -316,7 +316,7 @@ bool eve::thr::Thread::started( void )
 {
 	bool bret = false;
 
-	if( WAIT_OBJECT_0 == ::WaitForSingleObject( m_StartEvent, 200000 ) ) 
+	if (WAIT_OBJECT_0 == ::WaitForSingleObject(m_StartEvent, m_runWait))
 	{
 		bret = true;
 	}

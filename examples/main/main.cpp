@@ -96,13 +96,13 @@ void Example::initThreadedData(void)
 
 	m_pClock = EVE_CREATE_PTR(eve::time::Clock);
 	m_pClock->registerToEvent(this);
-	m_pClock->setPeriodicInterval(20);
+	m_pClock->setRunWait(5);
+	m_pClock->setPeriodicInterval(10);
 	m_pClock->start();
 }
 
 void Example::releaseThreadedData(void)
 {
-/*	m_pClock->unregisterFromEvent(this);*/
 	EVE_RELEASE_PTR(m_pClock);
 	EVE_RELEASE_PTR(m_pTimer);
 
