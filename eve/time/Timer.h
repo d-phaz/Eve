@@ -111,10 +111,12 @@ namespace eve
 
 
 		protected:
-#if defined(EVE_OS_WIN)
-			/** \brief Query performance counter (Windows only). */
-			static int64_t query_performance_counter(void);
-#endif
+			/** 
+			* \brief Query actual system time.
+			* Call QueryPerformanceCounter() on Windows.
+			* Call mach_absolute_time() on OSX.
+			*/
+			static int64_t query_absolute_time(void);
 
 
 		public:

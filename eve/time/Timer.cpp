@@ -154,9 +154,9 @@ void eve::time::Timer::release(void)
 
 
 //=================================================================================================
-#if defined(EVE_OS_WIN)
-int64_t eve::time::Timer::query_performance_counter(void)
+int64_t eve::time::Timer::query_absolute_time(void)
 {
+#if defined(EVE_OS_WIN)
 	::LARGE_INTEGER rawTime;
 	if (::QueryPerformanceCounter(&rawTime) == 0) 
 	{
@@ -165,46 +165,35 @@ int64_t eve::time::Timer::query_performance_counter(void)
 	}
 
 	return static_cast<int64_t>(rawTime.QuadPart);
-}
+
+#elif defined(EVE_OS_DARWIN)
+	return static_cast<int64_t>(mach_absolute_time())
+
+#elif defined(EVE_OS_LINUX)
+	timespec t;
+	if( clock_gettime(CLOCK_MONOTONIC, &t) != 0 )
+	{
+		EVE_LOG_ERROR("Unable to retrieve time, clock_gettime() failed, %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+	int64_t ret = static_cast<int64_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
+	return (ret / 1000);
 #endif
+}
 
 
 
 //=================================================================================================
 void eve::time::Timer::start(void)
 {
-#if defined(EVE_OS_WIN)
-	m_startTime = eve::time::Timer::query_performance_counter();
-
-#elif defined(EVE_OS_DARWIN)
-	m_startTime = static_cast<int64_t>(mach_absolute_time() * m_invFrequency);
-
-#elif defined(EVE_OS_LINUX)
-	timespec t;
-	clock_gettime(CLOCK_MONOTONIC, &t);
-	m_startTime = static_cast<int64_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
-
-#endif
-
+	m_startTime = eve::time::Timer::query_absolute_time();
 	m_bRunning = true;
 }
 
 //=================================================================================================
 void eve::time::Timer::stop(void)
 {
-#if defined(EVE_OS_WIN)
-	m_endTime = eve::time::Timer::query_performance_counter();
-
-#elif defined(EVE_OS_DARWIN)
-	m_endTime = static_cast<int64_t>(mach_absolute_time());
-
-#elif defined(EVE_OS_LINUX)
-	timespec t;
-	clock_gettime(CLOCK_MONOTONIC, &t);
-	m_endTime = static_cast<int64_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
-
-#endif
-
+	m_endTime = eve::time::Timer::query_absolute_time();
 	m_bRunning = false;
 }
 
@@ -223,18 +212,7 @@ int64_t eve::time::Timer::getElapsedTime(void)
 	}
 	else
 	{
-#if defined(EVE_OS_WIN)
-		m_milliElapsed = static_cast<int64_t>((eve::time::Timer::query_performance_counter() - m_startTime) * 1000.0 * m_invFrequency);
-
-#elif defined(EVE_OS_DARWIN)
-		m_milliElapsed = static_cast<int64_t>((mach_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
-
-#elif defined(EVE_OS_LINUX)
-		timespec t;
-		clock_gettime(CLOCK_MONOTONIC, &t);
-		m_milliElapsed = static_cast<int64_t>((t.tv_sec * 1000 + t.tv_nsec / 1000000) - m_startTime);
-
-#endif
+		m_milliElapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
 	}
 
 	return m_milliElapsed;

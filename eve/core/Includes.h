@@ -76,9 +76,12 @@
 // type utility
 #include <type_traits>
 // time
+#if defined(EVE_OS_WIN)
 #include <sys\timeb.h>
-#if defined (EVE_OS_DARWIN)
+#elif defined(EVE_OS_DARWIN)
 #include <mach/mach_time.h>
+#elif defined(EVE_OS_LINUX)
+#include <time.h>
 #endif
 
 
