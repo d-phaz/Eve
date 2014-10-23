@@ -82,7 +82,7 @@ namespace eve
 			virtual ~TStrategy(void);
 
 
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			TStrategy& operator = (const TStrategy & s);
 
 
@@ -145,7 +145,7 @@ namespace eve
 			virtual ~TStrategy(void);
 
 
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			TStrategy& operator = (const TStrategy & s);
 
 

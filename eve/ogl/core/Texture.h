@@ -77,7 +77,7 @@ namespace eve
 
 			/** \brief Copy constructor. */
 			FormatTex(const eve::ogl::FormatTex & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			const eve::ogl::FormatTex & operator = (const eve::ogl::FormatTex & p_other);
 
 		}; // class FormatTex

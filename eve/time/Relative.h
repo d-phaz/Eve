@@ -90,7 +90,7 @@ namespace eve
 			/** \brief Class destructor. */
 			virtual ~Relative(void) throw();
 
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			Relative & operator= (const Relative & p_other) throw();
 
 

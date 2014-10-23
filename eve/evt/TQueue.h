@@ -47,7 +47,7 @@ namespace eve
 	namespace evt
 	{
 		/**
-		* \class eve::evt:TQueue
+		* \class eve::evt::TQueue
 		*
 		* \brief FIFO event queue using back and front buffering.
 		* TEvt template type is the event type of this queue.

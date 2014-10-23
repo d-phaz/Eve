@@ -67,7 +67,7 @@ namespace eve
 
 			/** \brief Copy constructor. */
 			FormatUniform(const eve::ogl::FormatUniform & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			const eve::ogl::FormatUniform & operator = (const eve::ogl::FormatUniform & p_other);
 
 		}; // class FormatUniform

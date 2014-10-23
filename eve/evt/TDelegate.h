@@ -91,7 +91,7 @@ namespace eve
 			TDelegate(TObj* obj, NotifyMethod method, int32_t prio);
 			/** \brief Default class copy constructor. All members are copied except fence.*/
 			TDelegate(const TDelegate& p_other);
-			/** \brief Assignation operator. Copy all members except fence.*/
+			/** \brief Assignment operator. Copy all members except fence.*/
 			TDelegate& operator = (const TDelegate& p_other);
 			/** \brief Class destructor. */
 			virtual ~TDelegate(void);
@@ -157,7 +157,7 @@ namespace eve
 			TDelegate(TObj* obj, NotifyMethod method, int32_t prio);
 			/** \brief Default class copy constructor. All members are copied except fence.*/
 			TDelegate(const TDelegate& p_other);
-			/** \brief Assignation operator. Copy all members except fence.*/
+			/** \brief Assignment operator. Copy all members except fence.*/
 			TDelegate& operator = (const TDelegate& p_other);
 			/** \brief Class destructor. */
 			virtual ~TDelegate(void);
@@ -223,7 +223,7 @@ namespace eve
 			TDelegate(TObj* obj, NotifyMethod method, int32_t prio);
 			/** \brief Default class copy constructor. All members are copied except fence.*/
 			TDelegate(const TDelegate& p_other);
-			/** \brief Assignation operator. Copy all members except fence.*/
+			/** \brief Assignment operator. Copy all members except fence.*/
 			TDelegate& operator = (const TDelegate& p_other);
 			/** \brief Class destructor. */
 			virtual ~TDelegate(void);
@@ -289,7 +289,7 @@ namespace eve
 			TDelegate(TObj* obj, NotifyMethod method, int32_t prio);
 			/** \brief Default class copy constructor. All members are copied except fence.*/
 			TDelegate(const TDelegate& p_other);
-			/** \brief Assignation operator. Copy all members except fence.*/
+			/** \brief Assignment operator. Copy all members except fence.*/
 			TDelegate& operator = (const TDelegate& p_other);
 			/** \brief Class destructor. */
 			virtual ~TDelegate(void);

@@ -81,7 +81,7 @@ namespace eve
 			FileEventArgs(void);
 			/** \brief Copy constructor. */
 			FileEventArgs(const FileEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			FileEventArgs & operator = (const FileEventArgs & p_other);
 		};
 
@@ -140,7 +140,7 @@ namespace eve
 			KeyEventArgs(void);
 			/** \brief Copy constructor. */
 			KeyEventArgs(const KeyEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			KeyEventArgs & operator = (const KeyEventArgs & p_other);
 		};
 
@@ -211,7 +211,7 @@ namespace eve
 			MouseEventArgs(void);
 			/** \brief Copy constructor. */
 			MouseEventArgs(const MouseEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			MouseEventArgs & operator = (const MouseEventArgs & p_other);
 		};
 
@@ -312,7 +312,7 @@ namespace eve
 			TouchEventArgs(void);
 			/** \brief Copy constructor. */
 			TouchEventArgs(const TouchEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			TouchEventArgs & operator = (const TouchEventArgs & p_other);
 		}; 
 
@@ -380,7 +380,7 @@ namespace eve
 			ResizeEventArgs(void);
 			/** \brief Copy constructor. */
 			ResizeEventArgs(const ResizeEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			ResizeEventArgs & operator = (const ResizeEventArgs & p_other);
 		};
 
@@ -398,7 +398,7 @@ namespace eve
 			MoveEventArgs(void);
 			/** \brief Copy constructor. */
 			MoveEventArgs(const MoveEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			MoveEventArgs & operator = (const MoveEventArgs & p_other);
 		};
 
@@ -474,7 +474,7 @@ namespace eve
 			TimeEventArgs(void);
 			/** \brief Copy constructor. */
 			TimeEventArgs(const TimeEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			TimeEventArgs & operator = (const TimeEventArgs & p_other);
 		};
 
@@ -530,7 +530,7 @@ namespace eve
 			FrameEventArgs(void);
 			/** \brief Copy constructor. */
 			FrameEventArgs(const FrameEventArgs & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			FrameEventArgs & operator = (const FrameEventArgs & p_other);
 		};
 

@@ -99,7 +99,7 @@ namespace eve
 		public:
 			/** \brief Copy constructor. */
 			Timer(const Timer & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			Timer & operator = (const Timer & p_other);
 
 

@@ -55,7 +55,7 @@ namespace eve
 	namespace evt
 	{
 		/**
-		* \class eve::evt:TEvent
+		* \class eve::evt::TEvent
 		*
 		* \brief Priority event template class.
 		* A TEvent uses internally a TStrategy which invokes delegates in order of priority (lower priorities first).
@@ -89,7 +89,7 @@ namespace eve
 			TEvent(const TEvent<TArgs> & p_ref);
 
 			/**
-			* \brief Assignation operator.
+			* \brief Assignment operator.
 			* Allow copy of events, by copying everything except the mutex.
 			*/
 			TEvent<TArgs> & operator=(const TEvent<TArgs> & p_ref);

@@ -157,7 +157,7 @@ namespace eve
 			/** \brief Class destructor. */
 			virtual ~PixelFormat(void);
 
-			/** \brief Assignation operator (copy values from p_parent). */
+			/** \brief Assignment operator (copy values from p_parent). */
 			PixelFormat &operator=(const PixelFormat & p_parent);
 
 

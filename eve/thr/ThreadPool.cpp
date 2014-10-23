@@ -40,6 +40,10 @@
 #include "eve/thr/ThreadedWorkIO.h"
 #endif
 
+#ifndef __EVE_THREADING_PRODUCER_CONSUMER_QUEUE_H__
+#include "eve/thr/TPCQueue.h"
+#endif
+
 #ifndef __EVE_THREADING_WORKER_H__
 #include "eve/thr/Worker.h"
 #endif

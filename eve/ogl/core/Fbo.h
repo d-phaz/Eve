@@ -71,7 +71,7 @@ namespace eve
 
 			/** \brief Copy constructor. */
 			FormatFbo(const eve::ogl::FormatFbo & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			const eve::ogl::FormatFbo & operator = (const eve::ogl::FormatFbo & p_other);
 
 		}; // class FormatFbo

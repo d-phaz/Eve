@@ -237,6 +237,7 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWorkIO.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/TPCQueue.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Worker.cpp

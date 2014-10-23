@@ -48,7 +48,9 @@
 
 namespace eve { namespace thr	{ class SpinLock;		} }
 namespace eve { namespace thr	{ class ThreadedWorkIO; } }
-namespace eve{ namespace thr	{ class Worker;			} }
+namespace eve { namespace thr	{ class Worker;			} }
+
+namespace eve { namespace thr	{ template<class T> class TPCQueue; } }
 
 
 namespace eve
@@ -126,7 +128,7 @@ namespace eve
 			/** \brief Add worker so that it will be the next one used and return immediately. */
 			void addPriorityWorker(eve::thr::Worker * p_pWorker);
 
-		}; // class ThreadDummy
+		}; // class ThreadPool
 
 	} // namespace thr
 

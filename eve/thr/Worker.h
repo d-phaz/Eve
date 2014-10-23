@@ -76,11 +76,11 @@ namespace eve
 		public:
 			/** \brief Called once before the work is launched. Usually used to init required data. (pure virtual) */
 			virtual void beforeWork(void) = 0;
-			/** \brief Called once after the work is done. Usually used to release used data.. (pure virtual) */
+			/** \brief Called once after the work is done. Usually used to release used data. (pure virtual) */
 			virtual void afterWork(void) = 0;
 
 			/** 
-			* \brief Main schedule work method. (pure virtual) 
+			* \brief Main scheduled work method. (pure virtual) 
 			* \return false to exit work loop.
 			*/
 			virtual bool work(void) = 0;

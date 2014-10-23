@@ -110,7 +110,7 @@ namespace eve
 			/** \brief Class destructor. */
 			virtual ~Absolute(void) throw();
 
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			Absolute & operator = (const Absolute & p_other) throw();
 
 

@@ -72,7 +72,7 @@ namespace eve
 
 			/** \brief Copy constructor. */
 			FormatVao(const eve::ogl::FormatVao & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			const eve::ogl::FormatVao & operator = (const eve::ogl::FormatVao & p_other);
 
 		}; // class FormatVao

@@ -96,7 +96,7 @@ namespace eve
 
 			/** \brief Copy constructor. */
 			FormatShader(const eve::ogl::FormatShader & p_other);
-			/** \brief Assignation operator. */
+			/** \brief Assignment operator. */
 			const eve::ogl::FormatShader & operator = (const eve::ogl::FormatShader & p_other);
 
 		}; // class FormatShader
