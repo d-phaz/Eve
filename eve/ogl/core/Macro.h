@@ -6,7 +6,7 @@
 
 // Required OpenGL version
 #define EVE_WINDOWS_OPENGL_MAJOR_VERSION 4
-#define EVE_WINDOWS_OPENGL_MINOR_VERSION 4
+#define EVE_WINDOWS_OPENGL_MINOR_VERSION 2
 
 
 // Buffer offset

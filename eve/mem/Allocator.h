@@ -37,6 +37,10 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
 
 namespace eve
 {
@@ -50,12 +54,52 @@ namespace eve
 		/**
 		* \brief Free aligned memory.
 		*/
-		void align_free(void * p_pPtr);
-		
+		void align_free(void * p_pPtr);		
 
 	} // namespace mem
 
 } // namespace eve
+
+
+//=================================================================================================
+inline void * eve::mem::align_malloc(size_t p_alignment, size_t p_size)
+{
+#if defined(EVE_OS_WIN)
+	return _aligned_malloc(p_size, p_alignment);
+
+#elif defined(EVE_OS_DARWIN)
+	void * ptr = nullptr;
+	if (posix_memalign(&ptr, p_alignment, p_size) != 0)
+	{
+		EVE_LOG_ERROR("Unable to allocate memory, size:%d, alignment:%d", p_size, p_alignment)
+	}
+	return ptr;
+
+#elif defined(EVE_OS_LINUX)
+	void * ptr = nullptr;
+	if (posix_memalign(&ptr, p_alignment, p_size) != 0)
+	{
+		EVE_LOG_ERROR("Unable to allocate memory, size:%d, alignment:%d", p_size, p_alignment)
+	}
+	return ptr;
+
+#endif
+}
+
+//=================================================================================================
+inline void eve::mem::align_free(void * p_pPtr)
+{
+#if defined(EVE_OS_WIN)
+	_aligned_free(p_pPtr);
+
+#elif defined(EVE_OS_DARWIN)
+	free(p_pPtr);
+
+#elif defined(EVE_OS_LINUX)
+	free(p_pPtr);
+
+#endif
+}
 
 
 /** \def EVE_ALIGN \brief Convenience macro to declare class or struct aligned. */

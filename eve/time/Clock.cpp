@@ -52,19 +52,19 @@ eve::time::Clock::Clock(void)
 //=================================================================================================
 void eve::time::Clock::init(void)
 {
+	m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
+
 	// Call parent class.
 	eve::thr::Thread::init();
-
-	m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
 }
 
 //=================================================================================================
 void eve::time::Clock::release(void)
 {
-	EVE_RELEASE_PTR(m_pTimer);
-
 	// Call parent class.
 	eve::thr::Thread::release();
+
+	EVE_RELEASE_PTR(m_pTimer);
 }
 
 
