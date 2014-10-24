@@ -58,6 +58,7 @@
 // algorithm
 #include <algorithm>
 // pointers and memory
+#include <malloc.h>
 #include <memory>
 // assertion
 #include <cassert>

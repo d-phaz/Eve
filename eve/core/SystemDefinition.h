@@ -155,26 +155,6 @@
 
 
 #if defined(EVE_OS_WIN)
-
-#if defined(__MINGW32__) || defined(__CYGWIN__) || (defined (_MSC_VER) && _MSC_VER < 1300)
-#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) TYPE NAME
-#else
-#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) __declspec(align(ALIGNMENT)) TYPE NAME
-#endif
-
-#else
-
-#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) TYPE __attribute__ ((aligned (ALIGNMENT))) NAME
-
-#endif
-
-#define EVE_ALIGNED16(TYPE, NAME) EVE_ALIGN(16, TYPE, NAME)
-#define EVE_ALIGNED64(TYPE, NAME) EVE_ALIGN(64, TYPE, NAME)
-#define EVE_ALIGNED128(TYPE, NAME) EVE_ALIGN(128, TYPE, NAME)
-
-
-
-#if defined(EVE_OS_WIN)
 #define EVE_FORCE_INLINE __forceinline
 #else
 #define EVE_FORCE_INLINE inline

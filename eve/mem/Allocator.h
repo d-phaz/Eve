@@ -30,23 +30,51 @@
 */
 
 #pragma once
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#define __EVE_MEMORY_INCLUDES_H__
-
-
 #ifndef __EVE_MEMORY_ALLOCATOR_H__
-#include "eve/mem/Allocator.h"
+#define __EVE_MEMORY_ALLOCATOR_H__
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
 #endif
 
 
-#ifndef __EVE_MEMORY_POINTER_H__
-#include "eve/mem/Pointer.h"
+namespace eve
+{
+	namespace mem
+	{
+		/** 
+		* \brief Aligned memory allocation.
+		* \param p_alignment must be an integer power of 2.
+		*/
+		void * align_malloc(size_t p_alignment, size_t p_size);
+		/**
+		* \brief Free aligned memory.
+		*/
+		void align_free(void * p_pPtr);
+		
+
+	} // namespace mem
+
+} // namespace eve
+
+
+/** \def EVE_ALIGN \brief Convenience macro to declare class or struct aligned. */
+#if defined(EVE_OS_WIN)
+#if defined(__MINGW32__) || defined(__CYGWIN__) || (defined (_MSC_VER) && _MSC_VER < 1300)
+#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) TYPE NAME
+#else
+#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) __declspec(align(ALIGNMENT)) TYPE NAME
+#endif
+#else
+#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) TYPE __attribute__ ((aligned (ALIGNMENT))) NAME
 #endif
 
 
-#ifndef __EVE_MEMORY_SCOPED_H__
-#include "eve/mem/Scoped.h"
-#endif
+/** \def EVE_ALIGNED16 \brief Convenience macro to declare class or struct has 16 Byte memory alignment. */
+#define EVE_ALIGNED16(TYPE, NAME) EVE_ALIGN(16, TYPE, NAME)
+/** \def EVE_ALIGNED64 \brief Convenience macro to declare class or struct has 64 Byte memory alignment. */
+#define EVE_ALIGNED64(TYPE, NAME) EVE_ALIGN(64, TYPE, NAME)
+/** \def EVE_ALIGNED128 \brief Convenience macro to declare class or struct has 128 Byte memory alignment. */
+#define EVE_ALIGNED128(TYPE, NAME) EVE_ALIGN(128, TYPE, NAME)
 
-
-#endif // __EVE_MEMORY_INCLUDES_H__
+#endif // __EVE_MEMORY_ALLOCATOR_H__
