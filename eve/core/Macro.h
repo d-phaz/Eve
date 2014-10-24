@@ -34,45 +34,23 @@
 #define __EVE_CORE_MACRO_H__
 
 
-/**
-* \def EVE_DISABLE_COPY
-* \brief Disable copy constructor and assignation operator for target class making them private.
-*/
-#define EVE_DISABLE_COPY( targetClass )			\
-private:										\
-	targetClass(targetClass& arg){};			\
-	void operator=(const targetClass& arg){};
-
-
-/**
-* \def EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR
-* \brief Make default constructor and destructor protected.
-*/
-#define EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR( targetClass )		\
-protected:														\
-	explicit targetClass(void){};								\
-	virtual ~targetClass(void){};
-
-
-/**
-* \def EVE_PROTECT_CONSTRUCTOR
-* \brief Make default constructor protected.
-*/
-#define EVE_PROTECT_CONSTRUCTOR( targetClass )		\
-protected:											\
-	explicit targetClass(void){};
-
-
-/**
-* \def EVE_PROTECT_DESTRUCTOR
-* \brief Make destructor protected.
-*/
-#define EVE_PROTECT_DESTRUCTOR( targetClass )		\
-protected:											\
-	virtual ~targetClass(void){};
-
-
 /** 
+* \def EVE_FORCE_INLINE
+* Convenience macro to enforce inline function declaration.
+*/
+#if defined(EVE_OS_WIN)
+#if defined(__MINGW32__) || defined(__CYGWIN__) || (defined (_MSC_VER) && _MSC_VER < 1300)
+#define EVE_FORCE_INLINE inline
+#else
+#define EVE_FORCE_INLINE __forceinline
+#endif
+#elif defined(EVE_OS_DARWIN) || defined(EVE_OS_LINUX)
+#define EVE_FORCE_INLINE inline __attribute__((always_inline))
+#endif
+
+
+
+/**
 * \def EVE_ASSERT
 * \brief Assertion called in DEBUG mode only.
 */
@@ -81,8 +59,6 @@ protected:											\
 #else
 #define EVE_ASSERT( expression )	
 #endif
-
-
 /**
 * \def EVE_ASSERT_FAILURE
 * \brief Failure assertion called in DEBUG mode only.
@@ -94,7 +70,8 @@ protected:											\
 #endif
 
 
-/** 
+
+/**
 * \def EVE_TXT
 * \brief Convenience macro to use text as ANSI or UNICODE
 */
@@ -103,9 +80,44 @@ protected:											\
 #else
 #define EVE_TXT(txt)	txt
 #endif
-
-/** \brief Convenience macro to enforce UNICODE on system provided macro such as __FILE__ or __FUNCTION__. */
+/** 
+* \def EVE_TXT_ENFORCE
+* \brief Convenience macro to enforce UNICODE on system provided macro such as __FILE__ or __FUNCTION__. 
+*/
 #define  EVE_TXT_ENFORCE(txt)	EVE_TXT(txt)
+
+
+
+/**
+* \def EVE_DISABLE_COPY
+* \brief Disable copy constructor and assignation operator for target class making them private.
+*/
+#define EVE_DISABLE_COPY( targetClass )			\
+private:										\
+	targetClass(targetClass& arg){};			\
+	void operator=(const targetClass& arg){};
+/**
+* \def EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR
+* \brief Make default constructor and destructor protected.
+*/
+#define EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR( targetClass )		\
+protected:														\
+	explicit targetClass(void){};								\
+	virtual ~targetClass(void){};
+/**
+* \def EVE_PROTECT_CONSTRUCTOR
+* \brief Make default constructor protected.
+*/
+#define EVE_PROTECT_CONSTRUCTOR( targetClass )		\
+protected:											\
+	explicit targetClass(void){};
+/**
+* \def EVE_PROTECT_DESTRUCTOR
+* \brief Make destructor protected.
+*/
+#define EVE_PROTECT_DESTRUCTOR( targetClass )		\
+protected:											\
+	virtual ~targetClass(void){};
 
 
 #endif // __EVE_CORE_MACRO_H__

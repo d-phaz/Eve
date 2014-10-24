@@ -1,7 +1,7 @@
 
 #pragma once
-#ifndef __TMATH_H__
-#define __TMATH_H__
+#ifndef __EVE_MATH_TMATH_H__
+#define __EVE_MATH_TMATH_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -64,49 +64,143 @@
 #define EVE_MATH_EPSILON		FLT_EPSILON
 #define EVE_MATH_INFINITY		FLT_MAX
 
-#define FLOAT_QUASI_ZERO  0.000001f
-#define DOUBLE_QUASI_ZERO 0.000000000000000000001
+#define QUASI_ZEROD 0.000000000000000000001
+#define QUASI_ZEROF 0.000000001f
 
 
-#define DIVIDE_3D	0.333333333333333333333
-#define DIVIDE_3F	0.333333f
+#define EVE_DIVIDE_3D	0.333333333333333333333
+#define EVE_DIVIDE_3F	0.333333333f
 
-#define DIVIDE_45D	0.022222222222222222222
-#define DIVIDE_45F	0.022222f
+#define EVE_DIVIDE_45D	0.022222222222222222222
+#define EVE_DIVIDE_45F	0.022222222f
 
-#define DIVIDE_90D	0.011111111111111111111
-#define DIVIDE_90F	0.011111f
+#define EVE_DIVIDE_90D	0.011111111111111111111
+#define EVE_DIVIDE_90F	0.011111111f
 
-#define DIVIDE_180D	0.005555555555555555555
-#define DIVIDE_180F	0.005555f
+#define EVE_DIVIDE_180D	0.005555555555555555555
+#define EVE_DIVIDE_180F	0.005555555f
 
+#define EVE_PI_180F 0.017453292f
+#define EVE_PI_180D 0.017453292519943295769
+
+#define EVE_180_PIF 57.29577951f
+#define EVE_180_PID 57.295779513082321
+
+
+namespace eve
+{
+	namespace math
+	{
+		EVE_FORCE_INLINE float  toRadians(float  x)	{ return x * EVE_PI_180F; }
+		EVE_FORCE_INLINE double toRadians(double x) { return x * EVE_PI_180D; }
+		
+		EVE_FORCE_INLINE float  toDegrees(float  x)	{ return x * EVE_180_PIF; }
+		EVE_FORCE_INLINE double toDegrees(double x) { return x * EVE_180_PID; }
+		
+		
+		EVE_FORCE_INLINE float  lerp(const float  &a, const float  &b, float  factor)	{ return a + (b - a) * factor; }
+		EVE_FORCE_INLINE double lerp(const double &a, const double &b, double factor)	{ return a + (b - a) * factor; }
+		
+		
+		EVE_FORCE_INLINE float  lmap(float  val, float  inMin, float  inMax, float  outMin, float  outMax) { return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin)); }
+		EVE_FORCE_INLINE double lmap(double val, double inMin, double inMax, double outMin, double outMax) { return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin)); }
+		
+		
+		EVE_FORCE_INLINE float  bezierInterp(float  a, float  b, float  c, float  d, float  t)	{ float  t1(1.0f-t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
+		EVE_FORCE_INLINE float  bezierInterp(float  a, float  b, float  c, float  d, double t)	{ double t1(1.0 -t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
+		EVE_FORCE_INLINE double bezierInterp(double a, double b, double c, double d, double t)	{ double t1(1.0 -t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
+		EVE_FORCE_INLINE double bezierInterp(double a, double b, double c, double d, float  t)	{ float  t1(1.0f-t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
+		
+		
+		EVE_FORCE_INLINE float  constrain(float  val, float  minVal, float  maxVal) { if (val < minVal) return minVal; else if (val > maxVal) return maxVal; else return val; }
+		EVE_FORCE_INLINE double constrain(double val, double minVal, double maxVal) { if (val < minVal) return minVal; else if (val > maxVal) return maxVal; else return val; }
+		
+		
+		
+		EVE_FORCE_INLINE float	acos(float  x)				{ return ::acosf(x);		}
+		EVE_FORCE_INLINE double acos(double x)				{ return ::acos(x);			}
+
+		EVE_FORCE_INLINE float	asin(float  x)				{ return ::asinf(x);		}
+		EVE_FORCE_INLINE double asin(double x)				{ return ::asin(x);			}
+		
+		EVE_FORCE_INLINE float	atan(float  x)				{ return ::atanf(x);		}
+		EVE_FORCE_INLINE double atan(double x)				{ return ::atan(x);			}
+		
+		EVE_FORCE_INLINE float	atan2(float  x, float  y)	{ return ::atan2f(y, x);	}
+		EVE_FORCE_INLINE double atan2(double x, double y)	{ return ::atan2(y, x);		}
+		
+		EVE_FORCE_INLINE float	cos(float  x)				{ return ::cosf(x);			}
+		EVE_FORCE_INLINE double cos(double x)				{ return ::cos(x);			}
+		
+		EVE_FORCE_INLINE float	sin(float  x)				{ return ::sinf(x);			}
+		EVE_FORCE_INLINE double sin(double x)				{ return ::sin(x);			}
+		
+		EVE_FORCE_INLINE float	tan(float  x)				{ return ::tanf(x);			}
+		EVE_FORCE_INLINE double tan(double x)				{ return ::tan(x);			}
+
+		EVE_FORCE_INLINE float	cosh(float  x)				{ return ::coshf(x);		}
+		EVE_FORCE_INLINE double cosh(double x)				{ return ::cosh(x);			}
+		
+		EVE_FORCE_INLINE float	sinh(float  x)				{ return ::sinhf(x);		}
+		EVE_FORCE_INLINE double sinh(double x)				{ return ::sinh(x);			}
+		
+		EVE_FORCE_INLINE float	tanh(float  x)				{ return ::tanhf(x);		}
+		EVE_FORCE_INLINE double tanh(double x)				{ return ::tanh(x);			}
+		
+		EVE_FORCE_INLINE float	exp(float  x)				{ return ::expf(x);			}
+		EVE_FORCE_INLINE double exp(double x)				{ return ::exp(x);			}
+		
+		EVE_FORCE_INLINE float	log(float  x)				{ return ::logf(x);			}
+		EVE_FORCE_INLINE double log(double x)				{ return ::log(x);			}
+		
+		EVE_FORCE_INLINE float	log10(float  x)				{ return ::log10f(x);		}
+		EVE_FORCE_INLINE double log10(double x)				{ return ::log10(x);		}
+
+	}
+}
+
+
+
+
+// There are faster techniques for this, but this is portable
+EVE_FORCE_INLINE uint32_t log2floor(uint32_t x)
+{
+	uint32_t result = 0;
+	while (x >>= 1)
+		++result;
+
+	return result;
+}
+
+EVE_FORCE_INLINE uint32_t log2ceil(uint32_t x)
+{
+	uint32_t isNotPowerOf2 = (x & (x - 1));
+	return (isNotPowerOf2) ? (log2floor(x) + 1) : log2floor(x);
+}
+
+EVE_FORCE_INLINE uint32_t nextPowerOf2(uint32_t x)
+{
+	x |= (x >> 1);
+	x |= (x >> 2);
+	x |= (x >> 4);
+	x |= (x >> 8);
+	x |= (x >> 16);
+	return(x + 1);
+}
 
 
 template<typename T>
 struct tmath
 {
-	static T	acos  ( T x )			{ return ::acos		( double(x) );				}
-	static T	asin  ( T x )			{ return ::asin		( double(x) );				}
-	static T	atan  ( T x )			{ return ::atan		( double(x) );				}
-	static T	atan2 ( T x, T y )		{ return ::atan2	( double(y), double(x) );	}
-	static T	cos   ( T x )			{ return ::cos		( double(x) );				}
-	static T	sin   ( T x )			{ return ::sin		( double(x) );				}
-	static T	tan   ( T x )			{ return ::tan		( double(x) );				}
-	static T	cosh  ( T x )			{ return ::cosh		( double(x) );				}
-	static T	sinh  ( T x )			{ return ::sinh		( double(x) );				}
-	static T	tanh  ( T x )			{ return ::tanh		( double(x) );				}
-	static T	exp   ( T x )			{ return ::exp		( double(x) );				}
-	static T	log   ( T x )			{ return ::log		( double(x) );				}
-	static T	log10 ( T x )			{ return ::log10	( double(x) );				}
 	static T	modf  ( T x, T *iptr )
 	{
 		double ival;
-		T rval( ::modf (double(x),&ival));
+		T rval( ::modf (static_cast<double>(x),&ival));
 		*iptr = ival;
 		return rval;
 	}
-	static T	pow   (T x, T y)	{ return ::pow (double(x), double(y)); }
-	static T	sqrt  (T x)			{ return ::sqrt (double(x)); }
+	static T	pow   (T x, T y)	{ return ::pow (static_cast<double>(x), static_cast<double>(y)); }
+	static T	sqrt(T x)			{ return ::sqrt(static_cast<double>(x)); }
 
 	static T	sqrt_approx(T x)
 	{
@@ -147,11 +241,11 @@ struct tmath
 #else
 	static T	cbrt( T x )						{ return ::cbrt( x ); }
 #endif
-	static T	ceil  (T x)						{ return ::ceil (double(x));}
-	static T	abs  (T x)						{ return ::fabs (double(x));}
-	static T	floor (T x)						{ return ::floor (double(x));}
-	static T	fmod  (T x, T y)				{ return ::fmod (double(x), double(y));}
-	static T	hypot (T x, T y)				{ return ::hypot (double(x), double(y));}
+	static T	ceil(T x)						{ return ::ceil(static_cast<double>(x)); }
+	static T	abs(T x)						{ return ::fabs(static_cast<double>(x)); }
+	static T	floor(T x)						{ return ::floor(static_cast<double>(x)); }
+	static T	fmod  (T x, T y)				{ return ::fmod (static_cast<double>(x), static_cast<double>(y));}
+	static T	hypot (T x, T y)				{ return ::hypot (static_cast<double>(x), static_cast<double>(y));}
 	static T	signum (T x)					{ return ( x >0.0 ) ? 1.0 : ( ( x < 0.0 ) ? -1.0 : 0.0 ); }
 	static T	min(T x, T y)					{ return ( x < y ) ? x : y; }
 	static T	max(T x, T y)					{ return ( x > y ) ? x : y; }
@@ -166,19 +260,6 @@ struct tmath
 template<>
 struct tmath<float>
 {
-	static float	acos  ( float x )				{ return ::acosf	( x );		}
-	static float	asin  ( float x )				{ return ::asinf	( x );		}
-	static float	atan  ( float x )				{ return ::atanf	( x );		}
-	static float	atan2 ( float x, float y )		{ return ::atan2f	( y, x );	}
-	static float	cos   ( float x )				{ return ::cosf		( x );		}
-	static float	sin   ( float x )				{ return ::sinf		( x );		}
-	static float	tan   ( float x )				{ return ::tanf		( x );		}
-	static float	cosh  ( float x )				{ return ::coshf	( x );		}
-	static float	sinh  ( float x )				{ return ::sinhf	( x );		}
-	static float	tanh  ( float x )				{ return ::tanhf	( x );		}
-	static float	exp   ( float x )				{ return ::expf		( x );		}
-	static float	log   ( float x )				{ return ::logf		( x );		}
-	static float	log10 ( float x )				{ return ::log10f	( x );		}
 	static float	modf  ( float x, float *y )		{ return ::modff	( x, y );	}
 	static float	pow   ( float x, float y )		{ return ::powf		( x, y );	}
 	static float	sqrt  ( float x )				{ return ::sqrtf	( x );		}
@@ -218,7 +299,7 @@ struct tmath<float>
 	}
 
 #if defined( _MSC_VER )
-	static float	cbrt( float x )		{ return ( x > 0 ) ? (::powf( x, 1.0f * DIVIDE_3F )) : (- ::powf( -x, 1.0f * DIVIDE_3F ) ); }
+	static float	cbrt( float x )		{ return ( x > 0 ) ? (::powf( x, 1.0f * EVE_DIVIDE_3F )) : (- ::powf( -x, 1.0f * EVE_DIVIDE_3F ) ); }
 #else
 	static float	cbrt  (float x)			{ return ::cbrtf( x ); }	
 #endif
@@ -240,65 +321,15 @@ struct tmath<float>
 
 	static bool equal(float a, float b, float epsilon = std::numeric_limits<float>::epsilon()) { return (abs(a - b) < epsilon); }
 
-	inline static float quasi_zero( void )		{ return  0.000001f; }
-	inline static float quasi_zero_neg( void )	{ return -0.000001f; }
+	inline static float quasi_zero(void)		{ return  QUASI_ZEROF; }
+	inline static float quasi_zero_neg(void)	{ return -QUASI_ZEROF; }
 };
 
 
 
-inline float toRadians( float x )
-{
-	return x * 0.017453292519943295769f; // ( x * PI / 180 )
-}
 
-inline double toRadians( double x )
-{
-	return x * 0.017453292519943295769; // ( x * PI / 180 )
-}
 
-inline float toDegrees( float x )
-{
-	return x * 57.295779513082321f; // ( x * 180 / PI )
-}
 
-inline double toDegrees( double x )
-{
-	return x * 57.295779513082321; // ( x * 180 / PI )
-}
-
-template<typename T, typename L>
-T lerp( const T &a, const T &b, L factor )
-{
-	return a + ( b - a ) * factor;
-}
-
-template<typename T>
-T lmap(T val, T inMin, T inMax, T outMin, T outMax)
-{
-	return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin));
-}
-
-template<typename T, typename L>
-T bezierInterp( T a, T b, T c, T d, L t)
-{
-    L t1 = static_cast<L>(1.0) - t;
-    return a*(t1*t1*t1) + b*(3*t*t1*t1) + c*(3*t*t*t1) + d*(t*t*t);
-}
-
-template<typename T, typename L>
-T bezierInterpRef( const T &a, const T &b, const T &c, const T &d, L t)
-{
-    L t1 = static_cast<L>(1.0) - t;
-    return a*(t1*t1*t1) + b*(3*t*t1*t1) + c*(3*t*t*t1) + d*(t*t*t);
-}
-
-template<typename T>
-T constrain( T val, T minVal, T maxVal )
-{
-	if( val < minVal ) return minVal;
-	else if( val > maxVal ) return maxVal;
-	else return val;
-}
 
 // Don Hatch's version of sin(x)/x, which is accurate for very small x.
 // Returns 1 for x == 0.
@@ -309,32 +340,6 @@ T sinx_over_x( T x )
 	return T( 1 );
     else
 	return tmath<T>::sin( x ) / x;
-}
-
-// There are faster techniques for this, but this is portable
-inline uint32_t log2floor( uint32_t x )
-{
-    uint32_t result = 0;
-    while( x >>= 1 )
-        ++result;
-
-    return result;
-}
-
-inline uint32_t log2ceil( uint32_t x )
-{
-	uint32_t isNotPowerOf2 = (x & (x - 1));
-	return ( isNotPowerOf2 ) ? (log2floor( x ) + 1) : log2floor( x );
-}
-
-inline uint32_t nextPowerOf2( uint32_t x )
-{
-    x |= (x >> 1);
-    x |= (x >> 2);
-    x |= (x >> 4);
-    x |= (x >> 8);
-    x |= (x >> 16);
-    return(x+1);
 }
 
 template<typename T>
@@ -369,10 +374,10 @@ template<typename T>
 int solveCubic( T a, T b, T c, T d, T result[3] );
 
 
-#if defined( NATIVE_OS_WIN32 )
+#if defined(EVE_OS_WIN)
 namespace std {
-	inline bool isfinite( float arg ) { return _finite( arg ) != 0; }
-	inline bool isfinite( double arg ) { return _finite( arg ) != 0; }
+	EVE_FORCE_INLINE bool isfinite(float arg)  { return _finite(arg) != 0; }
+	EVE_FORCE_INLINE bool isfinite(double arg) { return _finite(arg) != 0; }
 }
 #endif
 

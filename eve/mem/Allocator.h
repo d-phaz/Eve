@@ -105,20 +105,20 @@ inline void eve::mem::align_free(void * p_pPtr)
 /** \def EVE_ALIGN \brief Convenience macro to declare class or struct aligned. */
 #if defined(EVE_OS_WIN)
 #if defined(__MINGW32__) || defined(__CYGWIN__) || (defined (_MSC_VER) && _MSC_VER < 1300)
-#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) TYPE NAME
+#define EVE_ALIGN(ALIGNMENT, TYPE) TYPE
 #else
-#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) __declspec(align(ALIGNMENT)) TYPE NAME
+#define EVE_ALIGN(ALIGNMENT, TYPE) __declspec(align(ALIGNMENT)) TYPE
 #endif
-#else
-#define EVE_ALIGN(ALIGNMENT, TYPE, NAME) TYPE __attribute__ ((aligned (ALIGNMENT))) NAME
+#elif defined(EVE_OS_DARWIN) || defined(EVE_OS_LINUX)
+#define EVE_ALIGN(ALIGNMENT, TYPE) TYPE __attribute__ ((aligned (ALIGNMENT)))
 #endif
 
 
 /** \def EVE_ALIGNED16 \brief Convenience macro to declare class or struct has 16 Byte memory alignment. */
-#define EVE_ALIGNED16(TYPE, NAME) EVE_ALIGN(16, TYPE, NAME)
+#define EVE_ALIGNED16(TYPE) EVE_ALIGN(16, TYPE)
 /** \def EVE_ALIGNED64 \brief Convenience macro to declare class or struct has 64 Byte memory alignment. */
-#define EVE_ALIGNED64(TYPE, NAME) EVE_ALIGN(64, TYPE, NAME)
+#define EVE_ALIGNED64(TYPE) EVE_ALIGN(64, TYPE)
 /** \def EVE_ALIGNED128 \brief Convenience macro to declare class or struct has 128 Byte memory alignment. */
-#define EVE_ALIGNED128(TYPE, NAME) EVE_ALIGN(128, TYPE, NAME)
+#define EVE_ALIGNED128(TYPE) EVE_ALIGN(128, TYPE)
 
 #endif // __EVE_MEMORY_ALLOCATOR_H__
