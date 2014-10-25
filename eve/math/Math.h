@@ -91,11 +91,11 @@ namespace eve
 {
 	namespace math
 	{
-		EVE_FORCE_INLINE float  toRadians(float  x)	{ return x * EVE_PI_180F; }
-		EVE_FORCE_INLINE double toRadians(double x) { return x * EVE_PI_180D; }
+		EVE_FORCE_INLINE float  toRadians(float  x)					{ return x * EVE_PI_180F; }
+		EVE_FORCE_INLINE double toRadians(double x)					{ return x * EVE_PI_180D; }
 		
-		EVE_FORCE_INLINE float  toDegrees(float  x)	{ return x * EVE_180_PIF; }
-		EVE_FORCE_INLINE double toDegrees(double x) { return x * EVE_180_PID; }
+		EVE_FORCE_INLINE float  toDegrees(float  x)					{ return x * EVE_180_PIF; }
+		EVE_FORCE_INLINE double toDegrees(double x)					{ return x * EVE_180_PID; }
 		
 		
 		EVE_FORCE_INLINE float  lerp(const float  &a, const float  &b, float  factor)	{ return a + (b - a) * factor; }
@@ -215,8 +215,8 @@ namespace eve
 		EVE_FORCE_INLINE bool equal(float  a, float  b, float  epsilon = std::numeric_limits<float>::epsilon())  { return (abs(a - b) < epsilon); }
 		EVE_FORCE_INLINE bool equal(double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) { return (abs(a - b) < epsilon); }
 
-		EVE_FORCE_INLINE bool isfinite(float  arg) { return std::isfinite(arg) != 0; }
-		EVE_FORCE_INLINE bool isfinite(double arg) { return std::isfinite(arg) != 0; }
+		EVE_FORCE_INLINE bool isfinite(float  arg)					{ return std::isfinite(arg) != 0; }
+		EVE_FORCE_INLINE bool isfinite(double arg)					{ return std::isfinite(arg) != 0; }
 
 
 		/*
@@ -301,7 +301,7 @@ namespace eve
 		template<typename T>
 		EVE_FORCE_INLINE int32_t solveQuadratic(T a, T b, T c, T result[2])
 		{
-			if (a == 0) return solveLinear(b, c, result);
+			if (a == 0) return eve::math::solveLinear(b, c, result);
 
 			T radical = b * b - 4 * a * c;
 			if (radical < 0) return 0;
@@ -323,7 +323,7 @@ namespace eve
 		int32_t solveCubic(T a, T b, T c, T d, T result[3])
 		{
 			if (a == 0)
-				return solveQuadratic(b, c, d, result);
+				return eve::math::solveQuadratic(b, c, d, result);
 
 			T f = ((3 * c / a) - ((b * b) / (a * a))) / 3;
 			T g = ((2 * b * b * b) / (a * a * a) - (9 * b * c) / (a * a) + (27 * d) / (a)) / 27;
@@ -357,7 +357,9 @@ namespace eve
 				return 3;
 			}
 		}
-	}
-}
+
+	} //namespace math
+
+} // namespace eve
 
 #endif // __EVE_MATH_MATH_H__
