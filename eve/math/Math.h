@@ -236,7 +236,7 @@ namespace eve
 			val_int >>= 1;			/* Divide by 2. */
 			val_int += 1 << 29;		/* Add ((b + 1) / 2) * 2^m. */
 
-			return *(float*)&val_int; /* Interpret again as float */
+			return *reinterpret_cast<float*>(&val_int); /* Interpret again as float */
 		}
 		EVE_FORCE_INLINE double sqrt_approx(double x)
 		{
@@ -246,7 +246,7 @@ namespace eve
 			val_int >>= 1;			/* Divide by 2. */
 			val_int += 1 << 29;		/* Add ((b + 1) / 2) * 2^m. */
 
-			return *(double*)&val_int; /* Interpret again as double */
+			return *reinterpret_cast<double*>(&val_int); /* Interpret again as double */
 		}
 
 
