@@ -4,11 +4,9 @@
 ;--------------------------------
 ; You must define these values
 
-  ;;	;;
-  !include Library.nsh
+  !include "Library.nsh"
   !define LIBRARY_SHELL_EXTENSION
   !define LIBRARY_IGNORE_VERSION
-  ;;	;;
 
   !define VERSION "@CPACK_PACKAGE_VERSION@"
   !define PATCH  "@CPACK_PACKAGE_VERSION_PATCH@"
@@ -157,6 +155,7 @@ Var AR_RegFlags
   "${SecName}_unchanged:"
 !macroend
 ;--- End of Add/Remove macros ---
+
 
 ;--------------------------------
 ;Interface Settings
@@ -554,6 +553,8 @@ FunctionEnd
 
 ;--------------------------------
 ;Pages
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\@CPACK_PACKAGE_NAME@.exe"
+	
   !insertmacro MUI_PAGE_WELCOME
 
   !insertmacro MUI_PAGE_LICENSE "@CPACK_RESOURCE_FILE_LICENSE@"
@@ -649,7 +650,7 @@ Section "-Core installation"
   SetOutPath "$INSTDIR"
   
   ; Reboot flag ---- RC
-  SetRebootFlag true
+  ; SetRebootFlag true
   
   @CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS@
   ; !system 'signtool sign /t http://timestamp.digicert.com /a ${binary}' ; ---- RC
@@ -834,14 +835,14 @@ Section "Uninstall"
 		Goto killend
 	
 	betterKill:
-	ExecWait "taskkill /im @CPACK_PACKAGE_NAME@.exe"
-	Sleep 1000
-	ExecWait "taskkill /f /im @CPACK_PACKAGE_NAME@.exe"
-	Sleep 1000
+		ExecWait "taskkill /im @CPACK_PACKAGE_NAME@.exe"
+		Sleep 1000
+		ExecWait "taskkill /f /im @CPACK_PACKAGE_NAME@.exe"
+		Sleep 1000
 	killend:
+	
 	; Unregister startup ---- RC
 	DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "@CPACK_PACKAGE_NAME@"
-	; Kill process if running ---- RC
 
   ReadRegStr $START_MENU SHCTX \
    "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "StartMenu"
@@ -907,7 +908,7 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
 @CPACK_NSIS_DELETE_ICONS_EXTRA@
 
-  ;Delete empty start menu parent diretories
+  ;Delete empty start menu parent directories
   StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
 
   secondStartMenuDeleteLoop:
@@ -945,10 +946,11 @@ Function .onInit
   ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "UninstallString"
   StrCmp $0 "" inst
 
-  MessageBox MB_YESNOCANCEL|MB_ICONEXCLAMATION \
-  "@CPACK_NSIS_PACKAGE_NAME@ is already installed. $\n$\nDo you want to uninstall the old version before installing the new one?" \
-  IDYES uninst IDNO inst
-  Abort
+  ; Uncomment this to use Uninstall Message Box ---- RC
+  ; MessageBox MB_YESNOCANCEL|MB_ICONEXCLAMATION \
+  ; "@CPACK_NSIS_PACKAGE_NAME@ is already installed. $\n$\nDo you want to uninstall the old version before installing the new one?" \
+  ; IDYES uninst IDNO inst
+  ; Abort
 
 ;Run the uninstaller
 uninst:

@@ -81,9 +81,6 @@ set( CPACK_NSIS_INSTALLED_ICON_NAME "${PRODUCT_ICON_INSTALL_NAME}.ico" )
 set( CPACK_NSIS_MODIFY_PATH OFF )
 set( CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON )
 
-# set( CPACK_NSIS_COMPRESSOR "/SOLID zlib" )
-set( CPACK_NSIS_MUI_FINISHPAGE_RUN "${CPACK_NSIS_INSTALL_ROOT}/${PRODUCT_PRODUCT_NAME}/${PRODUCT_PRODUCT_NAME}.exe" )
-
 
 # Additional icons and short-cuts
 ###################################################################################################
