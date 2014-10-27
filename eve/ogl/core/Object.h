@@ -184,6 +184,6 @@ inline TOGLClass * eve::ogl::Object::create_object(eve::ogl::Format & p_format, 
 * \def EVE_OGL_CREATE
 * \brief Convenience macro to create OpenGL object. 
 */
-#define EVE_OGL_CREATE(CLASS, FORMAT, RENDERER) eve::ogl::Object::create_object<CLASS>(FORMAT, RENDERER);
+#define EVE_OGL_CREATE(CLASS, FORMAT, RENDERER) eve::ogl::Object::create_object<CLASS>(FORMAT, RENDERER)
 
 #endif // __EVE_OPENGL_OBJECT_H__

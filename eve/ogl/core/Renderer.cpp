@@ -205,21 +205,27 @@ void eve::ogl::Renderer::cb_display(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-eve::ogl::Texture * eve::ogl::Renderer::create(eve::ogl::FormatTex & p_format)
-{
-	return EVE_OGL_CREATE(eve::ogl::Texture, p_format, this);
-}
-
-//=================================================================================================
 eve::ogl::Fbo * eve::ogl::Renderer::create(eve::ogl::FormatFbo & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Fbo, p_format, this);
 }
 
 //=================================================================================================
+eve::ogl::Pbo * eve::ogl::Renderer::create(eve::ogl::FormatPbo & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Pbo, p_format, this);
+}
+
+//=================================================================================================
 eve::ogl::Shader * eve::ogl::Renderer::create(eve::ogl::FormatShader & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Shader, p_format, this);
+}
+
+//=================================================================================================
+eve::ogl::Texture * eve::ogl::Renderer::create(eve::ogl::FormatTex & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::Texture, p_format, this);
 }
 
 //=================================================================================================

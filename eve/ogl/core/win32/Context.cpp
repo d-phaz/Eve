@@ -398,7 +398,8 @@ eve::ogl::SubContext * eve::ogl::SubContext::create_ptr(HWND p_hWnd)
 //=================================================================================================
 eve::ogl::SubContext::SubContext(HWND p_hWnd)
 	// Members init
-	: m_hDC(0)
+	: m_hGLRC(0)
+	, m_hDC(0)
 	, m_hWnd(p_hWnd)
 {}
 
@@ -424,8 +425,22 @@ void eve::ogl::SubContext::init(void)
 	}
 
 
+#ifndef NDEBUG
+	static const int contextAttribs[] = { WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB, 0 };
+#else
+	static const int contextAttribs[] = { 0 };
+#endif
+
+	// Create context (GLRC).
+	m_hGLRC = wglCreateContextAttribsARB(m_hDC, eve::ogl::Context::get_handle(), contextAttribs);
+	if (m_hGLRC == 0)
+	{
+		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContext() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
 	// Make context current (has to be activated here to enforce DC bound).
-	if (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()) == 0)
+	if (::wglMakeCurrent(m_hDC, m_hGLRC) == 0)
 	{
 		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
@@ -445,6 +460,12 @@ void eve::ogl::SubContext::init(void)
 //=================================================================================================
 void eve::ogl::SubContext::release(void)
 {
+	// Rendering context handle.
+	if (m_hGLRC)
+	{
+		::wglDeleteContext(m_hGLRC);
+		m_hGLRC = 0;
+	}
 	// Draw context.
 	if (m_hWnd && m_hDC)
 	{
@@ -470,13 +491,13 @@ bool eve::ogl::SubContext::makeCurrent(void)
 
 	bool ret = true;
 
-	if (eve::ogl::Context::get_handle() == ::wglGetCurrentContext())
+	if (/*eve::ogl::Context::get_handle()*/ m_hGLRC  == ::wglGetCurrentContext())
 	{
-		EVE_LOG_ERROR("Context already current.", (uintptr_t)eve::ogl::Context::get_handle());
+		EVE_LOG_ERROR("Context already current.");
 		ret = false;
 	}
 
-	if (ret && (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()) == TRUE))
+	if (ret && (::wglMakeCurrent(m_hDC, m_hGLRC/*eve::ogl::Context::get_handle()*/) == TRUE))
 	{
 		eve::ogl::SubContext::set_current_context(this);
 	}

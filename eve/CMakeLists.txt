@@ -145,6 +145,8 @@ set( OPENGL_SRCS
 	 ogl/core/Macro.h 
 	 ogl/core/Object.cpp 
 	 ogl/core/Object.h 
+	 ogl/core/Pbo.cpp 
+	 ogl/core/Pbo.h  
 	 ogl/core/Renderer.cpp 
 	 ogl/core/Renderer.h 
 	 ogl/core/Shader.cpp 

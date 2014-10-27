@@ -221,7 +221,7 @@ void eve::ogl::Vao::oglInit(void)
 //=================================================================================================
 void eve::ogl::Vao::oglUpdate(void)
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, m_arrayBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
 
 	m_pOglData = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, m_verticesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
 	memcpy(m_pOglData, m_pVertices.get(), m_verticesSize);

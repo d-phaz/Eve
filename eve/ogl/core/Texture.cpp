@@ -44,7 +44,7 @@ eve::ogl::FormatTex::FormatTex(void)
 	, type(GL_UNSIGNED_BYTE)
 	, filter(GL_LINEAR)
 	, wrap(GL_CLAMP_TO_EDGE)
-	, data()
+	, pixels()
 {}
 
 //=================================================================================================
@@ -62,7 +62,7 @@ eve::ogl::FormatTex::FormatTex(const eve::ogl::FormatTex & p_other)
 	, type(p_other.type)
 	, filter(p_other.filter)
 	, wrap(p_other.wrap)
-	, data(p_other.data)
+	, pixels(p_other.pixels)
 {}
 
 //=================================================================================================
@@ -70,13 +70,13 @@ const eve::ogl::FormatTex & eve::ogl::FormatTex::operator = (const eve::ogl::For
 {
 	if (this != &p_other)
 	{
-		this->format	= p_other.format;
+		this->format		= p_other.format;
 		this->width		= p_other.width;
-		this->height	= p_other.height;
+		this->height		= p_other.height;
 		this->type		= p_other.type;
-		this->filter	= p_other.filter;
+		this->filter		= p_other.filter;
 		this->wrap		= p_other.wrap;
-		this->data		= p_other.data;
+		this->pixels		= p_other.pixels;
 	}
 	return *this;
 }
@@ -93,7 +93,7 @@ eve::ogl::Texture::Texture(void)
 	, m_width(0)
 	, m_height(0)
 	, m_type(GL_UNSIGNED_BYTE)
-	, m_pData()
+	, m_pPixels()
 	, m_filter(GL_LINEAR)
 	, m_wrap(GL_CLAMP_TO_EDGE)
 {}
@@ -111,7 +111,7 @@ void eve::ogl::Texture::setAttributes(eve::ogl::Format * p_format)
 	m_type			= format->type;
 	m_filter		= format->filter;
 	m_wrap			= format->wrap;
-	m_pData			= format->data;
+	m_pPixels		= format->pixels;
 }
 
 
@@ -133,8 +133,8 @@ void eve::ogl::Texture::release(void)
 //=================================================================================================
 void eve::ogl::Texture::oglInit(void)
 {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	EVE_OGL_CHECK_ERROR;
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//EVE_OGL_CHECK_ERROR;
 
 	glGenTextures(1, &m_id);
 	glBindTexture(GL_TEXTURE_2D, m_id);
@@ -146,7 +146,7 @@ void eve::ogl::Texture::oglInit(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_wrap);
 	EVE_OGL_CHECK_ERROR;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, m_format, m_width, m_height, 0, m_format, m_type, m_pData.get());
+	glTexImage2D(GL_TEXTURE_2D, 0, m_format, m_width, m_height, 0, m_format, m_type, m_pPixels.get());
 	EVE_OGL_CHECK_ERROR;
 
 	glBindTexture( GL_TEXTURE_2D, 0 );
@@ -157,7 +157,7 @@ void eve::ogl::Texture::oglInit(void)
 void eve::ogl::Texture::oglUpdate(void)
 {
 	glBindTexture(GL_TEXTURE_2D, m_id);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, m_format, m_type, m_pData.get());
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, m_format, m_type, m_pPixels.get());
 	glBindTexture(GL_TEXTURE_2D, 0);
 	EVE_OGL_CHECK_ERROR;
 }
@@ -193,10 +193,10 @@ void eve::ogl::Texture::unbind(GLenum p_index)
 
 
 //=================================================================================================
-void eve::ogl::Texture::setData(std::shared_ptr<GLvoid> p_pData)
+void eve::ogl::Texture::setPixels(std::shared_ptr<GLvoid> p_pPixels)
 {
-	EVE_ASSERT(p_pData.get());
-	m_pData = p_pData;
+	EVE_ASSERT(p_pPixels.get());
+	m_pPixels = p_pPixels;
 
 	this->requestOglUpdate();
 }

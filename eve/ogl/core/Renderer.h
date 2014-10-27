@@ -41,6 +41,10 @@
 #include "eve/ogl/core/Fbo.h"
 #endif
 
+#ifndef __EVE_OPENGL_PBO_H__
+#include "eve/ogl/core/Pbo.h"
+#endif
+
 #ifndef __EVE_OPENGL_TEXTURE_H__
 #include "eve/ogl/core/Texture.h"
 #endif
@@ -146,12 +150,14 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
-			eve::ogl::Texture * create(eve::ogl::FormatTex & p_format);
 			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFbo. */
 			eve::ogl::Fbo *		create(eve::ogl::FormatFbo & p_format);
+			/** \brief Create and return new eve::ogl::Pbo pointer based on eve::ogl::FormatPbo. */
+			eve::ogl::Pbo *		create(eve::ogl::FormatPbo & p_format);
 			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
 			eve::ogl::Shader *	create(eve::ogl::FormatShader & p_format);
+			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
+			eve::ogl::Texture * create(eve::ogl::FormatTex & p_format);
 			/** \brief Create and return new eve::ogl::Uniform pointer based on eve::ogl::FormatUniform. */
 			eve::ogl::Uniform * create(eve::ogl::FormatUniform & p_format);
 			/** \brief Create and return new eve::ogl::Vao pointer based on eve::ogl::FormatVao. */

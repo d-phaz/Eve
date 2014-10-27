@@ -35,6 +35,7 @@
 #include "eve/time/Absolute.h"
 #include "eve/time/Clock.h"
 
+#include "eve/math/Types.h"
 
 class Example final
 	: public eve::sys::View
@@ -43,7 +44,9 @@ class Example final
 
 private:
 	eve::ogl::Renderer *		renderer;
+
 	eve::ogl::Fbo *				fbo;
+	eve::ogl::Pbo *				pbo;
 	eve::ogl::Texture *			tex;
 	eve::ogl::Shader *			shader;
 
@@ -85,6 +88,12 @@ void Example::initThreadedData(void)
 	fmtFbo.height	= 600;
 	fbo = renderer->create(fmtFbo);
 
+	eve::ogl::FormatPbo fmtPbo;
+	fmtPbo.width		= 800;
+	fmtPbo.height		= 600;
+	fmtPbo.numChannels	= 4;
+	pbo = renderer->create(fmtPbo);
+
 	eve::ogl::FormatTex fmtTex;
 	fmtTex.width	= 800;
 	fmtTex.height	= 600;
@@ -104,6 +113,10 @@ void Example::initThreadedData(void)
 
 	vec4 = (float*)eve::mem::align_malloc(sizeof(float)* 4, 16);
 	EVE_ASSERT(vec4);
+
+
+	eve::vec4i_t vec { 1, 3, 9, 27 };
+	EVE_LOG_INFO("__eve_vec4i [3] : %d", vec[3]);
 }
 
 void Example::releaseThreadedData(void)
@@ -115,6 +128,7 @@ void Example::releaseThreadedData(void)
 
 	shader->requestRelease(); 
 	tex->requestRelease();
+	pbo->requestRelease();
 	fbo->requestRelease();
 	this->releaseRenderer(renderer);
 

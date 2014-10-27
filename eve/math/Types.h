@@ -23,12 +23,11 @@ namespace eve
 
 	} // namespace __math_internal
 
+	typedef eve::__math_internal::__vec4i		vec4i_t;
+	typedef eve::__math_internal::__vec4ui		vec4iu_t;
+	typedef eve::__math_internal::__vec4f		vec4f_t;
+	typedef eve::__math_internal::__vec4d		vec4d_t;
+
 } // namespace eve
-
-#define __eve_vec4i		eve::__math_internal::__vec4i
-#define __eve_vec4ui	eve::__math_internal::__vec4ui
-#define __eve_vec4f		eve::__math_internal::__vec4f
-#define __eve_vec4d		eve::__math_internal::__vec4d
-
 
 #endif // __EVE_MATH_TYPES_H__

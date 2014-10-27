@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_TEXTURE_H__
-#define __EVE_OPENGL_TEXTURE_H__
+#ifndef __EVE_OPENGL_PBO_H__
+#define __EVE_OPENGL_PBO_H__
 
 #ifndef __EVE_OPENGL_OBJECT_H__
 #include "eve/ogl/core/Object.h"
@@ -43,59 +43,44 @@ namespace eve
 	namespace ogl
 	{
 		/**
-		* \class eve::ogl::FormatTex
+		* \class eve::ogl::FormatPbo
 		*
-		* \brief OpenGL texture format class.
-		* Used to create OpenGL texture based on properties.
-		*
-		* Default texture format is GL_RGBA (4 channels).
-		* Default texture data type is GL_UNSIGNED_BYTE.
-		*
-		* By default texture use LINEAR filtering and are clamped to edges on ST axes.
+		* \brief OpenGL pixel buffer object format class.
+		* Used to create OpenGL pixel buffer object based on properties.
 		*
 		* \note extends eve::ogl::Format
 		*/
-		class FormatTex final
+		class FormatPbo final
 			: public eve::ogl::Format
 		{
 		public:
-			GLenum						format;		//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
-			GLsizei						width;		//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
-			GLsizei						height;		//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
-			GLenum						type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
-			
-			GLint						filter;		//!< Specifies the filter used to interpolate texels.
-			GLint						wrap;		//!< Specifies texture wrap mode.
-			std::shared_ptr<GLvoid>		pixels;		//!< Specifies a pointer to the image data in memory.
-
+			uint32_t					width;				//!< Specifies texture width.
+			uint32_t					height;				//!< Specifies texture height.
+			uint32_t					numChannels;		//!< Specifies the number of pixel channels (e.g. RGBA = 4).
+			std::shared_ptr<GLvoid>		pixels;				//!< Specifies a pointer to the image data in memory.
 
 		public:
 			/** \brief Class constructor. */
-			FormatTex(void);
+			FormatPbo(void);
 			/** \brief Class destructor. */
-			virtual ~FormatTex(void);
+			virtual ~FormatPbo(void);
 
 			/** \brief Copy constructor. */
-			FormatTex(const eve::ogl::FormatTex & p_other);
+			FormatPbo(const eve::ogl::FormatPbo & p_other);
 			/** \brief Assignment operator. */
-			const eve::ogl::FormatTex & operator = (const eve::ogl::FormatTex & p_other);
+			const eve::ogl::FormatPbo & operator = (const eve::ogl::FormatPbo & p_other);
 
-		}; // class FormatTex
+		}; // class FormatFbo
 
 
 		/** 
-		* \class eve::ogl::Texture
+		* \class eve::ogl::Pbo
 		*
-		* \brief Create and manage OpenGL TexImage2D object.
-		*
-		* Default texture format is GL_RGBA (4 channels).
-		* Default texture data type is GL_UNSIGNED_BYTE.
-		*
-		* By default texture use LINEAR filtering and are clamped to edges on ST axes.
+		* \brief Pixel buffer object used to stream texture data.
 		*
 		* \note extends eve::ogl::Object
 		*/
-		class Texture final
+		class Pbo final
 			: public eve::ogl::Object
 		{
 
@@ -108,28 +93,27 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			GLuint						m_id;		//!< Specifies OpenGL unique texture ID.
+			GLuint						m_id;					//!< Specifies OpenGL unique ID.
 
-			GLenum						m_format;	//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
-			GLsizei						m_width;	//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
-			GLsizei						m_height;	//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
-			GLenum						m_type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
-			std::shared_ptr<GLvoid>		m_pPixels;	//!< Specifies a pointer to the image data in memory.
+			uint32_t					m_width;				//!< Specifies texture width.
+			uint32_t					m_height;				//!< Specifies texture height.
+			uint32_t					m_numChannels;			//!< Specifies the number of pixel channels (e.g. RGBA = 4).
+			GLsizeiptr					m_size;					//!< Specifies the memory size used by the PBO.
 
-			GLint						m_filter;	//!< Specifies the filter used to interpolate texels.
-			GLint						m_wrap;		//!< Specifies texture wrap mode.
+			std::shared_ptr<GLvoid>		m_pPixels;				//!< Specifies a pointer to the image data in memory.
+			void *						m_pOglData;				//!< Specifies device buffer data address.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Texture);
-			EVE_PROTECT_DESTRUCTOR(Texture);
+			EVE_DISABLE_COPY(Pbo);
+			EVE_PROTECT_DESTRUCTOR(Pbo);
 			
 		private:
 			/** \brief Class constructor. */
-			explicit Texture(void);
+			explicit Pbo(void);
 
 
 		protected:
@@ -157,10 +141,10 @@ namespace eve
 
 
 		public:
-			/** \brief Bind (activate) texture. */
-			void bind(GLenum p_index);
-			/** \brief Unbind (deactivate) texture. */
-			static void unbind(GLenum p_index);
+			/** \brief Bind (activate). */
+			void bind(void);
+			/** \brief Unbind (deactivate). */
+			static void unbind(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,24 +152,31 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Set texture data from host memory pointer. */
-			void setPixels(std::shared_ptr<GLvoid> p_pPixels);
-
-
-		public:
-			/** \brief Get OpenGL texture unique id. (pure virtual) */
+			/** \brief Get OpenGL FBO unique id. */
 			virtual const GLuint getId(void) const override;
 
 
 		public:
-			/** \brief Get FBO size. */
+			/** \brief Set texture data from host memory pointer. */
+			void setPixels(std::shared_ptr<GLvoid> p_pPixels);
+			/** \brief Set texture data from host memory pointer. */
+			void setPixels(std::shared_ptr<GLvoid> p_pPixels, uint32_t p_width, uint32_t p_height, uint32_t p_numChannel);
+
+
+		public:
+			/** \brief Get size. */
 			void getSize(uint32_t & p_width, uint32_t & p_height);
-			/** \brief Get FBO width. */
+			/** \brief Get width. */
 			const uint32_t getWidth(void) const;
-			/** \brief Get FBO height. */
+			/** \brief Get height. */
 			const uint32_t getHeight(void) const;
-			
-		}; // class Fbo
+
+
+		public:
+			/** \brief Get number of channels. */
+			const uint32_t getNumChannels(void) const;
+
+		}; // class Pbo
 
 	} // namespace ogl
 
@@ -197,16 +188,20 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Texture::getId(void) const	{ return m_id; }
+inline const GLuint eve::ogl::Pbo::getId(void) const				{ return m_id; }
 
 
 //=================================================================================================
-inline void eve::ogl::Texture::getSize(uint32_t & p_width, uint32_t & p_height)
+inline void eve::ogl::Pbo::getSize(uint32_t & p_width, uint32_t & p_height)
 {
 	p_width  = m_width;
 	p_height = m_height;
 }
-inline const uint32_t eve::ogl::Texture::getWidth(void) const  { return m_width; }
-inline const uint32_t eve::ogl::Texture::getHeight(void) const { return m_height; }
+inline const uint32_t eve::ogl::Pbo::getWidth(void) const  { return m_width; }
+inline const uint32_t eve::ogl::Pbo::getHeight(void) const { return m_height; }
 
-#endif // __EVE_OPENGL_TEXTURE_H__
+
+//=================================================================================================
+inline const uint32_t eve::ogl::Pbo::getNumChannels(void) const { return m_numChannels; }
+
+#endif // __EVE_OPENGL_PBO_H__
