@@ -29,10 +29,12 @@ namespace eve
 				/** \brief Cleans shader views on pipeline shader stages only (excludes compute) */
 				void CleanPipelineShaderViews();
 				/** \brief Cleans both shader views and unordered views on compute shader stage */
-				void CleanComputeShaderStage();				
+				void CleanComputeShaderStage();		
+				
+				EVE_FORCE_INLINE ID3D11DeviceContext2* GetContext() { return this->m_p_context; }		
 
 			private:
-				ID3D11DeviceContext* m_p_context;
+				ID3D11DeviceContext2* m_p_context;
 				ID3D11ShaderResourceView* m_p_nullShaderViews[MAX_DX11_SRV_SLOTS];
 				ID3D11UnorderedAccessView* m_p_nullUnorderedViews[MAX_DX11_UAV_SLOTS]; //Maximum number of UAV is 64 for now, so set array to maximum size
 

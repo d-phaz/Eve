@@ -173,10 +173,14 @@ source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 #################################################
 if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	set( DIRECTX11_SRCS
+	dx11/core/BlendStates.cpp
+	dx11/core/BlendStates.h
 	dx11/core/ConstantBuffer.cpp
 	dx11/core/ConstantBuffer.h
 	dx11/core/Context.cpp
 	dx11/core/Context.h
+	dx11/core/DepthStencilStates.cpp
+	dx11/core/DepthStencilStates.h
 	dx11/core/Device.cpp
 	dx11/core/Device.h
 	dx11/core/Enums.h
@@ -184,10 +188,14 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	dx11/core/IndexBuffer.cpp
 	dx11/core/IndexBuffer.h
 	dx11/core/Macros.h
+	dx11/core/RasterizerStates.cpp
+	dx11/core/RasterizerStates.h
 	dx11/core/RawBuffer.cpp
 	dx11/core/RawBuffer.h
 	dx11/core/Renderer.cpp
 	dx11/core/Renderer.h
+	dx11/core/SamplerStates.cpp
+	dx11/core/SamplerStates.h
 	dx11/core/StructuredBuffer.cpp
 	dx11/core/StructuredBuffer.h
 	dx11/core/ShaderCompiler.cpp

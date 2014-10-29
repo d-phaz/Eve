@@ -7,4 +7,6 @@
 
 #define EVE_SAFE_RELEASE(obj) if(obj) { obj->Release(); obj = NULL; }
 
+#define EVE_FRONTFACE_CCW true //Tells if we prefer clockwise/counterclockwise winding for culling
+
 #endif // __EVE_DIRECTX11_MACROS_H__
