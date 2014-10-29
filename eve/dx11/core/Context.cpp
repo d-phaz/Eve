@@ -59,7 +59,6 @@ void eve::dx11::Context::CleanPipelineShaderViews()
 		this->m_p_context->DSSetShaderResources(0, MAX_DX11_SRV_SLOTS, this->m_p_nullShaderViews);
 	}
 
-
 	this->m_p_context->GSSetShaderResources(0, MAX_DX11_SRV_SLOTS, this->m_p_nullShaderViews);
 }
 

@@ -42,6 +42,10 @@ namespace eve
 		
 				~Device();
 
+			public: 
+				EVE_FORCE_INLINE eve::dx11::FeatureLevel GetFeatureLevel() { return this->m_featureLevel; }
+				EVE_FORCE_INLINE bool IsAtLeastLevel11() { return this->m_featureLevel > eve::dx11::FeatureLevel::f11; }
+
 
 		};
 	} //namespace dx11
