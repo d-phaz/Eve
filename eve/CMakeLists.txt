@@ -181,11 +181,22 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	dx11/core/Device.h
 	dx11/core/Enums.h
 	dx11/core/Includes.h
+	dx11/core/IndexBuffer.cpp
+	dx11/core/IndexBuffer.h
 	dx11/core/Macros.h
+	dx11/core/RawBuffer.cpp
+	dx11/core/RawBuffer.h
 	dx11/core/Renderer.cpp
 	dx11/core/Renderer.h
+	dx11/core/StructuredBuffer.cpp
+	dx11/core/StructuredBuffer.h
+	dx11/core/ShaderCompiler.cpp
+	dx11/core/ShaderCompiler.h
 	dx11/core/SwapChain.cpp
 	dx11/core/SwapChain.h
+	dx11/core/SwapChain.h
+	dx11/core/VertexBuffer.cpp
+	dx11/core/VertexBuffer.h
 	)
 	
 	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
