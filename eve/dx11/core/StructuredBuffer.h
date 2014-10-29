@@ -12,7 +12,10 @@ namespace eve
 	{
 		class StructuredBuffer
 		{
-
+			private:
+				ID3D11UnorderedAccessView* m_pUnorderedView;
+				ID3D11ShaderResourceView* m_pShaderView;
+				ID3D11Buffer* m_pBuffer;
 		};
 
 	} //namespace dx11

@@ -28,6 +28,14 @@ void eve::dx11::RasterizerStates::Init(eve::dx11::Device* device)
 
 	rasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 	d->CreateRasterizerState(&rasterizerDesc, &this->m_p_wireFrame);
+
+	rasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+	
+	rasterizerDesc.AntialiasedLineEnable = TRUE;
+	d->CreateRasterizerState(&rasterizerDesc, &this->m_p_lineAlpha);
+
+	rasterizerDesc.MultisampleEnable = TRUE;
+	d->CreateRasterizerState(&rasterizerDesc, &this->m_p_lineQuad);
 }
 
 void eve::dx11::RasterizerStates::Release()
@@ -36,4 +44,6 @@ void eve::dx11::RasterizerStates::Release()
 	EVE_SAFE_RELEASE(this->m_p_frontCull);
 	EVE_SAFE_RELEASE(this->m_p_noCull);
 	EVE_SAFE_RELEASE(this->m_p_wireFrame);
+	EVE_SAFE_RELEASE(this->m_p_lineAlpha);
+	EVE_SAFE_RELEASE(this->m_p_lineQuad);
 }

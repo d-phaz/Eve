@@ -98,6 +98,16 @@ namespace eve
 			d32s8 = DXGI_FORMAT::DXGI_FORMAT_X32_TYPELESS_G8X24_UINT
 		};
 
+		/**
+		* \def eve::dx11::StructuredBufferMode
+		* \brief Structured Buffer mode for Unordered access view
+		*/
+		enum class StructuredBufferMode : uint32_t
+		{
+			Default = 0, 
+			Append = D3D11_BUFFER_UAV_FLAG::D3D11_BUFFER_UAV_FLAG_APPEND,
+			Counter = D3D11_BUFFER_UAV_FLAG::D3D11_BUFFER_UAV_FLAG_COUNTER
+		};
 
 	} //namespace dx11
 

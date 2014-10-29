@@ -37,9 +37,20 @@ namespace eve
 				{ 
 					context->GetContext()->RSSetState(this->m_p_noCull);
 				}
+
 				EVE_FORCE_INLINE ID3D11RasterizerState* SetWireFrame(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_wireFrame);
+				}
+
+				EVE_FORCE_INLINE ID3D11RasterizerState* SetLineAlpha(eve::dx11::Context* context) 
+				{ 
+					context->GetContext()->RSSetState(this->m_p_lineAlpha);
+				}
+
+				EVE_FORCE_INLINE ID3D11RasterizerState* SetLineQuadrilateral(eve::dx11::Context* context) 
+				{ 
+					context->GetContext()->RSSetState(this->m_p_lineQuad);
 				}
 
 			protected:
@@ -56,6 +67,8 @@ namespace eve
 				ID3D11RasterizerState* m_p_frontCull;
 				ID3D11RasterizerState* m_p_noCull;
 				ID3D11RasterizerState* m_p_wireFrame;
+				ID3D11RasterizerState* m_p_lineAlpha;
+				ID3D11RasterizerState* m_p_lineQuad;
 		};
 
 	} //namespace dx11
