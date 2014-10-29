@@ -31,14 +31,13 @@ namespace eve
 				void dxRelease();
 
 			protected:
-				EVE_FORCE_INLINE ID3D11DeviceContext2* GetImmediateContext() { return this->m_p_immediateContext; }
-		
 				~Device();
 
 			public: 
 				Device();
 				void Init();
 				EVE_FORCE_INLINE ID3D11Device2* GetDevice() { return this->m_p_device; }
+				EVE_FORCE_INLINE ID3D11DeviceContext2* GetImmediateContext() { return this->m_p_immediateContext; }
 				EVE_FORCE_INLINE IDXGIFactory1* GetFactory() { return this->m_p_factory; }
 
 				EVE_FORCE_INLINE eve::dx11::FeatureLevel GetFeatureLevel() { return this->m_featureLevel; }

@@ -25,6 +25,7 @@ namespace eve
 				void Init(eve::dx11::Device* device, HWND windowHandle);
 				void Present();
 				EVE_FORCE_INLINE void EnableVerticalSync(bool enable) { this->m_bEnableVSync = enable; }
+				EVE_FORCE_INLINE ID3D11RenderTargetView* GetRenderView() { return this->m_p_renderView; }
 
 			private:
 				bool m_bEnableVSync;
