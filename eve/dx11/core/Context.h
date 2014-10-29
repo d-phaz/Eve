@@ -6,6 +6,10 @@
 	#include "Enums.h"
 #endif
 
+#ifndef __EVE_DIRECTX11_DEVICE_H__
+	#include "Device.h"
+#endif
+
 namespace eve 
 {
 	namespace dx11
@@ -13,16 +17,22 @@ namespace eve
 		class Context
 		{
 			public:
+				Context();
+				virtual ~Context();
+
+				void Init(eve::dx11::Device* device);
+
 				/** \brief Cleans shader views on specified stages */
-				void CleanShaderViews(ShaderStage stages);
-				/** \brief Cleans shader views on all stages */
-				void CleanShaderViews();
+				void CleanShaderViews(eve::dx11::ShaderStage stages);
+				/** \brief Cleans all views on all stages */
+				void CleanAllViews();
 				/** \brief Cleans shader views on pipeline shader stages only (excludes compute) */
 				void CleanPipelineShaderViews();
 				/** \brief Cleans both shader views and unordered views on compute shader stage */
 				void CleanComputeShaderStage();				
 
 			private:
+				ID3D11DeviceContext* m_p_context;
 				ID3D11ShaderResourceView* m_p_nullShaderViews[128];
 				ID3D11UnorderedAccessView* m_p_nullUnorderedViews[64]; //Maximum number of UAV is 64 for now, so set array to maximum size
 				unsigned int numUAVForDevice; //Depending on feature level this is 0, 1, 8 or 64 (also HW dependent)

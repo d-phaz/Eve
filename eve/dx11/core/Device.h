@@ -10,6 +10,8 @@
 #include "eve/mess/Includes.h"
 #endif
 
+namespace eve { namespace dx11 { class Context; } }
+
 namespace eve 
 {
 	namespace dx11
@@ -23,16 +25,21 @@ namespace eve
 		*/
 		class Device
 		{
+			friend class eve::dx11::Context;
+
 			private:
 				ID3D11Device* m_p_device; //Device pointer
 				ID3D11DeviceContext* m_p_immediateContext; //Immediate context to submit commands to GPU
-				FeatureLevel m_featureLevel; //Real device feature level
+				eve::dx11::FeatureLevel m_featureLevel; //Real device feature level
 
 			private:
 				void Init();
 				void dxRelease();
 
-			public:
+			protected:
+				EVE_FORCE_INLINE ID3D11Device* GetDevice() { return this->m_p_device; }
+				EVE_FORCE_INLINE ID3D11DeviceContext* GetImmediateContext() { return this->m_p_immediateContext; }
+		
 				~Device();
 
 

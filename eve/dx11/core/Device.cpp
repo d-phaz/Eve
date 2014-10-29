@@ -34,7 +34,7 @@ void eve::dx11::Device::Init()
 		EVE_LOG_ERROR("Unable to create device, error code:%d", hr);
 	}
 
-	this->m_featureLevel = (FeatureLevel)level;
+	this->m_featureLevel = (eve::dx11::FeatureLevel)level;
 }
 
 void eve::dx11::Device::dxRelease()
