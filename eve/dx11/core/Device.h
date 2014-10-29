@@ -2,10 +2,6 @@
 #ifndef __EVE_DIRECTX11_DEVICE_H__
 #define __EVE_DIRECTX11_DEVICE_H__
 
-#ifndef __EVE_DIRECTX11_MACROS_H__
-	#include "Macros.h"
-#endif
-
 #ifndef __EVE_DIRECTX11_ENUMS_H__
 	#include "Enums.h"
 #endif
@@ -13,9 +9,6 @@
 #ifndef __EVE_MESSAGING_INCLUDES_H__
 #include "eve/mess/Includes.h"
 #endif
-
-
-#include <d3d11.h>
 
 namespace eve 
 {

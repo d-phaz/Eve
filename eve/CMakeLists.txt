@@ -180,6 +180,7 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	dx11/core/Device.cpp
 	dx11/core/Device.h
 	dx11/core/Enums.h
+	dx11/core/Includes.h
 	dx11/core/Macros.h
 	)
 	

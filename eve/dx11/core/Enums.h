@@ -2,7 +2,14 @@
 #ifndef __EVE_DIRECTX11_ENUMS_H__
 #define __EVE_DIRECTX11_ENUMS_H__
 
-#include <d3d11.h>
+#ifndef __EVE_DIRECTX11_MACROS_H__
+	#include "Macros.h"
+#endif
+
+#ifndef __EVE_DIRECTX11_INCLUDES_H__
+	#include "Includes.h"
+#endif
+
 
 namespace eve 
 {

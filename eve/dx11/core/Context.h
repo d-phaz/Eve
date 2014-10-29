@@ -6,8 +6,6 @@
 	#include "Enums.h"
 #endif
 
-#include <d3d11.h>
-
 namespace eve 
 {
 	namespace dx11
