@@ -6,6 +6,10 @@
 	#include "Device.h"
 #endif
 
+#ifndef __EVE_DIRECTX11_CONTEXT_H__
+	#include "Context.h"
+#endif
+
 namespace eve 
 {
 	namespace dx11
@@ -19,6 +23,26 @@ namespace eve
 		class RasterizerStates
 		{
 			public:
+				EVE_FORCE_INLINE ID3D11RasterizerState* SetBackCull(eve::dx11::Context* context) 
+				{ 
+					context->GetContext()->RSSetState(this->m_p_backCull);
+				}
+
+				EVE_FORCE_INLINE ID3D11RasterizerState* SetFrontCull(eve::dx11::Context* context) 
+				{ 
+					context->GetContext()->RSSetState(this->m_p_frontCull);
+				}
+
+				EVE_FORCE_INLINE ID3D11RasterizerState* SetNoCull(eve::dx11::Context* context) 
+				{ 
+					context->GetContext()->RSSetState(this->m_p_noCull);
+				}
+				EVE_FORCE_INLINE ID3D11RasterizerState* SetWireFrame(eve::dx11::Context* context) 
+				{ 
+					context->GetContext()->RSSetState(this->m_p_wireFrame);
+				}
+
+			protected:
 				EVE_FORCE_INLINE ID3D11RasterizerState* BackCull() { return this->m_p_backCull; }
 				EVE_FORCE_INLINE ID3D11RasterizerState* FrontCull() { return this->m_p_frontCull; }
 				EVE_FORCE_INLINE ID3D11RasterizerState* NoCull() { return this->m_p_noCull; }
