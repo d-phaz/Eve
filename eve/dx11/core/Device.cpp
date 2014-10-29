@@ -4,6 +4,7 @@ eve::dx11::Device::Device()
 {
 	this->m_p_device = NULL;
 	this->m_p_immediateContext = NULL;
+	this->m_p_factory = NULL;
 }
 
 void eve::dx11::Device::Init()
@@ -45,14 +46,23 @@ void eve::dx11::Device::Init()
 
 	device->QueryInterface(__uuidof(ID3D11Device2),(void**)(&this->m_p_device));
 	immediateContext->QueryInterface(__uuidof(ID3D11DeviceContext2),(void**)(&this->m_p_immediateContext));
-
 	this->m_featureLevel = (eve::dx11::FeatureLevel)level;
+
+	IDXGIDevice1* dxgidevice;
+	device->QueryInterface(__uuidof(IDXGIDevice1),(void**)(&dxgidevice));
+
+	IDXGIAdapter* adapter;
+	dxgidevice->GetAdapter(&adapter);
+
+	IDXGIAdapter1* adapter1 = (IDXGIAdapter1*)adapter;
+	adapter1->GetParent(__uuidof(IDXGIFactory1),(void**)(&this->m_p_factory));
 }
 
 void eve::dx11::Device::dxRelease()
 {
 	EVE_SAFE_RELEASE(this->m_p_immediateContext);
 	EVE_SAFE_RELEASE(this->m_p_device);
+	EVE_SAFE_RELEASE(this->m_p_factory);
 }
 
 eve::dx11::Device::~Device()

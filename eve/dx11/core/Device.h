@@ -27,17 +27,10 @@ namespace eve
 		{
 			friend class eve::dx11::Context;
 
-			private:
-				ID3D11Device2* m_p_device; //Device pointer
-				ID3D11DeviceContext2* m_p_immediateContext; //Immediate context to submit commands to GPU
-				eve::dx11::FeatureLevel m_featureLevel; //Real device feature level
-
-			private:
-				
+			private:	
 				void dxRelease();
 
 			protected:
-				EVE_FORCE_INLINE ID3D11Device2* GetDevice() { return this->m_p_device; }
 				EVE_FORCE_INLINE ID3D11DeviceContext2* GetImmediateContext() { return this->m_p_immediateContext; }
 		
 				~Device();
@@ -45,8 +38,18 @@ namespace eve
 			public: 
 				Device();
 				void Init();
+				EVE_FORCE_INLINE ID3D11Device2* GetDevice() { return this->m_p_device; }
+				EVE_FORCE_INLINE IDXGIFactory1* GetFactory() { return this->m_p_factory; }
+
 				EVE_FORCE_INLINE eve::dx11::FeatureLevel GetFeatureLevel() { return this->m_featureLevel; }
 				EVE_FORCE_INLINE bool IsAtLeastLevel11() { return this->m_featureLevel > eve::dx11::FeatureLevel::f11; }
+
+			private:
+				IDXGIFactory1* m_p_factory; //DXGI Factory, required to create swapchain
+				ID3D11Device2* m_p_device; //Device pointer
+				ID3D11DeviceContext2* m_p_immediateContext; //Immediate context to submit commands to GPU
+				eve::dx11::FeatureLevel m_featureLevel; //Real device feature level
+				
 
 
 		};
