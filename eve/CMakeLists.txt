@@ -168,6 +168,25 @@ set( OPENGL_SRCS
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
 source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 
+	
+# Directx11 Support
+#################################################
+if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
+	set( DIRECTX11_SRCS
+	dx11/core/ConstantBuffer.cpp
+	dx11/core/ConstantBuffer.h
+	dx11/core/Context.cpp
+	dx11/core/Context.h
+	dx11/core/Device.cpp
+	dx11/core/Device.h
+	dx11/core/Enums.h
+	dx11/core/Macros.h
+	)
+	
+	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
+	source_group( "DirecX11" FILES ${DIRECTX11_SRCS} )
+endif()
+
 
 # String.
 #################################################
@@ -321,6 +340,13 @@ if( WIN32 )
 		link_directories( ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR} )
 	endif()
 endif( WIN32 )
+
+if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
+	set( LIBS
+		 ${LIBS}
+		 dxgi.lib
+		 d3d11.lib ) 	
+endif ()
 
 
 # OSX 

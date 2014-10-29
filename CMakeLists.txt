@@ -174,6 +174,12 @@ if( WIN32 AND OPTION_BUILD_TYPE_DEBUG )
 	option( OPTION_BUILD_USE_VLD "Use Visual Leak Detector for Visual Studio (requires Debugging Tools for Windows)." ON)
 endif() 
 
+# DirectX Support
+###################################################################################################
+if( WIN32 )
+	option( OPTION_BUILD_ENABLE_DX11 "Enable DirectX11 support (requires Windows 8 for now" OFF)
+endif() 
+
 
 ###################################################################################################
 # NOTE:
