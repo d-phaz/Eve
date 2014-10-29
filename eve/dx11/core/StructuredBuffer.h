@@ -12,7 +12,19 @@ namespace eve
 	{
 		class StructuredBuffer
 		{
+			public:
+				StructuredBuffer();
+
+			protected:
+				void InitDynamic(eve::dx11::Device* device, uint32_t elementCount, uint32_t elementSize);
+				void InitWriteable(eve::dx11::Device* device, uint32_t elementCount, uint32_t elementSize);
+				void InitAppend(eve::dx11::Device* device, uint32_t elementCount, uint32_t elementSize);
+				void InitCounter(eve::dx11::Device* device, uint32_t elementCount, uint32_t elementSize);
+				void Release();
+
 			private:
+				D3D11_BUFFER_DESC GetWriteableDesc(uint32_t elementCount, uint32_t elementSize);
+				void Init(eve::dx11::Device* device, const D3D11_BUFFER_DESC& bufferDesc, bool createUAV, eve::dx11::StructuredBufferMode uavMode);
 				ID3D11UnorderedAccessView* m_pUnorderedView;
 				ID3D11ShaderResourceView* m_pShaderView;
 				ID3D11Buffer* m_pBuffer;

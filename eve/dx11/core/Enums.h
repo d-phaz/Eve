@@ -109,6 +109,27 @@ namespace eve
 			Counter = D3D11_BUFFER_UAV_FLAG::D3D11_BUFFER_UAV_FLAG_COUNTER
 		};
 
+		/**
+		* \def eve::dx11::RawBufferWriteMode
+		* \brief Write mode for raw buffer
+		*/
+		enum class RawBufferWriteMode : uint32_t
+		{
+			None = 0,
+			StreamOut = 1,
+			UnorderedAccess = 2
+		};
+
+		/**
+		* \def eve::dx11::IndexBufferFormat
+		* \brief format for index buffer (either uint16 or uint32)
+		*/
+		enum class IndexBufferFormat : uint32_t
+		{
+			Short = DXGI_FORMAT::DXGI_FORMAT_R16_UINT,
+			Int = DXGI_FORMAT::DXGI_FORMAT_R32_UINT
+		};
+
 	} //namespace dx11
 
 } //namespace eve
