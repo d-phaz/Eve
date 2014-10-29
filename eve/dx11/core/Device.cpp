@@ -1,5 +1,11 @@
 #include "eve/dx11/core/Device.h"
 
+eve::dx11::Device::Device()
+{
+	this->m_p_device = NULL;
+	this->m_p_immediateContext = NULL;
+}
+
 void eve::dx11::Device::Init()
 {
 	if (this->m_p_device)
@@ -26,13 +32,19 @@ void eve::dx11::Device::Init()
 
 	D3D_FEATURE_LEVEL level;
 
+	ID3D11Device* device;
+	ID3D11DeviceContext* immediateContext;
+
 	HRESULT hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE, NULL, flags, &levels[0],ARRAYSIZE(levels), 
-		D3D11_SDK_VERSION, &this->m_p_device, &level, &this->m_p_immediateContext);
+		D3D11_SDK_VERSION, &device, &level, &immediateContext);
 
 	if (FAILED(hr))
 	{
 		EVE_LOG_ERROR("Unable to create device, error code:%d", hr);
 	}
+
+	device->QueryInterface(__uuidof(ID3D11Device2),(void**)(&this->m_p_device));
+	immediateContext->QueryInterface(__uuidof(ID3D11DeviceContext2),(void**)(&this->m_p_immediateContext));
 
 	this->m_featureLevel = (eve::dx11::FeatureLevel)level;
 }
