@@ -21,7 +21,7 @@ namespace eve
 		*
 		* \note Feature level 9 is mostly for mobile devices (or really old machines)
 		*/
-		enum class FeatureLevel : unsigned int
+		enum class FeatureLevel : uint32_t
 		{
 			f11_1 = D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_1,
 			f11 = D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0,
@@ -36,7 +36,7 @@ namespace eve
 		* \def eve::dx11::FeatureLevel
 		* \brief DirectX shader stages
 		*/
-		enum class ShaderStage : unsigned int
+		enum class ShaderStage : uint32_t
 		{
 			Vertex = 1,
 			Hull = 2,
@@ -51,7 +51,7 @@ namespace eve
 		* \brief Depth buffer format enumeration
 		* Use to create depth stencil view, use DepthFormatResource to create Texture
 		*/
-		enum class DepthFormatDepthView : unsigned int
+		enum class DepthFormatDepthView : uint32_t
 		{
 			d16 = DXGI_FORMAT::DXGI_FORMAT_D16_UNORM, 
 			d24s8 = DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT,
@@ -64,7 +64,7 @@ namespace eve
 		* \brief Depth buffer format enumeration for Texture creation
 		* This forces resource format as typeless to allow depth/stencil reads after render
 		*/
-		enum class DepthFormatResource : unsigned int
+		enum class DepthFormatResource : uint32_t
 		{
 			d16 = DXGI_FORMAT::DXGI_FORMAT_R16_TYPELESS,
 			d24s8 = DXGI_FORMAT::DXGI_FORMAT_R24G8_TYPELESS,
@@ -76,7 +76,7 @@ namespace eve
 		* \def eve::dx11::DepthFormatShaderView
 		* \brief Depth buffer format enumeration for ShaderResourceView creation
 		*/
-		enum class DepthFormatShaderView : unsigned int
+		enum class DepthFormatShaderView : uint32_t
 		{
 			d16 = DXGI_FORMAT::DXGI_FORMAT_R16_UNORM,
 			d24s8 = DXGI_FORMAT::DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
@@ -90,7 +90,7 @@ namespace eve
 		*
 		* \note Since not all Depth formats have a stencil flag, this may return DXGI_FORMAT_UNKNOWN (0)
 		*/
-		enum StencilFormatShaderView
+		enum class StencilFormatShaderView : uint32_t
 		{
 			d16 = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN,
 			d24s8 = DXGI_FORMAT::DXGI_FORMAT_X24_TYPELESS_G8_UINT,
