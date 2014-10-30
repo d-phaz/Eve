@@ -23,32 +23,33 @@ namespace eve
 		class RasterizerStates
 		{
 			public:
-				EVE_FORCE_INLINE ID3D11RasterizerState* SetBackCull(eve::dx11::Context* context) 
+				RasterizerStates();
+				EVE_FORCE_INLINE void SetBackCull(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_backCull);
 				}
 
-				EVE_FORCE_INLINE ID3D11RasterizerState* SetFrontCull(eve::dx11::Context* context) 
+				EVE_FORCE_INLINE void SetFrontCull(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_frontCull);
 				}
 
-				EVE_FORCE_INLINE ID3D11RasterizerState* SetNoCull(eve::dx11::Context* context) 
+				EVE_FORCE_INLINE void SetNoCull(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_noCull);
 				}
 
-				EVE_FORCE_INLINE ID3D11RasterizerState* SetWireFrame(eve::dx11::Context* context) 
+				EVE_FORCE_INLINE void SetWireFrame(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_wireFrame);
 				}
 
-				EVE_FORCE_INLINE ID3D11RasterizerState* SetLineAlpha(eve::dx11::Context* context) 
+				EVE_FORCE_INLINE void SetLineAlpha(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_lineAlpha);
 				}
 
-				EVE_FORCE_INLINE ID3D11RasterizerState* SetLineQuadrilateral(eve::dx11::Context* context) 
+				EVE_FORCE_INLINE void SetLineQuadrilateral(eve::dx11::Context* context) 
 				{ 
 					context->GetContext()->RSSetState(this->m_p_lineQuad);
 				}

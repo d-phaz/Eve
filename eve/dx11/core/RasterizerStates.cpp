@@ -1,5 +1,15 @@
 #include "eve/dx11/core/RasterizerStates.h"
 
+eve::dx11::RasterizerStates::RasterizerStates()
+{
+	this->m_p_backCull = NULL;
+	this->m_p_frontCull = NULL;
+	this->m_p_lineAlpha = NULL;
+	this->m_p_lineQuad = NULL;
+	this->m_p_noCull = NULL;
+	this->m_p_wireFrame = NULL;
+}
+
 void eve::dx11::RasterizerStates::Init(eve::dx11::Device* device)
 {
 	ID3D11Device* d = device->GetDevice();
