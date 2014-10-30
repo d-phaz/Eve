@@ -41,6 +41,7 @@
 	#include "SwapChain.h"
 #endif
 
+namespace eve { namespace thr { class SpinLock;  } }
 
 namespace eve
 {
@@ -116,6 +117,7 @@ namespace eve
 			bool m_b_clear;
 			float m_f_clearcolor[4];
 			RenderCallBack* m_pRenderCallBack;
+			eve::thr::SpinLock * m_pRenderLock;
 
 		public:
 			/** \brief Before display callback. (pure virtual) */

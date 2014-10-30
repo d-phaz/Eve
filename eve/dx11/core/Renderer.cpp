@@ -38,7 +38,6 @@
 
 #include "eve/dx11/core/RenderTargetStack.h"
 
-//=================================================================================================
 eve::dx11::Renderer::Renderer(void)
 	: eve::core::Renderer()
 {
@@ -46,19 +45,20 @@ eve::dx11::Renderer::Renderer(void)
 	this->m_pRenderCallBack = NULL;
 }
 
-
-
-//=================================================================================================
 void eve::dx11::Renderer::init(void)
 {
-
+	m_pRenderLock = EVE_CREATE_PTR(eve::thr::SpinLock);
 }
 
-//=================================================================================================
 void eve::dx11::Renderer::release(void)
 {
+	this->DetachCallBack();
+
 	delete m_p_swapChain;
 	m_p_swapChain = 0;
+	this->m_pRenderCallBack = NULL;
+
+	EVE_RELEASE_PTR(m_pRenderLock);
 }
 
 void eve::dx11::Renderer::AttachDevice(eve::dx11::Device* device, eve::dx11::Context* context)
@@ -69,15 +69,22 @@ void eve::dx11::Renderer::AttachDevice(eve::dx11::Device* device, eve::dx11::Con
 
 void eve::dx11::Renderer::AttachCallBack(eve::dx11::RenderCallBack* callback)
 {
+	m_pRenderLock->lock();
+
 	this->m_pRenderCallBack = callback;
+
+	m_pRenderLock->unlock();
 }
 
 void eve::dx11::Renderer::DetachCallBack()
 {
+	m_pRenderLock->lock();
+
 	this->m_pRenderCallBack = NULL;
+
+	m_pRenderLock->unlock();
 }
 
-//=================================================================================================
 void eve::dx11::Renderer::registerToHandle(void * p_handle)
 {
 	if (m_p_swapChain)
@@ -91,26 +98,38 @@ void eve::dx11::Renderer::registerToHandle(void * p_handle)
 
 void eve::dx11::Renderer::cb_beforeDisplay(void)
 {
+	m_pRenderLock->lock();
+
 	this->m_p_context->GetRenderTargetStack()->Push(this->m_p_swapChain);
 
 	if (this->m_pRenderCallBack)
 	{
 		this->m_pRenderCallBack->cb_Update();
 	}
+
+	m_pRenderLock->unlock();
 }
 
 void eve::dx11::Renderer::cb_afterDisplay(void)
 {
+	m_pRenderLock->lock();
+
 	this->m_p_context->GetRenderTargetStack()->Pop();
 	this->m_p_swapChain->Present();
+
+	m_pRenderLock->unlock();
 }
 
 void eve::dx11::Renderer::cb_display(void)
 {
+	m_pRenderLock->lock();
+
 	if (this->m_pRenderCallBack)
 	{
 		this->m_pRenderCallBack->cb_Render();
 	}
+
+	m_pRenderLock->unlock();
 }
 
 
