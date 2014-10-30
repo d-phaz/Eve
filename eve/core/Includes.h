@@ -72,6 +72,7 @@
 #include <vector>
 #include <map>
 #include <hash_map>
+#include <stack>
 // utility
 #include <utility>
 // type utility
