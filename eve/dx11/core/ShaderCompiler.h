@@ -10,9 +10,23 @@ namespace eve
 {
 	namespace dx11
 	{
-		class RawBuffer
-		{
+		std::string GetShaderTarget(eve::dx11::FeatureLevel featureLevel, eve::dx11::ShaderStage shaderType);
+		std::string GetShaderType(eve::dx11::ShaderStage shaderType);
+		std::string GetShaderProfile(eve::dx11::FeatureLevel featureLevel);
 
+		class ShaderCompileArgs
+		{
+			public:
+				std::wstring code;
+				std::wstring entrypoint;
+				eve::dx11::ShaderStage shaderType;
+				eve::dx11::FeatureLevel featureLevel;
+		};
+
+		class ShaderCompiler
+		{
+			public:
+				static void Compile(ShaderCompileArgs args);
 		};
 
 	} //namespace dx11

@@ -8,5 +8,6 @@
 
 #include <d3d11_2.h>
 #include <dxgi1_3.h>
+#include <d3dcompiler.h>
 
 #endif // __EVE_DIRECTX11_INCLUDES_H__
