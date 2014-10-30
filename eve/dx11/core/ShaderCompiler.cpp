@@ -23,7 +23,7 @@ void eve::dx11::ShaderCompileResult::Release()
 }
 
 
-eve::dx11::ShaderCompileResult eve::dx11::ShaderCompiler::Compile(ShaderCompileArgs args)
+eve::dx11::ShaderCompileResult eve::dx11::ShaderCompiler::CompileShader(ShaderCompileArgs args)
 {
 	ID3DBlob* byteCode;
 	ID3DBlob* errorMessage;
@@ -32,6 +32,19 @@ eve::dx11::ShaderCompileResult eve::dx11::ShaderCompiler::Compile(ShaderCompileA
 
 	HRESULT hr = D3DCompile(eve::str::to_string(args.code).c_str(), args.code.size(),NULL, NULL, NULL, 
 	eve::str::to_string(args.entrypoint).c_str(), target.c_str(), 0 ,0 ,&byteCode,&errorMessage);
+	
+	eve::dx11::ShaderCompileResult result;
+	result.Init(byteCode, errorMessage, hr);
+	return result;
+}
+
+eve::dx11::ShaderCompileResult eve::dx11::ShaderCompiler::CompileEffect(std::wstring code)
+{
+	ID3DBlob* byteCode;
+	ID3DBlob* errorMessage;
+
+	HRESULT hr = D3DCompile(eve::str::to_string(code).c_str(), code.size(),NULL, NULL, NULL, 
+	NULL, "fx_5_0", 0 ,0 ,&byteCode,&errorMessage);
 	
 	eve::dx11::ShaderCompileResult result;
 	result.Init(byteCode, errorMessage, hr);

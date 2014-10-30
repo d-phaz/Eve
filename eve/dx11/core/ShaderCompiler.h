@@ -48,7 +48,9 @@ namespace eve
 		class ShaderCompiler
 		{
 			public:
-				static ShaderCompileResult Compile(ShaderCompileArgs args);
+				static ShaderCompileResult CompileShader(ShaderCompileArgs args);
+				static ShaderCompileResult CompileEffect(std::wstring code);
+				
 		};
 
 	} //namespace dx11
