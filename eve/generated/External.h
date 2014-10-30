@@ -3,7 +3,7 @@
 #ifndef __EVE_EXTERNAL_H__
 #define __EVE_EXTERNAL_H__
 
-#define OPTION_BUILD_USE_VLD
+/* #undef OPTION_BUILD_USE_VLD */
 #ifdef OPTION_BUILD_USE_VLD
 #include "vld.h"
 #endif

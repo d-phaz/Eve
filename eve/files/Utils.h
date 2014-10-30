@@ -42,7 +42,7 @@ namespace eve
 	namespace files
 	{
 		/** \brief normalize path to fit system requirements. */
-		std::wstring normalizePath(const std::wstring & p_path);
+		std::wstring normalize_path(const std::wstring & p_path);
 
 
 		/**

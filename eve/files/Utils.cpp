@@ -35,7 +35,7 @@
 
 
 //=================================================================================================
-std::wstring eve::files::normalizePath(const std::wstring & p_path)
+std::wstring eve::files::normalize_path(const std::wstring & p_path)
 {
 	std::wstring str(p_path);
 

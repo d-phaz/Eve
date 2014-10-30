@@ -209,8 +209,8 @@ namespace eve
 		EVE_FORCE_INLINE float    clamp(float    x, float    min = 0, float    max = 1)	{ return (x < min) ? min : ((x > max) ? max : x); }
 		EVE_FORCE_INLINE double   clamp(double   x, double   min = 0, double   max = 1)	{ return (x < min) ? min : ((x > max) ? max : x); }
 
-		EVE_FORCE_INLINE float  lerp(float  start, float  stop, float  amt) { return start + (stop - start) * amt; };
-		EVE_FORCE_INLINE double lerp(double start, double stop, double amt) { return start + (stop - start) * amt; };
+		EVE_FORCE_INLINE float  lerp(float  start, float  stop, float  amt) { return start + (stop - start) * amt; }
+		EVE_FORCE_INLINE double lerp(double start, double stop, double amt) { return start + (stop - start) * amt; }
 
 		EVE_FORCE_INLINE bool equal(float  a, float  b, float  epsilon = std::numeric_limits<float>::epsilon())  { return (abs(a - b) < epsilon); }
 		EVE_FORCE_INLINE bool equal(double a, double b, double epsilon = std::numeric_limits<double>::epsilon()) { return (abs(a - b) < epsilon); }
