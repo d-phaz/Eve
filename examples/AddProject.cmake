@@ -134,6 +134,14 @@ macro( add_project PROJECT_NAME_IN )
 			 User32.lib 
 			 Winmm.lib 
 			 ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${PRODUCT_PRODUCT_NAME}.lib ) 
+			 
+		if( OPTION_BUILD_ENABLE_DX11 )
+			set( LIBS
+				 ${LIBS}
+				 dxgi.lib
+				 d3dcompiler.lib
+				 d3d11.lib )
+		endif()
 
 		if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 			link_directories( ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR} )
