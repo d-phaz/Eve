@@ -36,12 +36,14 @@
 #include "eve/thr/SpinLock.h"
 #endif 
 
+#include "eve/dx11/core/RenderTargetStack.h"
 
 //=================================================================================================
 eve::dx11::Renderer::Renderer(void)
 	: eve::core::Renderer()
 {
 	this->m_p_swapChain = NULL;
+	this->m_pRenderCallBack = NULL;
 }
 
 
@@ -59,9 +61,20 @@ void eve::dx11::Renderer::release(void)
 	m_p_swapChain = 0;
 }
 
-void eve::dx11::Renderer::AttachDevice(eve::dx11::Device* device)
+void eve::dx11::Renderer::AttachDevice(eve::dx11::Device* device, eve::dx11::Context* context)
 {
 	this->m_p_device = device;
+	this->m_p_context = context;
+}
+
+void eve::dx11::Renderer::AttachCallBack(eve::dx11::RenderCallBack* callback)
+{
+	this->m_pRenderCallBack = callback;
+}
+
+void eve::dx11::Renderer::DetachCallBack()
+{
+	this->m_pRenderCallBack = NULL;
 }
 
 //=================================================================================================
@@ -78,19 +91,25 @@ void eve::dx11::Renderer::registerToHandle(void * p_handle)
 
 void eve::dx11::Renderer::cb_beforeDisplay(void)
 {
+	this->m_p_context->GetRenderTargetStack()->Push(this->m_p_swapChain);
 
+	if (this->m_pRenderCallBack)
+	{
+		this->m_pRenderCallBack->cb_Update();
+	}
 }
 
 void eve::dx11::Renderer::cb_afterDisplay(void)
 {
+	this->m_p_context->GetRenderTargetStack()->Pop();
 	this->m_p_swapChain->Present();
 }
 
 void eve::dx11::Renderer::cb_display(void)
 {
-	if (this->m_b_clear)
+	if (this->m_pRenderCallBack)
 	{
-		this->m_p_device->GetImmediateContext()->ClearRenderTargetView(this->m_p_swapChain->GetRenderView(),this->m_f_clearcolor);
+		this->m_pRenderCallBack->cb_Render();
 	}
 }
 

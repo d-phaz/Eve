@@ -46,6 +46,21 @@ namespace eve
 {
 	namespace dx11
 	{
+
+		/**
+		* \class eve::dx11::RenderCallBack
+		*
+		* \brief Pure virtual class to send callbacks on render
+		*
+		* \note extends eve::core::Renderer
+		*/
+		class RenderCallBack
+		{
+			public:
+				virtual void cb_Update() = 0;
+				virtual void cb_Render() = 0;
+		};
+
 		/**
 		* \class eve::sys::Renderer
 		*
@@ -74,7 +89,9 @@ namespace eve
 
 
 		public:
-			void AttachDevice(eve::dx11::Device* device);
+			void AttachDevice(eve::dx11::Device* device, eve::dx11::Context* context);
+			void AttachCallBack(eve::dx11::RenderCallBack* callback);
+			void DetachCallBack();
 			/** \brief Register renderer to window handle. (pure virtual) */
 			virtual void registerToHandle(void * p_handle) override;
 
@@ -87,13 +104,18 @@ namespace eve
 				m_f_clearcolor[3] = a;
 			}
 
+			EVE_FORCE_INLINE eve::dx11::SwapChain* GetSwapChain() { return this->m_p_swapChain; }
+
 		protected:
 			eve::dx11::SwapChain* m_p_swapChain;
 			eve::dx11::Device* m_p_device;
+			eve::dx11::Context* m_p_context;
+
 
 		private:
 			bool m_b_clear;
 			float m_f_clearcolor[4];
+			RenderCallBack* m_pRenderCallBack;
 
 		public:
 			/** \brief Before display callback. (pure virtual) */

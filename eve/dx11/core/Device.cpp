@@ -44,8 +44,11 @@ void eve::dx11::Device::Init()
 		EVE_LOG_ERROR("Unable to create device, error code:%d", hr);
 	}
 
-	device->QueryInterface(__uuidof(ID3D11Device2),(void**)(&this->m_p_device));
-	immediateContext->QueryInterface(__uuidof(ID3D11DeviceContext2),(void**)(&this->m_p_immediateContext));
+	this->m_p_device = device;
+	this->m_p_immediateContext = immediateContext;
+
+	/*device->QueryInterface(__uuidof(ID3D11Device2),(void**)(&this->m_p_device));
+	immediateContext->QueryInterface(__uuidof(ID3D11DeviceContext2),(void**)(&this->m_p_immediateContext));*/
 	this->m_featureLevel = (eve::dx11::FeatureLevel)level;
 
 	IDXGIDevice1* dxgidevice;

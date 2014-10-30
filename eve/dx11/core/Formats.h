@@ -38,6 +38,13 @@ namespace eve
 				void SetTexture3DDesc(D3D11_TEXTURE3D_DESC* texture3dDesc);
 		};
 
+		class StructuredBufferFormat
+		{
+			public:
+				uint32_t elementCount;
+				uint32_t elementSize;
+		};
+
 	} //namespace dx11
 
 } //namespace eve

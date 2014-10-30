@@ -51,8 +51,12 @@ void eve::dx11::SwapChain::InitTextureAndView()
 	ID3D11Texture2D* texture;
 	this->m_p_swapChain->GetBuffer(0,__uuidof(ID3D11Texture2D),(void**)(&texture));
 	ULONG res = texture->Release();
+	
 	this->m_p_texture = texture;
+	this->m_p_texture->GetDesc(&this->mTextureDesc);
+
 	this->m_pDevice->GetDevice()->CreateRenderTargetView(texture, NULL, &this->m_p_renderView);
+	this->m_p_renderView->GetDesc(&this->mRenderViewDesc);
 }
 
 void eve::dx11::SwapChain::Resize()

@@ -1,13 +1,17 @@
 #include "eve/dx11/core/Context.h"
 
+#include "eve/dx11/core/RenderTargetStack.h"
+
 eve::dx11::Context::Context()
 {
 	this->m_p_context = 0;
+	this->m_RenderTargetStack = 0;
 }
 
 eve::dx11::Context::~Context()
 {
 	EVE_SAFE_RELEASE(this->m_p_context);
+	delete this->m_RenderTargetStack;
 }
 
 void eve::dx11::Context::Init(eve::dx11::Device* device)
@@ -34,7 +38,12 @@ void eve::dx11::Context::Init(eve::dx11::Device* device)
 
 
 	ZeroMemory(&this->m_p_nullShaderViews,MAX_DX11_SRV_SLOTS*sizeof(void*));
-	ZeroMemory(&this->m_p_nullUnorderedViews,MAX_DX11_SRV_SLOTS*sizeof(void*));
+	ZeroMemory(&this->m_p_nullUnorderedViews,MAX_DX11_UAV_SLOTS*sizeof(void*));
+
+	//Create render target stack
+	this->m_RenderTargetStack = new eve::dx11::RenderTargetStack();
+	this->m_RenderTargetStack->Init(this);
+
 }
 
 void eve::dx11::Context::CleanShaderViews(eve::dx11::ShaderStage stages)

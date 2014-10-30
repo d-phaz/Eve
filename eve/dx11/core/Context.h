@@ -10,6 +10,8 @@
 	#include "Device.h"
 #endif
 
+namespace eve { namespace dx11 { class RenderTargetStack; } }
+
 namespace eve 
 {
 	namespace dx11
@@ -38,10 +40,13 @@ namespace eve
 				/** \brief Cleans both shader views and unordered views on compute shader stage */
 				void CleanComputeShaderStage();		
 				
-				EVE_FORCE_INLINE ID3D11DeviceContext2* GetContext() { return this->m_p_context; }		
+				EVE_FORCE_INLINE ID3D11DeviceContext* GetContext() { return this->m_p_context; }			
+				EVE_FORCE_INLINE eve::dx11::RenderTargetStack* GetRenderTargetStack() { return this->m_RenderTargetStack; }	
 
 			private:
-				ID3D11DeviceContext2* m_p_context;
+				eve::dx11::RenderTargetStack* m_RenderTargetStack;
+
+				ID3D11DeviceContext* m_p_context;
 				ID3D11ShaderResourceView* m_p_nullShaderViews[MAX_DX11_SRV_SLOTS];
 				ID3D11UnorderedAccessView* m_p_nullUnorderedViews[MAX_DX11_UAV_SLOTS]; //Maximum number of UAV is 64 for now, so set array to maximum size
 

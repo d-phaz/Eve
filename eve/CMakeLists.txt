@@ -179,6 +179,8 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	dx11/core/ConstantBuffer.h
 	dx11/core/Context.cpp
 	dx11/core/Context.h
+	dx11/core/DepthStencil.cpp
+	dx11/core/DepthStencil.h
 	dx11/core/DepthStencilStates.cpp
 	dx11/core/DepthStencilStates.h
 	dx11/core/Device.cpp
@@ -196,6 +198,14 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	dx11/core/RawBuffer.h
 	dx11/core/Renderer.cpp
 	dx11/core/Renderer.h
+	dx11/core/RenderTarget.cpp
+	dx11/core/RenderTarget.h
+	dx11/core/RenderTargetStack.cpp
+	dx11/core/RenderTargetStack.h
+	dx11/core/ResourceFactory.cpp
+	dx11/core/ResourceFactory.h
+	dx11/core/ResourcePool.cpp
+	dx11/core/ResourcePool.h
 	dx11/core/SamplerStates.cpp
 	dx11/core/SamplerStates.h
 	dx11/core/StructuredBuffer.cpp
@@ -412,16 +422,6 @@ if( WIN32 )
 	ADD_DEFINITIONS( -DGLEW_STATIC=1 )
 	set( LIBS ${LIBS} ${GLEW_LIBS})
 endif()
-
-if( OPTION_BUILD_ENABLE_DX11 )
-	set( LIBS
-		 ${LIBS}
-		 dxgi.lib
-		 d3dcompiler.lib
-		 d3d11.lib ) 	
-endif ()
-
-
 
 # # POCO
 # #################################################
