@@ -130,6 +130,18 @@ namespace eve
 			Int = DXGI_FORMAT::DXGI_FORMAT_R32_UINT
 		};
 
+		/**
+		* \def eve::dx11::ResourceUsageFormat
+		* \brief Preset for resource format usages
+		*/
+		enum class ResourceUsage : uint32_t
+		{
+			Default = D3D11_USAGE::D3D11_USAGE_DEFAULT, //Writeable bu gpu
+			Immutable = D3D11_USAGE::D3D11_USAGE_IMMUTABLE, //Immutable, can't be modified, initial data must be provided
+			Dynamic = D3D11_USAGE::D3D11_USAGE_DYNAMIC, //Dynamic , writeable by CPU
+			Staging = D3D11_USAGE::D3D11_USAGE_STAGING //Staging, readable by CPU (to retrieve data for debug)
+		};
+
 	} //namespace dx11
 
 } //namespace eve
