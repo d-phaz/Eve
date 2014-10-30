@@ -2,15 +2,40 @@
 
 #include "eve/str/Utils.h"
 
-void eve::dx11::ShaderCompiler::Compile(ShaderCompileArgs args)
+eve::dx11::ShaderCompileResult::ShaderCompileResult()
 {
-	ID3DBlob* blob;
-	ID3DBlob* errorMsg;
+	this->m_bIsCompiled = false;
+	this->m_pErrorMessage = NULL;
+	this->m_pShaderByteCode = NULL;
+}
+
+void eve::dx11::ShaderCompileResult::Init(ID3DBlob* byteCode, ID3DBlob* errorMessage, HRESULT compilationResult)
+{
+	this->m_pShaderByteCode = byteCode;
+	this->m_bIsCompiled = compilationResult >= 0;
+	this->m_pErrorMessage = errorMessage;
+}
+
+void eve::dx11::ShaderCompileResult::Release()
+{
+	EVE_SAFE_RELEASE(this->m_pErrorMessage);
+	EVE_SAFE_RELEASE(this->m_pShaderByteCode);
+}
+
+
+eve::dx11::ShaderCompileResult eve::dx11::ShaderCompiler::Compile(ShaderCompileArgs args)
+{
+	ID3DBlob* byteCode;
+	ID3DBlob* errorMessage;
 
 	std::string target = GetShaderTarget(args.featureLevel, args.shaderType);
 
-	HRESULT result = D3DCompile(eve::str::to_string(args.code).c_str(), args.code.size(),NULL, NULL, NULL, eve::str::to_string(args.entrypoint).c_str(), target.c_str(), 0 ,0 ,&blob,&errorMsg);
+	HRESULT hr = D3DCompile(eve::str::to_string(args.code).c_str(), args.code.size(),NULL, NULL, NULL, 
+	eve::str::to_string(args.entrypoint).c_str(), target.c_str(), 0 ,0 ,&byteCode,&errorMessage);
 	
+	eve::dx11::ShaderCompileResult result;
+	result.Init(byteCode, errorMessage, hr);
+	return result;
 }
 
 std::string eve::dx11::GetShaderTarget(eve::dx11::FeatureLevel featureLevel, eve::dx11::ShaderStage shaderType)

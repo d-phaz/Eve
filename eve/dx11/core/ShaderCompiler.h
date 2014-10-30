@@ -6,6 +6,8 @@
 	#include "Device.h"
 #endif
 
+namespace eve { namespace dx11 { class ShaderCompiler; } }
+
 namespace eve 
 {
 	namespace dx11
@@ -23,10 +25,30 @@ namespace eve
 				eve::dx11::FeatureLevel featureLevel;
 		};
 
+		class ShaderCompileResult
+		{
+			friend class eve::dx11::ShaderCompiler;
+			public:
+				ShaderCompileResult();
+				EVE_FORCE_INLINE ID3DBlob* GetShaderByteCode() { return this->m_pShaderByteCode; }
+				EVE_FORCE_INLINE ID3DBlob* GetErrorMessage() { return this->m_pErrorMessage; }
+				EVE_FORCE_INLINE bool IsCompiled() { return this->m_bIsCompiled; }
+				void Release();
+			private:
+				ID3DBlob* m_pShaderByteCode;
+				ID3DBlob* m_pErrorMessage;
+				bool m_bIsCompiled;
+				
+			protected:
+				void Init(ID3DBlob* byteCode, ID3DBlob* errorMessage, HRESULT compilationResult);
+
+
+		};
+
 		class ShaderCompiler
 		{
 			public:
-				static void Compile(ShaderCompileArgs args);
+				static ShaderCompileResult Compile(ShaderCompileArgs args);
 		};
 
 	} //namespace dx11
