@@ -3,7 +3,8 @@
 eve::dx11::RenderTargetState::RenderTargetState()
 {
 	//ZeroMemory(&this->m_pRenderViews,8*sizeof(void*));
-	this->Init(NULL, 0);	
+	this->Init(NULL, 0);
+	this->m_bOwned= false;	
 }
 
 eve::dx11::RenderTargetState::RenderTargetState(eve::dx11::RenderTarget* renderTarget)
@@ -71,6 +72,7 @@ void eve::dx11::RenderTargetStack::Init(eve::dx11::Context* context)
 void eve::dx11::RenderTargetStack::Push(eve::dx11::RenderTarget* renderTarget)
 {
 	eve::dx11::RenderTargetState* state = new eve::dx11::RenderTargetState(renderTarget);
+	state->m_bOwned = true;
 
 	this->m_stack->push(state);
 	this->Apply();
@@ -91,7 +93,14 @@ void eve::dx11::RenderTargetStack::Pop()
 	}
 	else
 	{
-		this->Apply();
+		RenderTargetState* state= this->m_stack->top();
+		state->Apply(this->m_pContext);
+
+		if (state->m_bOwned)
+		{
+			delete state;
+		}
+
 		this->m_stack->pop();
 	}
 }

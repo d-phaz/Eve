@@ -10,6 +10,8 @@
 	#include "RenderTarget.h"
 #endif
 
+namespace eve { namespace dx11 { class RenderTargetStack; } }
+
 namespace eve 
 {
 	namespace dx11
@@ -22,12 +24,15 @@ namespace eve
 		*/
 		class RenderTargetState
 		{
+			friend class RenderTargetStack;
 			public:
 				RenderTargetState();
 				RenderTargetState(eve::dx11::RenderTarget* renderTarget);
 				RenderTargetState(eve::dx11::RenderTarget** renderTargets, int renderTargetCount);
 
 				void Apply(eve::dx11::Context* context); //Apply the state content to the context
+			protected:
+				bool m_bOwned;
 			private:
 				void Init(eve::dx11::RenderTarget** renderTargets, int renderTargetCount);
 				ID3D11RenderTargetView* m_pRenderViews[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT]; //Maximum of 8 render targets
