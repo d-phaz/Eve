@@ -10,6 +10,13 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::BlendStates
+		*
+		* \brief DirectX11 Blend states
+		* Creates blend states presets
+		*
+		*/
 		class BlendStates
 		{
 

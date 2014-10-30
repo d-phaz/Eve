@@ -2,6 +2,7 @@
 
 eve::dx11::SwapChain::SwapChain()
 {
+	this->m_pDevice = NULL;
 	this->m_p_texture = NULL;
 	this->m_p_renderView = NULL;
 	this->m_p_swapChain = NULL;
@@ -22,6 +23,8 @@ void eve::dx11::SwapChain::Init(eve::dx11::Device* device, HWND windowHandle)
 		return; //Already initialized
 	}
 
+	this->m_pDevice = device;
+
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	ZeroMemory(&swapChainDesc,sizeof(DXGI_SWAP_CHAIN_DESC));
 
@@ -40,15 +43,26 @@ void eve::dx11::SwapChain::Init(eve::dx11::Device* device, HWND windowHandle)
 
 	HRESULT hr = device->GetFactory()->CreateSwapChain(device->GetDevice(), &swapChainDesc, &this->m_p_swapChain);
 
-	ID3D11Texture2D* texture;
+	this->InitTextureAndView();
+}
 
+void eve::dx11::SwapChain::InitTextureAndView()
+{
+	ID3D11Texture2D* texture;
 	this->m_p_swapChain->GetBuffer(0,__uuidof(ID3D11Texture2D),(void**)(&texture));
 	ULONG res = texture->Release();
-
 	this->m_p_texture = texture;
+	this->m_pDevice->GetDevice()->CreateRenderTargetView(texture, NULL, &this->m_p_renderView);
+}
 
-	device->GetDevice()->CreateRenderTargetView(texture, NULL, &this->m_p_renderView);
+void eve::dx11::SwapChain::Resize()
+{
+	EVE_SAFE_RELEASE(this->m_p_renderView);
+	EVE_SAFE_RELEASE(this->m_p_texture);
 
+	this->m_p_swapChain->ResizeBuffers(0,0,0,DXGI_FORMAT::DXGI_FORMAT_UNKNOWN,0);
+
+	this->InitTextureAndView();
 }
 
 void eve::dx11::SwapChain::Present()

@@ -10,6 +10,12 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::IndexBuffer
+		*
+		* \brief DirectX11 IndexBuffer
+		* Index buffer to attach geometry to render context
+		*/
 		class IndexBuffer
 		{
 

@@ -16,6 +16,11 @@ namespace eve
 		std::string GetShaderType(eve::dx11::ShaderStage shaderType);
 		std::string GetShaderProfile(eve::dx11::FeatureLevel featureLevel);
 
+		/**
+		* \class eve::dx11::ShaderCompileArgs
+		*
+		* \brief Arguments sent to shader compiler to describe compiler options
+		*/
 		class ShaderCompileArgs
 		{
 			public:
@@ -25,6 +30,12 @@ namespace eve
 				eve::dx11::FeatureLevel featureLevel;
 		};
 
+		/**
+		* \class eve::dx11::ShaderCompileResult
+		*
+		* \brief Returned by shader compiler, contains bytecode (if compilation was successfull),
+		* and eventual error/warning messages
+		*/
 		class ShaderCompileResult
 		{
 			friend class eve::dx11::ShaderCompiler;
@@ -45,6 +56,11 @@ namespace eve
 
 		};
 
+		/**
+		* \class eve::dx11::ShaderCompiler
+		*
+		* \brief Used to compile shader bytecode from source
+		*/
 		class ShaderCompiler
 		{
 			public:

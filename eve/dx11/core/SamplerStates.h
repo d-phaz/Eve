@@ -14,6 +14,13 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::SamplerStates
+		*
+		* \brief DirectX11 SamplerStates
+		* Sampler states presets. In that case we assign them differently, since as opposite
+		* as other states, they are bound to shader pipleline slots
+		*/
 		class SamplerStates
 		{
 			public:

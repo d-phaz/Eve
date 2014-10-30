@@ -10,6 +10,11 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::StructuredBuffer
+		*
+		* \brief StructuredBuffer resource type for DirectX11 pipeline.
+		*/
 		class StructuredBuffer
 		{
 			public:

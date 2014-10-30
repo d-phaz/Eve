@@ -23,15 +23,20 @@ namespace eve
 				SwapChain();
 				~SwapChain();
 				void Init(eve::dx11::Device* device, HWND windowHandle);
+				void Resize();
 				void Present();
 				EVE_FORCE_INLINE void EnableVerticalSync(bool enable) { this->m_bEnableVSync = enable; }
 				EVE_FORCE_INLINE ID3D11RenderTargetView* GetRenderView() { return this->m_p_renderView; }
 
 			private:
+				eve::dx11::Device* m_pDevice;
 				bool m_bEnableVSync;
 				IDXGISwapChain* m_p_swapChain;
 				ID3D11Texture2D* m_p_texture;
 				ID3D11RenderTargetView* m_p_renderView;
+
+			private:
+				void InitTextureAndView();
 		};
 	} //namespace dx11
 

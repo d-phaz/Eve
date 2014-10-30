@@ -14,6 +14,13 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::Context
+		*
+		* \brief DirectX11 Context
+		* Context wraps ID3D11DeviceContext, responsible to submit commands to gpu
+		*
+		*/
 		class Context
 		{
 			public:

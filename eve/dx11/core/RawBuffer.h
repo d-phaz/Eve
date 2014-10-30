@@ -14,6 +14,12 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::RawBuffer
+		*
+		* \brief DirectX11 RawBuffer
+		* Raw buffers are used as ByteAddressBuffer in DX11 Pipeline
+		*/
 		class RawBuffer
 		{
 			public:

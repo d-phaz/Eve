@@ -14,6 +14,13 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::ConstantBuffer
+		*
+		* \brief DirectX11 ConstantBuffer
+		* Creates a constant buffer to be used in shader pipeline
+		*
+		*/
 		class ConstantBuffer
 		{
 			public:

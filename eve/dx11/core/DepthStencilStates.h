@@ -10,6 +10,12 @@ namespace eve
 {
 	namespace dx11
 	{
+		/**
+		* \class eve::dx11::DepthStencilStates
+		*
+		* \brief DirectX11 DepthStencilStates
+		* Depth stencil states presets 
+		*/
 		class DepthStencilStates
 		{
 
