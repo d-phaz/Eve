@@ -157,11 +157,11 @@ namespace eve
 			/** \brief Window move event handler. (pure virtual) */
 			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg) = 0;
 			/** \brief Window gain focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusGot(void) = 0;
+			virtual void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg) = 0;
 			/** \brief Window loose focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusLost(void) = 0;
+			virtual void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg) = 0;
 			/** \brief Window close event handler. (pure virtual) */
-			virtual void cb_evtWindowClose(void) = 0;
+			virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) = 0;
 
 		}; // class Node
 

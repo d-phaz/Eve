@@ -48,7 +48,7 @@
 
 namespace eve { namespace thr	{ class SpinLock;		} }
 namespace eve { namespace thr	{ class ThreadedWorkIO; } }
-namespace eve{ namespace thr	{ class Worker;			} }
+namespace eve { namespace thr	{ class Worker;			} }
 
 
 namespace eve

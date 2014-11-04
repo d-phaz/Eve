@@ -68,13 +68,13 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			int64_t		m_startTime;			//!< Timer start time in milliseconds.
-			int64_t		m_endTime;				//!< Timer end time in milliseconds.
-			int64_t		m_elapsed;				//!< Timer elapsed time.
+			int64_t						m_startTime;			//!< Timer start time in milliseconds.
+			int64_t						m_endTime;				//!< Timer end time in milliseconds.
+			int64_t						m_elapsed;				//!< Timer elapsed time.
 
-			double		m_invFrequency;			//!< Convenience inverse native frequency factor.
+			double						m_invFrequency;			//!< Convenience inverse native frequency factor.
 
-			bool		m_bRunning;				//!< Timer running state.
+			bool						m_bRunning;				//!< Timer running state.
 
 
 			//////////////////////////////////////

@@ -33,6 +33,10 @@
 #ifndef __EVE_APPLICATION_APP_H__
 #define __EVE_APPLICATION_APP_H__
 
+#ifndef __EVE_EVT_INCLUDES_H__
+#include "eve/evt/Includes.h"
+#endif
+
 #ifndef __EVE_SYSTEM_CURSOR_H__
 #include "eve/sys/win32/Cursor.h"
 #endif
@@ -56,6 +60,10 @@
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
 #include "eve/thr/SpinLock.h"
 #endif 
+
+#ifndef __EVE_TIME_TIMER_H__
+#include "eve/time/Timer.h"
+#endif
 
 
 namespace eve
@@ -81,6 +89,7 @@ namespace eve
 
 		private:
 			static eve::app::App *				m_p_instance;		//!< Class unique instance.
+			static eve::time::Timer *			m_p_timer;			//!< Application timer, launched at startup.
 
 		private:
 			bool								m_bRunning;			//!< Application main loop running state.
@@ -148,14 +157,22 @@ namespace eve
 
 		public:
 			/** \brief Application exit event handler. */
-			void cb_evtApplicationExit(void);
+			void cb_evtApplicationExit(eve::evt::EventArgs & p_arg);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Get elapsed time since application startup in milliseconds. */
+			static int64_t get_elapsed_time(void);
 
 		}; // class App
 
 	} // namespace app
 
 } // namespace eve
-
 
 /** 
 * \def EveApp 
@@ -181,6 +198,15 @@ TView * eve::app::App::addView(void)
 	return view;
 }
 
+
+
+//=================================================================================================
+inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); return m_p_timer->getElapsedTime(); }
+/**
+* \def EveAppElapsedTime
+* \brief Convenience macro to access time since application startup in milliseconds.
+*/
+#define EveAppElapsedTime	eve::app::App::get_elapsed_time()
 
 
 #if defined(EVE_OS_WIN)
