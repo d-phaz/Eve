@@ -53,7 +53,7 @@
 #include <stdint.h>
 // math
 #include <float.h>
-#include <cmath>
+#include <math.h>
 #include <climits>
 // algorithm
 #include <algorithm>

@@ -1,56 +1,38 @@
 
 #pragma once
-#ifndef __TVECTOR_H__
-#define __TVECTOR_H__
+#ifndef __EVE_MATH_TVECTOR_H__
+#define __EVE_MATH_TVECTOR_H__
 
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
 
-#include <cmath>
-#include <cstring>
-#include <iostream>
-#include <cassert>
-#include <limits>
-
-#ifndef __TMATH_H__
-#include "math/TMath.h"
+#ifndef __EVE_MATH_MATH_H__
+#include "eve/math/Math.h"
 #endif
 
 
-template<typename T>
-struct VECTRAIT {
-	typedef float DIST;
-};
+namespace eve
+{
+	namespace math
+	{
 
-template<>
-struct VECTRAIT<double> {
-	typedef double DIST;
-};
 
-template<>
-struct VECTRAIT<int32_t> {
-	typedef float DIST;
-};
+	} // namespace math
 
-template<typename T, typename Y>
-struct VEC3CONV {
-	static T	getX( const Y &v ) { return static_cast<T>( v.x ); }
-	static T	getY( const Y &v ) { return static_cast<T>( v.y ); }
-	static T	getZ( const Y &v ) { return static_cast<T>( v.z ); }
-};
+} // namespace eve
+
+
+
+
 
 template<typename T> class TVec3;
-
-template<typename T> class TVec4Color;
 
 template<typename T>
 class TVec2
 {
  public:
 	T x,y;
-
-	typedef T							TYPE;
-	typedef T							value_type;
-	typedef typename VECTRAIT<T>::DIST	DIST;
-	static const int32_t DIM = 2;
 
 	TVec2() :x(0), y(0) {}
 	TVec2( T nx, T ny ) : x( nx ), y( ny ) {}
@@ -148,7 +130,7 @@ class TVec2
 		return x * rhs.y - y * rhs.x;
 	}
 
-	DIST distance( const TVec2<T> &rhs ) const
+	T distance( const TVec2<T> &rhs ) const
 	{
 		return ( *this - rhs ).length();
 	}
@@ -158,21 +140,21 @@ class TVec2
 		return ( *this - rhs ).lengthSquared();
 	}
 
-	DIST length() const
+	T length() const
 	{
-		return tmath<DIST>::sqrt( x*x + y*y );
+		return eve::math::sqrt( x*x + y*y );
 	}
 
 	void normalize()
 	{
-		DIST invS = 1 / length();
+		T invS = static_cast<T>(1) / length();
 		x *= invS;
 		y *= invS;
 	}
 
 	TVec2<T> normalized() const
 	{
-		DIST invS = 1 / length();
+		T invS = static_cast<T>(1) / length();
 		return TVec2<T>( x * invS, y * invS );
 	}
 
@@ -181,7 +163,7 @@ class TVec2
 	{
 		T s = lengthSquared();
 		if( s > 0 ) {
-			DIST invL = 1 / tmath<DIST>::sqrt( s );
+			T invL = static_cast<T>(1) / eve::math::sqrt( s );
 			x *= invL;
 			y *= invL;
 		}
@@ -191,17 +173,17 @@ class TVec2
 	{
 		T s = lengthSquared();
 		if( s > 0 ) {
-			DIST invL = 1 / tmath<DIST>::sqrt( s );
+			T invL = static_cast<T>(1) / eve::math::sqrt( s );
 			return TVec2<T>( x * invL, y * invL );
 		}
 		else
 			return TVec2<T>::zero();
 	}
 
-	void rotate( DIST radians )
+	void rotate( T radians )
 	{
-		T cosa = tmath<T>::cos( radians );
-		T sina = tmath<T>::sin( radians );
+		T cosa = eve::math::cos( radians );
+		T sina = eve::math::sin( radians );
 		T rx = x * cosa - y * sina;
 		y = x * sina + y * cosa;
 		x = rx;
@@ -213,12 +195,12 @@ class TVec2
 	}
 
 	//! Limits the length of a TVec2 to \a maxLength, scaling it proportionally if necessary.
-	void limit( DIST maxLength )
+	void limit( T maxLength )
 	{
 		T lengthSquared = x * x + y * y;
 
 		if( ( lengthSquared > maxLength * maxLength ) && ( lengthSquared > 0 ) ) {
-			DIST ratio = maxLength / tmath<DIST>::sqrt( lengthSquared );
+			T ratio = maxLength / eve::math::sqrt( lengthSquared );
 			x *= ratio;
 			y *= ratio;
 		}
@@ -230,7 +212,7 @@ class TVec2
 		T lengthSquared = x * x + y * y;
 
 		if( ( lengthSquared > maxLength * maxLength ) && ( lengthSquared > 0 ) ) {
-			DIST ratio = maxLength / tmath<DIST>::sqrt( lengthSquared );
+			T ratio = maxLength / eve::math::sqrt( lengthSquared );
 			return TVec2<T>( x * ratio, y * ratio );
 		}
 		else
@@ -258,24 +240,24 @@ class TVec2
 		x = x + ( rhs.x - x ) * fact; y = y + ( rhs.y - y ) * fact;
 	}
 
-	static bool equal( TVec2<T> const & x, TVec2<T> const & y )
+	EVE_FORCE_INLINE static bool equal( TVec2<T> const & x, TVec2<T> const & y )
 	{
-		return (tmath<T>::equal(x.x, y.x) && tmath<T>::equal(x.y, y.y));
+		return (eve::math::equal(x.x, y.x) && eve::math::equal(x.y, y.y));
 	}
 
-	static bool equal( TVec2<T> const & x, TVec2<T> const & y, T epsilon )
+	EVE_FORCE_INLINE static bool equal( TVec2<T> const & x, TVec2<T> const & y, T epsilon )
 	{
-		return (tmath<T>::equal(x.x, y.x, epsilon) && tmath<T>::equal(x.y, y.y, epsilon));
+		return (eve::math::equal(x.x, y.x, epsilon) && eve::math::equal(x.y, y.y, epsilon));
 	}
 
 	inline bool equal( TVec2<T> const & other )
 	{
-		return (tmath<T>::equal(x, other.x) && tmath<T>::equal(y, other.y));
+		return (eve::math::equal(x, other.x) && eve::math::equal(y, other.y));
 	}
 
 	inline bool equal( TVec2<T> const & other, T epsilon )
 	{
-		return (tmath<T>::equal(x, other.x, epsilon) && tmath<T>::equal(y, other.y, epsilon));
+		return (eve::math::equal(x, other.x, epsilon) && eve::math::equal(y, other.y, epsilon));
 	}
 
 	// GLSL inspired swizzling functions.
@@ -293,34 +275,28 @@ class TVec2
 	TVec3<T> yyx() const { return TVec3<T>(y, y, x); }
 	TVec3<T> yyy() const { return TVec3<T>(y, y, y); }
 
-	static TVec2<T> max()
+	EVE_FORCE_INLINE static TVec2<T> max()
 	{
 		return TVec2<T>( std::numeric_limits<T>::max(), std::numeric_limits<T>::max() );
 	}
 
-	static TVec2<T> zero()
+	EVE_FORCE_INLINE static TVec2<T> zero()
 	{
 		return TVec2<T>( 0, 0 );
 	}
 
-	static TVec2<T> one()
+	EVE_FORCE_INLINE static TVec2<T> one()
 	{
 		return TVec2<T>( 1, 1 );
 	}
 
-	friend std::ostream& operator<<( std::ostream& lhs, const TVec2<T>& rhs )
-	{
-		lhs << "[" << rhs.x << "," << rhs.y << "]";
-		return lhs;
-	}
+	EVE_FORCE_INLINE static TVec2<T> xAxis( void ) { return TVec2<T>( 1, 0 ); }
+	EVE_FORCE_INLINE static TVec2<T> yAxis( void ) { return TVec2<T>( 0, 1 ); }
 
-	static TVec2<T> xAxis( void ) { return TVec2<T>( 1, 0 ); }
-	static TVec2<T> yAxis( void ) { return TVec2<T>( 0, 1 ); }
+	EVE_FORCE_INLINE static TVec2<T> xAxisNeg( void ) { return TVec2<T>(-1, 0 ); }
+	EVE_FORCE_INLINE static TVec2<T> yAxisNeg( void ) { return TVec2<T>( 0,-1 ); }
 
-	static TVec2<T> xAxisNeg( void ) { return TVec2<T>(-1, 0 ); }
-	static TVec2<T> yAxisNeg( void ) { return TVec2<T>( 0,-1 ); }
-
-	static TVec2<T> NaN()   { return TVec2<T>( tmath<T>::NaN(), tmath<T>::NaN() ); }
+	EVE_FORCE_INLINE static TVec2<T> NaN()   { return TVec2<T>( eve::math::NaN(), eve::math::NaN() ); }
 };
 
 
@@ -330,10 +306,6 @@ class TVec3
 {
 public:
 	T x,y,z;
-
-	typedef T								TYPE;
-	typedef T								value_type;
-	static const int32_t DIM = 3;
 
 	TVec3() :x(0), y(0), z(0) {}
 	TVec3( T nx, T ny, T nz )
@@ -353,11 +325,6 @@ public:
 	TVec3( const TVec3<FromT> &src )
 		: x( static_cast<T>( src.x ) ), y( static_cast<T>( src.y ) ), z( static_cast<T>( src.z ) )
 	{}
-	//template<typename Y>
-	//explicit TVec3( const Y &v )
-	//	: x( VEC3CONV<TVec3<typename T::TYPE>,Y>::getX( v ) ), y( VEC3CONV<typename T::TYPE,Y>::getY( v ) ), z( VEC3CONV<typename T::TYPE,Y>::getZ( v ) )
-	//{
-	//}
 
 	void set( T ax, T ay, T az )
 	{
@@ -388,17 +355,13 @@ public:
 
 	T& operator[]( int32_t n )
 	{
-#ifndef NDEBUG
-		NATIVE_ASSERT( n >= 0 && n <= 2 );
-#endif
+		EVE_ASSERT( n >= 0 && n <= 2 );
 		return (&x)[n];
 	}
 
 	const T& operator[]( int32_t n ) const
 	{
-#ifndef NDEBUG
-		NATIVE_ASSERT( n >= 0 && n <= 2 );
-#endif
+		EVE_ASSERT(n >= 0 && n <= 2);
 		return (&x)[n];
 	}
 
@@ -439,7 +402,7 @@ public:
 		return x*rhs.x + y*rhs.y + z*rhs.z;
 	}
 
-	static T dot(TVec3<T> const & x, TVec3<T> const & y)
+	EVE_FORCE_INLINE static T dot(TVec3<T> const & x, TVec3<T> const & y)
 	{
 		return x.x * y.x + x.y * y.y;
 	}
@@ -449,7 +412,7 @@ public:
 		return TVec3<T>( y * rhs.z - rhs.y * z, z * rhs.x - rhs.z * x, x * rhs.y - rhs.x * y );
 	}
 
-	static TVec3<T> cross
+	EVE_FORCE_INLINE static TVec3<T> cross
 		(
 		TVec3<T> const & x,
 		TVec3<T> const & y
@@ -461,29 +424,29 @@ public:
 			x.x * y.y - y.x * x.y);
 	}
 
-	static bool equal(TVec3<T> const & x, TVec3<T> const & y)
+	EVE_FORCE_INLINE static bool equal(TVec3<T> const & x, TVec3<T> const & y)
 	{
-		return (tmath<T>::equal(x.x, y.x) && tmath<T>::equal(x.y, y.y) && tmath<T>::equal(x.z, y.z));
+		return (eve::math::equal(x.x, y.x) && eve::math::equal(x.y, y.y) && eve::math::equal(x.z, y.z));
 	}
 
-	static bool equal(TVec3<T> const & x, TVec3<T> const & y, T epsilon)
+	EVE_FORCE_INLINE static bool equal(TVec3<T> const & x, TVec3<T> const & y, T epsilon)
 	{
-		return (tmath<T>::equal(x.x, y.x, epsilon) && tmath<T>::equal(x.y, y.y, epsilon) && tmath<T>::equal(x.z, y.z, epsilon));
+		return (eve::math::equal(x.x, y.x, epsilon) && eve::math::equal(x.y, y.y, epsilon) && eve::math::equal(x.z, y.z, epsilon));
 	}
 
 	inline bool equal(TVec3<T> const & other)
 	{
-		return (tmath<T>::equal(x, other.x) && tmath<T>::equal(y, other.y) && tmath<T>::equal(z, other.z));
+		return (eve::math::equal(x, other.x) && eve::math::equal(y, other.y) && eve::math::equal(z, other.z));
 	}
 
 	inline bool equal(TVec3<T> const & other, T epsilon)
 	{
-		return (tmath<T>::equal(x, other.x, epsilon) && tmath<T>::equal(y, other.y, epsilon) && tmath<T>::equal(z, other.z, epsilon));
+		return (eve::math::equal(x, other.x, epsilon) && eve::math::equal(y, other.y, epsilon) && eve::math::equal(z, other.z, epsilon));
 	}
 
-	static TVec3<T> normalize(const TVec3<T> & p_v)
+	EVE_FORCE_INLINE static TVec3<T> normalize(const TVec3<T> & p_v)
 	{
-		T length = tmath<T>::sqrt(p_v.x*p_v.x + p_v.y*p_v.y + p_v.z*p_v.z);
+		T length = eve::math::sqrt(p_v.x*p_v.x + p_v.y*p_v.y + p_v.z*p_v.z);
 
 		T invS = 1.0f / length;
 
@@ -502,7 +465,7 @@ public:
 
 	T length( void ) const
 	{
-		return tmath<T>::sqrt( x*x + y*y + z*z );
+		return eve::math::sqrt( x*x + y*y + z*z );
 	}
 
 	T lengthSquared( void ) const
@@ -516,7 +479,7 @@ public:
 		T lengthSquared = x * x + y * y + z * z;
 
 		if( ( lengthSquared > maxLength * maxLength ) && ( lengthSquared > 0 ) ) {
-			T ratio = maxLength / tmath<T>::sqrt( lengthSquared );
+			T ratio = maxLength / eve::math::sqrt( lengthSquared );
 			x *= ratio;
 			y *= ratio;
 			z *= ratio;
@@ -529,7 +492,7 @@ public:
 		T lengthSquared = x * x + y * y + z * z;
 
 		if( ( lengthSquared > maxLength * maxLength ) && ( lengthSquared > 0 ) ) {
-			T ratio = maxLength / tmath<T>::sqrt( lengthSquared );
+			T ratio = maxLength / eve::math::sqrt( lengthSquared );
 			return TVec3<T>( x * ratio, y * ratio, z * ratio );
 		}
 		else
@@ -565,7 +528,7 @@ public:
 	{
 		T s = lengthSquared();
 		if( s > 0 ) {
-			T invS = ((T)1) / tmath<T>::sqrt( s );
+			T invS = static_cast<T>(1) / eve::math::sqrt( s );
 			x *= invS;
 			y *= invS;
 			z *= invS;
@@ -576,7 +539,7 @@ public:
 	{
 		T s = lengthSquared();
 		if( s > 0 ) {
-			float invS = ((T)1) / tmath<T>::sqrt( s );
+			float invS = static_cast<T>(1) / eve::math::sqrt(s);
 			return TVec3<T>( x * invS, y * invS, z * invS );
 		}
 		else
@@ -586,7 +549,7 @@ public:
 	//! Returns a vector which is orthogonal to \a this
 	TVec3<T> getOrthogonal( void ) const
 	{
-		if( tmath<T>::abs( y ) < (T)0.99 ) // abs(dot(u, Y)), somewhat arbitrary epsilon
+		if (eve::math::abs(y) < static_cast<T>(0.99)) // abs(dot(u, Y)), somewhat arbitrary epsilon
 			return TVec3<T>( -z, 0, x ); // cross( this, Y )
 		else
 			return TVec3<T>( 0, z, -y ); // cross( this, X )
@@ -594,8 +557,8 @@ public:
 
 	void rotateX( T angle )
 	{
-		T sina = tmath<T>::sin(angle);
-		T cosa = tmath<T>::cos(angle);
+		T sina = eve::math::sin(angle);
+		T cosa = eve::math::cos(angle);
 		T ry = y * cosa - z * sina;
 		T rz = y * sina + z * cosa;
 		y = ry;
@@ -604,8 +567,8 @@ public:
 
 	void rotateY( T angle )
 	{
-		T sina = tmath<T>::sin(angle);
-		T cosa = tmath<T>::cos(angle);
+		T sina = eve::math::sin(angle);
+		T cosa = eve::math::cos(angle);
 		T rx = x * cosa - z * sina;
 		T rz = x * sina + z * cosa;
 		x = rx;
@@ -614,8 +577,8 @@ public:
 
 	void rotateZ( T angle )
 	{
-		T sina = tmath<T>::sin(angle);
-		T cosa = tmath<T>::cos(angle);
+		T sina = eve::math::sin(angle);
+		T cosa = eve::math::cos(angle);
 		T rx = x * cosa - y * sina;
 		T ry = x * sina + y * cosa;
 		x = rx;
@@ -624,8 +587,8 @@ public:
 
 	void rotate( TVec3<T> axis, T angle )
 	{
-		T cosa = tmath<T>::cos(angle);
-		T sina = tmath<T>::sin(angle);
+		T cosa = eve::math::cos(angle);
+		T sina = eve::math::sin(angle);
 
 		T rx = (cosa + (1 - cosa) * axis.x * axis.x) * x;
 		rx += ((1 - cosa) * axis.x * axis.y - axis.z * sina) * y;
@@ -669,7 +632,7 @@ public:
 	//Rotate vector v around arbitrary axis, axis for angle radians
 	//It can only rotate around an axis through our object, to rotate around another axis:
 	//first translate the object to the axis, then use this function, then translate back in the new direction.
-	static TVec3<T> rotate_around_axis( const TVec3<T> & v, const TVec3<T> & axis, T angle )
+	EVE_FORCE_INLINE static TVec3<T> rotate_around_axis( const TVec3<T> & v, const TVec3<T> & axis, T angle )
 	{
 		if( (v.x == 0.0) && (v.y == 0.0) && (v.z == 0.0) ) { return TVec3<T>(); }
 
@@ -679,8 +642,8 @@ public:
 		TVec3<T> naxis = axis.normalized();
 
 		// Calculate parameters of the rotation matrix.
-		c = tmath<T>::cos( angle );
-		s = tmath<T>::sin( angle );
+		c = eve::math::cos( angle );
+		s = eve::math::sin( angle );
 		t = 1 - c;
 
 		// Multiply v with rotation matrix.
@@ -703,7 +666,7 @@ public:
 	}
 
 	//<! Gives the angle between two 3D vectors (in radians)
-	static T angle( const TVec3<T> & v, const TVec3<T> & w )
+	EVE_FORCE_INLINE static T angle( const TVec3<T> & v, const TVec3<T> & w )
 	{
 		// dot product(v,w) = length(v)*length(w)*cos(angle) ==> angle = acos(dot/(length(v)*length(w))) = acos(dot(norm(v)*norm(w)));
 		T cosineOfAngle = v.normalized().dot( w.normalized() );
@@ -711,35 +674,35 @@ public:
 		if( cosineOfAngle > 1.0 ) { cosineOfAngle =  1.0; }
 		if( cosineOfAngle < -1.0) { cosineOfAngle = -1.0; }
 
-		return -tmath<T>::acos( cosineOfAngle );
+		return -eve::math::acos( cosineOfAngle );
 	}
 
-	static T LengthSquared(const TVec3<T> &rhs)
+	EVE_FORCE_INLINE static T LengthSquared(const TVec3<T> &rhs)
 	{
 		return rhs.x*rhs.x + rhs.y*rhs.y + rhs.z*rhs.z;
 	}
 
-	static TVec3<T> max( void )
+	EVE_FORCE_INLINE static TVec3<T> max(void)
 	{
 		return TVec3<T>( std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max() );
 	}
 
-	static TVec3<T> zero( void )
+	EVE_FORCE_INLINE static TVec3<T> zero(void)
 	{
 		return TVec3<T>( static_cast<T>( 0 ), static_cast<T>( 0 ), static_cast<T>( 0 ) );
 	}
 
-	static TVec3<T> one( void )
+	EVE_FORCE_INLINE static TVec3<T> one( void )
 	{
 		return TVec3<T>( static_cast<T>( 1 ), static_cast<T>( 1 ), static_cast<T>( 1 ) );
 	}
 
-	static TVec3<T> view_direction( void )
+	EVE_FORCE_INLINE static TVec3<T> view_direction( void )
 	{
 		return TVec3<T>( static_cast<T>( 0 ), static_cast<T>( 0 ), static_cast<T>( -1 ) );
 	}
 
-	static TVec3<T> world_up( void )
+	EVE_FORCE_INLINE static TVec3<T> world_up( void )
 	{
 		return TVec3<T>( static_cast<T>( 0 ), static_cast<T>( 1 ), static_cast<T>( 0 ) );
 	}
@@ -754,14 +717,14 @@ public:
 		cosAlpha = this->dot( r );
 
 		// get angle (0 -> pi)
-		alpha = tmath<T>::acos( cosAlpha );
+		alpha = eve::math::acos( cosAlpha );
 
 		// get sine of angle between vectors (0 -> 1)
-		sinAlpha = tmath<T>::sin( alpha );
+		sinAlpha = eve::math::sin( alpha );
 
 		// this breaks down when sinAlpha = 0, i.e. alpha = 0 or pi
-		t1 = tmath<T>::sin( ((T)1 - fact) * alpha) / sinAlpha;
-		t2 = tmath<T>::sin( fact * alpha ) / sinAlpha;
+		t1 = eve::math::sin( ((T)1 - fact) * alpha) / sinAlpha;
+		t2 = eve::math::sin( fact * alpha ) / sinAlpha;
 
 		// interpolate src vectors
 		return *this * t1 + r * t2;
@@ -776,59 +739,53 @@ public:
 	}
 
 	// GLSL inspired swizzling functions.
-	TVec2<T> xx() const { return TVec2<T>(x, x); }
-	TVec2<T> xy() const { return TVec2<T>(x, y); }
-	TVec2<T> xz() const { return TVec2<T>(x, z); }
-	TVec2<T> yx() const { return TVec2<T>(y, x); }
-	TVec2<T> yy() const { return TVec2<T>(y, y); }
-	TVec2<T> yz() const { return TVec2<T>(y, z); }
-	TVec2<T> zx() const { return TVec2<T>(z, x); }
-	TVec2<T> zy() const { return TVec2<T>(z, y); }
-	TVec2<T> zz() const { return TVec2<T>(z, z); }
+	EVE_FORCE_INLINE TVec2<T> xx() const { return TVec2<T>(x, x); }
+	EVE_FORCE_INLINE TVec2<T> xy() const { return TVec2<T>(x, y); }
+	EVE_FORCE_INLINE TVec2<T> xz() const { return TVec2<T>(x, z); }
+	EVE_FORCE_INLINE TVec2<T> yx() const { return TVec2<T>(y, x); }
+	EVE_FORCE_INLINE TVec2<T> yy() const { return TVec2<T>(y, y); }
+	EVE_FORCE_INLINE TVec2<T> yz() const { return TVec2<T>(y, z); }
+	EVE_FORCE_INLINE TVec2<T> zx() const { return TVec2<T>(z, x); }
+	EVE_FORCE_INLINE TVec2<T> zy() const { return TVec2<T>(z, y); }
+	EVE_FORCE_INLINE TVec2<T> zz() const { return TVec2<T>(z, z); }
 
-	TVec3<T> xxx() const { return TVec3<T>(x, x, x); }
-	TVec3<T> xxy() const { return TVec3<T>(x, x, y); }
-	TVec3<T> xxz() const { return TVec3<T>(x, x, z); }
-	TVec3<T> xyx() const { return TVec3<T>(x, y, x); }
-	TVec3<T> xyy() const { return TVec3<T>(x, y, y); }
-	TVec3<T> xyz() const { return TVec3<T>(x, y, z); }
-	TVec3<T> xzx() const { return TVec3<T>(x, z, x); }
-	TVec3<T> xzy() const { return TVec3<T>(x, z, y); }
-	TVec3<T> xzz() const { return TVec3<T>(x, z, z); }
-	TVec3<T> yxx() const { return TVec3<T>(y, x, x); }
-	TVec3<T> yxy() const { return TVec3<T>(y, x, y); }
-	TVec3<T> yxz() const { return TVec3<T>(y, x, z); }
-	TVec3<T> yyx() const { return TVec3<T>(y, y, x); }
-	TVec3<T> yyy() const { return TVec3<T>(y, y, y); }
-	TVec3<T> yyz() const { return TVec3<T>(y, y, z); }
-	TVec3<T> yzx() const { return TVec3<T>(y, z, x); }
-	TVec3<T> yzy() const { return TVec3<T>(y, z, y); }
-	TVec3<T> yzz() const { return TVec3<T>(y, z, z); }
-	TVec3<T> zxx() const { return TVec3<T>(z, x, x); }
-	TVec3<T> zxy() const { return TVec3<T>(z, x, y); }
-	TVec3<T> zxz() const { return TVec3<T>(z, x, z); }
-	TVec3<T> zyx() const { return TVec3<T>(z, y, x); }
-	TVec3<T> zyy() const { return TVec3<T>(z, y, y); }
-	TVec3<T> zyz() const { return TVec3<T>(z, y, z); }
-	TVec3<T> zzx() const { return TVec3<T>(z, z, x); }
-	TVec3<T> zzy() const { return TVec3<T>(z, z, y); }
-	TVec3<T> zzz() const { return TVec3<T>(z, z, z); }
+	EVE_FORCE_INLINE TVec3<T> xxx() const { return TVec3<T>(x, x, x); }
+	EVE_FORCE_INLINE TVec3<T> xxy() const { return TVec3<T>(x, x, y); }
+	EVE_FORCE_INLINE TVec3<T> xxz() const { return TVec3<T>(x, x, z); }
+	EVE_FORCE_INLINE TVec3<T> xyx() const { return TVec3<T>(x, y, x); }
+	EVE_FORCE_INLINE TVec3<T> xyy() const { return TVec3<T>(x, y, y); }
+	EVE_FORCE_INLINE TVec3<T> xyz() const { return TVec3<T>(x, y, z); }
+	EVE_FORCE_INLINE TVec3<T> xzx() const { return TVec3<T>(x, z, x); }
+	EVE_FORCE_INLINE TVec3<T> xzy() const { return TVec3<T>(x, z, y); }
+	EVE_FORCE_INLINE TVec3<T> xzz() const { return TVec3<T>(x, z, z); }
+	EVE_FORCE_INLINE TVec3<T> yxx() const { return TVec3<T>(y, x, x); }
+	EVE_FORCE_INLINE TVec3<T> yxy() const { return TVec3<T>(y, x, y); }
+	EVE_FORCE_INLINE TVec3<T> yxz() const { return TVec3<T>(y, x, z); }
+	EVE_FORCE_INLINE TVec3<T> yyx() const { return TVec3<T>(y, y, x); }
+	EVE_FORCE_INLINE TVec3<T> yyy() const { return TVec3<T>(y, y, y); }
+	EVE_FORCE_INLINE TVec3<T> yyz() const { return TVec3<T>(y, y, z); }
+	EVE_FORCE_INLINE TVec3<T> yzx() const { return TVec3<T>(y, z, x); }
+	EVE_FORCE_INLINE TVec3<T> yzy() const { return TVec3<T>(y, z, y); }
+	EVE_FORCE_INLINE TVec3<T> yzz() const { return TVec3<T>(y, z, z); }
+	EVE_FORCE_INLINE TVec3<T> zxx() const { return TVec3<T>(z, x, x); }
+	EVE_FORCE_INLINE TVec3<T> zxy() const { return TVec3<T>(z, x, y); }
+	EVE_FORCE_INLINE TVec3<T> zxz() const { return TVec3<T>(z, x, z); }
+	EVE_FORCE_INLINE TVec3<T> zyx() const { return TVec3<T>(z, y, x); }
+	EVE_FORCE_INLINE TVec3<T> zyy() const { return TVec3<T>(z, y, y); }
+	EVE_FORCE_INLINE TVec3<T> zyz() const { return TVec3<T>(z, y, z); }
+	EVE_FORCE_INLINE TVec3<T> zzx() const { return TVec3<T>(z, z, x); }
+	EVE_FORCE_INLINE TVec3<T> zzy() const { return TVec3<T>(z, z, y); }
+	EVE_FORCE_INLINE TVec3<T> zzz() const { return TVec3<T>(z, z, z); }
 
-	friend std::ostream& operator<<( std::ostream& lhs, const TVec3<T> rhs )
-	{
-		lhs << "[" << rhs.x << "," << rhs.y << "," << rhs.z  << "]";
-		return lhs;
-	}
+	EVE_FORCE_INLINE static TVec3<T> xAxis(void) { return TVec3<T>(1, 0, 0); }
+	EVE_FORCE_INLINE static TVec3<T> yAxis(void) { return TVec3<T>(0, 1, 0); }
+	EVE_FORCE_INLINE static TVec3<T> zAxis(void) { return TVec3<T>(0, 0, 1); }
 
-	static TVec3<T> xAxis( void ) { return TVec3<T>( 1, 0, 0 ); }
-	static TVec3<T> yAxis( void ) { return TVec3<T>( 0, 1, 0 ); }
-	static TVec3<T> zAxis( void ) { return TVec3<T>( 0, 0, 1 ); }
+	EVE_FORCE_INLINE static TVec3<T> xAxisNeg(void) { return TVec3<T>(-1, 0, 0); }
+	EVE_FORCE_INLINE static TVec3<T> yAxisNeg(void) { return TVec3<T>(0, -1, 0); }
+	EVE_FORCE_INLINE static TVec3<T> zAxisNeg(void) { return TVec3<T>(0, 0, -1); }
 
-	static TVec3<T> xAxisNeg( void ) { return TVec3<T>(-1, 0, 0 ); }
-	static TVec3<T> yAxisNeg( void ) { return TVec3<T>( 0,-1, 0 ); }
-	static TVec3<T> zAxisNeg( void ) { return TVec3<T>( 0, 0,-1 ); }
-
-	static TVec3<T> NaN()   { return TVec3<T>( tmath<T>::NaN(), tmath<T>::NaN(), tmath<T>::NaN() ); }
+	EVE_FORCE_INLINE static TVec3<T> NaN()   { return TVec3<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
 };
 
 
@@ -838,10 +795,6 @@ class TVec4
 {
  public:
 	T x,y,z,w;
-
-	typedef T							TYPE;
-	typedef T							value_type;
-	static const int32_t DIM = 4;
 
 	TVec4()
 		: x( 0 ), y( 0 ), z( 0 ), w( 0 )
@@ -854,10 +807,6 @@ class TVec4
 	{}
 	TVec4( const TVec4<T>& src )
 		: x( src.x ), y( src.y ), z( src.z ), w( src.w )
-	{}
-	template<typename FromT>
-	TVec4(const TVec4Color<FromT>& src)
-		: x(src.r), y(src.g), z(src.b), w(src.a)
 	{}
 	template<typename FromT>
 	TVec4( const TVec4<FromT>& src )
@@ -948,24 +897,24 @@ class TVec4
 		return TVec4<T>( y*rhs.z - rhs.y*z, z*rhs.x - rhs.z*x, x*rhs.y - rhs.x*y );
 	}
 
-	static bool equal(TVec4<T> const & x, TVec4<T> const & y)
+	EVE_FORCE_INLINE static bool equal(TVec4<T> const & x, TVec4<T> const & y)
 	{
-		return (tmath<T>::equal(x.x, y.x) && tmath<T>::equal(x.y, y.y) && tmath<T>::equal(x.z, y.z) && tmath<T>::equal(x.w, y.w));
+		return (eve::math::equal(x.x, y.x) && eve::math::equal(x.y, y.y) && eve::math::equal(x.z, y.z) && eve::math::equal(x.w, y.w));
 	}
 
-	static bool equal( TVec4<T> const & x, TVec4<T> const & y, T epsilon )
+	EVE_FORCE_INLINE static bool equal( TVec4<T> const & x, TVec4<T> const & y, T epsilon )
 	{
-		return (tmath<T>::equal(x.x, y.x, epsilon) && tmath<T>::equal(x.y, y.y, epsilon) && tmath<T>::equal(x.z, y.z, epsilon) && tmath<T>::equal(x.w, y.w, epsilon));
+		return (eve::math::equal(x.x, y.x, epsilon) && eve::math::equal(x.y, y.y, epsilon) && eve::math::equal(x.z, y.z, epsilon) && eve::math::equal(x.w, y.w, epsilon));
 	}
 
 	inline bool equal( TVec4<T> const & other )
 	{
-		return (tmath<T>::equal(x, other.x) && tmath<T>::equal(y, other.y) && tmath<T>::equal(z, other.z) && tmath<T>::equal(w, other.w));
+		return (eve::math::equal(x, other.x) && eve::math::equal(y, other.y) && eve::math::equal(z, other.z) && eve::math::equal(w, other.w));
 	}
 
 	inline bool equal( TVec4<T> const & other, T epsilon )
 	{
-		return (tmath<T>::equal(x, other.x, epsilon) && tmath<T>::equal(y, other.y, epsilon) && tmath<T>::equal(z, other.z, epsilon) && tmath<T>::equal(w, other.w, epsilon));
+		return (eve::math::equal(x, other.x, epsilon) && eve::math::equal(y, other.y, epsilon) && eve::math::equal(z, other.z, epsilon) && eve::math::equal(w, other.w, epsilon));
 	}
 
 	T distance( const TVec4<T> &rhs ) const
@@ -981,7 +930,7 @@ class TVec4
 	T length() const
 	{
 		// For most vector operations, this assumes w to be zero.
-		return tmath<T>::sqrt( x*x + y*y + z*z + w*w );
+		return eve::math::sqrt( x*x + y*y + z*z + w*w );
 	}
 
 	T lengthSquared( void ) const
@@ -992,7 +941,7 @@ class TVec4
 
 	void normalize( void )
 	{
-		T invS = ((T)1) / length();
+		T invS = static_cast<T>(1) / length();
 		x *= invS;
 		y *= invS;
 		z *= invS;
@@ -1001,7 +950,7 @@ class TVec4
 	
 	TVec4<T> normalized() const 
 	{
-		T invS = ((T)1) / length();
+		T invS = static_cast<T>(1) / length();
 		return TVec4<T>( x*invS, y*invS, z*invS, w*invS );
 	}
 
@@ -1010,7 +959,7 @@ class TVec4
 	{
 		T s = lengthSquared();
 		if( s > 0 ) {
-			T invS = ((T)1) / tmath<T>::sqrt( s );
+			T invS = static_cast<T>(1) / eve::math::sqrt(s);
 			x *= invS;
 			y *= invS;
 			z *= invS;
@@ -1024,7 +973,7 @@ class TVec4
 		T lenSq = lengthSquared();
 
 		if( ( lenSq > maxLength * maxLength ) && ( lenSq > 0 ) ) {
-			T ratio = maxLength / tmath<T>::sqrt( lenSq );
+			T ratio = maxLength / eve::math::sqrt( lenSq );
 			x *= ratio;
 			y *= ratio;
 			z *= ratio;
@@ -1035,7 +984,7 @@ class TVec4
 		T lengthSquared = x * x + y * y + z * z + w * w;
 
 		if( ( lengthSquared > maxLength * maxLength ) && ( lengthSquared > 0 ) ) {
-			T ratio = maxLength / tmath<T>::sqrt( lengthSquared );
+			T ratio = maxLength / eve::math::sqrt( lengthSquared );
 			x *= ratio;
 			y *= ratio;
 			z *= ratio;
@@ -1050,7 +999,7 @@ class TVec4
 		T lenSq = lengthSquared();
 
 		if( ( lenSq > maxLength * maxLength ) && ( lenSq > 0 ) ) {
-			T ratio = maxLength / tmath<T>::sqrt( lenSq );
+			T ratio = maxLength / eve::math::sqrt( lenSq );
 			return TVec4<T>( x * ratio, y * ratio, z * ratio, w * ratio );
 		}
 		else
@@ -1060,7 +1009,7 @@ class TVec4
 		T lengthSquared = x * x + y * y + z * z + w * w;
 
 		if( ( lengthSquared > maxLength * maxLength ) && ( lengthSquared > 0 ) ) {
-			T ratio = maxLength / tmath<T>::sqrt( lengthSquared );
+			T ratio = maxLength / eve::math::sqrt( lengthSquared );
 			return TVec4<T>( x * ratio, y * ratio, z * ratio, w * ratio );
 		}
 		else
@@ -1088,17 +1037,17 @@ class TVec4
 		x = x + ( rhs.x - x ) * fact; y = y + ( rhs.y - y ) * fact; z = z + ( rhs.z - z ) * fact; w = w + ( rhs.w - w ) * fact;
 	}
 
-	static TVec4<T> max()
+	EVE_FORCE_INLINE static TVec4<T> max()
 	{
 		return TVec4<T>( std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max() );
 	}
 
-	static TVec4<T> zero()
+	EVE_FORCE_INLINE static TVec4<T> zero()
 	{
 		return TVec4<T>( static_cast<T>( 0 ), static_cast<T>( 0 ), static_cast<T>( 0 ), static_cast<T>( 0 ) );
 	}
 
-	static TVec4<T> one()
+	EVE_FORCE_INLINE static TVec4<T> one()
 	{
 		return TVec4<T>( static_cast<T>( 1 ), static_cast<T>( 1 ), static_cast<T>( 1 ), static_cast<T>( 1 ) );
 	}
@@ -1113,14 +1062,14 @@ class TVec4
 		cosAlpha = this->dot( r );
 
 		// get angle (0 -> pi)
-		alpha = tmath<T>::acos( cosAlpha );
+		alpha = eve::math::acos( cosAlpha );
 
 		// get sine of angle between vectors (0 -> 1)
-		sinAlpha = tmath<T>::sin( alpha );
+		sinAlpha = eve::math::sin( alpha );
 
 		// this breaks down when sinAlpha = 0, i.e. alpha = 0 or pi
-		t1 = tmath<T>::sin( ((T)1 - fact) * alpha) / sinAlpha;
-		t2 = tmath<T>::sin( fact * alpha ) / sinAlpha;
+		t1 = eve::math::sin( ((T)1 - fact) * alpha) / sinAlpha;
+		t2 = eve::math::sin( fact * alpha ) / sinAlpha;
 
 		// interpolate src vectors
 		return *this * t1 + r * t2;
@@ -1138,12 +1087,19 @@ class TVec4
 	TVec2<T> xx() const { return TVec2<T>(x, x); }
 	TVec2<T> xy() const { return TVec2<T>(x, y); }
 	TVec2<T> xz() const { return TVec2<T>(x, z); }
+	TVec2<T> xw() const { return TVec2<T>(x, w); }
 	TVec2<T> yx() const { return TVec2<T>(y, x); }
 	TVec2<T> yy() const { return TVec2<T>(y, y); }
 	TVec2<T> yz() const { return TVec2<T>(y, z); }
+	TVec2<T> yw() const { return TVec2<T>(y, w); }
 	TVec2<T> zx() const { return TVec2<T>(z, x); }
 	TVec2<T> zy() const { return TVec2<T>(z, y); }
 	TVec2<T> zz() const { return TVec2<T>(z, z); }
+	TVec2<T> zw() const { return TVec2<T>(z, w); }
+	TVec2<T> wx() const { return TVec2<T>(w, x); }
+	TVec2<T> wy() const { return TVec2<T>(w, y); }
+	TVec2<T> wz() const { return TVec2<T>(w, z); }
+	TVec2<T> ww() const { return TVec2<T>(w, w); }
 
 	TVec3<T> xxx() const { return TVec3<T>(x, x, x); }
 	TVec3<T> xxy() const { return TVec3<T>(x, x, y); }
@@ -1430,23 +1386,17 @@ class TVec4
 	TVec4<T> wwwz() const { return TVec4<T>(w, w, w, z); }
 	TVec4<T> wwww() const { return TVec4<T>(w, w, w, w); }
 
-	friend std::ostream& operator<<( std::ostream& lhs, const TVec4<T>& rhs )
-	{
-		lhs << "[" << rhs.x << "," << rhs.y << "," << rhs.z << "," << rhs.w << "]";
-		return lhs;
-	}
+	EVE_FORCE_INLINE static TVec4<T> xAxis( void ) { return TVec4<T>( 1, 0, 0, 0 ); }
+	EVE_FORCE_INLINE static TVec4<T> yAxis( void ) { return TVec4<T>( 0, 1, 0, 0 ); }
+	EVE_FORCE_INLINE static TVec4<T> zAxis( void ) { return TVec4<T>( 0, 0, 1, 0 ); }
+	EVE_FORCE_INLINE static TVec4<T> wAxis( void ) { return TVec4<T>( 0, 0, 0, 1 ); }
 
-	static TVec4<T> xAxis( void ) { return TVec4<T>( 1, 0, 0, 0 ); }
-	static TVec4<T> yAxis( void ) { return TVec4<T>( 0, 1, 0, 0 ); }
-	static TVec4<T> zAxis( void ) { return TVec4<T>( 0, 0, 1, 0 ); }
-	static TVec4<T> wAxis( void ) { return TVec4<T>( 0, 0, 0, 1 ); }
+	EVE_FORCE_INLINE static TVec4<T> xAxisNeg(void) { return TVec4<T>(-1, 0, 0, 0); }
+	EVE_FORCE_INLINE static TVec4<T> yAxisNeg(void) { return TVec4<T>(0, -1, 0, 0); }
+	EVE_FORCE_INLINE static TVec4<T> zAxisNeg(void) { return TVec4<T>(0, 0, -1, 0); }
+	EVE_FORCE_INLINE static TVec4<T> wAxisNeg(void) { return TVec4<T>(0, 0, 0, -1); }
 
-	static TVec4<T> xAxisNeg( void ) { return TVec4<T>(-1, 0, 0, 0 ); }
-	static TVec4<T> yAxisNeg( void ) { return TVec4<T>( 0,-1, 0, 0 ); }
-	static TVec4<T> zAxisNeg( void ) { return TVec4<T>( 0, 0,-1, 0 ); }
-	static TVec4<T> wAxisNeg( void ) { return TVec4<T>( 0, 0, 0,-1 ); }
-
-	static TVec4<T> NaN()   { return TVec4<T>( tmath<T>::NaN(), tmath<T>::NaN(), tmath<T>::NaN(), tmath<T>::NaN() ); }
+	EVE_FORCE_INLINE static TVec4<T> NaN()   { return TVec4<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
 };
 
 template <class T>
@@ -1455,19 +1405,12 @@ class TVec4Color
 public:
 	T r, g, b, a;
 
-	typedef T							TYPE;
-	typedef T							value_type;
-	static const int32_t DIM = 4;
-
 	TVec4Color()
 		: r(0), g(0), b(0), a(0)
 	{}
 	TVec4Color(T nr, T ng, T nb, T na = 0)
 		: r(nr), g(ng), b(nb), a(na)
 	{}
-	//	TVec4Color( const TVec3<T>& src, T aa = 0 )
-	//		: r( src.r ), g( src.g ), b( src.b ), a( aa )
-	//	{}
 	TVec4Color(const TVec4Color<T>& src)
 		: r(src.r), g(src.g), b(src.b), a(src.a)
 	{}
@@ -1504,17 +1447,13 @@ public:
 
 	T& operator[](int32_t n)
 	{
-#ifndef NDEBUG
-		NATIVE_ASSERT(n >= 0 && n <= 3);
-#endif
+		EVE_ASSERT(n >= 0 && n <= 3);
 		return (&r)[n];
 	}
 
 	const T& operator[](int32_t n)  const
 	{
-#ifndef NDEBUG
-		NATIVE_ASSERT(n >= 0 && n <= 3);
-#endif
+		EVE_ASSERT(n >= 0 && n <= 3);
 		return (&r)[n];
 	}
 
@@ -1560,24 +1499,24 @@ public:
 		return TVec4Color<T>(g*rhs.b - rhs.g*b, b*rhs.r - rhs.b*r, r*rhs.g - rhs.r*g);
 	}
 
-	static bool equal(TVec4Color<T> const & r, TVec4Color<T> const & g)
+	EVE_FORCE_INLINE static bool equal(TVec4Color<T> const & r, TVec4Color<T> const & g)
 	{
-		return (tmath<T>::equal(r.r, g.r) && tmath<T>::equal(r.g, g.g) && tmath<T>::equal(r.b, g.b) && tmath<T>::equal(r.a, g.a));
+		return (eve::math::equal(r.r, g.r) && eve::math::equal(r.g, g.g) && eve::math::equal(r.b, g.b) && eve::math::equal(r.a, g.a));
 	}
 
-	static bool equal(TVec4Color<T> const & r, TVec4Color<T> const & g, T epsilon )
+	EVE_FORCE_INLINE static bool equal(TVec4Color<T> const & r, TVec4Color<T> const & g, T epsilon )
 	{
-		return (tmath<T>::equal(r.r, g.r, epsilon) && tmath<T>::equal(r.g, g.g, epsilon) && tmath<T>::equal(r.b, g.b, epsilon) && tmath<T>::equal(r.a, g.a, epsilon));
+		return (eve::math::equal(r.r, g.r, epsilon) && eve::math::equal(r.g, g.g, epsilon) && eve::math::equal(r.b, g.b, epsilon) && eve::math::equal(r.a, g.a, epsilon));
 	}
 
 	inline bool equal( TVec4Color<T> const & other )
 	{
-		return (tmath<T>::equal(r, other.r) && tmath<T>::equal(g, other.g) && tmath<T>::equal(b, other.b) && tmath<T>::equal(a, other.a));
+		return (eve::math::equal(r, other.r) && eve::math::equal(g, other.g) && eve::math::equal(b, other.b) && eve::math::equal(a, other.a));
 	}
 
 	inline bool equal( TVec4Color<T> const & other, T epsilon )
 	{
-		return (tmath<T>::equal(r, other.r, epsilon) && tmath<T>::equal(g, other.g, epsilon) && tmath<T>::equal(b, other.b, epsilon) && tmath<T>::equal(a, other.a, epsilon));
+		return (eve::math::equal(r, other.r, epsilon) && eve::math::equal(g, other.g, epsilon) && eve::math::equal(b, other.b, epsilon) && eve::math::equal(a, other.a, epsilon));
 	}
 
 	T distance(const TVec4Color<T> &rhs) const
@@ -1593,7 +1532,7 @@ public:
 	T length() const
 	{
 		// For most vector operations, this assumes a to be bero.
-		return tmath<T>::sqrt(r*r + g*g + b*b + a*a);
+		return eve::math::sqrt(r*r + g*g + b*b + a*a);
 	}
 
 	T lengthSquared(void) const
@@ -1613,20 +1552,20 @@ public:
 
 	TVec4Color<T> normalized() const
 	{
-		T invS = ((T)1) / length();
+		T invS = static_cast<T>(1) / length();
 		return TVec4Color<T>(r*invS, g*invS, b*invS, a*invS);
 	}
 
-	// Tests for bero-length
+	// Tests for zero-length
 	void safeNormalize()
 	{
 		T s = lengthSquared();
 		if (s > 0) {
-			T invS = ((T)1) / tmath<T>::sqrt(s);
+			T invS = static_cast<T>(1) / eve::math::sqrt(s);
 			r *= invS;
 			g *= invS;
 			b *= invS;
-			a = (T)0;
+			a = static_cast<T>(0);
 		}
 	}
 
@@ -1636,7 +1575,7 @@ public:
 		T lenSq = lengthSquared();
 
 		if ((lenSq > marLength * marLength) && (lenSq > 0)) {
-			T ratio = marLength / tmath<T>::sqrt(lenSq);
+			T ratio = marLength / eve::math::sqrt(lenSq);
 			r *= ratio;
 			g *= ratio;
 			b *= ratio;
@@ -1647,7 +1586,7 @@ public:
 		T lengthSquared = r * r + g * g + b * b + a * a;
 
 		if( ( lengthSquared > marLength * marLength ) && ( lengthSquared > 0 ) ) {
-		T ratio = marLength / tmath<T>::sqrt( lengthSquared );
+		T ratio = marLength / eve::math::sqrt( lengthSquared );
 		r *= ratio;
 		g *= ratio;
 		b *= ratio;
@@ -1656,13 +1595,13 @@ public:
 		*/
 	}
 
-	//! Returns a copg of the TVec4Color aith its length limited to \a marLength, scaling it proportionallg if necessarg.
+	//! Returns a copy of the TVec4Color with its length limited to \a marLength, scaling it proportionallg if necessarg.
 	TVec4Color<T> limited(T marLength) const
 	{
 		T lenSq = lengthSquared();
 
 		if ((lenSq > marLength * marLength) && (lenSq > 0)) {
-			T ratio = marLength / tmath<T>::sqrt(lenSq);
+			T ratio = marLength / eve::math::sqrt(lenSq);
 			return TVec4Color<T>(r * ratio, g * ratio, b * ratio, a * ratio);
 		}
 		else
@@ -1672,7 +1611,7 @@ public:
 		T lengthSquared = r * r + g * g + b * b + a * a;
 
 		if( ( lengthSquared > marLength * marLength ) && ( lengthSquared > 0 ) ) {
-		T ratio = marLength / tmath<T>::sqrt( lengthSquared );
+		T ratio = marLength / eve::math::sqrt( lengthSquared );
 		return TVec4Color<T>( r * ratio, g * ratio, b * ratio, a * ratio );
 		}
 		else
@@ -1700,42 +1639,42 @@ public:
 		r = r + (rhs.r - r) * fact; g = g + (rhs.g - g) * fact; b = b + (rhs.b - b) * fact; a = a + (rhs.a - a) * fact;
 	}
 
-	static TVec4Color<T> mar()
+	EVE_FORCE_INLINE static TVec4Color<T> mar()
 	{
 		return TVec4Color<T>(std::numeric_limits<T>::mar(), std::numeric_limits<T>::mar(), std::numeric_limits<T>::mar(), std::numeric_limits<T>::mar());
 	}
 
-	static TVec4Color<T> zero()
+	EVE_FORCE_INLINE static TVec4Color<T> zero()
 	{
 		return TVec4Color<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0));
 	}
 
-	static TVec4Color<T> one()
+	EVE_FORCE_INLINE static TVec4Color<T> one()
 	{
 		return TVec4Color<T>(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1), static_cast<T>(1));
 	}
 
-	static TVec4Color<T> black( void )
+	EVE_FORCE_INLINE static TVec4Color<T> black( void )
 	{
 		return TVec4Color<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0));
 	}
 
-	static TVec4Color<T> white( void )
+	EVE_FORCE_INLINE static TVec4Color<T> white( void )
 	{
 		return TVec4Color<T>(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1), static_cast<T>(1));
 	}
 
-	static TVec4Color<T> red( void )
+	EVE_FORCE_INLINE static TVec4Color<T> red( void )
 	{
 		return TVec4Color<T>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
 	}
 
-	static TVec4Color<T> green( void )
+	EVE_FORCE_INLINE static TVec4Color<T> green( void )
 	{
 		return TVec4Color<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0), static_cast<T>(1));
 	}
 
-	static TVec4Color<T> blue( void )
+	EVE_FORCE_INLINE static TVec4Color<T> blue( void )
 	{
 		return TVec4Color<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(1), static_cast<T>(1));
 	}
@@ -1746,18 +1685,18 @@ public:
 		T t1, t2;
 		TVec4Color<T> result;
 
-		// get cosine of angle betaeen vectors (-1 -> 1)
+		// get cosine of angle between vectors (-1 -> 1)
 		cosAlpha = this->dot(r);
 
 		// get angle (0 -> pi)
-		alpha = tmath<T>::acos(cosAlpha);
+		alpha = eve::math::acos(cosAlpha);
 
-		// get sine of angle betaeen vectors (0 -> 1)
-		sinAlpha = tmath<T>::sin(alpha);
+		// get sine of angle between vectors (0 -> 1)
+		sinAlpha = eve::math::sin(alpha);
 
-		// this breaks doan ahen sinAlpha = 0, i.e. alpha = 0 or pi
-		t1 = tmath<T>::sin(((T)1 - fact) * alpha) / sinAlpha;
-		t2 = tmath<T>::sin(fact * alpha) / sinAlpha;
+		// this breaks down when sinAlpha = 0, i.e. alpha = 0 or pi
+		t1 = eve::math::sin(((T)1 - fact) * alpha) / sinAlpha;
+		t2 = eve::math::sin(fact * alpha) / sinAlpha;
 
 		// interpolate src vectors
 		return *this * t1 + r * t2;
@@ -2067,37 +2006,31 @@ public:
 	TVec4Color<T> aaab() const { return TVec4Color<T>(a, a, a, b); }
 	TVec4Color<T> aaaa() const { return TVec4Color<T>(a, a, a, a); }
 
-	friend std::ostream& operator<<(std::ostream& lhs, const TVec4Color<T>& rhs)
-	{
-		lhs << "[" << rhs.r << "," << rhs.g << "," << rhs.b << "," << rhs.a << "]";
-		return lhs;
-	}
+	EVE_FORCE_INLINE static TVec4Color<T> rAxis() { return TVec4Color<T>(1, 0, 0, 0); }
+	EVE_FORCE_INLINE static TVec4Color<T> gAxis() { return TVec4Color<T>(0, 1, 0, 0); }
+	EVE_FORCE_INLINE static TVec4Color<T> bAxis() { return TVec4Color<T>(0, 0, 1, 0); }
+	EVE_FORCE_INLINE static TVec4Color<T> aAxis() { return TVec4Color<T>(0, 0, 0, 1); }
 
-	static TVec4Color<T> rAxis() { return TVec4Color<T>(1, 0, 0, 0); }
-	static TVec4Color<T> gAxis() { return TVec4Color<T>(0, 1, 0, 0); }
-	static TVec4Color<T> bAxis() { return TVec4Color<T>(0, 0, 1, 0); }
-	static TVec4Color<T> aAxis() { return TVec4Color<T>(0, 0, 0, 1); }
-
-	static TVec4Color<T> NaN()   { return TVec4Color<T>(tmath<T>::NaN(), tmath<T>::NaN(), tmath<T>::NaN(), tmath<T>::NaN()); }
+	EVE_FORCE_INLINE static TVec4Color<T> NaN()   { return TVec4Color<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
 };
 
 //! Converts a coordinate from rectangular (Cartesian) coordinates to polar coordinates of the form (radius, theta)
 template<typename T>
 TVec2<T> toPolar( TVec2<T> car )
 {
-	const T epsilon = (T)0.0000001;
+	const T epsilon = static_cast<T>(0.0000001);
 	T theta;
-	if( tmath<T>::abs( car.x ) < epsilon ) { // x == 0
-		if( tmath<T>::abs( car.y ) < epsilon ) theta = 0;
+	if( eve::math::abs( car.x ) < epsilon ) { // x == 0
+		if( eve::math::abs( car.y ) < epsilon ) theta = 0;
 		else if( car.y > 0 ) theta = (T)M_PI / 2;
 		else theta = ( (T)M_PI * 3 ) / 2;
 	}
 	else if ( car.x > 0 ) {
-		if( car.y < 0 ) theta = tmath<T>::atan( car.y / car.x ) + 2 * (T)M_PI;
-		else theta = tmath<T>::atan( car.y / car.x );
+		if( car.y < 0 ) theta = eve::math::atan( car.y / car.x ) + 2 * (T)M_PI;
+		else theta = eve::math::atan( car.y / car.x );
 	}
 	else // car.x < 0
-		theta = (tmath<T>::atan( car.y / car.x ) + M_PI );
+		theta = (eve::math::atan( car.y / car.x ) + M_PI );
 
 	return TVec2<T>( car.length(), theta );
 }
@@ -2106,7 +2039,7 @@ TVec2<T> toPolar( TVec2<T> car )
 template<typename T>
 TVec2<T> fromPolar( TVec2<T> pol )
 {
-	return TVec2<T>( tmath<T>::cos( pol.y ) *  pol.x , tmath<T>::sin( pol.y ) *  pol.x );
+	return TVec2<T>( eve::math::cos( pol.y ) *  pol.x , eve::math::sin( pol.y ) *  pol.x );
 }
 
 template<typename T,typename Y> inline TVec2<T> operator *( Y s, const TVec2<T> &v ) { return TVec2<T>( v.x * s, v.y * s ); }
@@ -2133,23 +2066,15 @@ template <typename T> bool isNaN( const TVec4<T>& a ) { return std::isnan( a.x )
 //		Typedefs
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef TVec2<uint32_t>			Vec2ui;
-typedef TVec2<int32_t>			Vec2i;
 typedef TVec2<float>			Vec2f;
 typedef TVec2<double>			Vec2d;
 
-typedef TVec3<uint32_t>			Vec3ui;
-typedef TVec3<int32_t>			Vec3i;
 typedef TVec3<float>			Vec3f;
 typedef TVec3<double>			Vec3d;
 
-typedef TVec4<uint32_t>			Vec4ui;
-typedef TVec4<int32_t>			Vec4i;
 typedef TVec4<float>			Vec4f;
 typedef TVec4<double>			Vec4d;
 
-typedef TVec4Color<uint32_t>	Color4ui;
-typedef TVec4Color<int32_t>		Color4i;
 typedef TVec4Color<float>		Color4f;
 typedef TVec4Color<double>		Color4d;
 

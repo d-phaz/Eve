@@ -37,13 +37,17 @@
 #endif
 
 
-eve::app::App *	eve::app::App::m_p_instance = nullptr;
+//=================================================================================================
+eve::app::App *		eve::app::App::m_p_instance = nullptr;
+eve::time::Timer *	eve::app::App::m_p_timer	= nullptr;
 
 //=================================================================================================
 eve::app::App * eve::app::App::create_instance(void)
 {
-	EVE_ASSERT(!m_p_instance);
+	EVE_ASSERT(!m_p_timer);
+	m_p_timer = eve::time::Timer::create_ptr(true);
 
+	EVE_ASSERT(!m_p_instance);
 	m_p_instance = new eve::app::App();
 	m_p_instance->init();
 	return m_p_instance;
@@ -61,6 +65,9 @@ void eve::app::App::release_instance(void)
 {
 	EVE_ASSERT(m_p_instance);
 	EVE_RELEASE_PTR_CPP(m_p_instance);
+
+	EVE_ASSERT(m_p_timer);
+	EVE_RELEASE_PTR(m_p_timer);
 }
 
 
@@ -194,7 +201,7 @@ bool eve::app::App::releaseView(eve::sys::View * p_pView)
 
 
 //=================================================================================================
-void eve::app::App::cb_evtApplicationExit(void)
+void eve::app::App::cb_evtApplicationExit(eve::evt::EventArgs & p_arg)
 {
 	m_bRunning = false;
 }

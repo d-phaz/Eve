@@ -108,11 +108,11 @@ namespace eve
 			/** \brief Window move event handler. (pure virtual) */
 			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg) override{}
 			/** \brief Window gain focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusGot(void) override{}
+			virtual void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg) override{}
 			/** \brief Window loose focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusLost(void) override{}
+			virtual void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg) override{}
 			/** \brief Window close event handler. (pure virtual) */
-			virtual void cb_evtWindowClose(void) override{}
+			virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) override{}
 
 		}; // class Node
 
