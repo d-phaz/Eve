@@ -53,7 +53,7 @@ private:
 	eve::time::Timer *			m_pTimer;
 	eve::time::Clock *			m_pClock;
 
-	float *						vec4;
+	float *						m_vec4;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -111,17 +111,17 @@ void Example::initThreadedData(void)
 	m_pClock->setPeriodicInterval(10);
 	//m_pClock->start();
 
-	vec4 = (float*)eve::mem::align_malloc(sizeof(float)* 4, 16);
-	EVE_ASSERT(vec4);
+	m_vec4 = (float*)eve::mem::align_malloc(sizeof(float)* 4, 16);
+	EVE_ASSERT(m_vec4);
 
 
 	eve::vec4i_t vec { 1, 3, 9, 27 };
-	EVE_LOG_INFO("__eve_vec4i [3] : %d", vec[3]);
+	EVE_LOG_INFO("eve::vec4i_t [3] : %d", vec[3]);
 }
 
 void Example::releaseThreadedData(void)
 {
-	eve::mem::align_free(vec4);
+	eve::mem::align_free(m_vec4);
 
 	EVE_RELEASE_PTR(m_pClock);
 	EVE_RELEASE_PTR(m_pTimer);
