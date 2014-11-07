@@ -1,4 +1,8 @@
 
+#if !defined(__EVE_MATH_TVECTOR_H__)
+#error "Do not include this header directly, include eve/math/Tvector.h instead"
+#endif
+
 #pragma once
 #ifndef __EVE_MATH_TVECTOR_2_H__
 #define __EVE_MATH_TVECTOR_2_H__
@@ -208,21 +212,21 @@ eve::math::TVec2<T>::TVec2(const T *d)
 template<typename T>
 template<typename FromT>
 eve::math::TVec2<T>::TVec2(const eve::math::TVec2<FromT> & src)
-: x(static_cast<T>(src.x))
-, y(static_cast<T>(src.y))
+	: x(static_cast<T>(src.x))
+	, y(static_cast<T>(src.y))
 {}
 
 
 
 //=================================================================================================
 template<typename T>
-void eve::math::TVec2<T>::set(T ax, T ay)
+EVE_FORCE_INLINE void eve::math::TVec2<T>::set(T ax, T ay)
 {
 	x = ax; y = ay;
 }
 
 template<typename T>
-void eve::math::TVec2<T>::set(const TVec2<T> & rhs)
+EVE_FORCE_INLINE void eve::math::TVec2<T>::set(const TVec2<T> & rhs)
 {
 	x = rhs.x; y = rhs.y;
 }
@@ -232,7 +236,7 @@ void eve::math::TVec2<T>::set(const TVec2<T> & rhs)
 //=================================================================================================
 template<typename T>
 template<typename FromT>
-eve::math::TVec2<T> & eve::math::TVec2<T>::operator=(const eve::math::TVec2<FromT> & rhs)
+EVE_FORCE_INLINE eve::math::TVec2<T> & eve::math::TVec2<T>::operator=(const eve::math::TVec2<FromT> & rhs)
 {
 	x = static_cast<T>(rhs.x);
 	y = static_cast<T>(rhs.y);
@@ -240,7 +244,7 @@ eve::math::TVec2<T> & eve::math::TVec2<T>::operator=(const eve::math::TVec2<From
 }
 
 template<typename T>
-eve::math::TVec2<T> & eve::math::TVec2<T>::operator=(const eve::math::TVec2<T> & rhs)
+EVE_FORCE_INLINE eve::math::TVec2<T> & eve::math::TVec2<T>::operator=(const eve::math::TVec2<T> & rhs)
 {
 	x = rhs.x;
 	y = rhs.y;
