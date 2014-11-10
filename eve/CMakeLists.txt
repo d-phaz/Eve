@@ -212,6 +212,8 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	dx11/core/StructuredBuffer.h
 	dx11/core/ShaderCompiler.cpp
 	dx11/core/ShaderCompiler.h
+	dx11/core/ShaderInstance.cpp
+	dx11/core/ShaderInstance.h
 	dx11/core/SwapChain.cpp
 	dx11/core/SwapChain.h
 	dx11/core/SwapChain.h
