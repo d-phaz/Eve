@@ -253,7 +253,7 @@ void eve::sys::Event::notifyWindowResize(uint32_t p_width, uint32_t p_height)
 //=================================================================================================
 void  eve::sys::Event::notifyWindowMove(int32_t p_x, int32_t p_y)
 {
-	static eve::evt::MoveEventArgs moveEventArgs;
+	eve::evt::MoveEventArgs moveEventArgs;
 	moveEventArgs.x = p_x;
 	moveEventArgs.y = p_y;
 
@@ -263,19 +263,22 @@ void  eve::sys::Event::notifyWindowMove(int32_t p_x, int32_t p_y)
 //=================================================================================================
 void eve::sys::Event::notifyWindowFocusGot(void)
 {
-	eve::evt::notify_event(m_windowFocusGot);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(m_windowFocusGot, args);
 }
 
 //=================================================================================================
 void eve::sys::Event::notifyWindowFocusLost(void)
 {
-	eve::evt::notify_event(m_windowFocusLost);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(m_windowFocusLost, args);
 }
 
 //=================================================================================================
 void eve::sys::Event::notifyWindowClose(void)
 {
-	eve::evt::notify_event(m_windowClose);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(m_windowClose, args);
 }
 
 

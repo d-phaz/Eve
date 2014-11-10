@@ -30,6 +30,7 @@
 */
 
 #include "eve/app/App.h"
+#include "eve/math/Includes.h"
 #include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 #include "eve/time/Absolute.h"
@@ -53,7 +54,7 @@ private:
 	eve::time::Timer *			m_pTimer;
 	eve::time::Clock *			m_pClock;
 
-	float *						vec4;
+	float *						m_vec4;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -68,7 +69,7 @@ private:
 public:
 	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
 	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
-	virtual void cb_evtWindowClose(void) override;
+	virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) override;
 
 public:
 	void cb_evtClock(void);
@@ -111,17 +112,23 @@ void Example::initThreadedData(void)
 	m_pClock->setPeriodicInterval(10);
 	//m_pClock->start();
 
-	vec4 = (float*)eve::mem::align_malloc(sizeof(float)* 4, 16);
-	EVE_ASSERT(vec4);
-
+	m_vec4 = (float*)eve::mem::align_malloc(sizeof(float)* 4, 16);
+	EVE_ASSERT(m_vec4);
 
 	eve::vec4i_t vec { 1, 3, 9, 27 };
-	EVE_LOG_INFO("__eve_vec4i [3] : %d", vec[3]);
+	EVE_LOG_INFO("eve::vec4i_t[3] : %d", vec[3]);
+
+	Vec4f v(0.0F, 1.0F, 2.0f, 3.0f);
+	EVE_LOG_INFO("Vec4f.z : %f", v.z);
+
+	Vec2f v2;
+	Vec3f v3;
+	Vec4f v4;
 }
 
 void Example::releaseThreadedData(void)
 {
-	eve::mem::align_free(vec4);
+	eve::mem::align_free(m_vec4);
 
 	EVE_RELEASE_PTR(m_pClock);
 	EVE_RELEASE_PTR(m_pTimer);
@@ -145,6 +152,7 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 	{
 		//m_pTimer->stop();
 		EVE_LOG_INFO("Timer elapsed time: %d", m_pTimer->getElapsedTime());
+		EVE_LOG_INFO("%d ms since application startup.", p_args.time);
 	}
 	else {
 		m_pTimer->start();
@@ -156,7 +164,7 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 {
-	EVE_LOG_INFO("Key down received.");
+	EVE_LOG_INFO("Key down received, %d ms application run.", p_args.time);
 
 	if (p_args.key == eve::sys::key_Return)
 	{
@@ -168,7 +176,7 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 	}
 }
 
-void Example::cb_evtWindowClose(void)
+void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 {
 	EVE_LOG_INFO("Window close received.");
 

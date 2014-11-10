@@ -67,6 +67,63 @@ set( CORE_SRCS
 set( SOURCE_FILES ${SOURCE_FILES} ${CORE_SRCS} )
 source_group( "Core" FILES ${CORE_SRCS} )
 
+	
+# Directx11 Support.
+#################################################
+if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
+	set(DIRECTX11_SRCS
+		dx11/core/BlendStates.cpp
+		dx11/core/BlendStates.h
+		dx11/core/ConstantBuffer.cpp
+		dx11/core/ConstantBuffer.h
+		dx11/core/Context.cpp
+		dx11/core/Context.h
+		dx11/core/DepthStencil.cpp
+		dx11/core/DepthStencil.h
+		dx11/core/DepthStencilStates.cpp
+		dx11/core/DepthStencilStates.h
+		dx11/core/Device.cpp
+		dx11/core/Device.h
+		dx11/core/Enums.h
+		dx11/core/Formats.cpp
+		dx11/core/Formats.h
+		dx11/core/Includes.h
+		dx11/core/IndexBuffer.cpp
+		dx11/core/IndexBuffer.h
+		dx11/core/Macros.h
+		dx11/core/RasterizerStates.cpp
+		dx11/core/RasterizerStates.h
+		dx11/core/RawBuffer.cpp
+		dx11/core/RawBuffer.h
+		dx11/core/Renderer.cpp
+		dx11/core/Renderer.h
+		dx11/core/RenderTarget.cpp
+		dx11/core/RenderTarget.h
+		dx11/core/RenderTargetStack.cpp
+		dx11/core/RenderTargetStack.h
+		dx11/core/ResourceFactory.cpp
+		dx11/core/ResourceFactory.h
+		dx11/core/ResourcePool.cpp
+		dx11/core/ResourcePool.h
+		dx11/core/SamplerStates.cpp
+		dx11/core/SamplerStates.h
+		dx11/core/StructuredBuffer.cpp
+		dx11/core/StructuredBuffer.h
+		dx11/core/ShaderCompiler.cpp
+		dx11/core/ShaderCompiler.h
+		dx11/core/ShaderInstance.cpp
+		dx11/core/ShaderInstance.h
+		dx11/core/SwapChain.cpp
+		dx11/core/SwapChain.h
+		dx11/core/SwapChain.h
+		dx11/core/VertexBuffer.cpp
+		dx11/core/VertexBuffer.h
+		)
+	
+	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
+	source_group( "DirectX11" FILES ${DIRECTX11_SRCS} )
+endif()
+
 
 # Event.
 #################################################
@@ -102,7 +159,9 @@ source_group( "Files" FILES ${FILES_SRCS} )
 # Math.
 #################################################
 set( MATH_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
@@ -167,63 +226,6 @@ set( OPENGL_SRCS
 
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
 source_group( "OpenGL" FILES ${OPENGL_SRCS} )
-
-	
-# Directx11 Support
-#################################################
-if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
-	set( DIRECTX11_SRCS
-	dx11/core/BlendStates.cpp
-	dx11/core/BlendStates.h
-	dx11/core/ConstantBuffer.cpp
-	dx11/core/ConstantBuffer.h
-	dx11/core/Context.cpp
-	dx11/core/Context.h
-	dx11/core/DepthStencil.cpp
-	dx11/core/DepthStencil.h
-	dx11/core/DepthStencilStates.cpp
-	dx11/core/DepthStencilStates.h
-	dx11/core/Device.cpp
-	dx11/core/Device.h
-	dx11/core/Enums.h
-	dx11/core/Formats.cpp
-	dx11/core/Formats.h
-	dx11/core/Includes.h
-	dx11/core/IndexBuffer.cpp
-	dx11/core/IndexBuffer.h
-	dx11/core/Macros.h
-	dx11/core/RasterizerStates.cpp
-	dx11/core/RasterizerStates.h
-	dx11/core/RawBuffer.cpp
-	dx11/core/RawBuffer.h
-	dx11/core/Renderer.cpp
-	dx11/core/Renderer.h
-	dx11/core/RenderTarget.cpp
-	dx11/core/RenderTarget.h
-	dx11/core/RenderTargetStack.cpp
-	dx11/core/RenderTargetStack.h
-	dx11/core/ResourceFactory.cpp
-	dx11/core/ResourceFactory.h
-	dx11/core/ResourcePool.cpp
-	dx11/core/ResourcePool.h
-	dx11/core/SamplerStates.cpp
-	dx11/core/SamplerStates.h
-	dx11/core/StructuredBuffer.cpp
-	dx11/core/StructuredBuffer.h
-	dx11/core/ShaderCompiler.cpp
-	dx11/core/ShaderCompiler.h
-	dx11/core/ShaderInstance.cpp
-	dx11/core/ShaderInstance.h
-	dx11/core/SwapChain.cpp
-	dx11/core/SwapChain.h
-	dx11/core/SwapChain.h
-	dx11/core/VertexBuffer.cpp
-	dx11/core/VertexBuffer.h
-	)
-	
-	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
-	source_group( "DirectX11" FILES ${DIRECTX11_SRCS} )
-endif()
 
 
 # String.
@@ -291,12 +293,6 @@ set( THREADING_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWork.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWork.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWorkIO.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadedWorkIO.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ThreadPool.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/TPCQueue.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.h 

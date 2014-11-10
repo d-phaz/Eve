@@ -62,7 +62,7 @@ namespace eve
 
 
 //=================================================================================================
-inline void * eve::mem::align_malloc(size_t p_alignment, size_t p_size)
+EVE_FORCE_INLINE void * eve::mem::align_malloc(size_t p_alignment, size_t p_size)
 {
 #if defined(EVE_OS_WIN)
 	return _aligned_malloc(p_size, p_alignment);
@@ -87,7 +87,7 @@ inline void * eve::mem::align_malloc(size_t p_alignment, size_t p_size)
 }
 
 //=================================================================================================
-inline void eve::mem::align_free(void * p_pPtr)
+EVE_FORCE_INLINE void eve::mem::align_free(void * p_pPtr)
 {
 #if defined(EVE_OS_WIN)
 	_aligned_free(p_pPtr);
@@ -100,6 +100,18 @@ inline void eve::mem::align_free(void * p_pPtr)
 
 #endif
 }
+
+
+/** \def EVE_DECLARE_ALIGNED_ALLOCATOR \brief Convenience macro to declare class or struct aligned allocation operators. */
+#define EVE_DECLARE_ALIGNED_ALLOCATOR \
+	EVE_FORCE_INLINE void* operator new(size_t sizeInBytes)		{ return eve::mem::align_malloc(16, sizeInBytes);	}   \
+	EVE_FORCE_INLINE void  operator delete(void* ptr)			{ eve::mem::align_free(ptr);						}   \
+	EVE_FORCE_INLINE void* operator new(size_t, void* ptr)		{ return ptr;										}   \
+	EVE_FORCE_INLINE void  operator delete(void*, void*)		{													}   \
+	EVE_FORCE_INLINE void* operator new[](size_t sizeInBytes)	{ return eve::mem::align_malloc(16, sizeInBytes);	}   \
+	EVE_FORCE_INLINE void  operator delete[](void* ptr)			{ eve::mem::align_free(ptr);						}   \
+	EVE_FORCE_INLINE void* operator new[](size_t, void* ptr)	{ return ptr;										}   \
+	EVE_FORCE_INLINE void  operator delete[](void*, void*)		{													}   \
 
 
 /** \def EVE_ALIGN \brief Convenience macro to declare class or struct aligned. */

@@ -28,6 +28,8 @@ namespace eve
 	typedef eve::__math_internal::__vec4f		vec4f_t;
 	typedef eve::__math_internal::__vec4d		vec4d_t;
 
+	typedef __m128								simd_float4_t;
+
 } // namespace eve
 
 #endif // __EVE_MATH_TYPES_H__

@@ -29,45 +29,18 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "eve/thr/ThreadedWorkIO.h"
+#pragma once
+#ifndef __EVE_MATH_INCLUDES_H__
+#define __EVE_MATH_INCLUDES_H__
 
 
-//=================================================================================================
-eve::thr::ThreadedWorkIO::ThreadedWorkIO(void)
+#ifndef __EVE_MATH_MATH_H__
+#include "eve/math/Math.h"
+#endif
 
-	// Inheritance
-	: eve::thr::ThreadedWork()
-
-	// Members init
-	, m_cbStart(nullptr)
-	, m_cbExit(nullptr)
-{}
+#ifndef __EVE_MATH_TVECTOR_H__
+#include "eve/math/TVector.h"
+#endif
 
 
-
-//=================================================================================================
-void eve::thr::ThreadedWorkIO::release(void)
-{
-	// Release callbacks
-	EVE_RELEASE_PTR_CPP(m_cbStart);
-	EVE_RELEASE_PTR_CPP(m_cbExit);
-
-	// Call parent class
-	eve::thr::ThreadedWork::release();
-}
-
-
-
-//=================================================================================================
-void eve::thr::ThreadedWorkIO::run(void)
-{
-	// Start callback.
-	m_cbStart->execute();
-	
-	// Call parent class
-	eve::thr::ThreadedWork::run();
-
-	// Exit callback.
-	m_cbExit->execute();
-}
+#endif // __EVE_MATH_INCLUDES_H__

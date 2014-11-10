@@ -144,9 +144,9 @@ void eve::thr::Condition::broadcast(void)
 
 
 //=================================================================================================
-void eve::thr::Condition::release(int32_t value)
+void eve::thr::Condition::release(int32_t p_value)
 {
-	m_conditionnedVar = value;
+	m_conditionnedVar = p_value;
 	unlock();
 	this->signal();
 }
@@ -154,10 +154,10 @@ void eve::thr::Condition::release(int32_t value)
 
 
 //=================================================================================================
-int32_t eve::thr::Condition::operator=(int32_t value)
+int32_t eve::thr::Condition::operator=(int32_t p_value)
 {
-	this->setValue(value);
-	return value;
+	this->setValue(p_value);
+	return p_value;
 }
 
 
@@ -185,10 +185,10 @@ void eve::thr::Condition::restore(void)
 
 
 //=================================================================================================
-void eve::thr::Condition::setValue(int32_t value)
+void eve::thr::Condition::setValue(int32_t p_value)
 {
 	lock();
-	m_conditionnedVar = value;
+	m_conditionnedVar = p_value;
 	unlock();
 
 	this->signal();

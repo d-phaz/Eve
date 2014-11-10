@@ -32,6 +32,32 @@
 // Main header
 #include "eve/evt/Event.h"
 
+#ifndef __EVE_APPLICATION_APP_H__
+#include "eve/app/App.h"
+#endif
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//		COMMON
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+eve::evt::EventArgs::EventArgs(void)
+	: time(EveAppElapsedTime)
+{}
+
+//=================================================================================================
+eve::evt::EventArgs::EventArgs(const eve::evt::EventArgs & p_other)
+	: time(p_other.time)
+{}
+
+//=================================================================================================
+eve::evt::EventArgs & eve::evt::EventArgs::operator = (const eve::evt::EventArgs & p_other)
+{
+	this->time = p_other.time;
+	return *this;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //		FILE EVENTS
@@ -39,7 +65,8 @@
 
 //=================================================================================================
 eve::evt::FileEventArgs::FileEventArgs(void)
-	: x(0)
+	: eve::evt::EventArgs()
+	, x(0)
 	, y(0)
 	, count(0)
 	, files()
@@ -47,7 +74,8 @@ eve::evt::FileEventArgs::FileEventArgs(void)
 
 //=================================================================================================
 eve::evt::FileEventArgs::FileEventArgs(const eve::evt::FileEventArgs & p_other)
-	: x(p_other.x)
+	: eve::evt::EventArgs(p_other)
+	, x(p_other.x)
 	, y(p_other.y)
 	, count(p_other.count)
 	, files(p_other.files)
@@ -56,6 +84,7 @@ eve::evt::FileEventArgs::FileEventArgs(const eve::evt::FileEventArgs & p_other)
 //=================================================================================================
 eve::evt::FileEventArgs & eve::evt::FileEventArgs::operator = (const eve::evt::FileEventArgs & p_other)
 {
+	this->time	= p_other.time;
 	this->x		= p_other.x;
 	this->y		= p_other.y;
 	this->count = p_other.count;
@@ -85,7 +114,7 @@ void eve::evt::disable_events_file(void)
 //=================================================================================================
 void eve::evt::notify_file_dropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files)
 {
-	static eve::evt::FileEventArgs fileEventArgs;
+	eve::evt::FileEventArgs fileEventArgs;
 	fileEventArgs.x = p_x;
 	fileEventArgs.y = p_y;
 	fileEventArgs.count = p_count;
@@ -102,18 +131,21 @@ void eve::evt::notify_file_dropped(int32_t p_x, int32_t p_y, uint32_t p_count, s
 
 //=================================================================================================
 eve::evt::KeyEventArgs::KeyEventArgs(void)
-	: key(0)
+	: eve::evt::EventArgs()
+	, key(0)
 {}
 
 //=================================================================================================
 eve::evt::KeyEventArgs::KeyEventArgs(const eve::evt::KeyEventArgs & p_other)
-	: key(p_other.key)
+	: eve::evt::EventArgs(p_other)
+	, key(p_other.key)
 {}
 
 //=================================================================================================
 eve::evt::KeyEventArgs & eve::evt::KeyEventArgs::operator = (const eve::evt::KeyEventArgs & p_other)
 {
-	this->key = p_other.key;
+	this->time	= p_other.time;
+	this->key	= p_other.key;
 	return *this;
 }
 
@@ -145,7 +177,7 @@ void eve::evt::disable_events_key(void)
 //=================================================================================================
 void eve::evt::notify_key_pressed(uint8_t p_key)
 {
-	static eve::evt::KeyEventArgs keyEventArgs;
+	eve::evt::KeyEventArgs keyEventArgs;
 	keyEventArgs.key = p_key;
 
 	eve::evt::notify_event(eve::evt::EvtKey::keyPressed, keyEventArgs);
@@ -154,7 +186,7 @@ void eve::evt::notify_key_pressed(uint8_t p_key)
 //=================================================================================================
 void eve::evt::notify_key_released(uint8_t p_key)
 {
-	static eve::evt::KeyEventArgs keyEventArgs;
+	eve::evt::KeyEventArgs keyEventArgs;
 	keyEventArgs.key = p_key;
 
 	eve::evt::notify_event(eve::evt::EvtKey::keyReleased, keyEventArgs);
@@ -163,7 +195,7 @@ void eve::evt::notify_key_released(uint8_t p_key)
 //=================================================================================================
 void eve::evt::notify_key_input( uint8_t p_key )
 {
-	static eve::evt::KeyEventArgs keyEventArgs;
+	eve::evt::KeyEventArgs keyEventArgs;
 	keyEventArgs.key = p_key;
 
 	eve::evt::notify_event(eve::evt::EvtKey::keyInput, keyEventArgs);
@@ -176,14 +208,16 @@ void eve::evt::notify_key_input( uint8_t p_key )
 
 //=================================================================================================
 eve::evt::MouseEventArgs::MouseEventArgs(void)
-	: x(0)
+	: eve::evt::EventArgs()
+	, x(0)
 	, y(0)
 	, button(0)
 {}
 
 //=================================================================================================
 eve::evt::MouseEventArgs::MouseEventArgs(const eve::evt::MouseEventArgs & p_other)
-	: x(p_other.x)
+	: eve::evt::EventArgs(p_other)
+	, x(p_other.x)
 	, y(p_other.y)
 	, button(p_other.button)
 {}
@@ -191,9 +225,10 @@ eve::evt::MouseEventArgs::MouseEventArgs(const eve::evt::MouseEventArgs & p_othe
 //=================================================================================================
 eve::evt::MouseEventArgs & eve::evt::MouseEventArgs::operator = (const eve::evt::MouseEventArgs & p_other)
 {
+	this->time		= p_other.time;
 	this->x			= p_other.x;
 	this->y			= p_other.y;
-	this->button	= p_other.button;
+	this->button		= p_other.button;
 	return *this;
 }
 
@@ -231,7 +266,7 @@ void eve::evt::disable_events_mouse(void)
 //=================================================================================================
 void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 {
-	static eve::evt::MouseEventArgs mouseEventArgs;
+	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
@@ -242,7 +277,7 @@ void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 //=================================================================================================
 void eve::evt::notify_mouse_up( int32_t p_button, int32_t x, int32_t y )
 {
-	static eve::evt::MouseEventArgs mouseEventArgs;
+	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
@@ -253,7 +288,7 @@ void eve::evt::notify_mouse_up( int32_t p_button, int32_t x, int32_t y )
 //=================================================================================================
 void eve::evt::notify_mouse_double_click( int32_t p_button, int32_t x, int32_t y )
 {
-	static eve::evt::MouseEventArgs mouseEventArgs;
+	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
@@ -264,7 +299,7 @@ void eve::evt::notify_mouse_double_click( int32_t p_button, int32_t x, int32_t y
 //=================================================================================================
 void eve::evt::notify_mouse_motion(int32_t p_button, int32_t x, int32_t y)
 {
-	static eve::evt::MouseEventArgs mouseEventArgs;
+	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button	= p_button;
 	mouseEventArgs.x		= x;
 	mouseEventArgs.y		= y;
@@ -275,7 +310,7 @@ void eve::evt::notify_mouse_motion(int32_t p_button, int32_t x, int32_t y)
 //=================================================================================================
 void eve::evt::notify_mouse_passive_motion(int32_t x, int32_t y)
 {
-	static eve::evt::MouseEventArgs mouseEventArgs;
+	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.x = x;
 	mouseEventArgs.y = y;
 	
@@ -290,9 +325,10 @@ void eve::evt::notify_mouse_passive_motion(int32_t x, int32_t y)
 
 //=================================================================================================
 eve::evt::TouchEventArgs::TouchEventArgs(void)
-	: type(eve::evt::TouchEventArgs::Type::unknown)
+	: eve::evt::EventArgs()
+	, type(eve::evt::TouchEventArgs::Type::unknown)
 	, id(0)
-	, time(0)
+	, duration(0)
 	, numTouches(0)
 	, width(0.0f)
 	, height(0.0f)
@@ -308,9 +344,10 @@ eve::evt::TouchEventArgs::TouchEventArgs(void)
 
 //=================================================================================================
 eve::evt::TouchEventArgs::TouchEventArgs(const eve::evt::TouchEventArgs & p_other)
-	: type(p_other.type)
+	: eve::evt::EventArgs(p_other)
+	, type(p_other.type)
 	, id(p_other.id)
-	, time(p_other.time)
+	, duration(p_other.duration)
 	, numTouches(p_other.numTouches)
 	, width(p_other.width)
 	, height(p_other.height)
@@ -327,20 +364,21 @@ eve::evt::TouchEventArgs::TouchEventArgs(const eve::evt::TouchEventArgs & p_othe
 //=================================================================================================
 eve::evt::TouchEventArgs & eve::evt::TouchEventArgs::operator = (const eve::evt::TouchEventArgs & p_other)
 {
-	type		= p_other.type;
-	id			= p_other.id;
-	time		= p_other.time;
-	numTouches	= p_other.numTouches;
-	width		= p_other.width;
-	height		= p_other.height;
-	angle		= p_other.angle;
-	minoraxis	= p_other.minoraxis;
-	majoraxis	= p_other.majoraxis;
-	pressure	= p_other.pressure;
-	xspeed		= p_other.xspeed;
-	yspeed		= p_other.yspeed;
-	xaccel		= p_other.xaccel;
-	yaccel		= p_other.yaccel;
+	this->time			= p_other.time;
+	this->type			= p_other.type;
+	this->id				= p_other.id;
+	this->duration		= p_other.duration;
+	this->numTouches		= p_other.numTouches;
+	this->width			= p_other.width;
+	this->height			= p_other.height;
+	this->angle			= p_other.angle;
+	this->minoraxis		= p_other.minoraxis;
+	this->majoraxis		= p_other.majoraxis;
+	this->pressure		= p_other.pressure;
+	this->xspeed			= p_other.xspeed;
+	this->yspeed			= p_other.yspeed;
+	this->xaccel			= p_other.xaccel;
+	this->yaccel			= p_other.yaccel;
 	return *this;
 }
 
@@ -378,21 +416,24 @@ void eve::evt::disable_events_touch(void)
 
 //=================================================================================================
 eve::evt::ResizeEventArgs::ResizeEventArgs(void)
-	: width(0)
+	: eve::evt::EventArgs()
+	, width(0)
 	, height(0)
 {}
 
 //=================================================================================================
 eve::evt::ResizeEventArgs::ResizeEventArgs(const eve::evt::ResizeEventArgs & p_other)
-	: width(p_other.width)
+	: eve::evt::EventArgs(p_other)
+	, width(p_other.width)
 	, height(p_other.height)
 {}
 
 //=================================================================================================
 eve::evt::ResizeEventArgs & eve::evt::ResizeEventArgs::operator = (const eve::evt::ResizeEventArgs & p_other)
 {
-	this->width  = p_other.width;
-	this->height = p_other.height;
+	this->time		= p_other.time;
+	this->width		= p_other.width;
+	this->height		= p_other.height;
 	return *this;
 }
 
@@ -424,9 +465,9 @@ eve::evt::MoveEventArgs & eve::evt::MoveEventArgs::operator = (const eve::evt::M
 //=================================================================================================
 eve::evt::TEvent<eve::evt::ResizeEventArgs> 	eve::evt::EvtWindow::windowResized;
 eve::evt::TEvent<eve::evt::MoveEventArgs> 		eve::evt::EvtWindow::windowMoved;
-eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusGot;
-eve::evt::TEvent<void>							eve::evt::EvtWindow::windowFocusLost;
-eve::evt::TEvent<void>							eve::evt::EvtWindow::windowClose;
+eve::evt::TEvent<eve::evt::EventArgs>			eve::evt::EvtWindow::windowClose;
+eve::evt::TEvent<eve::evt::EventArgs>			eve::evt::EvtWindow::windowFocusGot;
+eve::evt::TEvent<eve::evt::EventArgs>			eve::evt::EvtWindow::windowFocusLost;
 
 //=================================================================================================
 void eve::evt::enable_events_window(void)
@@ -453,7 +494,7 @@ void eve::evt::disable_events_window(void)
 //=================================================================================================
 void eve::evt::notify_window_resize(int32_t p_width, int32_t p_height)
 {
-	static eve::evt::ResizeEventArgs resizeEventArgs;
+	eve::evt::ResizeEventArgs resizeEventArgs;
 	resizeEventArgs.width  = p_width;
 	resizeEventArgs.height = p_height;
 
@@ -463,7 +504,7 @@ void eve::evt::notify_window_resize(int32_t p_width, int32_t p_height)
 //=================================================================================================
 void notify_window_move(int32_t p_x, int32_t p_y)
 {
-	static eve::evt::MoveEventArgs moveEventArgs;
+	eve::evt::MoveEventArgs moveEventArgs;
 	moveEventArgs.x = p_x;
 	moveEventArgs.y = p_y;
 
@@ -473,19 +514,22 @@ void notify_window_move(int32_t p_x, int32_t p_y)
 //=================================================================================================
 void eve::evt::notify_window_focus_got(void)
 {
-	eve::evt::notify_event(eve::evt::EvtWindow::windowFocusGot);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(eve::evt::EvtWindow::windowFocusGot, args);
 }
 
 //=================================================================================================
 void eve::evt::notify_window_focus_lost(void)
 {
-	eve::evt::notify_event(eve::evt::EvtWindow::windowFocusLost);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(eve::evt::EvtWindow::windowFocusLost, args);
 }
 
 //=================================================================================================
 void eve::evt::notify_window_close(void)
 {
-	eve::evt::notify_event(eve::evt::EvtWindow::windowClose);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(eve::evt::EvtWindow::windowClose, args);
 }
 
 
@@ -495,26 +539,7 @@ void eve::evt::notify_window_close(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-eve::evt::TimeEventArgs::TimeEventArgs(void)
-	: time(0)
-{}
-
-//=================================================================================================
-eve::evt::TimeEventArgs::TimeEventArgs(const eve::evt::TimeEventArgs & p_other)
-	: time(p_other.time)
-{}
-
-//=================================================================================================
-eve::evt::TimeEventArgs & eve::evt::TimeEventArgs::operator = (const eve::evt::TimeEventArgs & p_other)
-{
-	this->time = p_other.time;
-	return *this;
-}
-
-
-
-//=================================================================================================
-eve::evt::TEvent<eve::evt::TimeEventArgs> eve::evt::EvtTime::newTime;
+eve::evt::TEvent<eve::evt::EventArgs> eve::evt::EvtTime::newTime;
 
 //=================================================================================================
 void eve::evt::enable_events_time(void)
@@ -533,8 +558,7 @@ void eve::evt::disable_events_time(void)
 //=================================================================================================
 void eve::evt::notify_time(int64_t p_time)
 {
-	static eve::evt::TimeEventArgs args;
-	args.time = p_time;
+	eve::evt::EventArgs args;
 
 	eve::evt::notify_event(eve::evt::EvtTime::newTime, args);
 }
@@ -547,17 +571,20 @@ void eve::evt::notify_time(int64_t p_time)
 
 //=================================================================================================
 eve::evt::FrameEventArgs::FrameEventArgs(void)
-	: frame(0)
+	: eve::evt::EventArgs()
+	, frame(0)
 {}
 
 //=================================================================================================
 eve::evt::FrameEventArgs::FrameEventArgs(const eve::evt::FrameEventArgs & p_other)
-	: frame(p_other.frame)
+	: eve::evt::EventArgs(p_other)
+	, frame(p_other.frame)
 {}
 
 //=================================================================================================
 eve::evt::FrameEventArgs & eve::evt::FrameEventArgs::operator = (const eve::evt::FrameEventArgs & p_other)
 {
+	this->time	= p_other.time;
 	this->frame = p_other.frame;
 	return *this;
 }
@@ -584,7 +611,7 @@ void eve::evt::disable_events_frame(void)
 //=================================================================================================
 void eve::evt::notify_frame(int64_t p_frame)
 {
-	static eve::evt::FrameEventArgs args;
+	eve::evt::FrameEventArgs args;
 	args.frame = p_frame;
 
 	eve::evt::notify_event(eve::evt::EvtFrame::newFrame, args);
@@ -597,7 +624,7 @@ void eve::evt::notify_frame(int64_t p_frame)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-eve::evt::TEvent<void>							eve::evt::EvtApp::appExit;
+eve::evt::TEvent<eve::evt::EventArgs>					eve::evt::EvtApp::appExit;
 
 //=================================================================================================
 void eve::evt::enable_events_application(void)
@@ -616,5 +643,6 @@ void eve::evt::disable_events_application(void)
 //=================================================================================================
 void eve::evt::notify_application_exit(void)
 {
-	eve::evt::notify_event(eve::evt::EvtApp::appExit);
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(eve::evt::EvtApp::appExit, args);
 }

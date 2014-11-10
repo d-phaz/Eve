@@ -86,9 +86,9 @@ namespace eve
 
 			eve::evt::TEvent<eve::evt::ResizeEventArgs> 		m_windowResized;		//!< Window resized event.
 			eve::evt::TEvent<eve::evt::MoveEventArgs> 			m_windowMoved;			//!< Window moved event.
-			eve::evt::TEvent<void>								m_windowFocusGot;		//!< Window gain focus event.
-			eve::evt::TEvent<void>								m_windowFocusLost;		//!< Window lost focus event.
-			eve::evt::TEvent<void>								m_windowClose;			//!< Window closed event.
+			eve::evt::TEvent<eve::evt::EventArgs>				m_windowFocusGot;		//!< Window gain focus event.
+			eve::evt::TEvent<eve::evt::EventArgs>				m_windowFocusLost;		//!< Window lost focus event.
+			eve::evt::TEvent<eve::evt::EventArgs>				m_windowClose;			//!< Window closed event.
 
 
 			//////////////////////////////////////
@@ -247,9 +247,9 @@ namespace eve
 			* Listener class must provide window event handler methods using the following signatures:
 			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
-			*		void cb_evtWindowFocusGot(void)
-			*		void cb_evtWindowFocusLost(void)
-			*		void cb_evtWindowClose(void)
+			*		void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 			*/
 			template<class ListenerClass>
 			void registerEventsWindow(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
@@ -258,9 +258,9 @@ namespace eve
 			* Listener class must provide window event handler methods using the following signatures:
 			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
-			*		void cb_evtWindowFocusGot(void)
-			*		void cb_evtWindowFocusLost(void)
-			*		void cb_evtWindowClose(void)
+			*		void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 			*/
 			template<class ListenerClass>
 			void unregisterEventsWindow(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
@@ -291,9 +291,9 @@ namespace eve
 			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
-			*		void cb_evtWindowFocusGot(void)
-			*		void cb_evtWindowFocusLost(void)
-			*		void cb_evtWindowClose(void)
+			*		void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 			*/
 			template<class ListenerClass>
 			void registerEvents(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
@@ -311,9 +311,9 @@ namespace eve
 			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
 			*		void cb_evtWindowMove(eve::evt::ResizeEventArgs & p_arg)
-			*		void cb_evtWindowFocusGot(void)
-			*		void cb_evtWindowFocusLost(void)
-			*		void cb_evtWindowClose(void)
+			*		void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg)
+			*		void cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 			*/
 			template<class ListenerClass>
 			void unregisterEvents(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
