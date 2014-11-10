@@ -161,6 +161,7 @@ source_group( "Files" FILES ${FILES_SRCS} )
 set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Simd.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h  )
 
