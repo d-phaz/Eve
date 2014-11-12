@@ -20,7 +20,7 @@ namespace eve
 {
 	namespace math
 	{
-		template<typename T> class TVec2;
+		template<class T> class TVec2;
 
 
 		/**
@@ -31,6 +31,7 @@ namespace eve
 		template<typename T>
 		class TVec3
 		{
+
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////

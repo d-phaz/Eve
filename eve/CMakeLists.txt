@@ -160,6 +160,9 @@ set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector2.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector3.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector4.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )

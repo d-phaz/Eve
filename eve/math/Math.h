@@ -107,7 +107,7 @@ namespace eve
 		
 		
 		EVE_FORCE_INLINE float  bezierInterp(float  a, float  b, float  c, float  d, float  t)	{ float  t1(1.0f-t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
-		EVE_FORCE_INLINE float  bezierInterp(float  a, float  b, float  c, float  d, double t)	{ double t1(1.0 -t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
+		EVE_FORCE_INLINE float  bezierInterp(float  a, float  b, float  c, float  d, double t)	{ double t1(1.0 -t); return static_cast<float>(a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t)); }
 		EVE_FORCE_INLINE double bezierInterp(double a, double b, double c, double d, double t)	{ double t1(1.0 -t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
 		EVE_FORCE_INLINE double bezierInterp(double a, double b, double c, double d, float  t)	{ float  t1(1.0f-t); return a*(t1*t1*t1) + b*(3 * t*t1*t1) + c*(3 * t*t*t1) + d*(t*t*t); }
 		

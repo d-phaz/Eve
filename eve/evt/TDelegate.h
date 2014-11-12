@@ -370,7 +370,7 @@ eve::evt::TDelegate<TObj, TArgs, useSender>::TDelegate(const TDelegate<TObj, TAr
 	// Inheritance
 	: eve::evt::TDelegateAbstract<TArgs>(p_other)
 	// Members init
-	, m_pReceiverObject(p_other.m_pReceiverObject),
+	, m_pReceiverObject(p_other.m_pReceiverObject)
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
@@ -554,7 +554,7 @@ eve::evt::TDelegate<TObj, void, true>::TDelegate(const TDelegate<TObj, void, tru
 	// Inheritance
 	: eve::evt::TDelegateAbstract<void>(p_other)
 	// Members init
-	, m_pReceiverObject(p_other.m_pReceiverObject),
+	, m_pReceiverObject(p_other.m_pReceiverObject)
 	, m_receiverMethod(p_other.m_receiverMethod)
 {
 	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
