@@ -111,6 +111,8 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 		dx11/core/StructuredBuffer.h
 		dx11/core/ShaderCompiler.cpp
 		dx11/core/ShaderCompiler.h
+		dx11/core/ShaderInstance.cpp
+		dx11/core/ShaderInstance.h
 		dx11/core/SwapChain.cpp
 		dx11/core/SwapChain.h
 		dx11/core/SwapChain.h
@@ -159,6 +161,7 @@ source_group( "Files" FILES ${FILES_SRCS} )
 set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Simd.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector2.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector3.h 
