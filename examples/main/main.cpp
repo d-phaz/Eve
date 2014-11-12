@@ -36,7 +36,7 @@
 #include "eve/time/Absolute.h"
 #include "eve/time/Clock.h"
 
-#include "eve/math/Types.h"
+#include "eve/math/Includes.h"
 
 class Example final
 	: public eve::sys::View
@@ -120,10 +120,6 @@ void Example::initThreadedData(void)
 
 	eve::vec4f v(0.0F, 1.0F, 2.0f, 3.0f);
 	EVE_LOG_INFO("Vec4f.z : %f", v.z);
-
-	eve::vec2f v2;
-	eve::vec3f v3;
-	eve::vec4f v4;
 }
 
 void Example::releaseThreadedData(void)

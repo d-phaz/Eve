@@ -42,5 +42,9 @@
 #include "eve/math/TVector.h"
 #endif
 
+#ifndef __EVE_MATH_TYPES_H__
+#include "eve/math/Types.h"
+#endif
+
 
 #endif // __EVE_MATH_INCLUDES_H__
