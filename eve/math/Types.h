@@ -97,6 +97,12 @@ namespace eve
 	typedef eve::math::TMatrix44<float>			mat44f;
 	typedef eve::math::TMatrix44<double>		mat44d;
 
+
+
+	typedef eve::math::TQuaternion<float>		quatf;
+	typedef eve::math::TQuaternion<double>		quatd;
+
+
 } // namespace eve
 
 #endif // __EVE_MATH_TYPES_H__

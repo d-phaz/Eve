@@ -38,12 +38,16 @@
 #include "eve/math/Math.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
-#endif
-
 #ifndef __EVE_MATH_TMATRIX_H__
 #include "eve/math/TMatrix.h"
+#endif
+
+#ifndef __EVE_MATH_TQUATERNION_H__
+#include "eve/math/TQuaternion.h"
+#endif
+
+#ifndef __EVE_MATH_TVECTOR_H__
+#include "eve/math/TVector.h"
 #endif
 
 #ifndef __EVE_MATH_TYPES_H__

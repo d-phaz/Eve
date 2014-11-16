@@ -49,8 +49,6 @@
 #include "eve/math/TVector.h"
 #endif
 
-#include <iomanip>
-
 
 namespace eve
 {

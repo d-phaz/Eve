@@ -57,8 +57,6 @@
 #include "eve/math/TMatrix33.h"
 #endif
 
-#include <iomanip>
-
 
 namespace eve
 {

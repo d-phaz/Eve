@@ -53,8 +53,6 @@
 #include "eve/math/TMatrix22.h"
 #endif
 
-#include <iomanip>
-
 
 namespace eve
 {
@@ -206,8 +204,8 @@ namespace eve
 			void				transpose(void);
 			TMatrix33<T>		transposed(void) const;
 
-			void				invert(T epsilon = EVE_MATH_EPSILON) { *this = inverted(epsilon); }
-			TMatrix33<T>		inverted(T epsilon = EVE_MATH_EPSILON) const;
+			void				invert(T epsilon = static_cast<T>(EVE_MATH_EPSILON)) { *this = inverted(epsilon); }
+			TMatrix33<T>		inverted(T epsilon = static_cast<T>(EVE_MATH_EPSILON)) const;
 
 			// pre-multiplies row vector v - no divide by w
 			eve::math::TVec3<T>	preMultiply(const eve::math::TVec3<T> &v) const;
@@ -940,13 +938,13 @@ eve::math::TMatrix33<T> eve::math::TMatrix33<T>::alignZAxisWithTarget(eve::math:
 {
 
 	// Ensure that the target direction is non-zero.
-	if( targetDir.lengthSquared() < EVE_MATH_EPSILON ) {
+	if (targetDir.lengthSquared() < static_cast<T>(EVE_MATH_EPSILON)) {
 		// We want to look down the negative z-axis since to match OpenGL.
 		targetDir = -eve::math::TVec3<T>::zAxis();
 	}
 
 	// Ensure that the up direction is non-zero.
-	if( upDir.lengthSquared() < EVE_MATH_EPSILON ) 
+	if (upDir.lengthSquared() < static_cast<T>(EVE_MATH_EPSILON))
 	{
 		upDir = eve::math::TVec3<T>::yAxis();
 	}
