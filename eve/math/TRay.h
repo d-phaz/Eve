@@ -19,7 +19,7 @@ protected:
 	TVec3<T>			m_direction;
 	TVec3<T> 			m_invDirection;
 
-	// These are helpful to certain ray intersection algorithms
+	// These are helpful to some ray intersection algorithms
 	char				m_signX;
 	char				m_signY;
 	char				m_signZ;
