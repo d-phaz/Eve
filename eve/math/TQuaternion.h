@@ -775,7 +775,8 @@ EVE_FORCE_INLINE void eve::math::TQuaternion<T>::Interpolate(eve::math::TQuatern
 		sinom = eve::math::sin( omega);
 		sclp  = eve::math::sin( (static_cast<T>(1.0) - pFactor) * omega) / sinom;
 		sclq  = eve::math::sin( pFactor * omega) / sinom;
-	} else
+	} 
+	else
 	{
 		// Very close, do linear interp (because it's faster)
 		sclp = static_cast<T>(1.0) - pFactor;
