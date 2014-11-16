@@ -41,6 +41,10 @@
 #include "eve/mem/Includes.h"
 #endif
 
+#ifndef __EVE_MATH_TMATRIX_H__
+#include "eve/math/TMatrix.h"
+#endif
+
 #ifndef __EVE_MATH_TVECTOR_H__
 #include "eve/math/TVector.h"
 #endif
@@ -81,6 +85,17 @@ namespace eve
 
 	typedef eve::math::TVec4<float>				vec4f;
 	typedef eve::math::TVec4<double>			vec4d;
+
+	
+
+	typedef eve::math::TMatrix22<float>			mat22f;
+	typedef eve::math::TMatrix22<double>		mat22d;
+
+	typedef eve::math::TMatrix33<float>			mat33f;
+	typedef eve::math::TMatrix33<double>		mat33d;
+
+	typedef eve::math::TMatrix44<float>			mat44f;
+	typedef eve::math::TMatrix44<double>		mat44d;
 
 } // namespace eve
 

@@ -120,6 +120,10 @@ void Example::initThreadedData(void)
 
 	eve::vec4f v(0.0F, 1.0F, 2.0f, 3.0f);
 	EVE_LOG_INFO("Vec4f.z : %f", v.z);
+
+	eve::mat22f mat22(0.0f);
+	eve::mat33f mat33(0.0f);
+	eve::mat44f mat44(0.0f);
 }
 
 void Example::releaseThreadedData(void)

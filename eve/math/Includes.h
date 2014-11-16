@@ -42,6 +42,10 @@
 #include "eve/math/TVector.h"
 #endif
 
+#ifndef __EVE_MATH_TMATRIX_H__
+#include "eve/math/TMatrix.h"
+#endif
+
 #ifndef __EVE_MATH_TYPES_H__
 #include "eve/math/Types.h"
 #endif

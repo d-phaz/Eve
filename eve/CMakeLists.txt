@@ -162,6 +162,10 @@ set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Simd.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix22.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix33.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix44.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector2.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector3.h 

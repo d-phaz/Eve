@@ -37,7 +37,7 @@ public:
 	typedef T	value_type;
  
 	TVec3<T>		v; // axisOfRotation.normalized() * sin( angleOfRotation / 2 )
-	T			w; // cos( angleOfRotation / 2 )
+	T				w; // cos( angleOfRotation / 2 )
 
 	TQuaternion(): w( 1 ), v( 0, 0, 0 ){} // default constructor is identity quat
 	template<typename FromT>

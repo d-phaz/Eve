@@ -33,10 +33,6 @@
 #ifndef __EVE_MATH_TVECTOR_H__
 #define __EVE_MATH_TVECTOR_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
-
 #ifndef __EVE_MATH_TVECTOR_2_H__
 #include "eve/math/TVector2.h"
 #endif
