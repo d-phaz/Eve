@@ -77,7 +77,7 @@ namespace eve
 		* \brief Abstract base OpenGL object class.
 		* Every OpenGL object (VAO/Texture/PBO/FBO/etc...) MUST inherit from this class.
 		*
-		* \note extends mem::Pointer
+		* \note extends eve::mem::Pointer
 		*/
 		class Object
 			: public eve::mem::Pointer

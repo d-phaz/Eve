@@ -117,11 +117,11 @@ void eve::ogl::Vao::setAttributes(eve::ogl::Format * p_format)
 
 	this->m_numVertices				= format->numVertices;
 	this->m_numIndices				= format->numIndices;
-	this->m_perVertexNumPosition	= format->perVertexNumPosition;
+	this->m_perVertexNumPosition		= format->perVertexNumPosition;
 	this->m_perVertexNumDiffuse		= format->perVertexNumDiffuse;
 	this->m_perVertexNumNormal		= format->perVertexNumNormal;
 	this->m_pVertices				= format->vertices;
-	this->m_pIndices				= format->indices;
+	this->m_pIndices					= format->indices;
 
 	EVE_ASSERT(m_numVertices != 0);
 	EVE_ASSERT(m_numIndices != 0);

@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_EXTERNAL_H__
-#define __EVE_OPENGL_EXTERNAL_H__
+#ifndef __EVE_OPENCL_EXTERNAL_H__
+#define __EVE_OPENCL_EXTERNAL_H__
 
 
 #ifndef __EVE_CORE_SYSTEM_DEFINITION__
@@ -39,26 +39,17 @@
 #endif
 
 
-#if defined( EVE_OS_WIN )
-#include <glew/GL/glew.h>
-#include <glew/GL/wglew.h>
-#endif 
+#if defined(EVE_OS_WIN) || defined(EVE_OS_LINUX)
+#include <CL/cl_platform.h>
+#include <CL/cl.h>
+#include <CL/cl_gl.h>
 
+#elif defined(EVE_OS_DARWIN)
+#include <OpenCL/cl_platform.h>
+#include <OpenCL/cl.h>
+#include <CGLDevice.h> // Khronos version : #include <OpenGL/CGLDevice.h>
 
-#if defined( EVE_OS_LINUX )
-#include <glew/GL/glew.h>
-#define GL_GLEXT_PROTOTYPES 1
-#include <glew/GL/ogl.h>
-#include <glew/GL/glext.h>
 #endif
 
 
-#if defined( EVE_OS_DARWIN )
-#include <OpenGL/ogl.h>
-#  define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
-#include <OpenGL/gl3.h>
-#include <OpenGL/glext.h>
-#endif
-
-
-#endif // __EVE_OPENGL_EXTERNAL_H__
+#endif // __EVE_OPENCL_EXTERNAL_H__

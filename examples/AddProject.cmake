@@ -203,6 +203,15 @@ macro( add_project PROJECT_NAME_IN )
 		set( LIBS ${LIBS} ${GLEW_LIBS})
 	endif()
 
+	
+	# OpenCL.
+	#################################################
+	set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
+	set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
+	find_package( OpenCL REQUIRED )
+	include_directories( ${OPENCL_INCLUDE_DIR} )
+	set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+
 	# # POCO
 	# #################################################
 	# add_definitions( -DPOCO_STATIC -DPOCO_NO_AUTOMATIC_LIBS )

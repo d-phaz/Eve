@@ -121,6 +121,14 @@ void eve::mem::Pointer::release_ptr(T * p_pPtr)
 #define EVE_RELEASE_PTR( PTR )	\
 	eve::mem::Pointer::release_ptr(PTR);	\
 	PTR = nullptr;
+/**
+* \def EVE_RELEASE_PTR_SAFE
+* \brief Test, release and nullify eve::mem::Pointer or derived pointer.
+*/
+#define EVE_RELEASE_PTR_SAFE( PTR )	\
+	if (PTR) { eve::mem::Pointer::release_ptr(PTR);	\
+	PTR = nullptr; }
+
 
 
 /**
@@ -130,6 +138,14 @@ void eve::mem::Pointer::release_ptr(T * p_pPtr)
 #define EVE_RELEASE_PTR_C( PTR )	\
 	free( PTR );					\
 	PTR = 0;
+/**
+* \def EVE_RELEASE_PTR_C_SAFE
+* \brief Test, release and nullify standard C pointer.
+*/
+#define EVE_RELEASE_PTR_C_SAFE( PTR )	\
+	if (PTR) { free( PTR );				\
+	PTR = 0; }
+
 
 
 /**
@@ -139,5 +155,12 @@ void eve::mem::Pointer::release_ptr(T * p_pPtr)
 #define EVE_RELEASE_PTR_CPP( PTR )  \
 	delete PTR;						\
 	PTR = nullptr;
+/**
+* \def EVE_RELEASE_PTR_CPP_SAFE
+* \brief Test, release and nullify standard C++ pointer.
+*/
+#define EVE_RELEASE_PTR_CPP_SAFE( PTR )  \
+	if (PTR) { delete PTR;				 \
+	PTR = nullptr; }
 
 #endif // __EVE_MEMORY_POINTER_H__

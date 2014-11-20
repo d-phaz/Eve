@@ -203,28 +203,42 @@ set( SOURCE_FILES ${SOURCE_FILES} ${MESSAGING_SRCS} )
 source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 
 
+# OpenCL.
+#################################################
+set( OPENCL_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/External.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.h  )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
+source_group( "OpenCL" FILES ${OPENCL_SRCS} )
+
+
 # OpenGL.
 #################################################
 set( OPENGL_SRCS
-	 ogl/core/Debug.cpp 
-	 ogl/core/Debug.h 
-	 ogl/core/Fbo.h 
-	 ogl/core/Fbo.cpp 
-	 ogl/core/Macro.h 
-	 ogl/core/Object.cpp 
-	 ogl/core/Object.h 
-	 ogl/core/Pbo.cpp 
-	 ogl/core/Pbo.h  
-	 ogl/core/Renderer.cpp 
-	 ogl/core/Renderer.h 
-	 ogl/core/Shader.cpp 
-	 ogl/core/Shader.h 
-	 ogl/core/Texture.cpp 
-	 ogl/core/Texture.h 
-	 ogl/core/Uniform.cpp 
-	 ogl/core/Uniform.h 
-	 ogl/core/Vao.cpp 
-	 ogl/core/Vao.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Debug.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Debug.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/External.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Fbo.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Fbo.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Macro.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Object.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Object.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Pbo.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Pbo.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Renderer.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Renderer.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.h )
 	 
 set( OPENGL_SRCS 
 	 ${OPENGL_SRCS}
@@ -429,6 +443,16 @@ if( WIN32 )
 	ADD_DEFINITIONS( -DGLEW_STATIC=1 )
 	set( LIBS ${LIBS} ${GLEW_LIBS})
 endif()
+
+	
+# OpenCL.
+#################################################
+set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
+set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
+find_package( OpenCL REQUIRED )
+include_directories( ${OPENCL_INCLUDE_DIR} )
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+
 
 # # POCO
 # #################################################
