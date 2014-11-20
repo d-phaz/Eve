@@ -151,7 +151,7 @@ inline bool eve::mem::Scoped<T>::operator!(void) const
 template<class T>
 inline bool eve::mem::Scoped<T>::operator==(const Scoped<T> & p_other) const
 {
-	return this->m_pData == other.m_pData;
+	return this->m_pData == p_other.m_pData;
 }
 
 //=================================================================================================
@@ -176,10 +176,10 @@ inline T * eve::mem::Scoped<T>::data(void) const
 template<class T>
 inline void eve::mem::Scoped<T>::take(T * p_pPtr)
 {
-	EVE_ASSERT(m_pData != p_pPtr)
+	EVE_ASSERT(p_pPtr && m_pData != p_pPtr)
 
 	T * oldPtr	= m_pData;
-	m_pData		= other;
+	m_pData		= p_pPtr;
 
 	EVE_RELEASE_PTR(oldPtr);
 }
@@ -198,10 +198,10 @@ inline T * eve::mem::Scoped<T>::give(void)
 template<class T>
 T * eve::mem::Scoped<T>::reset(T * p_pPtr)
 {
-	EVE_ASSERT(m_pData != p_pPtr)
+	EVE_ASSERT(p_pPtr && m_pData != p_pPtr)
 
-	T * oldPtr = m_pData;
-	m_pData = other;
+	T * oldPtr	= m_pData;
+	m_pData		= p_pPtr;
 
 	return oldPtr
 }
