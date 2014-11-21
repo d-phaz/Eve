@@ -71,8 +71,8 @@ eve::ocl::Engine::Engine(void)
 	, m_pDevices(nullptr)
 
 	, m_deviceMaxFlops(nullptr)
-	, m_maxComputeUnits(0)
 	, m_maxClockFrequency(0)
+	, m_maxComputeUnits(0)
 	, m_flops(0)
 
 	, m_err(CL_SUCCESS)
@@ -118,18 +118,18 @@ void eve::ocl::Engine::init(void)
 			{
 				device = m_pDevices[j];
 
-				m_err = clGetDeviceInfo(device, CL_DEVICE_MAX_COMPUTE_UNITS, sizeof(cl_int), &computeUnits, NULL);
+				m_err = clGetDeviceInfo(device, CL_DEVICE_MAX_CLOCK_FREQUENCY, sizeof(cl_int), &clockFrequency, NULL);
 				EVE_OCL_CHECK_DEVICE(m_err);
 
-				m_err = clGetDeviceInfo(device, CL_DEVICE_MAX_CLOCK_FREQUENCY, sizeof(cl_int), &clockFrequency, NULL);
+				m_err = clGetDeviceInfo(device, CL_DEVICE_MAX_COMPUTE_UNITS, sizeof(cl_int), &computeUnits, NULL);
 				EVE_OCL_CHECK_DEVICE(m_err);
 
 				flops = computeUnits * clockFrequency;
 
 				if (flops > m_flops)
 				{
-					m_maxComputeUnits	= computeUnits;
 					m_maxClockFrequency = clockFrequency;
+					m_maxComputeUnits	= computeUnits;
 					m_flops				= flops;
 					m_deviceMaxFlops	= device;
 				}
@@ -157,7 +157,7 @@ void eve::ocl::Engine::init(void)
 
 		mess = eve::str::to_wstring(txt);
 		free(txt);
-		EVE_LOG_INFO("OpenCL Device Vendor:  %s", mess.c_str());
+		EVE_LOG_INFO("OpenCL Device Vendor:          %s", mess.c_str());
 
 
 		// Device name.
@@ -170,7 +170,7 @@ void eve::ocl::Engine::init(void)
 
 		mess = eve::str::to_wstring(txt);
 		free(txt);
-		EVE_LOG_INFO("OpenCL Device Name:    %s", mess.c_str());
+		EVE_LOG_INFO("OpenCL Device Name:            %s", mess.c_str());
 
 
 		// Device version.
@@ -183,7 +183,12 @@ void eve::ocl::Engine::init(void)
 
 		mess = eve::str::to_wstring(txt);
 		free(txt);
-		EVE_LOG_INFO("OpenCL Device Version: %s", mess.c_str());
+		EVE_LOG_INFO("OpenCL Device Version:         %s", mess.c_str());
+
+
+		// Flops.
+		EVE_LOG_INFO("OpenCL Device Clock Frequency: %d", m_maxClockFrequency);
+		EVE_LOG_INFO("OpenCL Device Compute Units:   %d", m_maxComputeUnits);
 	}
 #endif
 }

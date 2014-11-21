@@ -74,8 +74,8 @@ namespace eve
 			cl_device_id *					m_pDevices;				//!< Available OpenCL devices.
 
 			cl_device_id					m_deviceMaxFlops;		//!< Max flops device (compute units * clock frequency).
-			cl_int							m_maxComputeUnits;		//!< Max flops device compute units number.
 			cl_int							m_maxClockFrequency;	//!< Max flops device maximum clock frequency.
+			cl_int							m_maxComputeUnits;		//!< Max flops device compute units number.
 			cl_int							m_flops;				//!< Max flops device flops.
 
 			cl_int							m_err;					//!< Error code.
