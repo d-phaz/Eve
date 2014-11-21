@@ -94,10 +94,11 @@ void eve::app::App::init(void)
 {
 	// Messaging server (log).
 	eve::mess::Server::create_instance();
-	// OpenGL master context.
-	eve::ogl::Context::create_instance();
+
 	// OpenCL engine.
 	eve::ocl::Engine::create_instance();
+	// OpenGL master context.
+	eve::ogl::Context::create_instance();
 
 	// Win32 COM
 #if defined(EVE_OS_WIN)
@@ -141,10 +142,10 @@ void eve::app::App::release(void)
 	::CoUninitialize();
 #endif
 
-	// OpenCL engine.
-	eve::ocl::Engine::release_instance();
 	// OpenGL master context.
 	eve::ogl::Context::release_instance();
+	// OpenCL engine.
+	eve::ocl::Engine::release_instance();
 
 	// Messaging server (log).
 	eve::mess::Server::release_instance();
