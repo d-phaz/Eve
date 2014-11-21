@@ -32,6 +32,10 @@
 // Main header
 #include "eve/app/App.h"
 
+#ifndef __EVE_OPENCL_ENGINE_H__
+#include "eve/ocl/core/Engine.h"
+#endif
+
 #ifndef __EVE_OPENGL_CONTEXT_H__
 #include "eve/ogl/core/win32/Context.h"
 #endif
@@ -92,6 +96,8 @@ void eve::app::App::init(void)
 	eve::mess::Server::create_instance();
 	// OpenGL master context.
 	eve::ogl::Context::create_instance();
+	// OpenCL engine.
+	eve::ocl::Engine::create_instance();
 
 	// Win32 COM
 #if defined(EVE_OS_WIN)
@@ -135,6 +141,8 @@ void eve::app::App::release(void)
 	::CoUninitialize();
 #endif
 
+	// OpenCL engine.
+	eve::ocl::Engine::release_instance();
 	// OpenGL master context.
 	eve::ogl::Context::release_instance();
 

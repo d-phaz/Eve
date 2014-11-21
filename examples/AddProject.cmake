@@ -210,6 +210,7 @@ macro( add_project PROJECT_NAME_IN )
 	set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
 	find_package( OpenCL REQUIRED )
 	include_directories( ${OPENCL_INCLUDE_DIR} )
+	set( LIBS ${LIBS} ${OPENCL_LIBRARY})
 	set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
 
 	# # POCO
