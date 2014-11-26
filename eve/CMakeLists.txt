@@ -72,52 +72,52 @@ source_group( "Core" FILES ${CORE_SRCS} )
 #################################################
 if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 	set(DIRECTX11_SRCS
-		dx11/core/BlendStates.cpp
-		dx11/core/BlendStates.h
-		dx11/core/ConstantBuffer.cpp
-		dx11/core/ConstantBuffer.h
-		dx11/core/Context.cpp
-		dx11/core/Context.h
-		dx11/core/DepthStencil.cpp
-		dx11/core/DepthStencil.h
-		dx11/core/DepthStencilStates.cpp
-		dx11/core/DepthStencilStates.h
-		dx11/core/Device.cpp
-		dx11/core/Device.h
-		dx11/core/Enums.h
-		dx11/core/Formats.cpp
-		dx11/core/Formats.h
-		dx11/core/Includes.h
-		dx11/core/IndexBuffer.cpp
-		dx11/core/IndexBuffer.h
-		dx11/core/Macros.h
-		dx11/core/RasterizerStates.cpp
-		dx11/core/RasterizerStates.h
-		dx11/core/RawBuffer.cpp
-		dx11/core/RawBuffer.h
-		dx11/core/Renderer.cpp
-		dx11/core/Renderer.h
-		dx11/core/RenderTarget.cpp
-		dx11/core/RenderTarget.h
-		dx11/core/RenderTargetStack.cpp
-		dx11/core/RenderTargetStack.h
-		dx11/core/ResourceFactory.cpp
-		dx11/core/ResourceFactory.h
-		dx11/core/ResourcePool.cpp
-		dx11/core/ResourcePool.h
-		dx11/core/SamplerStates.cpp
-		dx11/core/SamplerStates.h
-		dx11/core/StructuredBuffer.cpp
-		dx11/core/StructuredBuffer.h
-		dx11/core/ShaderCompiler.cpp
-		dx11/core/ShaderCompiler.h
-		dx11/core/ShaderInstance.cpp
-		dx11/core/ShaderInstance.h
-		dx11/core/SwapChain.cpp
-		dx11/core/SwapChain.h
-		dx11/core/SwapChain.h
-		dx11/core/VertexBuffer.cpp
-		dx11/core/VertexBuffer.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/BlendStates.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/BlendStates.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ConstantBuffer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ConstantBuffer.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Context.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Context.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencil.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencil.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencilStates.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencilStates.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Device.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Device.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Enums.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Formats.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Formats.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Includes.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/IndexBuffer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/IndexBuffer.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Macros.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RasterizerStates.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RasterizerStates.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RawBuffer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RawBuffer.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Renderer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Renderer.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTarget.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTarget.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTargetStack.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTargetStack.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourceFactory.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourceFactory.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourcePool.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourcePool.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SamplerStates.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SamplerStates.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/StructuredBuffer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/StructuredBuffer.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderCompiler.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderCompiler.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderInstance.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderInstance.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SwapChain.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SwapChain.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SwapChain.h
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/VertexBuffer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/VertexBuffer.h
 		)
 	
 	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
@@ -206,6 +206,8 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 # OpenCL.
 #################################################
 set( OPENCL_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/External.h

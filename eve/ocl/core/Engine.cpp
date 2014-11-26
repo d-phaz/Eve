@@ -32,6 +32,10 @@
 // Main header.
 #include "eve/ocl/core/Engine.h"
 
+#ifndef __EVE_OPENCL_CONTEXT_H__
+#include "eve/ocl/core/Context.h"
+#endif
+
 #ifndef __EVE_STRING_UTILS_H__
 #include "eve/str/Utils.h"
 #endif
@@ -45,8 +49,7 @@ eve::ocl::Engine * eve::ocl::Engine::create_instance(void)
 {
 	EVE_ASSERT(!m_p_instance);
 
-	m_p_instance = new eve::ocl::Engine();
-	m_p_instance->init();
+	m_p_instance = EVE_CREATE_PTR(eve::ocl::Engine);
 	return m_p_instance;
 }
 
@@ -75,6 +78,10 @@ eve::ocl::Engine::Engine(void)
 	, m_maxComputeUnits(0)
 	, m_flops(0)
 
+	, m_pContext(nullptr)
+	, m_pContextGL(nullptr)
+	, m_pContextDX(nullptr)
+
 	, m_err(CL_SUCCESS)
 {}
 
@@ -95,21 +102,24 @@ void eve::ocl::Engine::init(void)
 		EVE_OCL_CHECK_PLATFORM(m_err);
 
 		// Useful vars.
-		cl_device_id device		= nullptr;
-		cl_int computeUnits		= 0;
-		cl_int clockFrequency	= 0;
-		cl_int flops			= 0;
+		cl_platform_id	platform		= nullptr;
+		cl_device_id	device			= nullptr;
+		cl_int			computeUnits	= 0;
+		cl_int			clockFrequency	= 0;
+		cl_int			flops			= 0;
 
 		// Run threw platforms.
 		for (cl_uint i = 0; i < m_numPlatforms; i++)
 		{
+			platform = m_pPlatforms[i];
+
 			// Get per platform available device(s) number.
-			m_err = clGetDeviceIDs(m_pPlatforms[i], CL_DEVICE_TYPE_ALL, 0, NULL, &m_numDevices);
+			m_err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 0, NULL, &m_numDevices);
 			EVE_OCL_CHECK_DEVICE(m_err);
 
 			// Get per platform available device(s).
 			m_pDevices = (cl_device_id*)malloc(m_numDevices * sizeof(cl_device_id));
-			m_err = clGetDeviceIDs(m_pPlatforms[i], CL_DEVICE_TYPE_ALL, m_numDevices, m_pDevices, NULL);
+			m_err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, m_numDevices, m_pDevices, NULL);
 			EVE_OCL_CHECK_DEVICE(m_err);
 
 
@@ -128,6 +138,8 @@ void eve::ocl::Engine::init(void)
 
 				if (flops > m_flops)
 				{
+					m_platformMaxFlops  = platform;
+
 					m_maxClockFrequency = clockFrequency;
 					m_maxComputeUnits	= computeUnits;
 					m_flops				= flops;
@@ -191,11 +203,50 @@ void eve::ocl::Engine::init(void)
 		EVE_LOG_INFO("OpenCL Device Compute Units:   %d", m_maxComputeUnits);
 	}
 #endif
+
+
+	// Initialize default context
+	cl_context_properties props[] =
+	{
+		CL_CONTEXT_PLATFORM, cl_context_properties(m_platformMaxFlops),
+		0
+	};
+	cl_context context = clCreateContext(props, 1, &m_deviceMaxFlops, NULL, NULL, &m_err);
+	EVE_OCL_CHECK_CONTEXT(m_err);
+
+	m_pContext = eve::ocl::Context::create_ptr(context);
 }
 
 //=================================================================================================
 void eve::ocl::Engine::release(void)
 {
+	EVE_RELEASE_PTR_SAFE(m_pContext);
+	EVE_RELEASE_PTR_SAFE(m_pContextGL);
+	EVE_RELEASE_PTR_SAFE(m_pContextDX);
+
 	EVE_RELEASE_PTR_C_SAFE(m_pDevices);
 	EVE_RELEASE_PTR_C_SAFE(m_pPlatforms);
+}
+
+
+
+//=================================================================================================
+eve::ocl::Context * eve::ocl::Engine::create_context_OpenGL(HGLRC p_GLRC, HDC p_DC)
+{
+	EVE_ASSERT(!m_p_instance->m_pContextGL);
+
+	cl_context_properties props[] = 
+	{ 
+		CL_GL_CONTEXT_KHR,		(cl_context_properties)p_GLRC, 
+		CL_WGL_HDC_KHR,			(cl_context_properties)p_DC, 
+		CL_CONTEXT_PLATFORM,	(cl_context_properties)m_p_instance->m_platformMaxFlops,
+		0 
+	}; 
+	cl_int err;
+	cl_context context = clCreateContext(props, 1, &m_p_instance->m_deviceMaxFlops, NULL, NULL, &err);
+	EVE_OCL_CHECK_CONTEXT(err);
+
+	m_p_instance->m_pContextGL = eve::ocl::Context::create_ptr(context);
+
+	return m_p_instance->m_pContextGL;
 }

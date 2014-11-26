@@ -36,6 +36,10 @@
 #include "eve/ogl/core/Debug.h"
 #endif
 
+#ifndef __EVE_OPENCL_ENGINE_H__
+#include "eve/ocl/core/Engine.h"
+#endif
+
 #ifndef __EVE_SYSTEM_WINDOW_H__
 #include "eve/sys/win32/Window.h"
 #endif
@@ -148,6 +152,9 @@ void eve::ogl::Context::init(void)
 	eve::ogl::Context::init_OpenGL();
 	// Stock DC auto updated format.
 	this->updateFormatVersion();
+
+	// Init shared OpenCL context.
+	eve::ocl::Engine::create_context_OpenGL(m_hGLRC, m_hDC);
 
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == 0)
