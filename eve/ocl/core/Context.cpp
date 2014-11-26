@@ -73,6 +73,6 @@ void eve::ocl::Context::release(void)
 {
 	if (m_context) {
 		clReleaseContext(m_context);
-		m_context = NULL;
+		m_context = nullptr;
 	}
 }
