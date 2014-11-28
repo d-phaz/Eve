@@ -51,6 +51,7 @@
 
 
 
+namespace eve { namespace ocl { class Context; } }
 namespace eve { namespace thr { class SpinLock; } }
 
 
@@ -63,6 +64,7 @@ namespace eve
 		*
 		* \brief OpenGL master context.
 		* Create and manage rendering context (GLRC) based on available pixel format.
+		* Create and managed shared OpenCL context.
 		*
 		* \note extends mem::Pointer
 		*/
@@ -86,6 +88,9 @@ namespace eve
 			eve::ogl::PixelFormat			m_pixelFormat;			//!< Pixel format.
 			PIXELFORMATDESCRIPTOR			m_pixelFormatDecriptor;	//!< Pixel format descriptor.
 			int32_t							m_pixelFormatId;		//!< Pixel format ID.
+
+		private:
+			eve::ocl::Context *				m_pContextOpenCL;		//!< OpenCL context.
 
 
 			//////////////////////////////////////

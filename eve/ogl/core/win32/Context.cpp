@@ -95,6 +95,7 @@ eve::ogl::Context::Context(void)
 	, m_pixelFormat()
 	, m_pixelFormatDecriptor()
 	, m_pixelFormatId(0)
+	, m_pContextOpenCL(nullptr)
 {}
 
 
@@ -154,7 +155,7 @@ void eve::ogl::Context::init(void)
 	this->updateFormatVersion();
 
 	// Init shared OpenCL context.
-	eve::ocl::Engine::create_context_OpenGL(m_hGLRC, m_hDC);
+	m_pContextOpenCL = eve::ocl::Engine::create_context_OpenGL(m_hGLRC, m_hDC);
 
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == 0)

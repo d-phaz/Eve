@@ -214,6 +214,11 @@ set( OPENCL_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.h  )
 
+# Generate Configuration.h
+configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h @ONLY )
+set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h PROPERTIES GENERATED TRUE )	
+set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
+
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
 source_group( "OpenCL" FILES ${OPENCL_SRCS} )
 

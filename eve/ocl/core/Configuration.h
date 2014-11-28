@@ -30,31 +30,9 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENCL_EXTERNAL_H__
-#define __EVE_OPENCL_EXTERNAL_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
-
-
-#if defined(EVE_OS_WIN) || defined(EVE_OS_LINUX)
-#include <CL/cl_platform.h>
-#include <CL/cl.h>
-#include <CL/cl_gl.h>
-
-#elif defined(EVE_OS_DARWIN)
-#include <OpenCL/cl_platform.h>
-#include <OpenCL/cl.h>
-#include <CGLDevice.h> // Khronos version : #include <OpenGL/CGLDevice.h>
-
-#endif
-
-
 #ifndef __EVE_OPENCL_CONFIGURATION_H__
-#include "eve/ocl/core/Configuration.h"
-#endif
+#define __EVE_OPENCL_CONFIGURATION_H__
 
+#define EVE_OPENCL_ENABLE_BENCHMARK
 
-#endif // __EVE_OPENCL_EXTERNAL_H__
+#endif // __EVE_OPENCL_CONFIGURATION_H__

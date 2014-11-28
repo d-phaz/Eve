@@ -177,8 +177,20 @@ endif()
 # DirectX Support
 ###################################################################################################
 if( WIN32 )
-	option( OPTION_BUILD_ENABLE_DX11 "Enable DirectX11 support (requires Windows 8 for now" OFF)
+	option( OPTION_BUILD_ENABLE_DX11 "Enable DirectX11 support (requires Windows 8 for now)" OFF)
 endif() 
+
+# OpenCL options.
+###################################################################################################
+if( OPTION_BUILD_TYPE_DEBUG )
+	option( OPTION_BUILD_ENABLE_OPENCL_BENCHMARK "Enable OpenCL benchmark." ON)
+else()
+	option( OPTION_BUILD_ENABLE_OPENCL_BENCHMARK "Enable OpenCL benchmark." OFF)
+endif()
+
+if(OPTION_BUILD_ENABLE_OPENCL_BENCHMARK)
+	set(EVE_OPENCL_ENABLE_BENCHMARK ON)
+endif()
 
 
 ###################################################################################################
