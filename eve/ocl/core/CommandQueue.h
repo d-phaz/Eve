@@ -29,52 +29,75 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header.
-#include "eve/ocl/core/Context.h"
+#pragma once
+#ifndef __EVE_OPENCL_CONTEXT_H__
+#define __EVE_OPENCL_CONTEXT_H__
 
-#ifndef __EVE_STRING_UTILS_H__
-#include "eve/str/Utils.h"
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
 #endif
 
+#ifndef __EVE_OPENCL_DEBUG_H__
+#include "eve/ocl/core/Debug.h"
+#endif
 
-
-//=================================================================================================
-eve::ocl::Context * eve::ocl::Context::create_ptr(cl_context p_context, cl_device_id p_device)
+namespace eve
 {
-	EVE_ASSERT(p_context);
+	namespace ocl
+	{
+		/** 
+		* \class eve::ocl::Context
+		*
+		* \brief Stock OpenCL context with or without DirectX/OpenGL sharing.
+		* Create and manage OpenCL command queues, memory objects, programs, kernels, ...
+		*
+		* \note extends eve::mem::Pointer
+		*/
+		class Context final
+			: public eve::mem::Pointer
+		{
 
-	eve::ocl::Context * ptr = new eve::ocl::Context(p_context, p_device);
-	ptr->init();
-	return ptr;
-}
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		private:
+			cl_context						m_context;				//!< OpenCL context.
 
 
-
-//=================================================================================================
-eve::ocl::Context::Context(cl_context p_context, cl_device_id p_device)
-	// Inheritance
-	: eve::mem::Pointer()
-	// Members init
-	, m_context(p_context)
-	, m_device(p_device)
-
-	, m_err(CL_SUCCESS)
-{}
+		private:
+			cl_int							m_err;					//!< Error code.
 
 
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
-//=================================================================================================
-void eve::ocl::Context::init(void)
-{
-	EVE_ASSERT(m_context);
-	EVE_ASSERT(m_device);
-}
+			EVE_DISABLE_COPY(Context);
+			EVE_PROTECT_DESTRUCTOR(Context);
 
-//=================================================================================================
-void eve::ocl::Context::release(void)
-{
-	if (m_context) {
-		clReleaseContext(m_context);
-		m_context = nullptr;
-	}
-}
+		public:
+			/** \brief Create new pointer. */
+			static eve::ocl::Context * create_ptr(cl_context p_context);
+
+
+		private:
+			/** \brief Class constructor. */
+			explicit Context(cl_context p_context);
+
+
+		protected:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void);
+			/** \brief Release and delete class members. (pure virtual) */
+			virtual void release(void);
+
+		}; // class Context
+
+	} // namespace ocl
+
+} // namespace eve
+
+#endif // __EVE_OPENCL_CONTEXT_H__

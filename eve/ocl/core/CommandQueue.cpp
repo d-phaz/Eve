@@ -39,11 +39,11 @@
 
 
 //=================================================================================================
-eve::ocl::Context * eve::ocl::Context::create_ptr(cl_context p_context, cl_device_id p_device)
+eve::ocl::Context * eve::ocl::Context::create_ptr(cl_context p_context)
 {
 	EVE_ASSERT(p_context);
 
-	eve::ocl::Context * ptr = new eve::ocl::Context(p_context, p_device);
+	eve::ocl::Context * ptr = new eve::ocl::Context(p_context);
 	ptr->init();
 	return ptr;
 }
@@ -51,12 +51,11 @@ eve::ocl::Context * eve::ocl::Context::create_ptr(cl_context p_context, cl_devic
 
 
 //=================================================================================================
-eve::ocl::Context::Context(cl_context p_context, cl_device_id p_device)
+eve::ocl::Context::Context(cl_context p_context)
 	// Inheritance
 	: eve::mem::Pointer()
 	// Members init
 	, m_context(p_context)
-	, m_device(p_device)
 
 	, m_err(CL_SUCCESS)
 {}
@@ -67,7 +66,6 @@ eve::ocl::Context::Context(cl_context p_context, cl_device_id p_device)
 void eve::ocl::Context::init(void)
 {
 	EVE_ASSERT(m_context);
-	EVE_ASSERT(m_device);
 }
 
 //=================================================================================================

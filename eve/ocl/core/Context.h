@@ -65,7 +65,7 @@ namespace eve
 
 		private:
 			cl_context						m_context;				//!< OpenCL context.
-
+			cl_device_id					m_device;				//!< Linked OpenCL device (read only).
 
 		private:
 			cl_int							m_err;					//!< Error code.
@@ -80,12 +80,12 @@ namespace eve
 
 		public:
 			/** \brief Create new pointer. */
-			static eve::ocl::Context * create_ptr(cl_context p_context);
+			static eve::ocl::Context * create_ptr(cl_context p_context, cl_device_id p_device);
 
 
 		private:
 			/** \brief Class constructor. */
-			explicit Context(cl_context p_context);
+			explicit Context(cl_context p_context, cl_device_id p_device);
 
 
 		protected:

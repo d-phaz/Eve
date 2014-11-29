@@ -214,7 +214,7 @@ void eve::ocl::Engine::init(void)
 	cl_context context = clCreateContext(props, 1, &m_deviceMaxFlops, NULL, NULL, &m_err);
 	EVE_OCL_CHECK_CONTEXT(m_err);
 
-	m_pContext = eve::ocl::Context::create_ptr(context);
+	m_pContext = eve::ocl::Context::create_ptr(context, m_deviceMaxFlops);
 }
 
 //=================================================================================================
