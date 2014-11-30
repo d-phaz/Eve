@@ -206,6 +206,8 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 # OpenCL.
 #################################################
 set( OPENCL_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.cpp 

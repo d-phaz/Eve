@@ -32,10 +32,6 @@
 // Main header.
 #include "eve/ocl/core/Engine.h"
 
-#ifndef __EVE_OPENCL_CONTEXT_H__
-#include "eve/ocl/core/Context.h"
-#endif
-
 #ifndef __EVE_STRING_UTILS_H__
 #include "eve/str/Utils.h"
 #endif
@@ -90,6 +86,9 @@ eve::ocl::Engine::Engine(void)
 //=================================================================================================
 void eve::ocl::Engine::init(void)
 {
+	m_pPlatforms	= new std::vector<cl_platform_id>();
+	m_pDevices		= new std::vector<cl_device_id>();
+
 	// Get available platforms number.
 	m_err = clGetPlatformIDs(0, NULL, &m_numPlatforms);
 	EVE_OCL_CHECK_PLATFORM(m_err);
@@ -97,8 +96,8 @@ void eve::ocl::Engine::init(void)
 	if (m_numPlatforms > 0)
 	{
 		// Get available platforms.
-		m_pPlatforms = (cl_platform_id*)malloc(m_numPlatforms * sizeof(cl_platform_id));
-		m_err = clGetPlatformIDs(m_numPlatforms, m_pPlatforms, NULL);
+		cl_platform_id * platforms = (cl_platform_id*)malloc(m_numPlatforms * sizeof(cl_platform_id));
+		m_err = clGetPlatformIDs(m_numPlatforms, platforms, NULL);
 		EVE_OCL_CHECK_PLATFORM(m_err);
 
 		// Useful vars.
@@ -111,22 +110,24 @@ void eve::ocl::Engine::init(void)
 		// Run threw platforms.
 		for (cl_uint i = 0; i < m_numPlatforms; i++)
 		{
-			platform = m_pPlatforms[i];
+			platform = platforms[i];
+			m_pPlatforms->push_back(platform);
 
 			// Get per platform available device(s) number.
 			m_err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 0, NULL, &m_numDevices);
 			EVE_OCL_CHECK_DEVICE(m_err);
 
 			// Get per platform available device(s).
-			m_pDevices = (cl_device_id*)malloc(m_numDevices * sizeof(cl_device_id));
-			m_err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, m_numDevices, m_pDevices, NULL);
+			cl_device_id * devices = (cl_device_id*)malloc(m_numDevices * sizeof(cl_device_id));
+			m_err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, m_numDevices, devices, NULL);
 			EVE_OCL_CHECK_DEVICE(m_err);
 
 
 			// Run threw devices.
 			for (cl_uint j = 0; j < m_numDevices; j++)
 			{
-				device = m_pDevices[j];
+				device = devices[j];
+				m_pDevices->push_back(device);
 
 				m_err = clGetDeviceInfo(device, CL_DEVICE_MAX_CLOCK_FREQUENCY, sizeof(cl_int), &clockFrequency, NULL);
 				EVE_OCL_CHECK_DEVICE(m_err);
@@ -146,7 +147,9 @@ void eve::ocl::Engine::init(void)
 					m_deviceMaxFlops	= device;
 				}
 			}
+			free(devices);
 		}
+		free(platforms);
 	}
 
 	// Print selected device infos.
@@ -224,29 +227,36 @@ void eve::ocl::Engine::release(void)
 	EVE_RELEASE_PTR_SAFE(m_pContextGL);
 	EVE_RELEASE_PTR_SAFE(m_pContextDX);
 
-	EVE_RELEASE_PTR_C_SAFE(m_pDevices);
-	EVE_RELEASE_PTR_C_SAFE(m_pPlatforms);
+	EVE_RELEASE_PTR_CPP_SAFE(m_pDevices);
+	EVE_RELEASE_PTR_CPP_SAFE(m_pPlatforms);
 }
 
 
 
 //=================================================================================================
-eve::ocl::Context * eve::ocl::Engine::create_context_OpenGL(HGLRC p_GLRC, HDC p_DC)
+eve::ocl::Context * eve::ocl::Engine::createContextOpenGL(HGLRC p_GLRC, HDC p_DC)
 {
-	EVE_ASSERT(!m_p_instance->m_pContextGL);
+	EVE_ASSERT(!m_pContextGL);
 
-	cl_context_properties props[] = 
-	{ 
-		CL_GL_CONTEXT_KHR,		(cl_context_properties)p_GLRC, 
-		CL_WGL_HDC_KHR,			(cl_context_properties)p_DC, 
-		CL_CONTEXT_PLATFORM,	(cl_context_properties)m_p_instance->m_platformMaxFlops,
-		0 
-	}; 
+	cl_context_properties props[] =
+	{
+		CL_GL_CONTEXT_KHR, (cl_context_properties)p_GLRC,
+		CL_WGL_HDC_KHR, (cl_context_properties)p_DC,
+		CL_CONTEXT_PLATFORM, (cl_context_properties)m_platformMaxFlops,
+		0
+	};
 	cl_int err;
-	cl_context context = clCreateContext(props, 1, &m_p_instance->m_deviceMaxFlops, NULL, NULL, &err);
+	cl_context context = clCreateContext(props, 1, &m_deviceMaxFlops, NULL, NULL, &err);
 	EVE_OCL_CHECK_CONTEXT(err);
 
-	m_p_instance->m_pContextGL = eve::ocl::Context::create_ptr(context);
+	m_pContextGL = eve::ocl::Context::create_ptr(context, m_deviceMaxFlops);
 
-	return m_p_instance->m_pContextGL;
+	return m_pContextGL;
+}
+
+//=================================================================================================
+eve::ocl::Context * eve::ocl::Engine::create_context_OpenGL(HGLRC p_GLRC, HDC p_DC)
+{
+	EVE_ASSERT(m_p_instance);
+	return m_p_instance->createContextOpenGL(p_GLRC, p_DC);
 }

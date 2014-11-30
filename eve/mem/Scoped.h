@@ -176,7 +176,7 @@ inline T * eve::mem::Scoped<T>::data(void) const
 template<class T>
 inline void eve::mem::Scoped<T>::take(T * p_pPtr)
 {
-	EVE_ASSERT(p_pPtr && m_pData != p_pPtr)
+	EVE_ASSERT(p_pPtr && m_pData != p_pPtr);
 
 	T * oldPtr	= m_pData;
 	m_pData		= p_pPtr;
@@ -198,7 +198,7 @@ inline T * eve::mem::Scoped<T>::give(void)
 template<class T>
 T * eve::mem::Scoped<T>::reset(T * p_pPtr)
 {
-	EVE_ASSERT(p_pPtr && m_pData != p_pPtr)
+	EVE_ASSERT(p_pPtr && m_pData != p_pPtr);
 
 	T * oldPtr	= m_pData;
 	m_pData		= p_pPtr;

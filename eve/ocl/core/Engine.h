@@ -41,8 +41,9 @@
 #include "eve/ocl/core/Debug.h"
 #endif
 
-
-namespace eve { namespace ocl { class Context; } }
+#ifndef __EVE_OPENCL_CONTEXT_H__
+#include "eve/ocl/core/Context.h"
+#endif
 
 
 namespace eve
@@ -72,13 +73,13 @@ namespace eve
 
 		private:
 			cl_uint							m_numPlatforms;			//!< Number of available OpenCL platforms.
-			cl_platform_id *				m_pPlatforms;			//!< Available OpenCL platforms.
+			std::vector<cl_platform_id> *	m_pPlatforms;			//!< Available OpenCL platforms.
 			cl_platform_id					m_platformMaxFlops;		//!< Platform containing max flops device (compute units * clock frequency).
 
 
 		private:
 			cl_uint							m_numDevices;			//!< Number of available OpenCL devices.
-			cl_device_id *					m_pDevices;				//!< Available OpenCL devices.
+			std::vector<cl_device_id> *		m_pDevices;				//!< Available OpenCL devices.
 
 			cl_device_id					m_deviceMaxFlops;		//!< Max flops device (compute units * clock frequency).
 			cl_int							m_maxClockFrequency;	//!< Max flops device maximum clock frequency.
@@ -122,6 +123,9 @@ namespace eve
 			virtual void release(void) override;
 
 
+		private:
+			/** \brief Create OpenCL context from OpenGL context (activated sharing). */
+			eve::ocl::Context * createContextOpenGL(HGLRC p_GLRC, HDC p_DC);
 		public:
 			/** \brief Create OpenCL context from OpenGL context (activated sharing). */
 			static eve::ocl::Context * create_context_OpenGL(HGLRC p_GLRC, HDC p_DC);
@@ -133,36 +137,36 @@ namespace eve
 
 		public:
 			/** \brief get available platform(s) number. */
-			static cl_uint				get_platforms_num(void);
+			static cl_uint							get_platforms_num(void);
 			/** \brief Get available platform(s). */
-			static cl_platform_id *		get_platforms(void);
+			static std::vector<cl_platform_id> *	get_platforms(void);
 
 
 		public:
 			/** \brief get available device(s) number. */
-			static cl_uint				get_devices_num(void);
+			static cl_uint							get_devices_num(void);
 			/** \brief Get available device(s). */
-			static cl_device_id *		get_devices(void);
+			static std::vector<cl_device_id> *		get_devices(void);
 
 
 		public:
 			/** \brief Get maximum flops device (fastest one). */
-			static cl_device_id			get_max_flops_device(void);
+			static cl_device_id						get_max_flops_device(void);
 			/** \brief Get maximum flops device (fastest one) maximum compute units number. */
-			static cl_int				get_max_compute_units(void);
+			static cl_int							get_max_compute_units(void);
 			/** \brief Get maximum flops device (fastest one) maximum clock frequency. */
-			static cl_int				get_max_clock_frequency(void);
+			static cl_int							get_max_clock_frequency(void);
 			/** \brief Get maximum flops device (fastest one) flops. */
-			static cl_int				get_flops(void);
+			static cl_int							get_flops(void);
 
 
 		public:
 			/** \brief Get default context (no sharing). */
-			static eve::ocl::Context *	get_context(void);
+			static eve::ocl::Context *				get_context(void);
 			/** \brief Get linked to OpenGL context. */
-			static eve::ocl::Context *	get_context_OpenGL(void);
+			static eve::ocl::Context *				get_context_OpenGL(void);
 			/** \brief Get linked to DirectX context . */
-			static eve::ocl::Context *	get_context_DirectX(void);
+			static eve::ocl::Context *				get_context_DirectX(void);
 
 		}; // class Engine
 
@@ -172,25 +176,25 @@ namespace eve
 
 
 //=================================================================================================
-EVE_FORCE_INLINE cl_uint 				eve::ocl::Engine::get_platforms_num(void)		{ EVE_ASSERT(m_p_instance); return m_p_instance->m_numPlatforms;			}
-EVE_FORCE_INLINE cl_platform_id *		eve::ocl::Engine::get_platforms(void)			{ EVE_ASSERT(m_p_instance); return m_p_instance->m_pPlatforms;			}
+EVE_FORCE_INLINE cl_uint 						eve::ocl::Engine::get_platforms_num(void)		{ EVE_ASSERT(m_p_instance); return m_p_instance->m_numPlatforms;			}
+EVE_FORCE_INLINE std::vector<cl_platform_id> *	eve::ocl::Engine::get_platforms(void)			{ EVE_ASSERT(m_p_instance); return m_p_instance->m_pPlatforms; }
 
 
 //=================================================================================================
-EVE_FORCE_INLINE cl_uint				eve::ocl::Engine::get_devices_num(void)			{ EVE_ASSERT(m_p_instance); return m_p_instance->m_numDevices;			}
-EVE_FORCE_INLINE cl_device_id *			eve::ocl::Engine::get_devices(void)				{ EVE_ASSERT(m_p_instance); return m_p_instance->m_pDevices;				}
+EVE_FORCE_INLINE cl_uint						eve::ocl::Engine::get_devices_num(void)			{ EVE_ASSERT(m_p_instance); return m_p_instance->m_numDevices;			}
+EVE_FORCE_INLINE std::vector<cl_device_id> *	eve::ocl::Engine::get_devices(void)				{ EVE_ASSERT(m_p_instance); return m_p_instance->m_pDevices;				}
 
 
 //=================================================================================================
-EVE_FORCE_INLINE cl_device_id			eve::ocl::Engine::get_max_flops_device(void)	{ EVE_ASSERT(m_p_instance); return m_p_instance->m_deviceMaxFlops;		}
-EVE_FORCE_INLINE cl_int					eve::ocl::Engine::get_max_compute_units(void)	{ EVE_ASSERT(m_p_instance); return m_p_instance->m_maxComputeUnits;		}
-EVE_FORCE_INLINE cl_int					eve::ocl::Engine::get_max_clock_frequency(void)	{ EVE_ASSERT(m_p_instance); return m_p_instance->m_maxClockFrequency;	}
-EVE_FORCE_INLINE cl_int					eve::ocl::Engine::get_flops(void)				{ EVE_ASSERT(m_p_instance); return m_p_instance->m_flops;				}
+EVE_FORCE_INLINE cl_device_id					eve::ocl::Engine::get_max_flops_device(void)	{ EVE_ASSERT(m_p_instance); return m_p_instance->m_deviceMaxFlops;		}
+EVE_FORCE_INLINE cl_int							eve::ocl::Engine::get_max_compute_units(void)	{ EVE_ASSERT(m_p_instance); return m_p_instance->m_maxComputeUnits;		}
+EVE_FORCE_INLINE cl_int							eve::ocl::Engine::get_max_clock_frequency(void)	{ EVE_ASSERT(m_p_instance); return m_p_instance->m_maxClockFrequency;	}
+EVE_FORCE_INLINE cl_int							eve::ocl::Engine::get_flops(void)				{ EVE_ASSERT(m_p_instance); return m_p_instance->m_flops;				}
 
 
 //=================================================================================================
-EVE_FORCE_INLINE eve::ocl::Context *	eve::ocl::Engine::get_context(void)				{ EVE_ASSERT(m_p_instance); return m_p_instance->m_pContext; }
-EVE_FORCE_INLINE eve::ocl::Context *	eve::ocl::Engine::get_context_OpenGL(void)		{ EVE_ASSERT(m_p_instance); EVE_ASSERT(m_p_instance->m_pContextGL); return m_p_instance->m_pContextGL; }
-EVE_FORCE_INLINE eve::ocl::Context *	eve::ocl::Engine::get_context_DirectX(void)		{ EVE_ASSERT(m_p_instance); EVE_ASSERT(m_p_instance->m_pContextDX); return m_p_instance->m_pContextDX; }
+EVE_FORCE_INLINE eve::ocl::Context *			eve::ocl::Engine::get_context(void)				{ EVE_ASSERT(m_p_instance); return m_p_instance->m_pContext;				}
+EVE_FORCE_INLINE eve::ocl::Context *			eve::ocl::Engine::get_context_OpenGL(void)		{ EVE_ASSERT(m_p_instance); EVE_ASSERT(m_p_instance->m_pContextGL); return m_p_instance->m_pContextGL; }
+EVE_FORCE_INLINE eve::ocl::Context *			eve::ocl::Engine::get_context_DirectX(void)		{ EVE_ASSERT(m_p_instance); EVE_ASSERT(m_p_instance->m_pContextDX); return m_p_instance->m_pContextDX; }
 
 #endif // __EVE_OPENCL_ENGINE_H__

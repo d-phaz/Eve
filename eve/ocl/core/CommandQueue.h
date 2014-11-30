@@ -27,11 +27,11 @@
  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 #pragma once
-#ifndef __EVE_OPENCL_CONTEXT_H__
-#define __EVE_OPENCL_CONTEXT_H__
+#ifndef __EVE_OPENCL_COMMANDQUEUE_H__
+#define __EVE_OPENCL_COMMANDQUEUE_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
@@ -46,14 +46,13 @@ namespace eve
 	namespace ocl
 	{
 		/** 
-		* \class eve::ocl::Context
+		* \class eve::ocl::CommandQueue
 		*
-		* \brief Stock OpenCL context with or without DirectX/OpenGL sharing.
-		* Create and manage OpenCL command queues, memory objects, programs, kernels, ...
+		* \brief Create and maintain OpenCL command queue.
 		*
 		* \note extends eve::mem::Pointer
 		*/
-		class Context final
+		class CommandQueue final
 			: public eve::mem::Pointer
 		{
 
@@ -64,7 +63,10 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			cl_context						m_context;				//!< OpenCL context.
+			cl_context						m_context;				//!< OpenCL context (read only).
+			cl_device_id					m_device;				//!< Linked OpenCL device (read only).
+
+			cl_command_queue				m_queue;				//!< OpenCL command queue.
 
 
 		private:
@@ -75,17 +77,17 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Context);
-			EVE_PROTECT_DESTRUCTOR(Context);
+			EVE_DISABLE_COPY(CommandQueue);
+			EVE_PROTECT_DESTRUCTOR(CommandQueue);
 
 		public:
 			/** \brief Create new pointer. */
-			static eve::ocl::Context * create_ptr(cl_context p_context);
+			static eve::ocl::CommandQueue * create_ptr(cl_context p_context, cl_device_id p_device);
 
 
 		private:
 			/** \brief Class constructor. */
-			explicit Context(cl_context p_context);
+			explicit CommandQueue(cl_context p_context, cl_device_id p_device);
 
 
 		protected:
@@ -100,4 +102,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_OPENCL_CONTEXT_H__
+#endif // __EVE_OPENCL_COMMANDQUEUE_H__

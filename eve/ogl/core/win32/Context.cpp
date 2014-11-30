@@ -90,8 +90,8 @@ void eve::ogl::Context::release_instance(void)
 //=================================================================================================
 eve::ogl::Context::Context(void)
 	// Members init
-	: m_hGLRC(0)
-	, m_hDC(0)
+	: m_hGLRC(nullptr)
+	, m_hDC(nullptr)
 	, m_pixelFormat()
 	, m_pixelFormatDecriptor()
 	, m_pixelFormatId(0)
@@ -175,13 +175,13 @@ void eve::ogl::Context::release(void)
 	if (m_hGLRC)
 	{
 		::wglDeleteContext(m_hGLRC);
-		m_hGLRC = 0;
+		m_hGLRC = nullptr;
 	}
 	// Draw context.
 	if (m_hDC)
 	{
 		::ReleaseDC(0, m_hDC);
-		m_hDC = 0;
+		m_hDC = nullptr;
 	}
 
 	m_pixelFormatId = 0;

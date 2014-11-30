@@ -50,7 +50,6 @@
 #endif
 
 
-
 namespace eve { namespace ocl { class Context; } }
 namespace eve { namespace thr { class SpinLock; } }
 
@@ -90,7 +89,7 @@ namespace eve
 			int32_t							m_pixelFormatId;		//!< Pixel format ID.
 
 		private:
-			eve::ocl::Context *				m_pContextOpenCL;		//!< OpenCL context.
+			eve::ocl::Context *				m_pContextOpenCL;		//!< OpenCL context (read only).
 
 
 			//////////////////////////////////////

@@ -41,6 +41,10 @@
 #include "eve/ocl/core/Debug.h"
 #endif
 
+#ifndef __EVE_OPENCL_COMMANDQUEUE_H__
+#include "eve/ocl/core/CommandQueue.h"
+#endif
+
 namespace eve
 {
 	namespace ocl
@@ -69,6 +73,11 @@ namespace eve
 
 		private:
 			cl_int							m_err;					//!< Error code.
+
+
+		private:
+			eve::ocl::CommandQueue *		m_pQueueTransfer;		//!< Data transfer command queue.
+			eve::ocl::CommandQueue *		m_pQueueProcess;		//!< Data processs command queue.
 
 
 			//////////////////////////////////////

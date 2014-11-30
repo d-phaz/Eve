@@ -30,7 +30,7 @@
 */
 
 // Main header.
-#include "eve/ocl/core/Context.h"
+#include "eve/ocl/core/CommandQueue.h"
 
 #ifndef __EVE_STRING_UTILS_H__
 #include "eve/str/Utils.h"
@@ -39,11 +39,12 @@
 
 
 //=================================================================================================
-eve::ocl::Context * eve::ocl::Context::create_ptr(cl_context p_context)
+eve::ocl::CommandQueue * eve::ocl::CommandQueue::create_ptr(cl_context p_context, cl_device_id p_device)
 {
 	EVE_ASSERT(p_context);
+	EVE_ASSERT(p_device);
 
-	eve::ocl::Context * ptr = new eve::ocl::Context(p_context);
+	eve::ocl::CommandQueue * ptr = new eve::ocl::CommandQueue(p_context, p_device);
 	ptr->init();
 	return ptr;
 }
@@ -51,11 +52,13 @@ eve::ocl::Context * eve::ocl::Context::create_ptr(cl_context p_context)
 
 
 //=================================================================================================
-eve::ocl::Context::Context(cl_context p_context)
+eve::ocl::CommandQueue::CommandQueue(cl_context p_context, cl_device_id p_device)
 	// Inheritance
 	: eve::mem::Pointer()
 	// Members init
 	, m_context(p_context)
+	, m_device(p_device)
+	, m_queue(nullptr)
 
 	, m_err(CL_SUCCESS)
 {}
@@ -63,16 +66,22 @@ eve::ocl::Context::Context(cl_context p_context)
 
 
 //=================================================================================================
-void eve::ocl::Context::init(void)
+void eve::ocl::CommandQueue::init(void)
 {
-	EVE_ASSERT(m_context);
+#if defined(EVE_OPENCL_ENABLE_BENCHMARK)
+	m_queue = clCreateCommandQueue(m_context, m_device, CL_QUEUE_PROFILING_ENABLE, &m_err);
+#else
+	m_queue = clCreateCommandQueue(m_context, m_device, 0, &m_err);
+#endif
+	EVE_OCL_CHECK_COMMAND_QUEUE(m_err);
 }
 
 //=================================================================================================
-void eve::ocl::Context::release(void)
+void eve::ocl::CommandQueue::release(void)
 {
-	if (m_context) {
-		clReleaseContext(m_context);
-		m_context = nullptr;
+	if (m_queue) {
+		m_err = clReleaseCommandQueue(m_queue);
+		EVE_OCL_CHECK_COMMAND_QUEUE(m_err);
+		m_queue = nullptr;
 	}
 }

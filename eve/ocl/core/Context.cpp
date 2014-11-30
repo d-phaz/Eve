@@ -68,13 +68,21 @@ void eve::ocl::Context::init(void)
 {
 	EVE_ASSERT(m_context);
 	EVE_ASSERT(m_device);
+
+	// Create command queues.
+	m_pQueueTransfer	= eve::ocl::CommandQueue::create_ptr(m_context, m_device);
+	m_pQueueProcess		= eve::ocl::CommandQueue::create_ptr(m_context, m_device);
 }
 
 //=================================================================================================
 void eve::ocl::Context::release(void)
 {
+	EVE_RELEASE_PTR(m_pQueueTransfer);
+	EVE_RELEASE_PTR(m_pQueueProcess);
+
 	if (m_context) {
-		clReleaseContext(m_context);
+		m_err = clReleaseContext(m_context);
+		EVE_OCL_CHECK_CONTEXT(m_err);
 		m_context = nullptr;
 	}
 }
