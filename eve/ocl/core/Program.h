@@ -30,8 +30,8 @@
  */
 
 #pragma once
-#ifndef __EVE_OPENCL_COMMANDQUEUE_H__
-#define __EVE_OPENCL_COMMANDQUEUE_H__
+#ifndef __EVE_OPENCL_PROGRAM_H__
+#define __EVE_OPENCL_PROGRAM_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
@@ -46,13 +46,13 @@ namespace eve
 	namespace ocl
 	{
 		/** 
-		* \class eve::ocl::CommandQueue
+		* \class eve::ocl::Program
 		*
-		* \brief Create and maintain OpenCL command queue.
+		* \brief Create and maintain OpenCL program and contained kernel(s).
 		*
 		* \note extends eve::mem::Pointer
 		*/
-		class CommandQueue final
+		class Program final
 			: public eve::mem::Pointer
 		{
 
@@ -66,8 +66,9 @@ namespace eve
 			cl_context						m_context;				//!< OpenCL context (read only).
 			cl_device_id					m_device;				//!< Linked OpenCL device (read only).
 
-			cl_command_queue				m_queue;				//!< OpenCL command queue.
-
+			cl_program						m_program;				//!< OpenCL program.
+			std::wstring					m_path;					//!< Program file path.
+			char *							m_pPrgmContent;			//!< Program content.
 
 		private:
 			cl_int							m_err;					//!< Error code.
@@ -77,29 +78,37 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(CommandQueue);
-			EVE_PROTECT_DESTRUCTOR(CommandQueue);
+			EVE_DISABLE_COPY(Program);
+			EVE_PROTECT_DESTRUCTOR(Program);
 
 		public:
 			/** \brief Create new pointer. */
-			static eve::ocl::CommandQueue * create_ptr(cl_context p_context, cl_device_id p_device);
+			static eve::ocl::Program * create_ptr(cl_context p_context, cl_device_id p_device, const std::wstring & p_path);
 
 
 		private:
 			/** \brief Class constructor. */
-			explicit CommandQueue(cl_context p_context, cl_device_id p_device);
+			explicit Program(cl_context p_context, cl_device_id p_device, const std::wstring & p_path);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void);
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void);
 
-		}; // class CommandQueue
+
+		private:
+			/** 
+			* Loads a Program file and prepends the cPreamble to the code.
+			* Returns the source string if succeeded, 0 otherwise.
+			*/
+			char * load(const char * p_path, const char * p_preamble, size_t * p_length);
+
+		}; // class Program
 
 	} // namespace ocl
 
 } // namespace eve
 
-#endif // __EVE_OPENCL_COMMANDQUEUE_H__
+#endif // __EVE_OPENCL_PROGRAM_H__
