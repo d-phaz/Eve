@@ -215,6 +215,8 @@ set( OPENCL_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/External.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.h )
 
