@@ -94,10 +94,15 @@ namespace eve
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void);
 
+
+		public:
+			/** \brief Set argument. Arguments are indexed using declaration order in kernel method. */
+			void setArgument(cl_uint p_index, size_t p_size, void * p_arg);
+
 		}; // class Kernel
 
 	} // namespace ocl
 
 } // namespace eve
 
-#endif // __EVE_OPENCL_PROGRAM_H__
+#endif // __EVE_OPENCL_KERNEL_H__

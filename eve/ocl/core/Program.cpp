@@ -60,6 +60,7 @@ eve::ocl::Program::Program(cl_context p_context, cl_device_id p_device, const st
 	, m_device(p_device)
 	, m_path(p_path)
 	, m_pPrgmContent(nullptr)
+	, m_pKernels(nullptr)
 
 	, m_err(CL_SUCCESS)
 {}
@@ -97,17 +98,27 @@ void eve::ocl::Program::init(void)
 		EVE_LOG_ERROR("OpenCL program build log: %s", wLog.c_str());
 		free(build_log);
 	}
+
+	m_pKernels = new std::vector<eve::ocl::Kernel*>();
 }
 
 //=================================================================================================
 void eve::ocl::Program::release(void)
 {
+	while (!m_pKernels->empty())
+	{
+		eve::ocl::Kernel * tmp = m_pKernels->back();
+		m_pKernels->pop_back();
+		EVE_RELEASE_PTR(tmp);
+	}
+	EVE_RELEASE_PTR_CPP(m_pKernels);
+
+
 	if (m_program) {
 		m_err = clReleaseProgram(m_program);
 		EVE_OCL_CHECK_PROGRAM(m_err);
 		m_program = nullptr;
 	}
-
 	EVE_RELEASE_PTR_C_SAFE(m_pPrgmContent);
 }
 
@@ -116,11 +127,10 @@ void eve::ocl::Program::release(void)
 //=================================================================================================
 char * eve::ocl::Program::load(const char * p_path, const char * p_preamble, size_t * p_length)
 {
-	// locals 
 	FILE* pFileStream = NULL;
 	size_t szSourceLength;
 
-	// open the OpenCL source code file
+	// Open OpenCL source code file.
 #if defined(EVE_OS_WIN)
 	if (fopen_s(&pFileStream, p_path, "rb") != 0)
 	{
@@ -136,12 +146,12 @@ char * eve::ocl::Program::load(const char * p_path, const char * p_preamble, siz
 
 	size_t szPreambleLength = strlen(p_preamble);
 
-	// get the length of the source code
+	// Get source code length.
 	fseek(pFileStream, 0, SEEK_END);
 	szSourceLength = ftell(pFileStream);
 	fseek(pFileStream, 0, SEEK_SET);
 
-	// allocate a buffer for the source code string and read it in
+	// Allocate a buffer for the source code string and read it in.
 	char* cSourceString = (char *)malloc(szSourceLength + szPreambleLength + 1);
 	memcpy(cSourceString, p_preamble, szPreambleLength);
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)
@@ -151,7 +161,7 @@ char * eve::ocl::Program::load(const char * p_path, const char * p_preamble, siz
 		return 0;
 	}
 
-	// close the file and return the total length of the combined (preamble + source) string
+	// Close the file and return the total length of the combined (preamble + source) string.
 	fclose(pFileStream);
 	if (p_length != 0)
 	{
@@ -160,4 +170,14 @@ char * eve::ocl::Program::load(const char * p_path, const char * p_preamble, siz
 	cSourceString[szSourceLength + szPreambleLength] = '\0';
 
 	return cSourceString;
+}
+
+
+
+//=================================================================================================
+eve::ocl::Kernel * eve::ocl::Program::createKernel(const std::string & p_name)
+{
+	eve::ocl::Kernel * ret = eve::ocl::Kernel::create_ptr(m_program, p_name);
+	m_pKernels->push_back(ret);
+	return ret;
 }

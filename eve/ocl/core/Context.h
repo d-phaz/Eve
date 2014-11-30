@@ -45,6 +45,11 @@
 #include "eve/ocl/core/CommandQueue.h"
 #endif
 
+#ifndef __EVE_OPENCL_PROGRAM_H__
+#include "eve/ocl/core/Program.h"
+#endif
+
+
 namespace eve
 {
 	namespace ocl
@@ -77,7 +82,7 @@ namespace eve
 
 		private:
 			eve::ocl::CommandQueue *		m_pQueueTransfer;		//!< Data transfer command queue.
-			eve::ocl::CommandQueue *		m_pQueueProcess;		//!< Data processs command queue.
+			eve::ocl::CommandQueue *		m_pQueueProcess;		//!< Data process command queue.
 
 
 			//////////////////////////////////////

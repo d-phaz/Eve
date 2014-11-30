@@ -41,6 +41,11 @@
 #include "eve/ocl/core/Debug.h"
 #endif
 
+#ifndef __EVE_OPENCL_KERNEL_H__
+#include "eve/ocl/core/Kernel.h"
+#endif
+
+
 namespace eve
 {
 	namespace ocl
@@ -63,15 +68,17 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			cl_context						m_context;				//!< OpenCL context (read only).
-			cl_device_id					m_device;				//!< Linked OpenCL device (read only).
+			cl_context							m_context;				//!< OpenCL context (read only).
+			cl_device_id						m_device;				//!< Linked OpenCL device (read only).
 
-			cl_program						m_program;				//!< OpenCL program.
-			std::wstring					m_path;					//!< Program file path.
-			char *							m_pPrgmContent;			//!< Program content.
+			cl_program							m_program;				//!< OpenCL program.
+			std::wstring						m_path;					//!< Program file path.
+			char *								m_pPrgmContent;			//!< Program content.
+
+			std::vector<eve::ocl::Kernel*> *	m_pKernels;				//!< Program kernel(s).
 
 		private:
-			cl_int							m_err;					//!< Error code.
+			cl_int								m_err;					//!< Error code.
 
 
 			//////////////////////////////////////
@@ -104,6 +111,12 @@ namespace eve
 			* Returns the source string if succeeded, 0 otherwise.
 			*/
 			char * load(const char * p_path, const char * p_preamble, size_t * p_length);
+
+
+		public:
+			/** \brief Create and return OpenCL kernel. Program has ownership of created kernels. */
+			eve::ocl::Kernel * createKernel(const std::string & p_name);
+
 
 		}; // class Program
 

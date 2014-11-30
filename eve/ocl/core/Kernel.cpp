@@ -81,3 +81,12 @@ void eve::ocl::Kernel::release(void)
 		m_kernel = nullptr;
 	}
 }
+
+
+
+//=================================================================================================
+void eve::ocl::Kernel::setArgument(cl_uint p_index, size_t p_size, void * p_arg)
+{
+	m_err = clSetKernelArg(m_kernel, p_index, p_size, p_arg);
+	EVE_OCL_CHECK_KERNEL(m_err);
+}
