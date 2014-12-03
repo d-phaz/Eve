@@ -30,29 +30,29 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_INCLUDES_H__
-#define __EVE_MATH_INCLUDES_H__
+#ifndef __EVE_MATH_CORE_INCLUDES_H__
+#define __EVE_MATH_CORE_INCLUDES_H__
 
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_MATH_H__
+#include "eve/math/core/Math.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_H__
-#include "eve/math/TMatrix.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_H__
+#include "eve/math/core/TMatrix.h"
 #endif
 
-#ifndef __EVE_MATH_TQUATERNION_H__
-#include "eve/math/TQuaternion.h"
+#ifndef __EVE_MATH_CORE_TQUATERNION_H__
+#include "eve/math/core/TQuaternion.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#include "eve/math/core/TVector.h"
 #endif
 
-#ifndef __EVE_MATH_TYPES_H__
-#include "eve/math/Types.h"
+#ifndef __EVE_MATH_CORE_TYPES_H__
+#include "eve/math/core/Types.h"
 #endif
 
 
-#endif // __EVE_MATH_INCLUDES_H__
+#endif // __EVE_MATH_CORE_INCLUDES_H__

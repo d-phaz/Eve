@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_CONTEXT_H__
-#define __EVE_OPENGL_CONTEXT_H__
+#ifndef __EVE_OPENGL_CORE_CONTEXT_H__
+#define __EVE_OPENGL_CORE_CONTEXT_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -45,7 +45,7 @@
 #include "eve/mess/Includes.h"
 #endif
 
-#ifndef __EVE_OPENGL_PIXEL_FORMAT_H__
+#ifndef __EVE_OPENGL_CORE_PIXEL_FORMAT_H__
 #include "eve/ogl/core/win32/PixelFormat.h"
 #endif
 
@@ -280,4 +280,4 @@ namespace eve
 //=================================================================================================
 inline const eve::ogl::SubContext * eve::ogl::SubContext::get_current_context(void) { return m_p_context_current; }
 
-#endif // __EVE_OPENGL_CONTEXT_H__
+#endif // __EVE_OPENGL_CORE_CONTEXT_H__

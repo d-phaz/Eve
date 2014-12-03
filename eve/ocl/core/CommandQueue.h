@@ -30,14 +30,14 @@
  */
 
 #pragma once
-#ifndef __EVE_OPENCL_COMMANDQUEUE_H__
-#define __EVE_OPENCL_COMMANDQUEUE_H__
+#ifndef __EVE_OPENCL_CORE_COMMANDQUEUE_H__
+#define __EVE_OPENCL_CORE_COMMANDQUEUE_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
 #endif
 
-#ifndef __EVE_OPENCL_DEBUG_H__
+#ifndef __EVE_OPENCL_CORE_DEBUG_H__
 #include "eve/ocl/core/Debug.h"
 #endif
 
@@ -102,4 +102,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_OPENCL_COMMANDQUEUE_H__
+#endif // __EVE_OPENCL_CORE_COMMANDQUEUE_H__

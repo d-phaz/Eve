@@ -30,13 +30,11 @@
 */
 
 #include "eve/app/App.h"
-#include "eve/math/Includes.h"
+#include "eve/math/core/Includes.h"
 #include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 #include "eve/time/Absolute.h"
 #include "eve/time/Clock.h"
-
-#include "eve/math/Includes.h"
 
 class Example final
 	: public eve::sys::View

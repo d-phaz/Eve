@@ -32,11 +32,11 @@
 // Main header
 #include "eve/ogl/core/win32/PixelFormat.h"
 
-#ifndef __EVE_OPENGL_EXTERNAL_H__
+#ifndef __EVE_OPENGL_CORE_EXTERNAL_H__
 #include "eve/ogl/core/External.h"
 #endif
 
-#ifndef __EVE_OPENGL_MACRO_H__
+#ifndef __EVE_OPENGL_CORE_MACRO_H__
 #include "eve/ogl/core/Macro.h"
 #endif
 

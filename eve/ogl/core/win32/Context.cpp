@@ -36,7 +36,7 @@
 #include "eve/ogl/core/Debug.h"
 #endif
 
-#ifndef __EVE_OPENCL_ENGINE_H__
+#ifndef __EVE_OPENCL_CORE_ENGINE_H__
 #include "eve/ocl/core/Engine.h"
 #endif
 

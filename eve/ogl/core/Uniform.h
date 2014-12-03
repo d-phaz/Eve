@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_UNIFORM_H__
-#define __EVE_OPENGL_UNIFORM_H__
+#ifndef __EVE_OPENGL_CORE_UNIFORM_H__
+#define __EVE_OPENGL_CORE_UNIFORM_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -238,4 +238,4 @@ inline const int32_t eve::ogl::Uniform::get_uniform_buffer_offset_alignment(void
 //=================================================================================================
 inline const GLuint eve::ogl::Uniform::getId(void) const	{ return m_id; }
 
-#endif // __EVE_OPENGL_TEXTURE_H__
+#endif // __EVE_OPENGL_CORE_UNIFORM_H__

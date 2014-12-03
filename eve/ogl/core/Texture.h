@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_TEXTURE_H__
-#define __EVE_OPENGL_TEXTURE_H__
+#ifndef __EVE_OPENGL_CORE_TEXTURE_H__
+#define __EVE_OPENGL_CORE_TEXTURE_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -206,7 +206,7 @@ inline void eve::ogl::Texture::getSize(uint32_t & p_width, uint32_t & p_height)
 	p_width  = m_width;
 	p_height = m_height;
 }
-inline const uint32_t eve::ogl::Texture::getWidth(void) const  { return m_width; }
+inline const uint32_t eve::ogl::Texture::getWidth(void) const  { return m_width;  }
 inline const uint32_t eve::ogl::Texture::getHeight(void) const { return m_height; }
 
-#endif // __EVE_OPENGL_TEXTURE_H__
+#endif // __EVE_OPENGL_CORE_TEXTURE_H__

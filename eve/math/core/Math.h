@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_MATH_H__
-#define __EVE_MATH_MATH_H__
+#ifndef __EVE_MATH_CORE_MATH_H__
+#define __EVE_MATH_CORE_MATH_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -392,4 +392,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_MATH_MATH_H__
+#endif // __EVE_MATH_CORE_MATH_H__

@@ -30,22 +30,22 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENCL_CONTEXT_H__
-#define __EVE_OPENCL_CONTEXT_H__
+#ifndef __EVE_OPENCL_CORE_CONTEXT_H__
+#define __EVE_OPENCL_CORE_CONTEXT_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
 #endif
 
-#ifndef __EVE_OPENCL_DEBUG_H__
+#ifndef __EVE_OPENCL_CORE_DEBUG_H__
 #include "eve/ocl/core/Debug.h"
 #endif
 
-#ifndef __EVE_OPENCL_COMMANDQUEUE_H__
+#ifndef __EVE_OPENCL_CORE_COMMANDQUEUE_H__
 #include "eve/ocl/core/CommandQueue.h"
 #endif
 
-#ifndef __EVE_OPENCL_PROGRAM_H__
+#ifndef __EVE_OPENCL_CORE_PROGRAM_H__
 #include "eve/ocl/core/Program.h"
 #endif
 
@@ -108,10 +108,15 @@ namespace eve
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void);
 
+
+		public:
+			/** \brief Create and return OpenCL program. */
+			eve::ocl::Program * createProgram(const std::wstring & p_path);
+
 		}; // class Context
 
 	} // namespace ocl
 
 } // namespace eve
 
-#endif // __EVE_OPENCL_CONTEXT_H__
+#endif // __EVE_OPENCL_CORE_CONTEXT_H__

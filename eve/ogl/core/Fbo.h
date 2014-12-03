@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_FBO_H__
-#define __EVE_OPENGL_FBO_H__
+#ifndef __EVE_OPENGL_CORE_FBO_H__
+#define __EVE_OPENGL_CORE_FBO_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -241,4 +241,4 @@ inline void eve::ogl::Fbo::getSize(uint32_t & p_width, uint32_t & p_height)
 inline const uint32_t eve::ogl::Fbo::getWidth(void) const  { return m_width;  }
 inline const uint32_t eve::ogl::Fbo::getHeight(void) const { return m_height; }
 
-#endif // __EVE_OPENGL_FBO_H__
+#endif // __EVE_OPENGL_CORE_FBO_H__

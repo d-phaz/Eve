@@ -30,18 +30,18 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENCL_ENGINE_H__
-#define __EVE_OPENCL_ENGINE_H__
+#ifndef __EVE_OPENCL_CORE_ENGINE_H__
+#define __EVE_OPENCL_CORE_ENGINE_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
 #endif
 
-#ifndef __EVE_OPENCL_DEBUG_H__
+#ifndef __EVE_OPENCL_CORE_DEBUG_H__
 #include "eve/ocl/core/Debug.h"
 #endif
 
-#ifndef __EVE_OPENCL_CONTEXT_H__
+#ifndef __EVE_OPENCL_CORE_CONTEXT_H__
 #include "eve/ocl/core/Context.h"
 #endif
 
@@ -197,4 +197,4 @@ EVE_FORCE_INLINE eve::ocl::Context *			eve::ocl::Engine::get_context(void)				{ 
 EVE_FORCE_INLINE eve::ocl::Context *			eve::ocl::Engine::get_context_OpenGL(void)		{ EVE_ASSERT(m_p_instance); EVE_ASSERT(m_p_instance->m_pContextGL); return m_p_instance->m_pContextGL; }
 EVE_FORCE_INLINE eve::ocl::Context *			eve::ocl::Engine::get_context_DirectX(void)		{ EVE_ASSERT(m_p_instance); EVE_ASSERT(m_p_instance->m_pContextDX); return m_p_instance->m_pContextDX; }
 
-#endif // __EVE_OPENCL_ENGINE_H__
+#endif // __EVE_OPENCL_CORE_ENGINE_H__

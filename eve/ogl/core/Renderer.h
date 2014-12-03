@@ -30,34 +30,34 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_RENDER_H__
-#define __EVE_OPENGL_RENDER_H__
+#ifndef __EVE_OPENGL_CORE_RENDER_H__
+#define __EVE_OPENGL_CORE_RENDER_H__
 
 #ifndef __EVE_CORE_RENDERER_H__
 #include "eve/core/Renderer.h"
 #endif
 
-#ifndef __EVE_OPENGL_FBO_H__
+#ifndef __EVE_OPENGL_CORE_FBO_H__
 #include "eve/ogl/core/Fbo.h"
 #endif
 
-#ifndef __EVE_OPENGL_PBO_H__
+#ifndef __EVE_OPENGL_CORE_PBO_H__
 #include "eve/ogl/core/Pbo.h"
 #endif
 
-#ifndef __EVE_OPENGL_TEXTURE_H__
+#ifndef __EVE_OPENGL_CORE_TEXTURE_H__
 #include "eve/ogl/core/Texture.h"
 #endif
 
-#ifndef __EVE_OPENGL_SHADER_H__
+#ifndef __EVE_OPENGL_CORE_SHADER_H__
 #include "eve/ogl/core/Shader.h"
 #endif
 
-#ifndef __EVE_OPENGL_UNIFORM_H__
+#ifndef __EVE_OPENGL_CORE_UNIFORM_H__
 #include "eve/ogl/core/Uniform.h"
 #endif
 
-#ifndef __EVE_OPENGL_VAO_H__
+#ifndef __EVE_OPENGL_CORE_VAO_H__
 #include "eve/ogl/core/Vao.h"
 #endif
 
@@ -182,4 +182,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_OPENGL_RENDER_H__
+#endif // __EVE_OPENGL_CORE_RENDER_H__

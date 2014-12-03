@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_SHADER_H__
-#define __EVE_OPENGL_SHADER_H__
+#ifndef __EVE_OPENGL_CORE_SHADER_H__
+#define __EVE_OPENGL_CORE_SHADER_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -211,4 +211,4 @@ inline const GLuint eve::ogl::Shader::getId(void) const	{ return m_id; }
 //=================================================================================================
 inline const GLuint eve::ogl::Shader::getProgramId(eve::ogl::ProgramType p_type) const { EVE_ASSERT(m_prgmId[p_type] != 0); return m_prgmId[p_type]; }
 
-#endif // __EVE_OPENGL_TEXTURE_H__
+#endif // __EVE_OPENGL_CORE_SHADER_H__

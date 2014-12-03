@@ -29,32 +29,32 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if !defined(__EVE_MATH_TMATRIX_H__)
+#if !defined(__EVE_MATH_CORE_TMATRIX_H__)
 #error "Do not include this header directly, include eve/math/TMatrix.h instead"
 #endif
 
 #pragma once
-#ifndef __EVE_MATH_TMATRIX_44_H__
-#define __EVE_MATH_TMATRIX_44_H__
+#ifndef __EVE_MATH_CORE_TMATRIX_44_H__
+#define __EVE_MATH_CORE_TMATRIX_44_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_MATH_H__
+#include "eve/math/core/Math.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#include "eve/math/core/TVector.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_22_H__
-#include "eve/math/TMatrix22.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_22_H__
+#include "eve/math/core/TMatrix22.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_33_H__
-#include "eve/math/TMatrix33.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_33_H__
+#include "eve/math/core/TMatrix33.h"
 #endif
 
 
@@ -1717,4 +1717,4 @@ static EVE_FORCE_INLINE eve::math::TVec3<T> un_project(const eve::math::TVec3<T>
 	return eve::math::TVec3<T>(obj.xyz());
 }
 
-#endif // __EVE_MATH_TMATRIX_44_H__
+#endif // __EVE_MATH_CORE_TMATRIX_44_H__

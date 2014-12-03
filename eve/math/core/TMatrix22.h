@@ -29,24 +29,24 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if !defined(__EVE_MATH_TMATRIX_H__)
+#if !defined(__EVE_MATH_CORE_TMATRIX_H__)
 #error "Do not include this header directly, include eve/math/TMatrix.h instead"
 #endif
 
 #pragma once
-#ifndef __EVE_MATH_TMATRIX_22_H__
-#define __EVE_MATH_TMATRIX_22_H__
+#ifndef __EVE_MATH_CORE_TMATRIX_22_H__
+#define __EVE_MATH_CORE_TMATRIX_22_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_MATH_H__
+#include "eve/math/core/Math.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#include "eve/math/core/TVector.h"
 #endif
 
 
@@ -721,4 +721,4 @@ eve::math::TMatrix22<T> eve::math::TMatrix22<T>::createScale(const eve::math::TV
 	return ret;
 }
 
-#endif // __EVE_MATH_TMATRIX_22_H__
+#endif // __EVE_MATH_CORE_TMATRIX_22_H__

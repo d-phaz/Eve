@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_EXTERNAL_H__
-#define __EVE_OPENGL_EXTERNAL_H__
+#ifndef __EVE_OPENGL_CORE_EXTERNAL_H__
+#define __EVE_OPENGL_CORE_EXTERNAL_H__
 
 
 #ifndef __EVE_CORE_SYSTEM_DEFINITION__
@@ -61,4 +61,4 @@
 #endif
 
 
-#endif // __EVE_OPENGL_EXTERNAL_H__
+#endif // __EVE_OPENGL_CORE_EXTERNAL_H__

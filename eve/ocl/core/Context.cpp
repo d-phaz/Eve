@@ -86,3 +86,11 @@ void eve::ocl::Context::release(void)
 		m_context = nullptr;
 	}
 }
+
+
+
+//=================================================================================================
+eve::ocl::Program * eve::ocl::Context::createProgram(const std::wstring & p_path)
+{
+	return eve::ocl::Program::create_ptr(m_context, m_device, p_path);
+}

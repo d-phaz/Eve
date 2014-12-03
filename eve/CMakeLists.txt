@@ -121,7 +121,7 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 		)
 	
 	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
-	source_group( "DirectX11" FILES ${DIRECTX11_SRCS} )
+	source_group( "DirectX11 Core" FILES ${DIRECTX11_SRCS} )
 endif()
 
 
@@ -159,22 +159,22 @@ source_group( "Files" FILES ${FILES_SRCS} )
 # Math.
 #################################################
 set( MATH_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Simd.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix22.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix33.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix44.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TQuaternion.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector2.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector3.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector4.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Math.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Simd.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix22.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix33.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix44.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TQuaternion.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector2.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector3.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector4.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Types.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
-source_group( "Math" FILES ${MATH_SRCS} )
+source_group( "Math Core" FILES ${MATH_SRCS} )
 
 
 # Memory.
@@ -226,7 +226,7 @@ set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.
 set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
-source_group( "OpenCL" FILES ${OPENCL_SRCS} )
+source_group( "OpenCL Core" FILES ${OPENCL_SRCS} )
 
 
 # OpenGL.
@@ -261,7 +261,7 @@ set( OPENGL_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
-source_group( "OpenGL" FILES ${OPENGL_SRCS} )
+source_group( "OpenGL Core" FILES ${OPENGL_SRCS} )
 
 
 # String.

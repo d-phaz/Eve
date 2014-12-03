@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_PBO_H__
-#define __EVE_OPENGL_PBO_H__
+#ifndef __EVE_OPENGL_CORE_PBO_H__
+#define __EVE_OPENGL_CORE_PBO_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -204,4 +204,4 @@ inline const uint32_t eve::ogl::Pbo::getHeight(void) const { return m_height; }
 //=================================================================================================
 inline const uint32_t eve::ogl::Pbo::getNumChannels(void) const { return m_numChannels; }
 
-#endif // __EVE_OPENGL_PBO_H__
+#endif // __EVE_OPENGL_CORE_PBO_H__

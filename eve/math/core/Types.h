@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_TYPES_H__
-#define __EVE_MATH_TYPES_H__
+#ifndef __EVE_MATH_CORE_TYPES_H__
+#define __EVE_MATH_CORE_TYPES_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -41,12 +41,12 @@
 #include "eve/mem/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_H__
-#include "eve/math/TMatrix.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_H__
+#include "eve/math/core/TMatrix.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#include "eve/math/core/TVector.h"
 #endif
 
 
@@ -105,4 +105,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_MATH_TYPES_H__
+#endif // __EVE_MATH_CORE_TYPES_H__

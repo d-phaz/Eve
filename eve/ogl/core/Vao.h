@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_VAO_H__
-#define __EVE_OPENGL_VAO_H__
+#ifndef __EVE_OPENGL_CORE_VAO_H__
+#define __EVE_OPENGL_CORE_VAO_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -194,4 +194,4 @@ namespace eve
 //=================================================================================================
 inline const GLuint eve::ogl::Vao::getId(void) const	{ return m_id; }
 
-#endif // __EVE_OPENGL_VAO_H__
+#endif // __EVE_OPENGL_CORE_VAO_H__

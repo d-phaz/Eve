@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_PIXEL_FORMAT_H__
-#define __EVE_OPENGL_PIXEL_FORMAT_H__
+#ifndef __EVE_OPENGL_CORE_PIXEL_FORMAT_H__
+#define __EVE_OPENGL_CORE_PIXEL_FORMAT_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -513,9 +513,9 @@ inline const bool eve::ogl::PixelFormat::depth(void) const					{ return this->te
 inline const bool eve::ogl::PixelFormat::rgba(void) const					{ return this->testOption(pf_optRgba);				}
 inline const bool eve::ogl::PixelFormat::alpha(void) const					{ return this->testOption(pf_optAlphaChannel);		}
 inline const bool eve::ogl::PixelFormat::accum(void) const					{ return this->testOption(pf_optAccumBuffer);		}
-inline const bool eve::ogl::PixelFormat::stencil(void) const					{ return this->testOption(pf_optStencilBuffer);		}
+inline const bool eve::ogl::PixelFormat::stencil(void) const				{ return this->testOption(pf_optStencilBuffer);		}
 inline const bool eve::ogl::PixelFormat::stereo(void) const					{ return this->testOption(pf_optStereoBuffers);		}
-inline const bool eve::ogl::PixelFormat::directRendering(void) const			{ return this->testOption(pf_optDirectRendering);	}
+inline const bool eve::ogl::PixelFormat::directRendering(void) const		{ return this->testOption(pf_optDirectRendering);	}
 inline const bool eve::ogl::PixelFormat::sampleBuffers(void) const			{ return this->testOption(pf_optSampleBuffers);		}
 inline const bool eve::ogl::PixelFormat::hasOverlay(void) const				{ return this->testOption(pf_optHasOverlay);		}
 
@@ -523,7 +523,7 @@ inline const bool eve::ogl::PixelFormat::hasOverlay(void) const				{ return this
 
 //=================================================================================================
 inline const int32_t eve::ogl::PixelFormat::samples(void) const				{ return m_numSamples;		}
-inline const int32_t eve::ogl::PixelFormat::swapInterval(void) const			{ return m_swapInterval;	}
+inline const int32_t eve::ogl::PixelFormat::swapInterval(void) const		{ return m_swapInterval;	}
 inline const int32_t eve::ogl::PixelFormat::plane(void) const				{ return m_pln;				}
 
 
@@ -531,4 +531,4 @@ inline const int32_t eve::ogl::PixelFormat::plane(void) const				{ return m_pln;
 //=================================================================================================
 inline eve::ogl::PixelFormatProfile eve::ogl::PixelFormat::profile(void) const { return m_profile; }
 
-#endif // __EVE_OPENGL_PIXEL_FORMAT_H__
+#endif // __EVE_OPENGL_CORE_PIXEL_FORMAT_H__

@@ -29,20 +29,20 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if !defined(__EVE_MATH_TVECTOR_H__)
+#if !defined(__EVE_MATH_CORE_TVECTOR_H__)
 #error "Do not include this header directly, include eve/math/Tvector.h instead"
 #endif
 
 #pragma once
-#ifndef __EVE_MATH_TVECTOR_4_H__
-#define __EVE_MATH_TVECTOR_4_H__
+#ifndef __EVE_MATH_CORE_TVECTOR_4_H__
+#define __EVE_MATH_CORE_TVECTOR_4_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_MATH_H__
+#include "eve/math/core/Math.h"
 #endif
 
 
@@ -1139,4 +1139,4 @@ template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::wAx
 template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::NaN(void)   { return eve::math::TVec4<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
 
 
-#endif // __EVE_MATH_TVECTOR_4_H__
+#endif // __EVE_MATH_CORE_TVECTOR_4_H__

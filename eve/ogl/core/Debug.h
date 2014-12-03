@@ -30,18 +30,18 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_DEBUG_H__
-#define __EVE_OPENGL_DEBUG_H__
+#ifndef __EVE_OPENGL_CORE_DEBUG_H__
+#define __EVE_OPENGL_CORE_DEBUG_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_OPENGL_EXTERNAL_H__
+#ifndef __EVE_OPENGL_CORE_EXTERNAL_H__
 #include "eve/ogl/core/External.h"
 #endif
 
-#ifndef __EVE_OPENGL_MACRO_H__
+#ifndef __EVE_OPENGL_CORE_MACRO_H__
 #include "eve/ogl/core/Macro.h"
 #endif
 
@@ -96,4 +96,4 @@ namespace eve
 #define EVE_OGL_CHECK_SHADER(ID)
 #endif
 
-#endif // __EVE_OPENGL_RENDER_H__
+#endif // __EVE_OPENGL_CORE_DEBUG_H__
