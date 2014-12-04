@@ -73,16 +73,16 @@ namespace eve
 			pf_optSampleBuffers			= 0x0200,
 			pf_optDeprecatedFunctions	= 0x0400,
 
-			pf_optSingleBuffer			= pf_optDoubleBuffer << 16,
-			pf_optNoDepthBuffer			= pf_optDepthBuffer << 16,
-			pf_optColorIndex			= pf_optRgba << 16,
-			pf_optNoAlphaChannel		= pf_optAlphaChannel << 16,
-			pf_optNoAccumBuffer			= pf_optAccumBuffer << 16,
-			pf_optNoStencilBuffer		= pf_optStencilBuffer << 16,
-			pf_optNoStereoBuffers		= pf_optStereoBuffers << 16,
-			pf_optIndirectRendering		= pf_optDirectRendering << 16,
-			pf_optNoOverlay				= pf_optHasOverlay << 16,
-			pf_optNoSampleBuffers		= pf_optSampleBuffers << 16,
+			pf_optSingleBuffer			= pf_optDoubleBuffer		<< 16,
+			pf_optNoDepthBuffer			= pf_optDepthBuffer			<< 16,
+			pf_optColorIndex			= pf_optRgba				<< 16,
+			pf_optNoAlphaChannel		= pf_optAlphaChannel		<< 16,
+			pf_optNoAccumBuffer			= pf_optAccumBuffer			<< 16,
+			pf_optNoStencilBuffer		= pf_optStencilBuffer		<< 16,
+			pf_optNoStereoBuffers		= pf_optStereoBuffers		<< 16,
+			pf_optIndirectRendering		= pf_optDirectRendering		<< 16,
+			pf_optNoOverlay				= pf_optHasOverlay			<< 16,
+			pf_optNoSampleBuffers		= pf_optSampleBuffers		<< 16,
 			pf_optNoDeprecatedFunctions = pf_optDeprecatedFunctions << 16
 		};
 

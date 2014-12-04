@@ -128,7 +128,7 @@ namespace eve
 			TMatrix22<T>&		operator=(const TMatrix22<FromT>& rhs);
 
 			bool				equalCompare(const TMatrix22<T>& rhs, T epsilon) const;
-			bool				operator==(const TMatrix22<T> &rhs) const { return equalCompare(rhs, (T)EPSILON); }
+			bool				operator==(const TMatrix22<T> &rhs) const { return equalCompare(rhs, (T)EVE_MATH_EPSILON); }
 			bool				operator!=(const TMatrix22<T> &rhs) const { return !(*this == rhs); }
 
 			TMatrix22<T>&		operator*=(const TMatrix22<T> &rhs);
@@ -187,8 +187,8 @@ namespace eve
 			void				transpose(void);
 			TMatrix22<T>		transposed(void) const;
 
-			void				invert(T epsilon = EPSILON) { *this = inverted(epsilon); }
-			TMatrix22<T>		inverted(T epsilon = EPSILON) const;
+			void				invert(T epsilon = EVE_MATH_EPSILON) { *this = inverted(epsilon); }
+			TMatrix22<T>		inverted(T epsilon = EVE_MATH_EPSILON) const;
 
 			// pre-multiplies row vector v - no divide by w
 			eve::math::TVec2<T>	preMultiply(const eve::math::TVec2<T> &v) const;

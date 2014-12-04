@@ -629,7 +629,7 @@ namespace eve
 
 			static eve::math::TQuaternion<T> identity(void)
 			{
-				return eve::math::TQuaternion();
+				return eve::math::TQuaternion<T>();
 			}
 
 			eve::math::TMatrix33<T> toMatrix33(void) const

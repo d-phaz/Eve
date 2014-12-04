@@ -128,10 +128,6 @@ namespace eve
 		EVE_FORCE_INLINE double toDegrees(double x)					{ return x * EVE_180_PID; }
 		
 		
-		EVE_FORCE_INLINE float  lerp(const float  &a, const float  &b, float  factor)	{ return a + (b - a) * factor; }
-		EVE_FORCE_INLINE double lerp(const double &a, const double &b, double factor)	{ return a + (b - a) * factor; }
-		
-		
 		EVE_FORCE_INLINE float  lmap(float  val, float  inMin, float  inMax, float  outMin, float  outMax) { return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin)); }
 		EVE_FORCE_INLINE double lmap(double val, double inMin, double inMax, double outMin, double outMax) { return outMin + (outMax - outMin) * ((val - inMin) / (inMax - inMin)); }
 		

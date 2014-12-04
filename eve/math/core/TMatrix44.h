@@ -153,7 +153,7 @@ namespace eve
 			TMatrix44<T>&		operator=(const TMatrix33<T>& rhs);
 
 			bool				equalCompare(const TMatrix44<T>& rhs, T epsilon) const;
-			bool				operator==(const TMatrix44<T> &rhs) const { return equalCompare(rhs, (T)EPSILON); }
+			bool				operator==(const TMatrix44<T> &rhs) const { return equalCompare(rhs, (T)EVE_MATH_EPSILON); }
 			bool				operator!=(const TMatrix44<T> &rhs) const { return !(*this == rhs); }
 
 			TMatrix44<T>&		operator*=(const TMatrix44<T> &rhs);
@@ -225,8 +225,8 @@ namespace eve
 			void				transpose(void);
 			TMatrix44<T>		transposed(void) const;
 
-			void				invert(T epsilon = EPSILON) { *this = inverted(epsilon); }
-			TMatrix44<T>		inverted(T epsilon = EPSILON) const;
+			void				invert(T epsilon = EVE_MATH_EPSILON) { *this = inverted(epsilon); }
+			TMatrix44<T>		inverted(T epsilon = EVE_MATH_EPSILON) const;
 
 			// pre-multiplies row vector v - no divide by w
 			eve::math::TVec3<T>	preMultiply(const eve::math::TVec3<T> &v) const;
@@ -1189,7 +1189,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::affineInverted() const
 	T cofactor4 = m[ 2]*m[ 9] - m[1]*m[10];
 	T cofactor8 = m[ 1]*m[ 6] - m[2]*m[ 5];
 	T det = m[0]*cofactor0 + m[4]*cofactor4 + m[8]*cofactor8;
-	if (eve::math::abs(det) <= EPSILON) {
+	if (eve::math::abs(det) <= EVE_MATH_EPSILON) {
 		return ret;
 	}
 

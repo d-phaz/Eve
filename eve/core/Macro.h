@@ -89,6 +89,13 @@
 
 
 /**
+* \def EVE_DISABLE_ASSIGNATION
+* \brief Disable assignation operator for target class making them private.
+*/
+#define EVE_DISABLE_ASSIGNATION( targetClass )			\
+private:										\
+	void operator=(const targetClass& arg){};
+/**
 * \def EVE_DISABLE_COPY
 * \brief Disable copy constructor and assignation operator for target class making them private.
 */

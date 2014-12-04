@@ -525,13 +525,13 @@ EVE_FORCE_INLINE void eve::math::TVec2<T>::lerpEq(T fact, const eve::math::TVec2
 }
 
 template<typename T>
-EVE_FORCE_INLINE static bool eve::math::TVec2<T>::equal(eve::math::TVec2<T> const & x, eve::math::TVec2<T> const & y)
+EVE_FORCE_INLINE bool eve::math::TVec2<T>::equal(eve::math::TVec2<T> const & x, eve::math::TVec2<T> const & y)
 {
 	return (eve::math::equal(x.x, y.x) && eve::math::equal(x.y, y.y));
 }
 
 template<typename T>
-EVE_FORCE_INLINE static bool eve::math::TVec2<T>::equal(eve::math::TVec2<T> const & x, eve::math::TVec2<T> const & y, T epsilon)
+EVE_FORCE_INLINE bool eve::math::TVec2<T>::equal(eve::math::TVec2<T> const & x, eve::math::TVec2<T> const & y, T epsilon)
 {
 	return (eve::math::equal(x.x, y.x, epsilon) && eve::math::equal(x.y, y.y, epsilon));
 }
@@ -581,36 +581,36 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec2<T>::yyy(void) const { retu
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::max(void)
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::max(void)
 {
 	return eve::math::TVec2<T>(std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::zero(void)
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::zero(void)
 {
 	return eve::math::TVec2<T>(0, 0);
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::one(void)
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::one(void)
 {
 	return eve::math::TVec2<T>(1, 1);
 }
 
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::xAxis(void)	{ return eve::math::TVec2<T>(1, 0); }
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::xAxis(void)		{ return eve::math::TVec2<T>(1, 0); }
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::yAxis(void)	{ return eve::math::TVec2<T>(0, 1); }
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::yAxis(void)		{ return eve::math::TVec2<T>(0, 1); }
 
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::xAxisNeg(void)	{ return eve::math::TVec2<T>(-1, 0); }
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::xAxisNeg(void)	{ return eve::math::TVec2<T>(-1, 0); }
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::yAxisNeg(void)	{ return eve::math::TVec2<T>(0, -1); }
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::yAxisNeg(void)	{ return eve::math::TVec2<T>(0, -1); }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec2<T> eve::math::TVec2<T>::NaN(void)		{ return eve::math::TVec2<T>(eve::math::NaN(), eve::math::NaN()); }
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TVec2<T>::NaN(void)			{ return eve::math::TVec2<T>(eve::math::NaN(), eve::math::NaN()); }
 
 #endif // __EVE_MATH_CORE_TVECTOR_2_H__

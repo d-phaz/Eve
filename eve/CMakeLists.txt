@@ -171,10 +171,17 @@ set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector2.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector3.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector4.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Types.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Types.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
 source_group( "Math Core" FILES ${MATH_SRCS} )
+
+set( MATH_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Camera.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Camera.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
+source_group( "Math" FILES ${MATH_SRCS} )
 
 
 # Memory.
