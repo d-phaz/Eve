@@ -1,6 +1,6 @@
 
 // Main header
-#include "math/MatrixDecompose.h"
+#include "eve/math/core/MatrixDecompose.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8,13 +8,13 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-typedef Quatf HVect;
+typedef eve::quatf HVect;
 typedef float _HMatrix[4][4];
 typedef struct
 {
-	Vec4f t;		// Translation Component;
-	Quatf q;        // Essential Rotation
-	Quatf u;        // Stretch rotation
+	eve::vec4f t;		// Translation Component;
+	eve::quatf q;        // Essential Rotation
+	eve::quatf u;        // Stretch rotation
 	HVect k;        // Sign of determinant
 	float f;       // Sign of determinant
 } _affineParts;
@@ -24,22 +24,22 @@ enum QuatPart {X, Y, Z, W};
 
 #define SQRTHALF_D	(0.7071067811865475244)
 #define SQRTHALF_F	(0.707106f)
-//static Quatf qxtoz(0,SQRTHALF_D,0,SQRTHALF_D);
-//static Quatf qytoz(SQRTHALF_D,0,0,SQRTHALF_D);
-//static Quatf qppmm( 0.5f, 0.5f,-0.5f,-0.5f );
-//static Quatf qpppp( 0.5f, 0.5f, 0.5f, 0.5f );
-//static Quatf qmpmm(-0.5f, 0.5f,-0.5f,-0.5f );
-//static Quatf qpppm( 0.5f, 0.5f, 0.5f,-0.5f );
-//static Quatf q0001( 0.0f, 0.0f, 0.0f, 1.0f );
-//static Quatf q1000( 1.0f, 0.0f, 0.0f, 0.0f );
-static Quatf qxtoz( SQRTHALF_F,		0.0f, SQRTHALF_F, 0.0f );
-static Quatf qytoz( SQRTHALF_F,		SQRTHALF_F, 0.0f, 0.0f );
-static Quatf qppmm( -0.5f,	 0.5f, 0.5f,-0.5f );
-static Quatf qpppp(  0.5f,	 0.5f, 0.5f, 0.5f );
-static Quatf qmpmm( -0.5f,	-0.5f, 0.5f,-0.5f );
-static Quatf qpppm( -0.5f,	 0.5f, 0.5f, 0.5f );
-static Quatf q0001(  1.0f,	 0.0f, 0.0f, 0.0f );
-static Quatf q1000(  0.0f,	 1.0f, 0.0f, 0.0f );
+//static eve::quatf qxtoz(0,SQRTHALF_D,0,SQRTHALF_D);
+//static eve::quatf qytoz(SQRTHALF_D,0,0,SQRTHALF_D);
+//static eve::quatf qppmm( 0.5f, 0.5f,-0.5f,-0.5f );
+//static eve::quatf qpppp( 0.5f, 0.5f, 0.5f, 0.5f );
+//static eve::quatf qmpmm(-0.5f, 0.5f,-0.5f,-0.5f );
+//static eve::quatf qpppm( 0.5f, 0.5f, 0.5f,-0.5f );
+//static eve::quatf q0001( 0.0f, 0.0f, 0.0f, 1.0f );
+//static eve::quatf q1000( 1.0f, 0.0f, 0.0f, 0.0f );
+static eve::quatf qxtoz( SQRTHALF_F,		0.0f, SQRTHALF_F, 0.0f );
+static eve::quatf qytoz( SQRTHALF_F,		SQRTHALF_F, 0.0f, 0.0f );
+static eve::quatf qppmm( -0.5f,	 0.5f, 0.5f,-0.5f );
+static eve::quatf qpppp(  0.5f,	 0.5f, 0.5f, 0.5f );
+static eve::quatf qmpmm( -0.5f,	-0.5f, 0.5f,-0.5f );
+static eve::quatf qpppm( -0.5f,	 0.5f, 0.5f, 0.5f );
+static eve::quatf q0001(  1.0f,	 0.0f, 0.0f, 0.0f );
+static eve::quatf q1000(  0.0f,	 1.0f, 0.0f, 0.0f );
 
 /** Copy nxn matrix A to C using "gets" for assignment **/
 #define matrixCopy(C, gets, A, n) {int32_t i, j; for (i=0;i<n;i++) for (j=0;j<n;j++)\
@@ -76,8 +76,8 @@ float mat_norm(_HMatrix M, int32_t tpose)
     float sum, max=0.0;
     for (i=0; i<3; i++) 
 	{
-        if (tpose) sum = mathf::abs(M[0][i])+mathf::abs(M[1][i])+mathf::abs(M[2][i]);
-        else       sum = mathf::abs(M[i][0])+mathf::abs(M[i][1])+mathf::abs(M[i][2]);
+        if (tpose) sum = eve::math::abs(M[0][i])+eve::math::abs(M[1][i])+eve::math::abs(M[2][i]);
+        else       sum = eve::math::abs(M[i][0])+eve::math::abs(M[i][1])+eve::math::abs(M[i][2]);
 
         if (max<sum) max = sum;
     }
@@ -136,10 +136,10 @@ void adjoint_transpose(_HMatrix M, _HMatrix MadjT)
 /** Setup u for Household reflection to zero all v components but first **/
 void make_reflector(float *v, float *u)
 {
-    float s = mathf::sqrt(vdot(v, v));
+    float s = eve::math::sqrt(vdot(v, v));
     u[0] = v[0]; u[1] = v[1];
     u[2] = v[2] + ((v[2]<0.0) ? -s : s);
-    s = mathf::sqrt (2.0f/vdot(u, u) );
+    s = eve::math::sqrt (2.0f/vdot(u, u) );
     u[0] = u[0]*s; u[1] = u[1]*s; u[2] = u[2]*s;
 }
 
@@ -212,11 +212,11 @@ void do_rank2(_HMatrix M, _HMatrix MadjT, _HMatrix Q)
     w = M[0][0]; x = M[0][1]; y = M[1][0]; z = M[1][1];
     if (w*z>x*y) 
 	{
-        c = z+w; s = y-x; d = mathf::sqrt(c*c+s*s); c = c/d; s = s/d;
+        c = z+w; s = y-x; d = eve::math::sqrt(c*c+s*s); c = c/d; s = s/d;
         Q[0][0] = Q[1][1] = c; Q[0][1] = -(Q[1][0] = s);
     } else 
 	{
-        c = z-w; s = y+x; d = mathf::sqrt(c*c+s*s); c = c/d; s = s/d;
+        c = z-w; s = y+x; d = eve::math::sqrt(c*c+s*s); c = c/d; s = s/d;
         Q[0][0] = -(Q[1][1] = c); Q[0][1] = Q[1][0] = s;
     }
     Q[0][2] = Q[2][0] = Q[1][2] = Q[2][1] = 0.0; Q[2][2] = 1.0;
@@ -225,14 +225,15 @@ void do_rank2(_HMatrix M, _HMatrix MadjT, _HMatrix Q)
 }
 
 /* Return product of quaternion q by scalar w. */
-Quatf Qt_Scale(Quatf q, float w)
+eve::quatf Qt_Scale(eve::quatf q, float w)
 {
-	Quatf qq;
-	qq.w	= q.w	* w;
-	qq.x()	= q.x()	* w;
-	qq.y()	= q.y()	* w;
-	qq.z()	= q.z()	* w;
-	return (qq);
+	//eve::quatf qq;
+	//qq.w	= q.w	* w;
+	//qq.x()	= q.x()	* w;
+	//qq.y()	= q.y()	* w;
+	//qq.z()	= q.z()	* w;
+	//return (qq);
+	return (q*w);
 }
 
 /* Construct a unit quaternion from rotation matrix.  Assumes matrix is
@@ -240,35 +241,36 @@ Quatf Qt_Scale(Quatf q, float w)
 * correctly for right-handed coordinate system and right-handed rotations.
 * Translation and perspective components ignored. */
 
-Quatf quatFromMatrix(_HMatrix mat)
+eve::quatf quatFromMatrix(_HMatrix mat)
 {
    /* This algorithm avoids near-zero divides by looking for a large component
 	* - first w, then x, y, or z.  When the trace is greater than zero,
 	* |w| is greater than 1/2, which is as small as a largest component can be.
 	* Otherwise, the largest diagonal entry corresponds to the largest of |x|,
 	* |y|, or |z|, one of which must be larger than |w|, and at least 1/2. */
-   Quatf qu = q0001;
+   eve::quatf qu = q0001;
    float tr, s;
 
    tr = mat[X][X] + mat[Y][Y]+ mat[Z][Z];
    if (tr >= 0.0)
    {
-	   s = mathf::sqrt(tr + mat[W][W]);
+	   s = eve::math::sqrt(tr + mat[W][W]);
 	   qu.w = s * 0.5f;
 	   s = 0.5f / s;
-	   qu.x() = (mat[Z][Y] - mat[Y][Z]) * s;
-	   qu.y() = (mat[X][Z] - mat[Z][X]) * s;
-	   qu.z() = (mat[Y][X] - mat[X][Y]) * s;
+	   qu.setX((mat[Z][Y] - mat[Y][Z]) * s);
+	   qu.setY((mat[X][Z] - mat[Z][X]) * s);
+	   qu.setZ((mat[Y][X] - mat[X][Y]) * s);
    }
    else
    {
 	   int32_t h = X;
 	   if (mat[Y][Y] > mat[X][X]) h = Y;
 	   if (mat[Z][Z] > mat[h][h]) h = Z;
-	   switch (h) {
+	   switch (h) 
+	   {
 #define caseMacro(i,j,k,I,J,K) \
 		   case I:\
-				  s = mathf::sqrt( (mat[I][I] - (mat[J][J]+mat[K][K])) + mat[W][W] );\
+				  s = eve::math::sqrt( (mat[I][I] - (mat[J][J]+mat[K][K])) + mat[W][W] );\
 		   qu.i() = s*0.5f;\
 		   s = 0.5f / s;\
 		   qu.j() = (mat[I][J] + mat[J][I]) * s;\
@@ -281,7 +283,7 @@ Quatf quatFromMatrix(_HMatrix mat)
 	   }
    }
    if (mat[W][W] != 1.0) 
-	   qu = Qt_Scale(qu, 1/mathf::sqrt(mat[W][W]));
+	   qu = Qt_Scale(qu, 1.0f/eve::math::sqrt(mat[W][W]));
    
    return (qu);
 }
@@ -319,7 +321,7 @@ float polarDecomp( _HMatrix M, _HMatrix Q, _HMatrix S)
 		MadjT_one = norm_one(MadjTk);
 		MadjT_inf = norm_inf(MadjTk);
 
-		gamma = mathf::sqrt(mathf::sqrt((MadjT_one*MadjT_inf)/(M_one*M_inf))/mathf::abs(det));
+		gamma = eve::math::sqrt(eve::math::sqrt((MadjT_one*MadjT_inf)/(M_one*M_inf))/eve::math::abs(det));
 		g1 = gamma*0.5f;
 		g2 = 0.5f/(gamma*det);
 		matrixCopy(Ek,=,Mk,3);
@@ -357,23 +359,23 @@ HVect spectDecomp(_HMatrix S, _HMatrix U)
    Diag[X] = S[X][X]; Diag[Y] = S[Y][Y]; Diag[Z] = S[Z][Z];
    OffD[X] = S[Y][Z]; OffD[Y] = S[Z][X]; OffD[Z] = S[X][Y];
    for (sweep=20; sweep>0; sweep--) {
-	   float sm = mathf::abs(OffD[X])+mathf::abs(OffD[Y])+mathf::abs(OffD[Z]);
+	   float sm = eve::math::abs(OffD[X])+eve::math::abs(OffD[Y])+eve::math::abs(OffD[Z]);
 	   if (sm==0.0) break;
 	   for (i=Z; i>=X; i--) {
 		   int32_t p = nxt[i]; int32_t q = nxt[p];
-		   fabsOffDi = mathf::abs(OffD[i]);
+		   fabsOffDi = eve::math::abs(OffD[i]);
 		   g = 100.0f*fabsOffDi;
 		   if (fabsOffDi>0.0) {
 			   h = Diag[q] - Diag[p];
-			   fabsh = mathf::abs(h);
+			   fabsh = eve::math::abs(h);
 			   if (fabsh+g==fabsh) {
 				   t = OffD[i]/h;
 			   } else {
 				   theta = 0.5f*h/OffD[i];
-				   t = 1.0f/(mathf::abs(theta)+mathf::sqrt(theta*theta+1.0f));
+				   t = 1.0f/(eve::math::abs(theta)+eve::math::sqrt(theta*theta+1.0f));
 				   if (theta<0.0) t = -t;
 			   }
-			   c = 1.0f / mathf::sqrt(t*t+1.0f); s = t*c;
+			   c = 1.0f / eve::math::sqrt(t*t+1.0f); s = t*c;
 			   tau = s / (c+1.0f);
 			   ta = t*OffD[i]; OffD[i] = 0.0;
 			   Diag[p] -= ta; Diag[q] += ta;
@@ -393,9 +395,9 @@ HVect spectDecomp(_HMatrix S, _HMatrix U)
 }
 
 /* Return conjugate of quaternion. */
-Quatf Qt_Conj(Quatf q)
+eve::quatf Qt_Conj(eve::quatf q)
 {
-	Quatf qq;
+	eve::quatf qq;
     qq.x()	= -q.x(); 
 	qq.y()	= -q.y(); 
 	qq.z()	= -q.z(); 
@@ -406,9 +408,9 @@ Quatf Qt_Conj(Quatf q)
 /* Return quaternion product qL * qR.  Note: order is important!
  * To combine rotations, use the product Mul(qSecond, qFirst),
  * which gives the effect of rotating by qFirst then qSecond. */
-Quatf Qt_Mul(Quatf qL, Quatf qR)
+eve::quatf Qt_Mul(eve::quatf qL, eve::quatf qR)
 {
-	Quatf qq;
+	eve::quatf qq;
     qq.w	= qL.w*qR.w   - qL.x()*qR.x() - qL.y()*qR.y() - qL.z()*qR.z();
     qq.x()	= qL.w*qR.x() + qL.x()*qR.w   + qL.y()*qR.z() - qL.z()*qR.y();
     qq.y()	= qL.w*qR.y() + qL.y()*qR.w   + qL.z()*qR.x() - qL.x()*qR.z();
@@ -417,9 +419,9 @@ Quatf Qt_Mul(Quatf qL, Quatf qR)
 }
 
 /* Construct a (possibly non-unit) quaternion from real components. */
-Quatf Qt_(float x, float y, float z, float w)
+eve::quatf Qt_(float x, float y, float z, float w)
 {
-	Quatf qq;
+	eve::quatf qq;
     qq.x() = x; qq.y() = y; qq.z() = z; qq.w = w;
     return (qq);
 }
@@ -433,14 +435,14 @@ Quatf Qt_(float x, float y, float z, float w)
  * See Ken Shoemake and Tom Duff. Matrix Animation and Polar Decomposition.
  * Proceedings of Graphics Interface 1992. Details on p. 262-263.
  */
-Quatf snuggle(Quatf q, HVect *k)
+eve::quatf snuggle(eve::quatf q, HVect *k)
 {
 #define sgn(n,v)    ((n)?-(v):(v))
 #define swap(a,i,j) {a[3]=a[i]; a[i]=a[j]; a[j]=a[3];}
 #define cycle(a,p)  if (p) {a[3]=a[0]; a[0]=a[1]; a[1]=a[2]; a[2]=a[3];}\
 	else   {a[3]=a[2]; a[2]=a[1]; a[1]=a[0]; a[0]=a[3];}
 
-	Quatf p = q0001;
+	eve::quatf p = q0001;
 	float ka[4];
 	int32_t i, turn = -1;
 	ka[X] = k->x(); 
@@ -459,7 +461,7 @@ Quatf snuggle(Quatf q, HVect *k)
 			turn = X;
 	}
 	if (turn>=0) {
-		Quatf qtoz, qp;
+		eve::quatf qtoz, qp;
 		uint32_t  win;
 		float mag[3], t;
 		switch (turn) {
@@ -497,7 +499,7 @@ Quatf snuggle(Quatf q, HVect *k)
 		}
 
 		qp = Qt_Mul(q, p);
-		t = mathf::sqrt( mag[win] + 0.5f );
+		t = eve::math::sqrt( mag[win] + 0.5f );
 		p = Qt_Mul(p, Qt_(0.0,0.0,-qp.z()/t,qp.w/t));
 		p = Qt_Mul(qtoz, Qt_Conj(p));
 	}
@@ -578,10 +580,10 @@ Quatf snuggle(Quatf q, HVect *k)
 void decompAffine(_HMatrix A, _affineParts * parts)
 {
 	_HMatrix Q, S, U;
-	Quatf p;
+	eve::quatf p;
 
 	//Translation component.
-	parts->t = Vec4f(A[X][W], A[Y][W], A[Z][W], 0);
+	parts->t = eve::vec4f(A[X][W], A[Y][W], A[Z][W], 0);
 	float det = polarDecomp(A, Q, S);
 	if( det < 0.0f )
 	{
@@ -598,7 +600,10 @@ void decompAffine(_HMatrix A, _affineParts * parts)
 	parts->u = Qt_Mul(parts->u, p);
 }
 
-void matrix_algo::decompose_matrix44( const Matrix44f & mat, Vec3f& t, Quatf & r, Vec3f& s, Quatf & so )
+
+
+//=================================================================================================
+void eve::math::decompose_matrix44( const eve::mat44f & mat, eve::vec3f & t, eve::quatf & r, eve::vec3f & s, eve::quatf & so )
 {
 	_affineParts parts;
     _HMatrix hmatrix;
@@ -637,7 +642,10 @@ void matrix_algo::decompose_matrix44( const Matrix44f & mat, Vec3f& t, Quatf & r
     so.set(parts.u.x(), parts.u.y(), parts.u.z(), parts.u.w);
 }
 
-void matrix_algo::decompose_matrix44( const Matrix44f & mat, Vec3f& t, Quatf & r )
+
+
+//=================================================================================================
+void eve::math::decompose_matrix44( const eve::mat44f & mat, eve::vec3f & t, eve::quatf & r )
 {
 	_affineParts parts;
 	_HMatrix hmatrix;
@@ -670,35 +678,39 @@ void matrix_algo::decompose_matrix44( const Matrix44f & mat, Vec3f& t, Quatf & r
 //		CAMERA
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Vec3f transform3x3( const Vec3f & v, const Matrix44f & m ) 
+EVE_FORCE_INLINE static eve::vec3f transform3x3(const eve::vec3f & v, const eve::mat44f & m)
 {
-	return Vec3f( (m.m[0]*v.x + m.m[4]*v.y + m.m[ 8]*v.z),
-				  (m.m[1]*v.x + m.m[5]*v.y + m.m[ 9]*v.z),
-				  (m.m[2]*v.x + m.m[6]*v.y + m.m[10]*v.z) );
+	return eve::vec3f((m.m[0]*v.x + m.m[4]*v.y + m.m[ 8]*v.z),
+					  (m.m[1]*v.x + m.m[5]*v.y + m.m[ 9]*v.z),
+					  (m.m[2]*v.x + m.m[6]*v.y + m.m[10]*v.z));
 }
 
-Vec3f transform3x3( const Matrix44f & m, const Vec3f & v ) 
+EVE_FORCE_INLINE static eve::vec3f transform3x3(const eve::mat44f & m, const eve::vec3f & v)
 {
-	return Vec3f( (m.m[ 0]*v.x + m.m[ 1]*v.y + m.m[ 2]*v.z),
-				  (m.m[ 4]*v.x + m.m[ 5]*v.y + m.m[ 6]*v.z),
-				  (m.m[ 8]*v.x + m.m[ 9]*v.y + m.m[10]*v.z) );
+	return eve::vec3f((m.m[ 0]*v.x + m.m[ 1]*v.y + m.m[ 2]*v.z),
+				      (m.m[ 4]*v.x + m.m[ 5]*v.y + m.m[ 6]*v.z),
+				      (m.m[ 8]*v.x + m.m[ 9]*v.y + m.m[10]*v.z));
 }
 
 
-void matrix_algo::get_look_at( const Matrix44f & mat, Vec3f & eye, Vec3f & center, Vec3f & up, float lookDistance )
+
+//=================================================================================================
+EVE_FORCE_INLINE void eve::math::get_look_at(const eve::mat44f & mat, eve::vec3f & eye, eve::vec3f & center, eve::vec3f & up, float lookDistance)
 {
-	Matrix44f inv = mat.inverted();
+	eve::mat44f inv = mat.inverted();
 
-	eye = inv * Vec3f( 0.0f, 0.0f, 0.0f);
+	eye = inv * eve::vec3f( 0.0f, 0.0f, 0.0f);
 
-	up		= transform3x3( mat, Vec3f::world_up()		 );
-	center	= transform3x3( mat, Vec3f::view_direction() );
+	up		= transform3x3( mat, eve::vec3f::world_up()		 );
+	center	= transform3x3( mat, eve::vec3f::view_direction() );
 	center.normalize();
 	center	= eye + center*lookDistance;
 }
 
 
-void matrix_algo::get_eye_point( const Matrix44f & mat, Vec3f & eye )
+
+//=================================================================================================
+EVE_FORCE_INLINE void eve::math::get_eye_point(const eve::mat44f & mat, eve::vec3f & eye)
 {
 	eye.x = -(mat.at(0,0) * mat.at(0,3) 
 			+ mat.at(1,0) * mat.at(1,3) 

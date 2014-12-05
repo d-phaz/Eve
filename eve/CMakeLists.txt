@@ -161,6 +161,8 @@ source_group( "Files" FILES ${FILES_SRCS} )
 set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Math.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/MatrixDecompose.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/MatrixDecompose.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Simd.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix22.h 

@@ -104,7 +104,7 @@
 * \def EVE_DISABLE_ASSIGNATION
 * \brief Disable assignation operator for target class making them private.
 */
-#define EVE_DISABLE_ASSIGNATION( targetClass )			\
+#define EVE_DISABLE_ASSIGNATION( targetClass )	\
 private:										\
 	void operator=(const targetClass& arg){};
 /**

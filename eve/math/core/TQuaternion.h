@@ -723,9 +723,14 @@ namespace eve
 
 
 		public:
-			T x(void);
-			T y(void);
-			T z(void);
+			T & x(void);
+			T & y(void);
+			T & z(void);
+
+			void setX(float p_x);
+			void setY(float p_y);
+			void setZ(float p_z);
+			void setW(float p_w);
 		};
 
 	} // namespace math
@@ -734,13 +739,25 @@ namespace eve
 
 
 template<typename T>
-EVE_FORCE_INLINE T eve::math::TQuaternion<T>::x(void)		{ return v.x; }
+EVE_FORCE_INLINE T & eve::math::TQuaternion<T>::x(void)				{ return v.x;	}
 
 template<typename T>
-EVE_FORCE_INLINE T eve::math::TQuaternion<T>::y(void)		{ return v.y; }
+EVE_FORCE_INLINE T & eve::math::TQuaternion<T>::y(void)				{ return v.y;	}
 
 template<typename T>
-EVE_FORCE_INLINE T eve::math::TQuaternion<T>::z(void)		{ return v.z; }
+EVE_FORCE_INLINE T & eve::math::TQuaternion<T>::z(void)				{ return v.z;	}
+
+template<typename T>
+EVE_FORCE_INLINE void eve::math::TQuaternion<T>::setX(float p_x)	{ v.x = p_x;	}
+
+template<typename T>
+EVE_FORCE_INLINE void eve::math::TQuaternion<T>::setY(float p_y)	{ v.y = p_y;	}
+
+template<typename T>
+EVE_FORCE_INLINE void eve::math::TQuaternion<T>::setZ(float p_z)	{ v.z = p_z;	}
+
+template<typename T>
+EVE_FORCE_INLINE void eve::math::TQuaternion<T>::setW(float p_w)	{ w = p_w;		}
 
 
 
