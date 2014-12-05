@@ -41,6 +41,10 @@
 #include "eve/math/core/Includes.h"
 #endif
 
+#ifndef __EVE_MATH_TYPES_H__
+#include "eve/math/Types.h"
+#endif
+
 
 namespace eve
 {
@@ -166,13 +170,13 @@ namespace eve
 			void releaseCalibration(void);
 
 
-// 		public:
-// 			/** \brief Generate ray from point. */
-// 			Rayf generateRay(float p_uPos, float p_vPos, float p_imagePlaneAspectRatio) const;
-// 			/** \brief Generate ray from point. */
-// 			Rayf generateRay(float p_uPos, float p_vPos, float p_imagePlaneWidth, float p_imagePlaneHeight) const;
-// 			/** \brief Generate ray from point. */
-// 			Rayf generateRay(eve::vec2f p_pos, float p_imagePlaneWidth, float p_imagePlaneHeight) const;
+		public:
+			/** \brief Generate ray from point. */
+			eve::rayf generateRay(float p_uPos, float p_vPos, float p_imagePlaneAspectRatio) const;
+			/** \brief Generate ray from point. */
+			eve::rayf generateRay(float p_uPos, float p_vPos, float p_imagePlaneWidth, float p_imagePlaneHeight) const;
+			/** \brief Generate ray from point. */
+			eve::rayf generateRay(eve::vec2f p_pos, float p_imagePlaneWidth, float p_imagePlaneHeight) const;
 
 
 		public:
@@ -462,6 +466,6 @@ inline const float			eve::math::Camera::getLensShiftHorizontal(void) const			{ r
 inline const float			eve::math::Camera::getLensShiftVertical(void) const				{ return m_lensShift.y;			}
 
 //=================================================================================================
-inline const eve::vec2f		eve::math::Camera::getHalfSize(void) const						{ return eve::vec2f(m_width/2.0f, m_height/2.0f); }
+inline const eve::vec2f		eve::math::Camera::getHalfSize(void) const						{ return eve::vec2f(m_width*0.5f, m_height*0.5f); }
 
 #endif // __EVE_MATH_CAMERA_H__

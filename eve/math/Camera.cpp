@@ -359,27 +359,27 @@ void eve::math::Camera::releaseCalibration(void)
 
 
 
-////=================================================================================================
-//Rayf eve::math::Camera::generateRay(float p_uPos, float p_vPos, float p_imagePlaneAspectRatio) const
-//{
-//	float s = (p_uPos - 0.5f) * p_imagePlaneAspectRatio;
-//	float t = (p_vPos - 0.5f);
-//	float viewDistance = p_imagePlaneAspectRatio / tmath<float>::abs(m_frustumRight - m_frustumLeft) * m_nearClip;
-//
-//	return Rayf(m_eyePoint, (m_U * s + m_V * t - (m_W * viewDistance)).normalized());
-//}
-//
-////=================================================================================================
-//Rayf eve::math::Camera::generateRay(float p_uPos, float p_vPos, float p_imagePlaneWidth, float p_imagePlaneHeight) const
-//{
-//	return this->generateRay(p_uPos, p_vPos, p_imagePlaneWidth / p_imagePlaneHeight);
-//}
-//
-////=================================================================================================
-//Rayf eve::math::Camera::generateRay(eve::vec2f p_pos, float p_imagePlaneWidth, float p_imagePlaneHeight) const
-//{
-//	return this->generateRay(p_pos.x, p_pos.y, p_imagePlaneWidth / p_imagePlaneHeight);
-//}
+//=================================================================================================
+eve::rayf eve::math::Camera::generateRay(float p_uPos, float p_vPos, float p_imagePlaneAspectRatio) const
+{
+	float s = (p_uPos - 0.5f) * p_imagePlaneAspectRatio;
+	float t = (p_vPos - 0.5f);
+	float viewDistance = p_imagePlaneAspectRatio / eve::math::abs(m_frustumRight - m_frustumLeft) * m_nearClip;
+
+	return eve::rayf(m_eyePoint, (m_U * s + m_V * t - (m_W * viewDistance)).normalized());
+}
+
+//=================================================================================================
+eve::rayf eve::math::Camera::generateRay(float p_uPos, float p_vPos, float p_imagePlaneWidth, float p_imagePlaneHeight) const
+{
+	return this->generateRay(p_uPos, p_vPos, p_imagePlaneWidth / p_imagePlaneHeight);
+}
+
+//=================================================================================================
+eve::rayf eve::math::Camera::generateRay(eve::vec2f p_pos, float p_imagePlaneWidth, float p_imagePlaneHeight) const
+{
+	return this->generateRay(p_pos.x, p_pos.y, p_imagePlaneWidth / p_imagePlaneHeight);
+}
 
 
 
