@@ -161,8 +161,6 @@ source_group( "Files" FILES ${FILES_SRCS} )
 set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Math.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/MatrixDecompose.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/MatrixDecompose.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Simd.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix22.h 
@@ -180,7 +178,11 @@ source_group( "Math Core" FILES ${MATH_SRCS} )
 
 set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Camera.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Camera.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Camera.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TRay.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
 source_group( "Math" FILES ${MATH_SRCS} )

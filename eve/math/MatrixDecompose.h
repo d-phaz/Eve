@@ -30,31 +30,15 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_CORE_MATRIX_DECOMPOSE_H__
-#define __EVE_MATH_CORE_MATRIX_DECOMPOSE_H__
+#ifndef __EVE_MATH_MATRIX_DECOMPOSE_H__
+#define __EVE_MATH_MATRIX_DECOMPOSE_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_CORE_MATH_H__
-#include "eve/math/core/Math.h"
-#endif
-
-#ifndef __EVE_MATH_CORE_TMATRIX_H__
-#include "eve/math/core/TMatrix.h"
-#endif
-
-#ifndef __EVE_MATH_CORE_TQUATERNION_H__
-#include "eve/math/core/TQuaternion.h"
-#endif
-
-#ifndef __EVE_MATH_CORE_TVECTOR_H__
-#include "eve/math/core/TVector.h"
-#endif
-
-#ifndef __EVE_MATH_CORE_TYPES_H__
-#include "eve/math/core/Types.h"
+#ifndef __EVE_MATH_CORE_INCLUDES_H__
+#include "eve/math/core/Includes.h"
 #endif
 
 
@@ -77,4 +61,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_MATH_CORE_MATRIX_DECOMPOSE_H__
+#endif // __EVE_MATH_MATRIX_DECOMPOSE_H__
