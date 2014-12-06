@@ -109,12 +109,12 @@ namespace eve
 
 //=================================================================================================
 template< typename T >
-eve::math::TBox<T>::TBox(void)
+EVE_FORCE_INLINE eve::math::TBox<T>::TBox(void)
 {}
 
 //=================================================================================================
 template< typename T >
-eve::math::TBox<T>::TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
+EVE_FORCE_INLINE eve::math::TBox<T>::TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
 {
 	m_extends[0] = eve::math::TVec3<T>(p_min.x, p_min.y, p_min.z);
 	m_extends[1] = eve::math::TVec3<T>(p_max.x, p_max.y, p_max.z);
@@ -136,7 +136,7 @@ eve::math::TBox<T>::TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVe
 
 //=================================================================================================
 template< typename T >
-void eve::math::TBox<T>::set(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
+EVE_FORCE_INLINE void eve::math::TBox<T>::set(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
 {
 	m_extends[0] = eve::math::TVec3<T>(p_min.x, p_min.y, p_min.z);
 	m_extends[1] = eve::math::TVec3<T>(p_max.x, p_max.y, p_max.z);
@@ -158,7 +158,7 @@ void eve::math::TBox<T>::set(const eve::math::TVec3<T> & p_min, const eve::math:
 
 //=================================================================================================
 template< typename T >
-bool eve::math::TBox<T>::intersects(const eve::math::TRay<T> & p_ray)
+EVE_FORCE_INLINE bool eve::math::TBox<T>::intersects(const eve::math::TRay<T> & p_ray)
 {
 	float tmin, tmax, tymin, tymax, tzmin, tzmax;
 
@@ -189,7 +189,7 @@ bool eve::math::TBox<T>::intersects(const eve::math::TRay<T> & p_ray)
 
 //=================================================================================================
 template< typename T >
-int32_t eve::math::TBox<T>::intersect(const eve::math::TRay<T> & p_ray, T intersections[2])
+EVE_FORCE_INLINE int32_t eve::math::TBox<T>::intersect(const eve::math::TRay<T> & p_ray, T intersections[2])
 {
 	int32_t i = 0;
 
@@ -242,7 +242,7 @@ int32_t eve::math::TBox<T>::intersect(const eve::math::TRay<T> & p_ray, T inters
 
 //=================================================================================================
 template< typename T >
-void eve::math::TBox<T>::include(const eve::math::TBox<T> & p_box)
+EVE_FORCE_INLINE void eve::math::TBox<T>::include(const eve::math::TBox<T> & p_box)
 {
 	eve::math::TVec3<T> minB = p_box.getMin();
 	if (minB.x < m_extends[0].x) m_extends[0].x = minB.x;
@@ -272,7 +272,7 @@ void eve::math::TBox<T>::include(const eve::math::TBox<T> & p_box)
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TBox<T>::getPositive(const eve::math::TVec3<T> & p_normal) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getPositive(const eve::math::TVec3<T> & p_normal) const
 {
 	eve::math::TVec3<T> result = getMin();
 	eve::math::TVec3<T> size   = getSize();
@@ -293,7 +293,7 @@ eve::math::TVec3<T> eve::math::TBox<T>::getPositive(const eve::math::TVec3<T> & 
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TBox<T>::getNegative(const eve::math::TVec3<T> & p_normal) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getNegative(const eve::math::TVec3<T> & p_normal) const
 {
 	eve::math::TVec3<T> result = getMin();
 	eve::math::TVec3<T> size   = getSize();
@@ -314,7 +314,7 @@ eve::math::TVec3<T> eve::math::TBox<T>::getNegative(const eve::math::TVec3<T> & 
 
 //=================================================================================================
 template< typename T >
-eve::math::TBox<T> eve::math::TBox<T>::transformed(const eve::math::TMatrix44<T> & p_transform) const
+EVE_FORCE_INLINE eve::math::TBox<T> eve::math::TBox<T>::transformed(const eve::math::TMatrix44<T> & p_transform) const
 {
 	eve::math::TVec3<T> verts[8];
 
@@ -342,14 +342,14 @@ eve::math::TBox<T> eve::math::TBox<T>::transformed(const eve::math::TMatrix44<T>
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TBox<T>::getCenter(void) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getCenter(void) const
 {
 	return (m_extends[1] + m_extends[0]) * static_cast<T>(0.5);
 }
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TBox<T>::getSize(void) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getSize(void) const
 {
 	return m_extends[1] - m_extends[0];
 }
@@ -358,14 +358,14 @@ eve::math::TVec3<T> eve::math::TBox<T>::getSize(void) const
 
 //=================================================================================================
 template< typename T >
-const eve::math::TVec3<T> & eve::math::TBox<T>::getMin(void) const
+EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TBox<T>::getMin(void) const
 {
 	return m_extends[0];
 }
 
 //=================================================================================================
 template< typename T >
-const eve::math::TVec3<T> & eve::math::TBox<T>::getMax(void) const
+EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TBox<T>::getMax(void) const
 {
 	return m_extends[1];
 }
