@@ -584,9 +584,9 @@ void eve::math::Camera::getNearClipCoordinates(eve::vec3f * p_pTopLeft, eve::vec
 {
 	eve::vec3f viewDirection(m_viewDirection.normalized());
 
-	*p_pTopLeft		= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumTop * m_V) + (m_frustumLeft * m_U);
-	*p_pTopRight	= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumTop * m_V) + (m_frustumRight * m_U);
-	*p_pBottomLeft	= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumBottom * m_V) + (m_frustumLeft * m_U);
+	*p_pTopLeft		= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumTop    * m_V) + (m_frustumLeft  * m_U);
+	*p_pTopRight	= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumTop    * m_V) + (m_frustumRight * m_U);
+	*p_pBottomLeft	= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumBottom * m_V) + (m_frustumLeft  * m_U);
 	*p_pBottomRight = m_eyePoint + (m_nearClip * viewDirection) + (m_frustumBottom * m_V) + (m_frustumRight * m_U);
 }
 
@@ -597,9 +597,9 @@ void eve::math::Camera::getFarClipCoordinates(eve::vec3f * p_pTopLeft, eve::vec3
 
 	float ratio = m_farClip / m_nearClip;
 
-	*p_pTopLeft		= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumTop * m_V) + (ratio * m_frustumLeft * m_U);
-	*p_pTopRight	= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumTop * m_V) + (ratio * m_frustumRight * m_U);
-	*p_pBottomLeft	= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumBottom * m_V) + (ratio * m_frustumLeft * m_U);
+	*p_pTopLeft		= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumTop    * m_V) + (ratio * m_frustumLeft  * m_U);
+	*p_pTopRight	= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumTop    * m_V) + (ratio * m_frustumRight * m_U);
+	*p_pBottomLeft	= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumBottom * m_V) + (ratio * m_frustumLeft  * m_U);
 	*p_pBottomRight = m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumBottom * m_V) + (ratio * m_frustumRight * m_U);
 }
 
@@ -711,7 +711,7 @@ void eve::math::Camera::setLensShiftVertical(float p_vertical)
 
 
 //=================================================================================================
-// bool eve::math::Camera::initFromAssimpCamera( const aiCamera * pCamera, const aiScene * pScene, const eve::vec3f & p_upAxis )
+// bool eve::math::Camera::initFromImport( const aiCamera * pCamera, const aiScene * pScene, const eve::vec3f & p_upAxis )
 // {
 // #ifndef NDEBUG
 // 	NATIVE_ASSERT( (pCamera!=NULL)	);
@@ -793,7 +793,7 @@ void eve::math::Camera::setLensShiftVertical(float p_vertical)
 // 			matrix.invert();
 // 			
 // 			// Extract camera data from model view matrix.
-// 			matrix_algo::get_look_at( matrix, m_eyePoint, m_target, m_worldUp );
+// 			eve::math::get_look_at( matrix, m_eyePoint, m_target, m_worldUp );
 // 
 // 			// Compute camera matrix required data.
 // 			m_viewDirection		= (m_target - m_eyePoint).normalized();

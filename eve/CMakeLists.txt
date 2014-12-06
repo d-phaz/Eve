@@ -182,6 +182,7 @@ set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TBox.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TRay.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h )
 

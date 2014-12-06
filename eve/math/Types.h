@@ -37,6 +37,10 @@
 #include "eve/math/core/Types.h"
 #endif
 
+#ifndef __EVE_MATH_TBOX_H__
+#include "eve/math/TBox.h"
+#endif 
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
@@ -48,6 +52,9 @@ namespace eve
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//		Typedefs
 	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	typedef eve::math::TBox<float>		boxf;
+	typedef eve::math::TBox<double>		boxd;
 
 	typedef eve::math::TRay<float>		rayf;
 	typedef eve::math::TRay<double>		rayd;

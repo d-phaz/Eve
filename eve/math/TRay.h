@@ -60,7 +60,7 @@ namespace eve
 			TVec3<T>			m_direction;
 			TVec3<T> 			m_invDirection;
 
-			// These are helpful to some ray intersection algorithms
+			// These are helpful to some ray intersection algorithms.
 			char				m_signX;
 			char				m_signY;
 			char				m_signZ;
@@ -91,7 +91,8 @@ namespace eve
 			const char getSignX(void) const;
 			const char getSignY(void) const;
 			const char getSignZ(void) const;
-		};
+
+		}; // class TRay
 
 	} // namespace math
 

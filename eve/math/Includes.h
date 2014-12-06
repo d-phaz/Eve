@@ -46,6 +46,10 @@
 #include "eve/math/MatrixDecompose.h"
 #endif
 
+#ifndef __EVE_MATH_TBOX_H__
+#include "eve/math/TBox.h"
+#endif 
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
