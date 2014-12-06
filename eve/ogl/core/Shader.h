@@ -82,11 +82,11 @@ namespace eve
 			: public eve::ogl::Format
 		{
 		public:
-			std::string					vertex;			//!< Vertex shader program source.
-			std::string					control;		//!< Control shader program source.
-			std::string					eval;			//!< Evaluation shader program source.
-			std::string					geom;			//!< Geometry shader program source.
-			std::string					fragment;		//!< Fragment shader program source.
+			std::string					vert;		//!< Vertex shader program source.
+			std::string					cont;		//!< Control shader program source.
+			std::string					eval;		//!< Evaluation shader program source.
+			std::string					geom;		//!< Geometry shader program source.
+			std::string					frag;		//!< Fragment shader program source.
 
 		public:
 			/** \brief Class constructor. */
@@ -133,11 +133,11 @@ namespace eve
 			GLuint						m_id;					//!< Specifies OpenGL unique shader program ID.
 			GLuint *					m_prgmId;				//!< Staged programs OpenGL ids.
 
-			std::string					m_vertex;				//!< Vertex shader program source.
-			std::string					m_control;				//!< Control shader program source.
+			std::string					m_vert;					//!< Vertex shader program source.
+			std::string					m_cont;					//!< Control shader program source.
 			std::string					m_eval;					//!< Evaluation shader program source.
 			std::string					m_geom;					//!< Geometry shader program source.
-			std::string					m_fragment;				//!< Fragment shader program source.
+			std::string					m_frag;					//!< Fragment shader program source.
 
 
 			//////////////////////////////////////
@@ -181,6 +181,27 @@ namespace eve
 			void bind(GLenum p_index);
 			/** \brief Unbind (deactivate). */
 			static void unbind(GLenum p_index);
+
+
+		public:
+			/** \brief Reload vertex shader program from source. */
+			void reloadShaderVertex(const std::string & p_vert);
+			/** \brief Reload control shader program from source. */
+			void reloadShaderControl(const std::string & p_cont);
+			/** \brief Reload evaluation shader program from source. */
+			void reloadShaderEvaluation(const std::string & p_eval);
+			/** \brief Reload geometry shader program from source. */
+			void reloadShaderGeometry(const std::string & p_geom);
+			/** \brief Reload fragment shader program from source. */
+			void reloadShaderFragment(const std::string & p_frag);
+
+
+			/** \brief Reload shader program(s) from source. */
+			void reloadShader(const std::string & p_vert, const std::string & p_frag);
+			/** \brief Reload shader program(s) from source. */
+			void reloadShader(const std::string & p_vert, const std::string & p_geom, const std::string & p_frag);
+			/** \brief Reload shader program(s) from source. */
+			void reloadShader(const std::string & p_vert, const std::string & p_cont, const std::string & p_eval, const std::string & p_geom, const std::string & p_frag);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////

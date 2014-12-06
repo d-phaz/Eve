@@ -38,11 +38,11 @@ eve::ogl::FormatShader::FormatShader(void)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
-	, vertex()
-	, control()
+	, vert()
+	, cont()
 	, eval()
 	, geom()
-	, fragment()
+	, frag()
 {}
 
 //=================================================================================================
@@ -54,11 +54,11 @@ eve::ogl::FormatShader::FormatShader(const eve::ogl::FormatShader & p_other)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
-	, vertex(p_other.vertex)
-	, control(p_other.control)
+	, vert(p_other.vert)
+	, cont(p_other.cont)
 	, eval(p_other.eval)
 	, geom(p_other.geom)
-	, fragment(p_other.fragment)
+	, frag(p_other.frag)
 {}
 
 //=================================================================================================
@@ -66,11 +66,11 @@ const eve::ogl::FormatShader & eve::ogl::FormatShader::operator = (const eve::og
 {
 	if (this != &p_other)
 	{
-		this->vertex	= p_other.vertex;
-		this->control	= p_other.control;
-		this->eval		= p_other.eval;
-		this->geom		= p_other.geom;
-		this->fragment	= p_other.fragment;
+		this->vert	= p_other.vert;
+		this->cont	= p_other.cont;
+		this->eval	= p_other.eval;
+		this->geom	= p_other.geom;
+		this->frag	= p_other.frag;
 	}
 	return *this;
 }
@@ -84,11 +84,11 @@ eve::ogl::Shader::Shader(void)
 	// Members init
 	, m_id(0)
 	, m_prgmId(nullptr)
-	, m_vertex()
-	, m_control()
+	, m_vert()
+	, m_cont()
 	, m_eval()
 	, m_geom()
-	, m_fragment()
+	, m_frag()
 {}
 
 
@@ -98,11 +98,11 @@ void eve::ogl::Shader::setAttributes(eve::ogl::Format * p_format)
 {
 	eve::ogl::FormatShader * format = reinterpret_cast<eve::ogl::FormatShader*>(p_format);
 
-	m_vertex	= format->vertex;
-	m_control	= format->control;
-	m_eval		= format->eval;
-	m_geom		= format->geom;
-	m_fragment	= format->fragment;
+	m_vert = format->vert;
+	m_cont = format->cont;
+	m_eval = format->eval;
+	m_geom = format->geom;
+	m_frag = format->frag;
 }
 
 
@@ -131,9 +131,9 @@ void eve::ogl::Shader::oglInit(void)
 
 	char const * src = nullptr;
 
-	if (m_vertex.length() > 1)
+	if (m_vert.length() > 1)
 	{
-		src = m_vertex.c_str();
+		src = m_vert.c_str();
 		m_prgmId[prgm_Vertex] = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &src);
 		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Vertex]);
 
@@ -141,9 +141,9 @@ void eve::ogl::Shader::oglInit(void)
 		EVE_OGL_CHECK_ERROR;
 	}
 
-	if (m_control.length() > 1)
+	if (m_cont.length() > 1)
 	{
-		src = m_control.c_str();
+		src = m_cont.c_str();
 		m_prgmId[prgm_Control] = glCreateShaderProgramv(GL_TESS_CONTROL_SHADER, 1, &src);
 		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Control]);
 
@@ -171,9 +171,9 @@ void eve::ogl::Shader::oglInit(void)
 		EVE_OGL_CHECK_ERROR;
 	}
 
-	if (m_fragment.length() > 1)
+	if (m_frag.length() > 1)
 	{
-		src = m_fragment.c_str();
+		src = m_frag.c_str();
 		m_prgmId[prgm_Fragment] = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &src);
 		EVE_OGL_CHECK_SHADER(m_prgmId[eve::ogl::prgm_Fragment]);
 
@@ -185,8 +185,9 @@ void eve::ogl::Shader::oglInit(void)
 //=================================================================================================
 void eve::ogl::Shader::oglUpdate(void)
 {
-	// Shader pipeline cannot be updated for now.
-	EVE_ASSERT_FAILURE;
+	this->oglRelease();
+	this->init();
+	this->oglInit();
 }
 
 //=================================================================================================
@@ -219,4 +220,94 @@ void eve::ogl::Shader::unbind(GLenum p_index)
 {
 	glBindProgramPipeline(0);
 	EVE_OGL_CHECK_ERROR;
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShaderVertex(const std::string & p_vert)
+{
+	EVE_ASSERT(p_vert.length() > 1);
+
+	m_vert = std::string(p_vert);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShaderControl(const std::string & p_cont)
+{
+	EVE_ASSERT(p_cont.length() > 1);
+
+	m_cont = std::string(p_cont);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShaderEvaluation(const std::string & p_eval)
+{
+	EVE_ASSERT(p_eval.length() > 1);
+
+	m_eval = std::string(p_eval);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShaderGeometry(const std::string & p_geom)
+{
+	EVE_ASSERT(p_geom.length() > 1);
+
+	m_geom = std::string(p_geom);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShaderFragment(const std::string & p_frag)
+{
+	EVE_ASSERT(p_frag.length() > 1);
+
+	m_frag = std::string(p_frag);
+	this->requestOglUpdate();
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShader(const std::string & p_vert, const std::string & p_frag)
+{
+	EVE_ASSERT(p_vert.length() > 1);
+	EVE_ASSERT(p_frag.length() > 1);
+
+	m_vert = std::string(p_vert);
+	m_frag = std::string(p_frag);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShader(const std::string & p_vert, const std::string & p_geom, const std::string & p_frag)
+{
+	EVE_ASSERT(p_vert.length() > 1);
+	EVE_ASSERT(p_geom.length() > 1);
+	EVE_ASSERT(p_frag.length() > 1);
+
+	m_vert = std::string(p_vert);
+	m_geom = std::string(p_geom);
+	m_frag = std::string(p_frag);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Shader::reloadShader(const std::string & p_vert, const std::string & p_cont, const std::string & p_eval, const std::string & p_geom, const std::string & p_frag)
+{
+	EVE_ASSERT(p_vert.length() > 1);
+	EVE_ASSERT(p_cont.length() > 1);
+	EVE_ASSERT(p_eval.length() > 1);
+	EVE_ASSERT(p_geom.length() > 1);
+	EVE_ASSERT(p_frag.length() > 1);
+
+	m_vert = std::string(p_vert);
+	m_cont = std::string(p_cont);
+	m_eval = std::string(p_eval);
+	m_geom = std::string(p_geom);
+	m_frag = std::string(p_frag);
+	this->requestOglUpdate();
 }
