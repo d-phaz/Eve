@@ -142,14 +142,14 @@ namespace eve
 			*		void cb_evtClock(void)
 			*/
 			template<class ListenerClass>
-			void registerToEvent(ListenerClass * p_pListener);
+			void registerListener(ListenerClass * p_pListener);
 			/**
 			* \brief Unregister listener class to clock events.
 			* Listener class must provide event handler methods using the following signatures:
 			*		void cb_evtClock(void)
 			*/
 			template<class ListenerClass>
-			void unregisterFromEvent(ListenerClass * p_pListener);
+			void unregisterListener(ListenerClass * p_pListener);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +173,7 @@ namespace eve
 
 //=================================================================================================
 template<class ListenerClass>
-inline void eve::time::Clock::registerToEvent(ListenerClass * p_pListener)
+inline void eve::time::Clock::registerListener(ListenerClass * p_pListener)
 {
 	m_pFence->lock();
 	eve::evt::add_listener(m_event, p_pListener, &ListenerClass::cb_evtClock);
@@ -182,7 +182,7 @@ inline void eve::time::Clock::registerToEvent(ListenerClass * p_pListener)
 
 //=================================================================================================
 template<class ListenerClass>
-inline void eve::time::Clock::unregisterFromEvent(ListenerClass * p_pListener)
+inline void eve::time::Clock::unregisterListener(ListenerClass * p_pListener)
 {
 	m_pFence->lock();
 	eve::evt::remove_listener(m_event, p_pListener, &ListenerClass::cb_evtClock);

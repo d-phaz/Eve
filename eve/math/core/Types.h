@@ -45,6 +45,10 @@
 #include "eve/math/core/TMatrix.h"
 #endif
 
+#ifndef __EVE_MATH_CORE_TQUATERNION_H__
+#include "eve/math/core/TQuaternion.h"
+#endif
+
 #ifndef __EVE_MATH_CORE_TVECTOR_H__
 #include "eve/math/core/TVector.h"
 #endif

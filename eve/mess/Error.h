@@ -44,14 +44,12 @@ namespace eve
 	{
 #if defined(EVE_OS_WIN)
 
-		/** 
+		/**
 		 * \brief get Windows error message based on error code.
 		 * \param p_err error code.
 		 */
 		std::wstring get_error_msg(DWORD p_err);
-		/**
-		* \brief get Windows error message using GetLastError().
-		*/
+		/** \brief get Windows error message using GetLastError(). */
 		std::wstring get_error_msg(void);
 #endif
 

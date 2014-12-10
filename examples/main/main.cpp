@@ -105,7 +105,7 @@ void Example::initThreadedData(void)
 	m_pTimer = eve::time::Timer::create_ptr(true);
 
 	m_pClock = EVE_CREATE_PTR(eve::time::Clock);
-	m_pClock->registerToEvent(this);
+	m_pClock->registerListener(this);
 	m_pClock->setRunWait(5);
 	m_pClock->setPeriodicInterval(10);
 	//m_pClock->start();
@@ -122,6 +122,9 @@ void Example::initThreadedData(void)
 	eve::mat22f mat22(0.0f);
 	eve::mat33f mat33(0.0f);
 	eve::mat44f mat44(0.0f);
+
+	eve::math::Cameraf * cam = eve::math::Cameraf::create_ptr();
+	EVE_RELEASE_PTR(cam);
 }
 
 void Example::releaseThreadedData(void)

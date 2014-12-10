@@ -41,6 +41,10 @@
 #include "eve/math/TBox.h"
 #endif 
 
+#ifndef __EVE_MATH_TCAMERA_H__
+#include "eve/math/TCamera.h"
+#endif 
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
@@ -53,12 +57,24 @@ namespace eve
 	//		Typedefs
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	typedef eve::math::TBox<float>		boxf;
-	typedef eve::math::TBox<double>		boxd;
+	typedef eve::math::TBox<float>			boxf;
+	typedef eve::math::TBox<double>			boxd;
 
-	typedef eve::math::TRay<float>		rayf;
-	typedef eve::math::TRay<double>		rayd;
+	typedef eve::math::TRay<float>			rayf;
+	typedef eve::math::TRay<double>			rayd;
 
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	//		Typedefs, convenience pointer classes.
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	namespace math
+	{
+		typedef eve::math::TCamera<float>		Cameraf;
+		typedef eve::math::TCamera<double>		Camerad;
+
+	} // namespace math
 
 } // namespace eve
 

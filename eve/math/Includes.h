@@ -38,10 +38,6 @@
 #include "eve/math/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_CAMERA_H__
-#include "eve/math/Camera.h"
-#endif
-
 #ifndef __EVE_MATH_MATRIX_DECOMPOSE_H__
 #include "eve/math/MatrixDecompose.h"
 #endif
@@ -50,8 +46,16 @@
 #include "eve/math/TBox.h"
 #endif 
 
+#ifndef __EVE_MATH_TCAMERA_H__
+#include "eve/math/TCamera.h"
+#endif 
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
+#endif
+
+#ifndef __EVE_MATH_TYPES_H__
+#include "eve/math/Types.h"
 #endif
 
 
