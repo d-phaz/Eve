@@ -1032,7 +1032,7 @@ template <typename T>
 void eve::math::TCamera<T>::setViewDirection(const eve::math::TVec3<T> & p_viewDirection)
 {
 	m_viewDirection = p_viewDirection.normalized();
-	m_orientation = eve::math::TQuaternion<T>(eve::math::TVec3<T>(static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(-1.0)), m_viewDirection);
+	m_orientation	= eve::math::TQuaternion<T>(eve::math::TVec3<T>(static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(-1.0)), m_viewDirection);
 
 	this->calcModelView();
 }
