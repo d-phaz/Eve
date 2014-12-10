@@ -73,11 +73,13 @@ namespace eve
 			//////////////////////////////////////
 
 		public:
+			/** \brief Class default constructor. */
 			TBox(void);
+			/** \brief Class constructor. */
 			TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max);
 
 
-		protected:
+		public:
 			void set(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max);
 
 
@@ -85,18 +87,30 @@ namespace eve
 			bool intersects(const eve::math::TRay<T> & p_ray);
 			int32_t	intersect(const eve::math::TRay<T> & p_ray, T p_intersections[2]);
 
-			//! Expands the box so that it contains \a p_box
-			virtual void include(const TBox<T> & p_box);
 
+		public:
+			//! Expands the box so that it contains \a p_box
+			void include(const TBox<T> & p_box);
+
+
+		public:
+			//! converts axis-aligned box to another coordinate space
+			TBox<T> transformed(const eve::math::TMatrix44<T> & p_transform) const;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
 			//! for use in frustum culling
 			eve::math::TVec3<T> getNegative(const eve::math::TVec3<T> & p_normal) const;
 			eve::math::TVec3<T> getPositive(const eve::math::TVec3<T> & p_normal) const;
 
-			//! converts axis-aligned box to another coordinate space
-			TBox<T> transformed(const eve::math::TMatrix44<T> & p_transform) const;
 
 			eve::math::TVec3<T> getCenter(void) const;
 			eve::math::TVec3<T> getSize(void) const;
+
 
 			const eve::math::TVec3<T> & getMin(void) const;
 			const eve::math::TVec3<T> & getMax(void) const;

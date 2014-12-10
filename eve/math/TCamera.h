@@ -66,7 +66,7 @@ namespace eve
 		/** 
 		* \class eve::math::TCamera
 		*
-		* \brief Template 3D TCamera object math and manipulation.
+		* \brief Template 3D Camera object math and manipulation.
 		*
 		* \note extends eve::mem::Pointer
 		*/
@@ -208,24 +208,24 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** Translate object. */
+			/** \brief Translate object. */
 			virtual void translate(const eve::math::TVec3<T> & p_translation);
-			/** Translate object on X-axis. */
+			/** \brief Translate object on X-axis. */
 			virtual void translateX(T p_translationX);
-			/** Translate object on Y-axis. */
+			/** \brief Translate object on Y-axis. */
 			virtual void translateY(T p_translationY);
-			/** Translate object on Z-axis. */
+			/** \brief Translate object on Z-axis. */
 			virtual void translateZ(T p_translationZ);
 
 
 		public:
-			/** Rotate object. */
+			/** \brief Rotate object. */
 			virtual void rotate(const eve::math::TVec3<T> & p_rotation);
-			/** Rotate object on X-axis. */
+			/** \brief Rotate object on X-axis. */
 			virtual void rotateX(T p_rotationX);
-			/** Rotate object on Y-axis. */
+			/** \brief Rotate object on Y-axis. */
 			virtual void rotateY(T p_rotationY);
-			/** Rotate object on Z-axis. */
+			/** \brief Rotate object on Z-axis. */
 			virtual void rotateZ(T p_rotationZ);
 
 
@@ -254,13 +254,13 @@ namespace eve
 
 
 		public:
-			/** Get translation. */
+			/** \brief Get translation. */
 			const eve::math::TVec3<T> getTranslation(void) const;
-			/** Get translation on X-axis. */
+			/** \brief Get translation on X-axis. */
 			const T getTranslationX(void) const;
-			/** Get translation on Y-axis. */
+			/** \brief Get translation on Y-axis. */
 			const T getTranslationY(void) const;
-			/** Get translation on Z-axis. */
+			/** \brief Get translation on Z-axis. */
 			const T getTranslationZ(void) const;
 
 

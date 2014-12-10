@@ -550,7 +550,7 @@ namespace eve
 		};
 
 		/**
-		* \class eve::evt::EvtTime
+		* \class eve::evt::EvtFrame
 		* \brief Stock global static frame events.
 		*/
 		class EvtFrame
