@@ -982,7 +982,7 @@ EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationZ(void) const	
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getCenterOfInterest(void) const		{ return m_centerOfInterest; }
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getCenterOfInterest(void) const	{ return m_centerOfInterest; }
 
 //=================================================================================================
 template <typename T>
