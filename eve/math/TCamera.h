@@ -236,6 +236,13 @@ namespace eve
 		public:
 			/** \brief Get eye point. */
 			const eve::math::TVec3<T> getEyePoint(void) const;
+			/** \brief Get eye point position on X-axis. */
+			const T getEyePointX(void) const;
+			/** \brief Get eye point position on Y-axis. */
+			const T getEyePointY(void) const;
+			/** \brief Get eye point position on Z-axis. */
+			const T getEyePointZ(void) const;
+
 			/** \brief Set eye point. */
 			void setEyePoint(const eve::math::TVec3<T> & p_eyePoint);
 			/** \brief Set eye point X value. */
@@ -916,6 +923,16 @@ void eve::math::TCamera<T>::rotateZ(T p_rotationZ)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getEyePoint(void) const	{ return m_eyePoint;   }
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointX(void) const { return m_eyePoint.x; }
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointY(void) const { return m_eyePoint.y; }
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointZ(void) const { return m_eyePoint.z; }
+
+//=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setEyePoint(const eve::math::TVec3<T> & p_eyePoint)
 {
@@ -947,12 +964,38 @@ void eve::math::TCamera<T>::setEyePointZ(T p_eyePointZ)
 	this->calcModelView();
 }
 
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getTranslation(void) const	{ return m_eyePoint;   }
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationX(void) const	{ return m_eyePoint.x; }
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationY(void) const	{ return m_eyePoint.y; }
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationZ(void) const	{ return m_eyePoint.z; }
+
+
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getCenterOfInterest(void) const		{ return m_centerOfInterest; }
+
 //=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setCenterOfInterest(T p_centerOfInterest)
 {
 	m_centerOfInterest = p_centerOfInterest;
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getCenterOfInterestPoint(void) const	{ return (m_eyePoint + m_viewDirection * m_centerOfInterest); }
 
 //=================================================================================================
 template <typename T>
@@ -961,6 +1004,12 @@ void eve::math::TCamera<T>::setCenterOfInterestPoint(const eve::math::TVec3<T> &
 	m_centerOfInterest = m_eyePoint.distance(p_centerOfInterestPoint);
 	this->lookAt(p_centerOfInterestPoint);
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getWorldUp(void) const { return m_worldUp; }
 
 //=================================================================================================
 template <typename T>
@@ -972,6 +1021,12 @@ void eve::math::TCamera<T>::setWorldUp(const eve::math::TVec3<T> & p_worldUp)
 	this->calcModelView();
 }
 
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getViewDirection(void) const { return m_viewDirection; }
+
 //=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setViewDirection(const eve::math::TVec3<T> & p_viewDirection)
@@ -981,6 +1036,12 @@ void eve::math::TCamera<T>::setViewDirection(const eve::math::TVec3<T> & p_viewD
 
 	this->calcModelView();
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TQuaternion<T> eve::math::TCamera<T>::getOrientation(void) const { return m_orientation; }
 
 //=================================================================================================
 template <typename T>
@@ -992,6 +1053,12 @@ void eve::math::TCamera<T>::setOrientation(const eve::math::TQuaternion<T> & p_o
 	this->calcModelView();
 }
 
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFov(void) const { return m_fov; }
+
 //=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setFov(T p_fov)
@@ -1000,6 +1067,12 @@ void eve::math::TCamera<T>::setFov(T p_fov)
 	this->calcProjection();
 }
 
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getAspectRatio(void) const { return m_aspectRatio; }
+
 //=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setAspectRatio(T p_aspectRatio)
@@ -1007,6 +1080,12 @@ void eve::math::TCamera<T>::setAspectRatio(T p_aspectRatio)
 	m_aspectRatio = p_aspectRatio;
 	this->calcProjection();
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getNearClip(void) const { return m_nearClip; }
 
 //=================================================================================================
 template <typename T>
@@ -1017,12 +1096,20 @@ void eve::math::TCamera<T>::setNearClip(T p_nearClip)
 }
 
 //=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFarClip(void) const { return m_farClip; }
+
+//=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setFarClip(T p_farClip)
 {
 	m_farClip = p_farClip;
 	this->calcProjection();
 }
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFrustumDepth(void) const { return m_frustumDepth; }
 
 
 
@@ -1065,6 +1152,22 @@ void eve::math::TCamera<T>::getFrustum(T * p_pLeft, T * p_pTop, T * p_pRight, T 
 	*p_pNear	= m_nearClip;
 	*p_pFar		= m_farClip;
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixProjection(void) const				{ return m_matrixProjection; }
+template<typename T>								
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelView(void) const				{ return m_matrixModelView; }
+template<typename T>								
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelViewProjection(void) const		{ return m_matrixModelViewProjection; }
+template<typename T>								
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseProjection(void) const		{ return m_matrixProjectionInverse; }
+template<typename T>								
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseModelView(void) const		{ return m_matrixModelViewInverse; }
+template<typename T>								
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixViewport(void) const				{ return m_matrixViewport; }
 
 
 
@@ -1121,6 +1224,9 @@ void eve::math::TCamera<T>::setDisplaySize(T p_width, T p_height, bool p_bUpdate
 }
 
 
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec2<T> eve::math::TCamera<T>::getLensShift(void) const { return m_lensShift; }
 
 //=================================================================================================
 template <typename T>
@@ -1151,6 +1257,10 @@ void eve::math::TCamera<T>::setLensShift(const eve::math::TVec2<T> & p_shift)
 }
 
 //=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getLensShiftHorizontal(void) const { return m_lensShift.x; }
+
+//=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setLensShiftHorizontal(T p_horizontal)
 {
@@ -1159,12 +1269,23 @@ void eve::math::TCamera<T>::setLensShiftHorizontal(T p_horizontal)
 }
 
 //=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getLensShiftVertical(void) const { return m_lensShift.y; }
+
+//=================================================================================================
 template <typename T>
 void eve::math::TCamera<T>::setLensShiftVertical(T p_vertical)
 {
 	m_lensShift.y = p_vertical;
 	this->calcProjection();
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec2<T> eve::math::TCamera<T>::getHalfSize(void) const { return eve::math::TVec2<T>(m_width*static_cast<T>(0.5), m_height*static_cast<T>(0.5)); }
+
 
 
 
@@ -1268,76 +1389,5 @@ void eve::math::TCamera<T>::setLensShiftVertical(T p_vertical)
 // 
 // 	return breturn;
 // }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>				eve::math::TCamera<T>::getEyePoint(void) const						{ return m_eyePoint; }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>				eve::math::TCamera<T>::getTranslation(void) const					{ return m_eyePoint; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getTranslationX(void) const					{ return m_eyePoint.x; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getTranslationY(void) const					{ return m_eyePoint.y; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getTranslationZ(void) const					{ return m_eyePoint.z; }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getCenterOfInterest(void) const				{ return m_centerOfInterest; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>				eve::math::TCamera<T>::getCenterOfInterestPoint(void) const			{ return (m_eyePoint + m_viewDirection * m_centerOfInterest); }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>				eve::math::TCamera<T>::getWorldUp(void) const						{ return m_worldUp; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>				eve::math::TCamera<T>::getViewDirection(void) const					{ return m_viewDirection; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TQuaternion<T>		eve::math::TCamera<T>::getOrientation(void) const					{ return m_orientation; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getFov(void) const							{ return m_fov; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getAspectRatio(void) const					{ return m_aspectRatio; }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getNearClip(void) const						{ return m_nearClip; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getFarClip(void) const						{ return m_farClip; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getFrustumDepth(void) const					{ return m_frustumDepth; }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &		eve::math::TCamera<T>::getMatrixProjection(void) const				{ return m_matrixProjection; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &		eve::math::TCamera<T>::getMatrixModelView(void) const				{ return m_matrixModelView; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &		eve::math::TCamera<T>::getMatrixModelViewProjection(void) const		{ return m_matrixModelViewProjection; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &		eve::math::TCamera<T>::getMatrixInverseProjection(void) const		{ return m_matrixProjectionInverse; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &		eve::math::TCamera<T>::getMatrixInverseModelView(void) const		{ return m_matrixModelViewInverse; }
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &		eve::math::TCamera<T>::getMatrixViewport(void) const				{ return m_matrixViewport; }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec2<T>				eve::math::TCamera<T>::getLensShift(void) const						{ return m_lensShift; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getLensShiftHorizontal(void) const			{ return m_lensShift.x; }
-template<typename T>
-EVE_FORCE_INLINE const T								eve::math::TCamera<T>::getLensShiftVertical(void) const				{ return m_lensShift.y; }
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec2<T>				eve::math::TCamera<T>::getHalfSize(void) const						{ return eve::math::TVec2<T>(m_width*static_cast<T>(0.5), m_height*static_cast<T>(0.5)); }
 
 #endif // __EVE_MATH_TCAMERA_H__
