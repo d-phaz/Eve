@@ -199,7 +199,7 @@ macro( add_project PROJECT_NAME_IN )
 					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewmxs.lib )
 			endif()	
 		endif()
-		ADD_DEFINITIONS( -DGLEW_STATIC=1 )
+		add_definitions( -DGLEW_STATIC=1 )
 		set( LIBS ${LIBS} ${GLEW_LIBS})
 	endif()
 
