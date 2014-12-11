@@ -64,8 +64,8 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::math::TVec3<T> m_extends[2];
-			eve::math::TVec3<T> m_verts[8];
+			eve::math::TVec3<T>		m_extends[2];			//!< Min and max vectors.
+			eve::math::TVec3<T>		m_verts[8];				//!< Box object vertices.
 
 
 			//////////////////////////////////////
@@ -80,21 +80,24 @@ namespace eve
 
 
 		public:
+			/** \brief Set box using min and max vectors. */
 			void set(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max);
 
 
 		public:
+			/** \brief Test ray for intersection. */
 			bool intersects(const eve::math::TRay<T> & p_ray);
+			/** \brief Test ray for intersection. */
 			int32_t	intersect(const eve::math::TRay<T> & p_ray, T p_intersections[2]);
 
 
 		public:
-			//! Expands the box so that it contains \a p_box
+			/** \brief Expands the box so that it contains \a p_box. */
 			void include(const TBox<T> & p_box);
 
 
 		public:
-			//! converts axis-aligned box to another coordinate space
+			/** \brief Converts axis-aligned box to another coordinate space. */
 			TBox<T> transformed(const eve::math::TMatrix44<T> & p_transform) const;
 
 
@@ -103,16 +106,21 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			//! for use in frustum culling
-			eve::math::TVec3<T> getNegative(const eve::math::TVec3<T> & p_normal) const;
+			/** \brief Get positive vector from normal (used in frustum culling). */
 			eve::math::TVec3<T> getPositive(const eve::math::TVec3<T> & p_normal) const;
+			/** \brief Get negative vector from normal (used in frustum culling). */
+			eve::math::TVec3<T> getNegative(const eve::math::TVec3<T> & p_normal) const;
 
 
+			/** \brief Get box center. */
 			eve::math::TVec3<T> getCenter(void) const;
+			/** \brief Get box size. */
 			eve::math::TVec3<T> getSize(void) const;
 
 
+			/** \brief Get box min vector. */
 			const eve::math::TVec3<T> & getMin(void) const;
+			/** \brief Get box max vector. */
 			const eve::math::TVec3<T> & getMax(void) const;
 
 		}; // class TBox
@@ -130,20 +138,7 @@ EVE_FORCE_INLINE eve::math::TBox<T>::TBox(void)
 template< typename T >
 EVE_FORCE_INLINE eve::math::TBox<T>::TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
 {
-	m_extends[0] = eve::math::TVec3<T>(p_min.x, p_min.y, p_min.z);
-	m_extends[1] = eve::math::TVec3<T>(p_max.x, p_max.y, p_max.z);
-
-	eve::math::TVec3<T> extent(p_max.x - p_min.x, p_max.y - p_min.y, p_max.z - p_min.z);
-	eve::math::TVec3<T> mid((p_min.x + p_max.x) * static_cast<T>(0.5), (p_min.y + p_max.y) * static_cast<T>(0.5), (p_min.z + p_max.z) * static_cast<T>(0.5));
-
-	m_verts[0] = eve::math::TVec3<T>(static_cast<T>(-0.5), static_cast<T>(-0.5), static_cast<T>( 0.5)) * extent + mid;
-	m_verts[1] = eve::math::TVec3<T>(static_cast<T>( 0.5), static_cast<T>(-0.5), static_cast<T>( 0.5)) * extent + mid;
-	m_verts[2] = eve::math::TVec3<T>(static_cast<T>(-0.5), static_cast<T>( 0.5), static_cast<T>( 0.5)) * extent + mid;
-	m_verts[3] = eve::math::TVec3<T>(static_cast<T>( 0.5), static_cast<T>( 0.5), static_cast<T>( 0.5)) * extent + mid;
-	m_verts[4] = eve::math::TVec3<T>(static_cast<T>(-0.5), static_cast<T>( 0.5), static_cast<T>(-0.5)) * extent + mid;
-	m_verts[5] = eve::math::TVec3<T>(static_cast<T>( 0.5), static_cast<T>( 0.5), static_cast<T>(-0.5)) * extent + mid;
-	m_verts[6] = eve::math::TVec3<T>(static_cast<T>(-0.5), static_cast<T>(-0.5), static_cast<T>(-0.5)) * extent + mid;
-	m_verts[7] = eve::math::TVec3<T>(static_cast<T>( 0.5), static_cast<T>(-0.5), static_cast<T>(-0.5)) * extent + mid;
+	this->set(p_min, p_max);
 }
 
 
@@ -286,6 +281,40 @@ EVE_FORCE_INLINE void eve::math::TBox<T>::include(const eve::math::TBox<T> & p_b
 
 //=================================================================================================
 template< typename T >
+EVE_FORCE_INLINE eve::math::TBox<T> eve::math::TBox<T>::transformed(const eve::math::TMatrix44<T> & p_transform) const
+{
+	eve::math::TVec3<T> verts[8];
+
+	for (size_t i = 0; i < 8; i++)
+	{
+		verts[i] = p_transform.transformPointAffine(m_verts[i]);
+	}
+
+	eve::math::TVec3<T> min = verts[0];
+	eve::math::TVec3<T> max = verts[0];
+
+	for (size_t i = 1; i < 8; i++)
+	{
+		if (verts[i].x < min.x) min.x = verts[i].x;
+		if (verts[i].y < min.y) min.y = verts[i].y;
+		if (verts[i].z < min.z) min.z = verts[i].z;
+
+		if (verts[i].x > max.x) max.x = verts[i].x;
+		if (verts[i].y > max.y) max.y = verts[i].y;
+		if (verts[i].z > max.z) max.z = verts[i].z;
+	}
+
+	return(TBox<T>(min, max));
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+template< typename T >
 EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getPositive(const eve::math::TVec3<T> & p_normal) const
 {
 	eve::math::TVec3<T> result = getMin();
@@ -302,8 +331,6 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getPositive(const eve::
 
 	return(result);
 }
-
-
 
 //=================================================================================================
 template< typename T >
@@ -328,44 +355,16 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getNegative(const eve::
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE eve::math::TBox<T> eve::math::TBox<T>::transformed(const eve::math::TMatrix44<T> & p_transform) const
-{
-	eve::math::TVec3<T> verts[8];
-
-	for (size_t i = 0; i < 8; i++)
-		verts[i] = p_transform.transformPointAffine(m_verts[i]);
-
-	eve::math::TVec3<T> min = verts[0];
-	eve::math::TVec3<T> max = verts[0];
-
-	for (size_t i = 1; i < 8; i++) 
-	{
-		if (verts[i].x < min.x) min.x = verts[i].x;
-		if (verts[i].y < min.y) min.y = verts[i].y;
-		if (verts[i].z < min.z) min.z = verts[i].z;
-
-		if (verts[i].x > max.x) max.x = verts[i].x;
-		if (verts[i].y > max.y) max.y = verts[i].y;
-		if (verts[i].z > max.z) max.z = verts[i].z;
-	}
-
-	return TBox<T>(min, max);
-}
-
-
-
-//=================================================================================================
-template< typename T >
 EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getCenter(void) const
 {
-	return (m_extends[1] + m_extends[0]) * static_cast<T>(0.5);
+	return((m_extends[1] + m_extends[0]) * static_cast<T>(0.5));
 }
 
 //=================================================================================================
 template< typename T >
 EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getSize(void) const
 {
-	return m_extends[1] - m_extends[0];
+	return(m_extends[1] - m_extends[0]);
 }
 
 
@@ -374,14 +373,14 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TBox<T>::getSize(void) const
 template< typename T >
 EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TBox<T>::getMin(void) const
 {
-	return m_extends[0];
+	return(m_extends[0]);
 }
 
 //=================================================================================================
 template< typename T >
 EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TBox<T>::getMax(void) const
 {
-	return m_extends[1];
+	return(m_extends[1]);
 }
 
 #endif // __EVE_MATH_TBOX_H__
