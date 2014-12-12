@@ -48,6 +48,7 @@ private:
 	eve::ogl::Pbo *				pbo;
 	eve::ogl::Texture *			tex;
 	eve::ogl::Shader *			shader;
+	eve::ogl::Vao *				vao;
 
 	eve::time::Timer *			m_pTimer;
 	eve::time::Clock *			m_pClock;
@@ -101,6 +102,9 @@ void Example::initThreadedData(void)
 	eve::ogl::FormatShader fmtShader;
 	shader = renderer->create(fmtShader);
 
+	vao = renderer->create(eve::geom::create_sphere_colored(eve::vec3f::zero(), 2.0f, eve::color4f::one()));
+
+
 	//m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
 	m_pTimer = eve::time::Timer::create_ptr(true);
 
@@ -138,6 +142,7 @@ void Example::releaseThreadedData(void)
 	tex->requestRelease();
 	pbo->requestRelease();
 	fbo->requestRelease();
+	vao->requestRelease();
 	this->releaseRenderer(renderer);
 
 	// Call parent class.

@@ -55,7 +55,6 @@ namespace eve
 		/** \brief Create a colored sphere. */
 		eve::ogl::FormatVao create_sphere_colored(const eve::vec3f & p_position, float p_radius, const eve::color4f & p_color, int32_t p_segments = 20);
 
-
 	} // namespace geom
 
 } // namespace eve

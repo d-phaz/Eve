@@ -37,6 +37,10 @@
 #include "eve/core/Renderer.h"
 #endif
 
+#ifndef __EVE_GEOMETRY_INCLUDES_H__
+#include "eve/geom/Includes.h"
+#endif
+
 #ifndef __EVE_OPENGL_CORE_FBO_H__
 #include "eve/ogl/core/Fbo.h"
 #endif

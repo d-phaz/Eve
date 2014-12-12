@@ -117,11 +117,11 @@ void eve::ogl::Vao::setAttributes(eve::ogl::Format * p_format)
 
 	this->m_numVertices				= format->numVertices;
 	this->m_numIndices				= format->numIndices;
-	this->m_perVertexNumPosition		= format->perVertexNumPosition;
+	this->m_perVertexNumPosition	= format->perVertexNumPosition;
 	this->m_perVertexNumDiffuse		= format->perVertexNumDiffuse;
 	this->m_perVertexNumNormal		= format->perVertexNumNormal;
 	this->m_pVertices				= format->vertices;
-	this->m_pIndices					= format->indices;
+	this->m_pIndices				= format->indices;
 
 	EVE_ASSERT(m_numVertices != 0);
 	EVE_ASSERT(m_numIndices != 0);
@@ -136,7 +136,7 @@ void eve::ogl::Vao::init(void)
 {
 	m_offsetPosition		= 0;
 	m_offsetDiffuse			= sizeof(float) * m_perVertexNumPosition;
-	m_offsetNormals			= sizeof(float)* (m_perVertexNumPosition + m_perVertexNumDiffuse);
+	m_offsetNormals			= sizeof(float) * (m_perVertexNumPosition + m_perVertexNumDiffuse);
 
 	m_verticesStrideUnit	= (m_perVertexNumPosition + m_perVertexNumDiffuse + m_perVertexNumNormal);
 	m_verticesStride		= GLsizei(m_verticesStrideUnit * sizeof(float));

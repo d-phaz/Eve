@@ -4,7 +4,7 @@
 
 
 //=================================================================================================
-eve::ogl::FormatVao create_sphere_textured(const eve::vec3f & p_position, float p_radius, int32_t p_segments)
+eve::ogl::FormatVao eve::geom::create_sphere_textured(const eve::vec3f & p_position, float p_radius, int32_t p_segments)
 {
 	eve::ogl::FormatVao ret;
 
@@ -74,7 +74,7 @@ eve::ogl::FormatVao create_sphere_textured(const eve::vec3f & p_position, float 
 }
 
 //=================================================================================================
-eve::ogl::FormatVao create_sphere_colored(const eve::vec3f & p_position, float p_radius, const eve::color4f & p_color, int32_t p_segments)
+eve::ogl::FormatVao eve::geom::create_sphere_colored(const eve::vec3f & p_position, float p_radius, const eve::color4f & p_color, int32_t p_segments)
 {
 	eve::ogl::FormatVao ret;
 
@@ -86,7 +86,7 @@ eve::ogl::FormatVao create_sphere_colored(const eve::vec3f & p_position, float p
 	ret.perVertexNumNormal			= 3;
 
 
-	float * vertices = (float*)malloc((ret.numVertices * 8) * sizeof(float));
+	float * vertices = (float*)malloc((ret.numVertices * 10) * sizeof(float));
 
 	float radius    = p_radius * 0.5f;
 	const float S   = 1.0f / static_cast<float>(p_segments - 1);
