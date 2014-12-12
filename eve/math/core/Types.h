@@ -90,6 +90,9 @@ namespace eve
 	typedef eve::math::TVec4<float>				vec4f;
 	typedef eve::math::TVec4<double>			vec4d;
 
+	typedef eve::math::TVec4<float>				color4f;
+	typedef eve::math::TVec4<double>			color4d;
+
 	
 
 	typedef eve::math::TMatrix22<float>			mat22f;

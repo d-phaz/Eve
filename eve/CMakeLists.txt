@@ -156,6 +156,17 @@ set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
 source_group( "Files" FILES ${FILES_SRCS} )
 
 
+# Geometry.
+#################################################
+set( GEOM_SRCS 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.h  )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${GEOM_SRCS} )
+source_group( "Geometry" FILES ${GEOM_SRCS} )
+
+
 # Math.
 #################################################
 set( MATH_SRCS
@@ -192,6 +203,7 @@ source_group( "Math" FILES ${MATH_SRCS} )
 # Memory.
 #################################################
 set( MEMORY_SRCS
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.cpp
