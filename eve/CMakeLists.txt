@@ -169,6 +169,16 @@ set( SOURCE_FILES ${SOURCE_FILES} ${GEOM_SRCS} )
 source_group( "Geometry" FILES ${GEOM_SRCS} )
 
 
+# Input / Output.
+#################################################
+set( IO_SRCS  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${IO_SRCS} )
+source_group( "Input / Output" FILES ${IO_SRCS} )
+
+
 # Math.
 #################################################
 set( MATH_SRCS

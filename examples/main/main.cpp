@@ -102,7 +102,8 @@ void Example::initThreadedData(void)
 	eve::ogl::FormatShader fmtShader;
 	shader = renderer->create(fmtShader);
 
-	vao = renderer->create(eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f::one(), eve::color4f::red()));
+	eve::ogl::FormatVao fmtVao = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f::one(), eve::color4f::red());
+	vao = renderer->create(fmtVao);
 
 
 	//m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
