@@ -27,7 +27,6 @@ eve::ogl::FormatVao eve::geom::create_sphere_textured(const eve::vec3f & p_posit
 	float y = 0.0f;
 	float z = 0.0f;
 
-	// Denver style
 	float * vert = vertices - 1;
 	for (int32_t r = 0; r < p_segments; r++)
 	{
@@ -97,7 +96,6 @@ eve::ogl::FormatVao eve::geom::create_sphere_colored(const eve::vec3f & p_positi
 	float y = 0.0f;
 	float z = 0.0f;
 
-	// Denver style
 	float * vert = vertices - 1;
 	for (int32_t r = 0; r < p_segments; r++)
 	{

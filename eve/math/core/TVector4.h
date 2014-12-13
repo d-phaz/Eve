@@ -164,6 +164,15 @@ namespace eve
 			static TVec4<T> max(void);
 			static TVec4<T> zero(void);
 			static TVec4<T> one(void);
+			
+
+			static TVec4<T> white(void);
+			static TVec4<T> black(void);
+
+			static TVec4<T> red(void);
+			static TVec4<T> green(void);
+			static TVec4<T> blue(void);
+
 
 			TVec4<T> slerp(T fact, const TVec3<T> &r) const;
 
@@ -782,6 +791,34 @@ template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::zer
 template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::one(void)
 {
 	return eve::math::TVec4<T>(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1), static_cast<T>(1));
+}
+
+
+
+//=================================================================================================
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::white(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1), static_cast<T>(1));
+}
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::black(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
+}
+
+
+
+//=================================================================================================
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::red(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
+}
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::green(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0), static_cast<T>(1));
+}
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::blue(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(1), static_cast<T>(1));
 }
 
 

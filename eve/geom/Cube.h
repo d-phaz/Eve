@@ -30,17 +30,33 @@
 */
 
 #pragma once
-#ifndef __EVE_GEOMETRY_INCLUDES_H__
-#define __EVE_GEOMETRY_INCLUDES_H__
-
-
 #ifndef __EVE_GEOMETRY_CUBE_H__
-#include "eve/geom/Cube.h"
+#define __EVE_GEOMETRY_CUBE_H__
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_GEOMETRY_SPHERE_H__
-#include "eve/geom/Sphere.h"
+#ifndef __EVE_MATH_INCLUDES_H__
+#include "eve/math/Includes.h"
+#endif
+
+#ifndef __EVE_OPENGL_CORE_VAO_H__
+#include "eve/ogl/core/Vao.h"
 #endif
 
 
-#endif // __EVE_GEOMETRY_INCLUDES_H__
+namespace eve
+{
+	namespace geom
+	{
+		/** \brief Create a textured cube. */
+		eve::ogl::FormatVao create_cube_textured(const eve::vec3f & p_position, const eve::vec3f & p_size);
+		/** \brief Create a colored cube. */
+		eve::ogl::FormatVao create_cube_colored(const eve::vec3f & p_position, const eve::vec3f & p_size, const eve::color4f & p_color);
+
+	} // namespace geom
+
+} // namespace eve
+
+#endif  // __EVE_GEOMETRY_CUBE_H__ 

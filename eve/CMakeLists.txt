@@ -158,10 +158,12 @@ source_group( "Files" FILES ${FILES_SRCS} )
 
 # Geometry.
 #################################################
-set( GEOM_SRCS 
+set( GEOM_SRCS  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${GEOM_SRCS} )
 source_group( "Geometry" FILES ${GEOM_SRCS} )
