@@ -206,12 +206,18 @@ macro( add_project PROJECT_NAME_IN )
 	
 	# OpenCL.
 	#################################################
-	set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
-	set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
-	find_package( OpenCL REQUIRED )
-	include_directories( ${OPENCL_INCLUDE_DIR} )
-	set( LIBS ${LIBS} ${OPENCL_LIBRARY})
-	set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+	if(OPTION_BUILD_ENABLE_OPENCL)
+		set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
+		set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
+		find_package( OpenCL REQUIRED )
+		if(${OPENCL_FOUND})
+			include_directories( ${OPENCL_INCLUDE_DIR} )
+			set( LIBS ${LIBS} ${OPENCL_LIBRARY})
+		else()
+			message(FATAL_ERROR "OpenCL not found on this platform.")
+		endif()
+		set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+	endif()
 
 	# # POCO
 	# #################################################
