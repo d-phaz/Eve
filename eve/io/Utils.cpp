@@ -37,7 +37,7 @@
 char * eve::io::load_program(const char * p_filePath, const char * p_preamble, size_t * p_finalLength)
 {
 	// locals
-	FILE* pFileStream = NULL;
+	FILE * pFileStream = nullptr;
 	size_t szSourceLength;
 
 	// Open source code file.
@@ -62,7 +62,7 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 	fseek(pFileStream, 0, SEEK_SET);
 
 	// Allocate string buffer.
-	char* cSourceString = (char *)malloc(szSourceLength + szPreambleLength + 1);
+	char * cSourceString = (char*)malloc(szSourceLength + szPreambleLength + 1);
 	memcpy(cSourceString, p_preamble, szPreambleLength);
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)
 	{
@@ -73,7 +73,7 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 
 	// Close the file and return the total length of the combined (preamble + source) string.
 	fclose(pFileStream);
-	if (p_finalLength != 0)
+	if (p_finalLength)
 	{
 		*p_finalLength = szSourceLength + szPreambleLength;
 	}
