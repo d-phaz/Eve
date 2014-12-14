@@ -33,75 +33,48 @@
 #ifndef __EVE_MATH_TYPES_H__
 #define __EVE_MATH_TYPES_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
+#ifndef __EVE_MATH_CORE_TYPES_H__
+#include "eve/math/core/Types.h"
 #endif
 
-#ifndef __EVE_MEMORY_INCLUDES_H__
-#include "eve/mem/Includes.h"
-#endif
+#ifndef __EVE_MATH_TBOX_H__
+#include "eve/math/TBox.h"
+#endif 
 
-#ifndef __EVE_MATH_TMATRIX_H__
-#include "eve/math/TMatrix.h"
-#endif
+#ifndef __EVE_MATH_TCAMERA_H__
+#include "eve/math/TCamera.h"
+#endif 
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
+#ifndef __EVE_MATH_TRAY_H__
+#include "eve/math/TRay.h"
 #endif
 
 
 namespace eve
 {
-	namespace __math_internal
-	{
-		typedef EVE_ALIGNED16(int32_t)		__vec4i[4];
-		typedef EVE_ALIGNED16(uint32_t)		__vec4ui[4];
-		typedef EVE_ALIGNED16(float)		__vec4f[4];
-		typedef EVE_ALIGNED16(double)		__vec4d[4];
-
-	} // namespace __math_internal
-
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//		Typedefs
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	typedef eve::__math_internal::__vec4i		vec4i_t;
-	typedef eve::__math_internal::__vec4ui		vec4iu_t;
-	typedef eve::__math_internal::__vec4f		vec4f_t;
-	typedef eve::__math_internal::__vec4d		vec4d_t;
+	typedef eve::math::TBox<float>			boxf;
+	typedef eve::math::TBox<double>			boxd;
 
-	
-	
-	typedef __m128								simd_float4_t;
+	typedef eve::math::TRay<float>			rayf;
+	typedef eve::math::TRay<double>			rayd;
 
 
 
-	typedef eve::math::TVec2<float>				vec2f;
-	typedef eve::math::TVec2<double>			vec2d;
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	//		Typedefs, convenience pointer classes.
+	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	typedef eve::math::TVec3<float>				vec3f;
-	typedef eve::math::TVec3<double>			vec3d;
+	namespace math
+	{
+		typedef eve::math::TCamera<float>		Cameraf;
+		typedef eve::math::TCamera<double>		Camerad;
 
-	typedef eve::math::TVec4<float>				vec4f;
-	typedef eve::math::TVec4<double>			vec4d;
-
-	
-
-	typedef eve::math::TMatrix22<float>			mat22f;
-	typedef eve::math::TMatrix22<double>		mat22d;
-
-	typedef eve::math::TMatrix33<float>			mat33f;
-	typedef eve::math::TMatrix33<double>		mat33d;
-
-	typedef eve::math::TMatrix44<float>			mat44f;
-	typedef eve::math::TMatrix44<double>		mat44d;
-
-
-
-	typedef eve::math::TQuaternion<float>		quatf;
-	typedef eve::math::TQuaternion<double>		quatd;
-
+	} // namespace math
 
 } // namespace eve
 

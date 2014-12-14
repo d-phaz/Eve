@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_CONTEXT_H__
-#define __EVE_OPENGL_CONTEXT_H__
+#ifndef __EVE_OPENGL_CORE_CONTEXT_H__
+#define __EVE_OPENGL_CORE_CONTEXT_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -45,7 +45,7 @@
 #include "eve/mess/Includes.h"
 #endif
 
-#ifndef __EVE_OPENGL_PIXEL_FORMAT_H__
+#ifndef __EVE_OPENGL_CORE_PIXEL_FORMAT_H__
 #include "eve/ogl/core/win32/PixelFormat.h"
 #endif
 
@@ -177,16 +177,16 @@ namespace eve
 
 
 //=================================================================================================
-inline eve::ogl::Context *	eve::ogl::Context::get_instance(void)	{ EVE_ASSERT(m_p_instance);		return m_p_instance;	}
-inline eve::thr::SpinLock * eve::ogl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence;		}
+EVE_FORCE_INLINE eve::ogl::Context *	eve::ogl::Context::get_instance(void)	{ EVE_ASSERT(m_p_instance);		return m_p_instance; }
+EVE_FORCE_INLINE eve::thr::SpinLock * eve::ogl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence; }
 
 //=================================================================================================
-inline const HGLRC			eve::ogl::Context::get_handle(void)		{ EVE_ASSERT(m_p_instance);		return m_p_instance->m_hGLRC; }
+EVE_FORCE_INLINE const HGLRC			eve::ogl::Context::get_handle(void)		{ EVE_ASSERT(m_p_instance);		return m_p_instance->m_hGLRC; }
 
 //=================================================================================================
-inline const eve::ogl::PixelFormat &	eve::ogl::Context::get_pixel_format(void)				{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormat;			}
-inline const PIXELFORMATDESCRIPTOR &	eve::ogl::Context::get_pixel_format_descriptor(void)	{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatDecriptor;	}
-inline const int32_t					eve::ogl::Context::get_pixel_format_ID(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatId;			}
+EVE_FORCE_INLINE const eve::ogl::PixelFormat &	eve::ogl::Context::get_pixel_format(void)				{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormat; }
+EVE_FORCE_INLINE const PIXELFORMATDESCRIPTOR &	eve::ogl::Context::get_pixel_format_descriptor(void)	{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatDecriptor; }
+EVE_FORCE_INLINE const int32_t					eve::ogl::Context::get_pixel_format_ID(void)			{ EVE_ASSERT(m_p_instance);  return m_p_instance->m_pixelFormatId; }
 
 
 
@@ -278,6 +278,6 @@ namespace eve
 } // namespace eve
 
 //=================================================================================================
-inline const eve::ogl::SubContext * eve::ogl::SubContext::get_current_context(void) { return m_p_context_current; }
+EVE_FORCE_INLINE const eve::ogl::SubContext * eve::ogl::SubContext::get_current_context(void) { return m_p_context_current; }
 
-#endif // __EVE_OPENGL_CONTEXT_H__
+#endif // __EVE_OPENGL_CORE_CONTEXT_H__

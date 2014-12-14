@@ -30,18 +30,18 @@
  */
 
 #pragma once
-#ifndef __EVE_OPENCL_PROGRAM_H__
-#define __EVE_OPENCL_PROGRAM_H__
+#ifndef __EVE_OPENCL_CORE_PROGRAM_H__
+#define __EVE_OPENCL_CORE_PROGRAM_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
 #endif
 
-#ifndef __EVE_OPENCL_DEBUG_H__
+#ifndef __EVE_OPENCL_CORE_DEBUG_H__
 #include "eve/ocl/core/Debug.h"
 #endif
 
-#ifndef __EVE_OPENCL_KERNEL_H__
+#ifndef __EVE_OPENCL_CORE_KERNEL_H__
 #include "eve/ocl/core/Kernel.h"
 #endif
 
@@ -124,4 +124,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_OPENCL_PROGRAM_H__
+#endif // __EVE_OPENCL_CORE_PROGRAM_H__

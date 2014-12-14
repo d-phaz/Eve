@@ -34,12 +34,24 @@
 #define __EVE_CORE_MACRO_H__
 
 
+/**
+* \def EVE_DEPRECATED
+* Convenience macro to enforce deprecated function declaration.
+*/
+#if defined(EVE_OS_WIN)
+#define EVE_DEPRECATED		__declspec(deprecated)
+#else
+#define EVE_DEPRECATED		__attribute__ ((__deprecated__))
+#endif
+
+
+
 /** 
 * \def EVE_FORCE_INLINE
 * Convenience macro to enforce inline function declaration.
 */
 #if defined(EVE_OS_WIN)
-#if defined(__MINGW32__) || defined(__CYGWIN__) || (defined (_MSC_VER) && _MSC_VER < 1300)
+#if defined(__MINGW32__) || defined(__CYGWIN__) || (defined(_MSC_VER) && _MSC_VER < 1300)
 #define EVE_FORCE_INLINE inline
 #else
 #define EVE_FORCE_INLINE __forceinline
@@ -88,6 +100,13 @@
 
 
 
+/**
+* \def EVE_DISABLE_ASSIGNATION
+* \brief Disable assignation operator for target class making them private.
+*/
+#define EVE_DISABLE_ASSIGNATION( targetClass )	\
+private:										\
+	void operator=(const targetClass& arg){};
 /**
 * \def EVE_DISABLE_COPY
 * \brief Disable copy constructor and assignation operator for target class making them private.

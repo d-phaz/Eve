@@ -32,11 +32,11 @@
 // Main header
 #include "eve/ogl/core/win32/PixelFormat.h"
 
-#ifndef __EVE_OPENGL_EXTERNAL_H__
+#ifndef __EVE_OPENGL_CORE_EXTERNAL_H__
 #include "eve/ogl/core/External.h"
 #endif
 
-#ifndef __EVE_OPENGL_MACRO_H__
+#ifndef __EVE_OPENGL_CORE_MACRO_H__
 #include "eve/ogl/core/Macro.h"
 #endif
 
@@ -578,10 +578,12 @@ void eve::ogl::PixelFormat::setPlane( int32_t p_plane )
 void eve::ogl::PixelFormat::setOption( FormatOptions p_opt )
 {
 	FormatOptions options_on = p_opt & 0xffff;
-    if( options_on ) {
+    if( options_on ) 
+	{
         m_opts |= options_on;
 	}
-    else {
+    else 
+	{
        m_opts &= (~(p_opt >> 16)) & 0xffff;
 	}
 }
@@ -591,10 +593,12 @@ bool eve::ogl::PixelFormat::testOption(FormatOptions p_opt) const
 {
 	bool B_Return;
 	FormatOptions options_on = p_opt & 0xffff;
-    if( options_on ) {
+    if( options_on ) 
+	{
        B_Return = (m_opts & options_on) != 0;
 	}
-    else {
+    else 
+	{
        B_Return = (m_opts & ((p_opt >> 16) & 0xffff) ) == 0;
 	}
 

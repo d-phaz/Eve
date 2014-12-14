@@ -1,57 +1,106 @@
 
+/*
+ Copyright (c) 2014, The eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 #pragma once
-#ifndef __TRAY_H__
-#define __TRAY_H__
+#ifndef __EVE_MATH_TRAY_H__
+#define __EVE_MATH_TRAY_H__
 
-
-#ifndef __TVECTOR_H__
-#include "math/TVector.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#include "eve/math/core/TVector.h"
 #endif
 
-#define PICKING_EPSILON   0.00000000001f
 
-template< typename T >
-class TRay 
+namespace eve
 {
+	namespace math
+	{
+		/**
+		* \class eve::math::TRay
+		*
+		* \brief Template ray composed of origin and direction.
+		*/
+		template< typename T >
+		class TRay
+		{
 
-protected:
-	TVec3<T>			m_origin;
-	TVec3<T>			m_direction;
-	TVec3<T> 			m_invDirection;
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
 
-	// These are helpful to some ray intersection algorithms
-	char				m_signX;
-	char				m_signY;
-	char				m_signZ;
+		protected:
+			TVec3<T>			m_origin;
+			TVec3<T>			m_direction;
+			TVec3<T> 			m_invDirection;
+
+			// These are helpful to some ray intersection algorithms.
+			char				m_signX;
+			char				m_signY;
+			char				m_signZ;
 
 
- public:
-	TRay( const TVec3<T>  &aOrigin=TVec3<T>::zero(), const TVec3<T>  &aDirection=TVec3<T>::zero() );
-	virtual ~TRay( void );
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
 
-	TVec3<T>  calcPosition( T t ) const;
+		public:
+			TRay(const TVec3<T>  &aOrigin = TVec3<T>::zero(), const TVec3<T>  &aDirection = TVec3<T>::zero());
+			virtual ~TRay(void);
 
-	bool calcTriangleIntersection( const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, TVec3<T> * intersectionPoint ) const;
-	bool calcTriangleIntersection( const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, T *result ) const;
-	bool calcPlaneIntersection( const TVec3<T>  &origin, const TVec3<T>  &normal, T *result ) const;
+			TVec3<T>  calcPosition(T t) const;
 
-	void			setOrigin( const TVec3<T>  &aOrigin );
-	const TVec3<T> &	getOrigin( void ) const;
-	
-	void setDirection( const TVec3<T>  &aDirection );
+			bool calcTriangleIntersection(const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, TVec3<T> * intersectionPoint) const;
+			bool calcTriangleIntersection(const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, T *result) const;
+			bool calcPlaneIntersection(const TVec3<T>  &origin, const TVec3<T>  &normal, T *result) const;
 
-	const TVec3<T> &	getDirection( void ) const;
-	const TVec3<T> &	getInverseDirection( void ) const;
-	
-	const char getSignX( void ) const;
-	const char getSignY( void ) const;
-	const char getSignZ( void ) const;		
-};
+			void			setOrigin(const TVec3<T>  &aOrigin);
+			const TVec3<T> &	getOrigin(void) const;
 
+			void setDirection(const TVec3<T>  &aDirection);
+
+			const TVec3<T> &	getDirection(void) const;
+			const TVec3<T> &	getInverseDirection(void) const;
+
+			const char getSignX(void) const;
+			const char getSignY(void) const;
+			const char getSignZ(void) const;
+
+		}; // class TRay
+
+	} // namespace math
+
+} // namespace eve
 
 //=================================================================================================
 template< typename T >
-TRay<T>::TRay( const TVec3<T>  &aOrigin, const TVec3<T>  &aDirection )
+EVE_FORCE_INLINE eve::math::TRay<T>::TRay(const TVec3<T>  &aOrigin, const TVec3<T>  &aDirection)
 	: m_origin			( aOrigin )
 	, m_direction		( TVec3<T>::zero() )
 	, m_invDirection	( TVec3<T>::zero() )
@@ -65,14 +114,14 @@ TRay<T>::TRay( const TVec3<T>  &aOrigin, const TVec3<T>  &aDirection )
 
 //=================================================================================================
 template< typename T >
-TRay<T>::~TRay( void )
+EVE_FORCE_INLINE eve::math::TRay<T>::~TRay(void)
 {}	
 
 
 
 //=================================================================================================
 template< typename T >
-TVec3<T> TRay<T>::calcPosition( T t ) const 
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TRay<T>::calcPosition(T t) const
 { 
 	return m_origin + m_direction * t; 
 }
@@ -81,7 +130,7 @@ TVec3<T> TRay<T>::calcPosition( T t ) const
 
 //=================================================================================================
 template< typename T >
-bool TRay<T>::calcTriangleIntersection( const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, TVec3<T> * intersectionPoint ) const
+EVE_FORCE_INLINE bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & vert0, const eve::math::TVec3<T> & vert1, const eve::math::TVec3<T> & vert2, eve::math::TVec3<T> * intersectionPoint) const
 {
 	// Triangle vectors
 	Vec3f	I, u, v, n;  
@@ -100,7 +149,7 @@ bool TRay<T>::calcTriangleIntersection( const TVec3<T>  &vert0, const TVec3<T>  
 	w0 = m_origin - vert0;
 	a = -n.dot( w0 );
 	b =  n.dot( dir );
-	if( tmath<T>::fabs(b) < PICKING_EPSILON ) { // ray is parallel to triangle plane
+	if( tmath<T>::fabs(b) < EVE_PICKING_EPSILON ) { // ray is parallel to triangle plane
 		return false;          
 	}
 
@@ -143,7 +192,7 @@ bool TRay<T>::calcTriangleIntersection( const TVec3<T>  &vert0, const TVec3<T>  
 
 //=================================================================================================
 template< typename T >
-bool TRay<T>::calcTriangleIntersection( const TVec3<T> & vert0, const TVec3<T> & vert1, const TVec3<T> & vert2, T * result ) const
+EVE_FORCE_INLINE bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & vert0, const eve::math::TVec3<T> & vert1, const eve::math::TVec3<T> & vert2, T * result) const
 {
 	Vec3f edge1, edge2, tvec, pvec, qvec;
 	T det;
@@ -195,7 +244,7 @@ bool TRay<T>::calcTriangleIntersection( const TVec3<T> & vert0, const TVec3<T> &
 
 //=================================================================================================
 template< typename T >
-bool TRay<T>::calcPlaneIntersection( const TVec3<T>  &origin, const TVec3<T>  &normal, T *result ) const
+EVE_FORCE_INLINE bool eve::math::TRay<T>::calcPlaneIntersection(const eve::math::TVec3<T> & origin, const eve::math::TVec3<T> & normal, T * result) const
 {
 	bool breturn = false;
 
@@ -214,14 +263,14 @@ bool TRay<T>::calcPlaneIntersection( const TVec3<T>  &origin, const TVec3<T>  &n
 
 //=================================================================================================
 template< typename T >
-void TRay<T>::setOrigin( const TVec3<T>  &aOrigin ) 
+EVE_FORCE_INLINE void eve::math::TRay<T>::setOrigin(const eve::math::TVec3<T> & aOrigin)
 { 
 	m_origin = aOrigin; 
 }
 
 //=================================================================================================
 template< typename T >
-const TVec3<T> &	TRay<T>::getOrigin( void ) const 
+EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getOrigin(void) const
 { 
 	return m_origin; 
 }
@@ -230,25 +279,25 @@ const TVec3<T> &	TRay<T>::getOrigin( void ) const
 
 //=================================================================================================
 template< typename T >
-void TRay<T>::setDirection( const TVec3<T>  &aDirection ) 
+EVE_FORCE_INLINE void eve::math::TRay<T>::setDirection(const eve::math::TVec3<T> & aDirection)
 {
 	m_direction = aDirection;
-	m_invDirection = TVec3<T> ( 1.0f / m_direction.x, 1.0f / m_direction.y, 1.0f / m_direction.z );
-	m_signX = ( m_direction.x < 0.0f ) ? 1 : 0;
-	m_signY = ( m_direction.y < 0.0f ) ? 1 : 0;
-	m_signZ = ( m_direction.z < 0.0f ) ? 1 : 0;		
+	m_invDirection = eve::math::TVec3<T>(static_cast<T>(1) / m_direction.x, static_cast<T>(1) / m_direction.y, static_cast<T>(1) / m_direction.z);
+	m_signX = (m_direction.x < static_cast<T>(0)) ? 1 : 0;
+	m_signY = (m_direction.y < static_cast<T>(0)) ? 1 : 0;
+	m_signZ = (m_direction.z < static_cast<T>(0)) ? 1 : 0;
 }
 
 //=================================================================================================
 template< typename T >
-const TVec3<T> &	TRay<T>::getDirection( void ) const 
+EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getDirection(void) const
 { 
 	return m_direction; 
 }
 
 //=================================================================================================
 template< typename T >
-const TVec3<T> &	TRay<T>::getInverseDirection( void ) const 
+EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getInverseDirection(void) const
 { 
 	return m_invDirection; 
 }
@@ -257,28 +306,28 @@ const TVec3<T> &	TRay<T>::getInverseDirection( void ) const
 
 //=================================================================================================
 template< typename T >
-const char TRay<T>::getSignX( void ) const 
+EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignX(void) const
 { 
 	return m_signX; 
 }
 
 //=================================================================================================
 template< typename T >
-const char TRay<T>::getSignY( void ) const 
+EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignY(void) const
 { 
 	return m_signY; 
 }
 
 //=================================================================================================
 template< typename T >
-const char TRay<T>::getSignZ( void ) const 
+EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignZ(void) const
 { 
 	return m_signZ; 
 }	
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // Typedefs
-typedef TRay<float>	 Rayf;
-typedef TRay<double> Rayd;
+typedef eve::math::TRay<float>	Rayf;
+typedef eve::math::TRay<double>	Rayd;
 
-#endif // __TRAY_H__
+#endif // __EVE_MATH_TRAY_H__

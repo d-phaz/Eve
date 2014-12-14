@@ -36,8 +36,6 @@
 #include "eve/time/Absolute.h"
 #include "eve/time/Clock.h"
 
-#include "eve/math/Includes.h"
-
 class Example final
 	: public eve::sys::View
 {
@@ -50,6 +48,7 @@ private:
 	eve::ogl::Pbo *				pbo;
 	eve::ogl::Texture *			tex;
 	eve::ogl::Shader *			shader;
+	eve::ogl::Vao *				vao;
 
 	eve::time::Timer *			m_pTimer;
 	eve::time::Clock *			m_pClock;
@@ -103,11 +102,15 @@ void Example::initThreadedData(void)
 	eve::ogl::FormatShader fmtShader;
 	shader = renderer->create(fmtShader);
 
+	eve::ogl::FormatVao fmtVao = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f::one(), eve::color4f::red());
+	vao = renderer->create(fmtVao);
+
+
 	//m_pTimer = EVE_CREATE_PTR(eve::time::Timer);
 	m_pTimer = eve::time::Timer::create_ptr(true);
 
 	m_pClock = EVE_CREATE_PTR(eve::time::Clock);
-	m_pClock->registerToEvent(this);
+	m_pClock->registerListener(this);
 	m_pClock->setRunWait(5);
 	m_pClock->setPeriodicInterval(10);
 	//m_pClock->start();
@@ -119,11 +122,14 @@ void Example::initThreadedData(void)
 	EVE_LOG_INFO("eve::vec4i_t[3] : %d", vec[3]);
 
 	eve::vec4f v(0.0F, 1.0F, 2.0f, 3.0f);
-	EVE_LOG_INFO("Vec4f.z : %f", v.z);
+	EVE_LOG_INFO("vec4f.z : %f", v.z);
 
 	eve::mat22f mat22(0.0f);
 	eve::mat33f mat33(0.0f);
 	eve::mat44f mat44(0.0f);
+
+	eve::math::Cameraf * cam = eve::math::Cameraf::create_ptr();
+	EVE_RELEASE_PTR(cam);
 }
 
 void Example::releaseThreadedData(void)
@@ -137,6 +143,7 @@ void Example::releaseThreadedData(void)
 	tex->requestRelease();
 	pbo->requestRelease();
 	fbo->requestRelease();
+	vao->requestRelease();
 	this->releaseRenderer(renderer);
 
 	// Call parent class.

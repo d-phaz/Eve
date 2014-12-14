@@ -29,20 +29,20 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if !defined(__EVE_MATH_TVECTOR_H__)
+#if !defined(__EVE_MATH_CORE_TVECTOR_H__)
 #error "Do not include this header directly, include eve/math/Tvector.h instead"
 #endif
 
 #pragma once
-#ifndef __EVE_MATH_TVECTOR_4_H__
-#define __EVE_MATH_TVECTOR_4_H__
+#ifndef __EVE_MATH_CORE_TVECTOR_4_H__
+#define __EVE_MATH_CORE_TVECTOR_4_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_MATH_H__
+#include "eve/math/core/Math.h"
 #endif
 
 
@@ -164,6 +164,15 @@ namespace eve
 			static TVec4<T> max(void);
 			static TVec4<T> zero(void);
 			static TVec4<T> one(void);
+			
+
+			static TVec4<T> white(void);
+			static TVec4<T> black(void);
+
+			static TVec4<T> red(void);
+			static TVec4<T> green(void);
+			static TVec4<T> blue(void);
+
 
 			TVec4<T> slerp(T fact, const TVec3<T> &r) const;
 
@@ -787,6 +796,34 @@ template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::one
 
 
 //=================================================================================================
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::white(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1), static_cast<T>(1));
+}
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::black(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
+}
+
+
+
+//=================================================================================================
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::red(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1));
+}
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::green(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0), static_cast<T>(1));
+}
+template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::blue(void)
+{
+	return eve::math::TVec4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(1), static_cast<T>(1));
+}
+
+
+
+//=================================================================================================
 template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::slerp(T fact, const eve::math::TVec3<T> & r) const
 {
 	T cosAlpha, alpha, sinAlpha;
@@ -1139,4 +1176,4 @@ template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::wAx
 template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::NaN(void)   { return eve::math::TVec4<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
 
 
-#endif // __EVE_MATH_TVECTOR_4_H__
+#endif // __EVE_MATH_CORE_TVECTOR_4_H__

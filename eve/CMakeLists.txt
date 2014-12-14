@@ -42,6 +42,22 @@ set( CMAKE_AUTOMOC_RELAXED_MODE TRUE )
 set( SOURCE_FILES )
 set( LIBS )
 
+	
+# OpenCL.
+###################################################################################################
+if(OPTION_BUILD_ENABLE_OPENCL)
+	set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
+	set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
+	find_package( OpenCL REQUIRED )
+	if(${OPENCL_FOUND})
+		include_directories( ${OPENCL_INCLUDE_DIR} )
+		set( LIBS ${LIBS} ${OPENCL_LIBRARY})
+	else()
+		message(FATAL_ERROR "OpenCL not found on this platform.")
+	endif()
+	set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+endif()
+
 
 # App.
 #################################################
@@ -121,7 +137,7 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 		)
 	
 	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
-	source_group( "DirectX11" FILES ${DIRECTX11_SRCS} )
+	source_group( "DirectX11 Core" FILES ${DIRECTX11_SRCS} )
 endif()
 
 
@@ -156,22 +172,57 @@ set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
 source_group( "Files" FILES ${FILES_SRCS} )
 
 
+# Geometry.
+#################################################
+set( GEOM_SRCS  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${GEOM_SRCS} )
+source_group( "Geometry" FILES ${GEOM_SRCS} )
+
+
+# Input / Output.
+#################################################
+set( IO_SRCS  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${IO_SRCS} )
+source_group( "Input / Output" FILES ${IO_SRCS} )
+
+
 # Math.
 #################################################
 set( MATH_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Math.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Simd.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix22.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix33.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix44.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TQuaternion.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector2.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector3.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector4.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Types.h )
+
+set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
+source_group( "Math Core" FILES ${MATH_SRCS} )
+
+set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Math.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Simd.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix22.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix33.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMatrix44.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TQuaternion.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector2.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector3.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TVector4.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.h
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TBox.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TCamera.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TRay.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
 source_group( "Math" FILES ${MATH_SRCS} )
@@ -180,6 +231,7 @@ source_group( "Math" FILES ${MATH_SRCS} )
 # Memory.
 #################################################
 set( MEMORY_SRCS
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.cpp
@@ -205,28 +257,30 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 
 # OpenCL.
 #################################################
-set( OPENCL_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/External.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.h )
+if(${OPENCL_FOUND})
+	set( OPENCL_SRCS
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.cpp 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.h 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.cpp 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.h 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.cpp 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.h 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/External.h
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.cpp 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.h 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.cpp 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.h 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.cpp 
+		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.h )
 
-# Generate Configuration.h
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h @ONLY )
-set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h PROPERTIES GENERATED TRUE )	
-set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
+	# Generate Configuration.h
+	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h @ONLY )
+	set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h PROPERTIES GENERATED TRUE )	
+	set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
 
-set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
-source_group( "OpenCL" FILES ${OPENCL_SRCS} )
+	set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
+	source_group( "OpenCL Core" FILES ${OPENCL_SRCS} )
+endif()
 
 
 # OpenGL.
@@ -261,7 +315,7 @@ set( OPENGL_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.h  )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
-source_group( "OpenGL" FILES ${OPENGL_SRCS} )
+source_group( "OpenGL Core" FILES ${OPENGL_SRCS} )
 
 
 # String.
@@ -456,16 +510,6 @@ if( WIN32 )
 	ADD_DEFINITIONS( -DGLEW_STATIC=1 )
 	set( LIBS ${LIBS} ${GLEW_LIBS})
 endif()
-
-	
-# OpenCL.
-#################################################
-set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
-set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
-find_package( OpenCL REQUIRED )
-include_directories( ${OPENCL_INCLUDE_DIR} )
-set( LIBS ${LIBS} ${OPENCL_LIBRARY})
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
 
 
 # # POCO

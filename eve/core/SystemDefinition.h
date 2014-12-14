@@ -153,11 +153,4 @@
 #endif
 
 
-
-#if defined(EVE_OS_WIN)
-#define EVE_FORCE_INLINE __forceinline
-#else
-#define EVE_FORCE_INLINE inline
-#endif
-
 #endif // __EVE_CORE_SYSTEM_DEFINITION__

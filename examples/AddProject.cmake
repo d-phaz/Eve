@@ -199,19 +199,25 @@ macro( add_project PROJECT_NAME_IN )
 					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewmxs.lib )
 			endif()	
 		endif()
-		ADD_DEFINITIONS( -DGLEW_STATIC=1 )
+		add_definitions( -DGLEW_STATIC=1 )
 		set( LIBS ${LIBS} ${GLEW_LIBS})
 	endif()
 
 	
 	# OpenCL.
 	#################################################
-	set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
-	set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
-	find_package( OpenCL REQUIRED )
-	include_directories( ${OPENCL_INCLUDE_DIR} )
-	set( LIBS ${LIBS} ${OPENCL_LIBRARY})
-	set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+	if(OPTION_BUILD_ENABLE_OPENCL)
+		set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
+		set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
+		find_package( OpenCL REQUIRED )
+		if(${OPENCL_FOUND})
+			include_directories( ${OPENCL_INCLUDE_DIR} )
+			set( LIBS ${LIBS} ${OPENCL_LIBRARY})
+		else()
+			message(FATAL_ERROR "OpenCL not found on this platform.")
+		endif()
+		set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH_OLD}")
+	endif()
 
 	# # POCO
 	# #################################################

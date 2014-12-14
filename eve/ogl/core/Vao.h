@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_VAO_H__
-#define __EVE_OPENGL_VAO_H__
+#ifndef __EVE_OPENGL_CORE_VAO_H__
+#define __EVE_OPENGL_CORE_VAO_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -176,9 +176,36 @@ namespace eve
 			/** \brief Get OpenGL texture unique id. (pure virtual) */
 			virtual const GLuint getId(void) const override;
 
+
 		public:
+			/** \brief Get number of vertices. */
+			const GLint getNumVertices(void) const;
+			/** \brief Get number of indices. */
+			const GLint getNumIndices(void) const;
+
+
+		public:
+			/** \brief Get per vertex position values amount (should be 2 in 2D scene, 3 in 3D scene). */
+			const GLsizei getPerVertexNumPosition(void) const;
+			/** \brief Get per vertex diffuse coordinates values amount (should be 2 is using texture coordinates, 4 if using color). */
+			const GLsizei getPerVertexNumDiffuse(void) const;
+			/** \brief Get per vertex normals values amount (should be 3). */
+			const GLsizei getPerVertexNumNormal(void) const;
+
+
+		public:
+			/** \brief Get the pointer to vertices data in memory (used as std::shared_ptr). */
+			std::shared_ptr<float>	getVertices(void) const;
 			/** \brief Set array buffer data (vertices). */
 			void setVertices(const std::shared_ptr<float> & p_data);
+
+
+		public:
+			/** \brief Get the pointer to indices data in memory (used as std::shared_ptr). */
+			std::shared_ptr<GLuint> getIndices(void) const;
+			/** \brief Set element buffer data (indices). */
+			void setIndices(const std::shared_ptr<GLuint> & p_data);
+
 			
 		}; // class Fbo
 
@@ -192,6 +219,26 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Vao::getId(void) const	{ return m_id; }
+EVE_FORCE_INLINE const GLuint eve::ogl::Vao::getId(void) const	{ return m_id; }
 
-#endif // __EVE_OPENGL_VAO_H__
+
+
+//=================================================================================================
+EVE_FORCE_INLINE const GLint eve::ogl::Vao::getNumVertices(void) const	{ return m_numVertices; }
+EVE_FORCE_INLINE const GLint eve::ogl::Vao::getNumIndices(void) const	{ return m_numIndices;  }
+
+
+//=================================================================================================
+EVE_FORCE_INLINE const GLsizei eve::ogl::Vao::getPerVertexNumPosition(void) const	{ return m_perVertexNumPosition;	}
+EVE_FORCE_INLINE const GLsizei eve::ogl::Vao::getPerVertexNumDiffuse(void) const	{ return m_perVertexNumDiffuse;		}
+EVE_FORCE_INLINE const GLsizei eve::ogl::Vao::getPerVertexNumNormal(void) const		{ return m_perVertexNumNormal;		}
+
+
+//=================================================================================================
+EVE_FORCE_INLINE std::shared_ptr<float>	eve::ogl::Vao::getVertices(void) const	{ return m_pVertices; }
+
+
+//=================================================================================================
+EVE_FORCE_INLINE std::shared_ptr<GLuint> eve::ogl::Vao::getIndices(void) const	{ return m_pIndices;  }
+
+#endif // __EVE_OPENGL_CORE_VAO_H__

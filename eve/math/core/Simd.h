@@ -30,11 +30,11 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_SIMD_H__
-#define __EVE_MATH_SIMD_H__
+#ifndef __EVE_MATH_CORE_SIMD_H__
+#define __EVE_MATH_CORE_SIMD_H__
 
-#ifndef __EVE_MATH_TYPES_H__
-#include "eve/math/Types.h"
+#ifndef __EVE_MATH_CORE_TYPES_H__
+#include "eve/math/core/Types.h"
 #endif
 
 namespace eve
@@ -166,4 +166,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __EVE_MATH_SIMD_H__
+#endif // __EVE_MATH_CORE_SIMD_H__

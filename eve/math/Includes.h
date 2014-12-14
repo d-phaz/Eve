@@ -34,20 +34,24 @@
 #define __EVE_MATH_INCLUDES_H__
 
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_INCLUDES_H__
+#include "eve/math/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_H__
-#include "eve/math/TMatrix.h"
+#ifndef __EVE_MATH_MATRIX_DECOMPOSE_H__
+#include "eve/math/MatrixDecompose.h"
 #endif
 
-#ifndef __EVE_MATH_TQUATERNION_H__
-#include "eve/math/TQuaternion.h"
-#endif
+#ifndef __EVE_MATH_TBOX_H__
+#include "eve/math/TBox.h"
+#endif 
 
-#ifndef __EVE_MATH_TVECTOR_H__
-#include "eve/math/TVector.h"
+#ifndef __EVE_MATH_TCAMERA_H__
+#include "eve/math/TCamera.h"
+#endif 
+
+#ifndef __EVE_MATH_TRAY_H__
+#include "eve/math/TRay.h"
 #endif
 
 #ifndef __EVE_MATH_TYPES_H__

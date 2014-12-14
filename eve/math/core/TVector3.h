@@ -29,20 +29,20 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#if !defined(__EVE_MATH_TVECTOR_H__)
+#if !defined(__EVE_MATH_CORE_TVECTOR_H__)
 #error "Do not include this header directly, include eve/math/Tvector.h instead"
 #endif
 
 #pragma once
-#ifndef __EVE_MATH_TVECTOR_3_H__
-#define __EVE_MATH_TVECTOR_3_H__
+#ifndef __EVE_MATH_CORE_TVECTOR_3_H__
+#define __EVE_MATH_CORE_TVECTOR_3_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_MATH_MATH_H__
-#include "eve/math/Math.h"
+#ifndef __EVE_MATH_CORE_MATH_H__
+#include "eve/math/core/Math.h"
 #endif
 
 
@@ -441,7 +441,7 @@ EVE_FORCE_INLINE T eve::math::TVec3<T>::dot(const eve::math::TVec3<T> &rhs) cons
 }
 
 template<typename T>
-EVE_FORCE_INLINE static T eve::math::TVec3<T>::dot(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y)
+EVE_FORCE_INLINE T eve::math::TVec3<T>::dot(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y)
 {
 	return x.x * y.x + x.y * y.y;
 }
@@ -453,7 +453,7 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::cross(const eve::math:
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::cross(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::cross(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y)
 {
 	return eve::math::TVec3<T>( x.y * y.z - y.y * x.z,
 								x.z * y.x - y.z * x.x,
@@ -461,13 +461,13 @@ EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::cross(eve::math
 }
 
 template<typename T>
-EVE_FORCE_INLINE static bool eve::math::TVec3<T>::equal(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y)
+EVE_FORCE_INLINE bool eve::math::TVec3<T>::equal(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y)
 {
 	return (eve::math::equal(x.x, y.x) && eve::math::equal(x.y, y.y) && eve::math::equal(x.z, y.z));
 }
 
 template<typename T>
-EVE_FORCE_INLINE static bool eve::math::TVec3<T>::equal(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y, T epsilon)
+EVE_FORCE_INLINE bool eve::math::TVec3<T>::equal(eve::math::TVec3<T> const & x, eve::math::TVec3<T> const & y, T epsilon)
 {
 	return (eve::math::equal(x.x, y.x, epsilon) && eve::math::equal(x.y, y.y, epsilon) && eve::math::equal(x.z, y.z, epsilon));
 }
@@ -485,7 +485,7 @@ EVE_FORCE_INLINE bool eve::math::TVec3<T>::equal(eve::math::TVec3<T> const & oth
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::normalize(const eve::math::TVec3<T> & p_v)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::normalize(const eve::math::TVec3<T> & p_v)
 {
 	T length = eve::math::sqrt(p_v.x*p_v.x + p_v.y*p_v.y + p_v.z*p_v.z);
 
@@ -692,7 +692,7 @@ EVE_FORCE_INLINE void eve::math::TVec3<T>::rotateAroundAxis(const TVec3<T> & axi
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::rotate_around_axis(const eve::math::TVec3<T> & v, const eve::math::TVec3<T> & axis, T angle)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::rotate_around_axis(const eve::math::TVec3<T> & v, const eve::math::TVec3<T> & axis, T angle)
 {
 	if ((v.x == 0.0) && (v.y == 0.0) && (v.z == 0.0)) { return eve::math::TVec3<T>(); }
 
@@ -728,7 +728,7 @@ EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::rotate_around_a
 
 
 template<typename T>
-EVE_FORCE_INLINE static T eve::math::TVec3<T>::angle(const eve::math::TVec3<T> & v, const eve::math::TVec3<T> & w)
+EVE_FORCE_INLINE T eve::math::TVec3<T>::angle(const eve::math::TVec3<T> & v, const eve::math::TVec3<T> & w)
 {
 	// dot product(v,w) = length(v)*length(w)*cos(angle) ==> angle = acos(dot/(length(v)*length(w))) = acos(dot(norm(v)*norm(w)));
 	T cosineOfAngle = v.normalized().dot(w.normalized());
@@ -740,7 +740,7 @@ EVE_FORCE_INLINE static T eve::math::TVec3<T>::angle(const eve::math::TVec3<T> &
 }
 
 template<typename T>
-EVE_FORCE_INLINE static T eve::math::TVec3<T>::LengthSquared(const eve::math::TVec3<T> &rhs)
+EVE_FORCE_INLINE T eve::math::TVec3<T>::LengthSquared(const eve::math::TVec3<T> &rhs)
 {
 	return rhs.x*rhs.x + rhs.y*rhs.y + rhs.z*rhs.z;
 }
@@ -748,31 +748,31 @@ EVE_FORCE_INLINE static T eve::math::TVec3<T>::LengthSquared(const eve::math::TV
 
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::max(void)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::max(void)
 {
 	return eve::math::TVec3<T>(std::numeric_limits<T>::max(), std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::zero(void)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::zero(void)
 {
 	return eve::math::TVec3<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0));
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::one(void)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::one(void)
 {
 	return eve::math::TVec3<T>(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1));
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::view_direction(void)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::view_direction(void)
 {
 	return eve::math::TVec3<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(-1));
 }
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::world_up(void)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::world_up(void)
 {
 	return eve::math::TVec3<T>(static_cast<T>(0), static_cast<T>(1), static_cast<T>(0));
 }
@@ -890,22 +890,22 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::zzz(void) const { retu
 
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::xAxis(void)		{ return TVec3<T>(1, 0, 0); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::xAxis(void)		{ return TVec3<T>(1, 0, 0); }
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::yAxis(void)		{ return TVec3<T>(0, 1, 0); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::yAxis(void)		{ return TVec3<T>(0, 1, 0); }
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::zAxis(void)		{ return TVec3<T>(0, 0, 1); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::zAxis(void)		{ return TVec3<T>(0, 0, 1); }
 
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::xAxisNeg(void)		{ return eve::math::TVec3<T>(-1, 0, 0); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::xAxisNeg(void)		{ return eve::math::TVec3<T>(-1, 0, 0); }
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::yAxisNeg(void)		{ return eve::math::TVec3<T>(0, -1, 0); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::yAxisNeg(void)		{ return eve::math::TVec3<T>(0, -1, 0); }
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::zAxisNeg(void)		{ return eve::math::TVec3<T>(0, 0, -1); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::zAxisNeg(void)		{ return eve::math::TVec3<T>(0, 0, -1); }
 
 
 template<typename T>
-EVE_FORCE_INLINE static eve::math::TVec3<T> eve::math::TVec3<T>::NaN(void)			{ return eve::math::TVec3<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TVec3<T>::NaN(void)			{ return eve::math::TVec3<T>(eve::math::NaN(), eve::math::NaN(), eve::math::NaN()); }
 
-#endif // __EVE_MATH_TVECTOR_3_H__
+#endif // __EVE_MATH_CORE_TVECTOR_3_H__

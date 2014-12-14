@@ -30,19 +30,19 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_TMATRIX_H__
-#define __EVE_MATH_TMATRIX_H__
+#ifndef __EVE_MATH_CORE_TMATRIX_H__
+#define __EVE_MATH_CORE_TMATRIX_H__
 
-#ifndef __EVE_MATH_TMATRIX_22_H__
-#include "eve/math/TMatrix22.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_22_H__
+#include "eve/math/core/TMatrix22.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_33_H__
-#include "eve/math/TMatrix33.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_33_H__
+#include "eve/math/core/TMatrix33.h"
 #endif
 
-#ifndef __EVE_MATH_TMATRIX_44_H__
-#include "eve/math/TMatrix44.h"
+#ifndef __EVE_MATH_CORE_TMATRIX_44_H__
+#include "eve/math/core/TMatrix44.h"
 #endif
 
 
@@ -127,4 +127,4 @@
 // 	return lastFrame( prevMatrix, prevPoint.xyz(), lastPoint.xyz() );
 // }
 
-#endif // __EVE_MATH_TMATRIX_H__
+#endif // __EVE_MATH_CORE_TMATRIX_H__

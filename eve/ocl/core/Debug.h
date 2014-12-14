@@ -30,14 +30,14 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENCL_DEBUG_H__
-#define __EVE_OPENCL_DEBUG_H__
+#ifndef __EVE_OPENCL_CORE_DEBUG_H__
+#define __EVE_OPENCL_CORE_DEBUG_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
-#ifndef __EVE_OPENCL_EXTERNAL_H__
+#ifndef __EVE_OPENCL_CORE_EXTERNAL_H__
 #include "eve/ocl/core/External.h"
 #endif
 

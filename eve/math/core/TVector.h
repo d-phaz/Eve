@@ -30,19 +30,19 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_TVECTOR_H__
-#define __EVE_MATH_TVECTOR_H__
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#define __EVE_MATH_CORE_TVECTOR_H__
 
-#ifndef __EVE_MATH_TVECTOR_2_H__
-#include "eve/math/TVector2.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_2_H__
+#include "eve/math/core/TVector2.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_3_H__
-#include "eve/math/TVector3.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_3_H__
+#include "eve/math/core/TVector3.h"
 #endif
 
-#ifndef __EVE_MATH_TVECTOR_4_H__
-#include "eve/math/TVector4.h"
+#ifndef __EVE_MATH_CORE_TVECTOR_4_H__
+#include "eve/math/core/TVector4.h"
 #endif
 
 
@@ -124,4 +124,4 @@ namespace eve
 
 } // namespace eve
 
-#endif // __TVECTOR_H__
+#endif // __EVE_MATH_CORE_TVECTOR_H__

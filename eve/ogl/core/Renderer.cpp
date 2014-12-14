@@ -32,11 +32,11 @@
 // Main header.
 #include "eve/ogl/core/Renderer.h"
 
-#ifndef __EVE_OPENGL_CONTEXT_H__
+#ifndef __EVE_OPENGL_CORE_CONTEXT_H__
 #include "eve/ogl/core/win32/Context.h"
 #endif
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 

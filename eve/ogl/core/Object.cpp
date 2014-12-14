@@ -32,7 +32,7 @@
 // Main header
 #include "eve/ogl/core/Object.h"
 
-#ifndef __EVE_OPENGL_RENDER_H__
+#ifndef __EVE_OPENGL_CORE_RENDER_H__
 #include "eve/ogl/core/Renderer.h"
 #endif
 

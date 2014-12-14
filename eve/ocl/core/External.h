@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENCL_EXTERNAL_H__
-#define __EVE_OPENCL_EXTERNAL_H__
+#ifndef __EVE_OPENCL_CORE_EXTERNAL_H__
+#define __EVE_OPENCL_CORE_EXTERNAL_H__
 
 
 #ifndef __EVE_CORE_SYSTEM_DEFINITION__
@@ -52,9 +52,9 @@
 #endif
 
 
-#ifndef __EVE_OPENCL_CONFIGURATION_H__
+#ifndef __EVE_OPENCL_CORE_CONFIGURATION_H__
 #include "eve/ocl/core/Configuration.h"
 #endif
 
 
-#endif // __EVE_OPENCL_EXTERNAL_H__
+#endif // __EVE_OPENCL_CORE_EXTERNAL_H__

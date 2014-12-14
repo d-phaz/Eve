@@ -56,7 +56,7 @@ namespace eve
 		/**
 		* \class eve::mess::Server
 		*
-		* \brief Holds and manages creation and redirection of error/warning/info/debug messages.
+		* \brief Holds and manages creation and redirection of error/info/warning/progress/debug messages.
 		*
 		* \note extends mem::Pointer
 		*/
@@ -199,8 +199,7 @@ namespace eve
 			static handlerMethod get_progress_handler(void);
 			/** \brief Get the debug msg handler. */
 			static handlerMethod get_debug_handler(void);
-
-
+			
 
 			/** \brief Redirect the error messages to target file \p_pFile. */
 			static void set_error_stream(FILE * p_pFile);

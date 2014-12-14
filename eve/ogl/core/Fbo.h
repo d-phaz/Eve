@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_FBO_H__
-#define __EVE_OPENGL_FBO_H__
+#ifndef __EVE_OPENGL_CORE_FBO_H__
+#define __EVE_OPENGL_CORE_FBO_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -228,17 +228,17 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Fbo::getId(void) const				{ return m_id; }
-inline const GLuint eve::ogl::Fbo::getTextureId( uint32_t p_id )	{ return m_pSlotTextureIds[ p_id ]; }
+EVE_FORCE_INLINE const GLuint eve::ogl::Fbo::getId(void) const				{ return m_id; }
+EVE_FORCE_INLINE const GLuint eve::ogl::Fbo::getTextureId(uint32_t p_id)	{ return m_pSlotTextureIds[p_id]; }
 
 
 //=================================================================================================
-inline void eve::ogl::Fbo::getSize(uint32_t & p_width, uint32_t & p_height)
+EVE_FORCE_INLINE void eve::ogl::Fbo::getSize(uint32_t & p_width, uint32_t & p_height)
 {
 	p_width  = m_width;
 	p_height = m_height;
 }
-inline const uint32_t eve::ogl::Fbo::getWidth(void) const  { return m_width;  }
-inline const uint32_t eve::ogl::Fbo::getHeight(void) const { return m_height; }
+EVE_FORCE_INLINE const uint32_t eve::ogl::Fbo::getWidth(void) const  { return m_width;  }
+EVE_FORCE_INLINE const uint32_t eve::ogl::Fbo::getHeight(void) const { return m_height; }
 
-#endif // __EVE_OPENGL_FBO_H__
+#endif // __EVE_OPENGL_CORE_FBO_H__

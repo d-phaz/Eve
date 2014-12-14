@@ -14,7 +14,7 @@
 
 
 
-IF (WIN32)
+if(WIN32)
      # =======================================================================
 	 #
      # First try to find something for a windows-environment. This is the most
@@ -27,104 +27,104 @@ IF (WIN32)
 	 #
      # =======================================================================
 
-     FIND_PATH(	AMD_OPENCL_BASEDIR
+     find_path(	AMD_OPENCL_BASEDIR
                 "include/CL/cl.h"
                 PATH $ENV{AMDAPPSDKROOT} )
 
-     FIND_PATH( NVIDIA_OPENCL_BASEDIR
+     find_path( NVIDIA_OPENCL_BASEDIR
 				"include/CL/cl.h"
 				PATH $ENV{CUDA_PATH} 
 				$ENV{CUDA_HOME} )
 				
-	FIND_PATH( INTEL_OPENCL_BASEDIR
+	 find_path( INTEL_OPENCL_BASEDIR
 				"include/CL/cl.h"
 				PATH $ENV{INTELOCLSDKROOT} )
 				
 				
 	# Setup for INTEL SDK
-	IF( INTEL_OPENCL_BASEDIR )
-		FIND_PATH( OPENCL_INCLUDE_DIR
+	if( INTEL_OPENCL_BASEDIR )
+		find_path( OPENCL_INCLUDE_DIR
                     NAMES CL/cl.hpp OpenCL/cl.hpp CL/cl.h OpenCL/cl.h
                     PATHS $ENV{INTELOCLSDKROOT}include )
-		 MESSAGE( STATUS "INTEL-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
+		 message( STATUS "INTEL-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
 		 
-		 IF( CMAKE_CL_64 )
-             FIND_LIBRARY( 	OPENCL_LIBRARY
+		 if( CMAKE_CL_64 )
+             find_library( 	OPENCL_LIBRARY
 							NAMES OpenCL
 							PATHS $ENV{INTELOCLSDKROOT}lib/x64 )
-         ELSE()
-             FIND_LIBRARY( OPENCL_LIBRARY
+         else()
+             find_library( OPENCL_LIBRARY
 							NAMES OpenCL
 							PATHS $ENV{INTELOCLSDKROOT}lib/x86 )
-         ENDIF()
-    ELSE()
-        MESSAGE( "INTEL-OpenCL-Implementation: NOT_FOUND" )
-    ENDIF()
+         endif()
+    else()
+        message( "INTEL-OpenCL-Implementation: NOT_FOUND" )
+    endif()
 			
      # Setup for AMD/ATI Stream-SDK
-     IF( AMD_OPENCL_BASEDIR )
-         FIND_PATH( OPENCL_INCLUDE_DIR
+     if( AMD_OPENCL_BASEDIR )
+         find_path( OPENCL_INCLUDE_DIR
                     NAMES CL/cl.hpp OpenCL/cl.hpp CL/cl.h OpenCL/cl.h
                     PATHS $ENV{AMDAPPSDKROOT}include )
          
-		 MESSAGE( STATUS "AMD-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
+		 message( STATUS "AMD-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
          
-		 IF( CMAKE_CL_64 )
-             FIND_LIBRARY( 	OPENCL_LIBRARY
+		 if( CMAKE_CL_64 )
+             find_library( 	OPENCL_LIBRARY
 							NAMES OpenCL
 							PATHS $ENV{AMDAPPSDKROOT}lib/x86_64 )
-         ELSE()
-             FIND_LIBRARY( 	OPENCL_LIBRARY
+         else()
+             find_library( 	OPENCL_LIBRARY
 							NAMES OpenCL
 							PATHS $ENV{AMDAPPSDKROOT}lib/x86 )
-         ENDIF()
+         endif()
 		 
-		 IF( OPENCL_LIBRARY )
-			MESSAGE( STATUS "AMD-OpenCL-Library path : " ${OPENCL_LIBRARY} )
-		 ENDIF()
+		 if( OPENCL_LIBRARY )
+			message( STATUS "AMD-OpenCL-Library path : " ${OPENCL_LIBRARY} )
+		 endif()
 		 
-     ELSE()
-         MESSAGE( "AMD/ATI-Stream-OpenCL-Implementation: NOT_FOUND" )
-     ENDIF()
+     else()
+         message( "AMD/ATI-Stream-OpenCL-Implementation: NOT_FOUND" )
+     endif()
 	 
 	 
 	 # Setup for NVIDIA SDK
-     IF( NVIDIA_OPENCL_BASEDIR )
-         FIND_PATH( OPENCL_INCLUDE_DIR
+     if( NVIDIA_OPENCL_BASEDIR )
+         find_path( OPENCL_INCLUDE_DIR
                     NAMES CL/cl.hpp OpenCL/cl.hpp CL/cl.h OpenCL/cl.h
 					PATHS ${NVIDIA_OPENCL_BASEDIR}/include )
 					
-         MESSAGE( STATUS "NVidia-CUDA-OpenCL-Includepath : " ${OPENCL_INCLUDE_DIR})
+         message( STATUS "NVidia-CUDA-OpenCL-Includepath : " ${OPENCL_INCLUDE_DIR})
 
-         IF( CMAKE_CL_64 )
-             FIND_LIBRARY( 	OPENCL_LIBRARY
+         if( CMAKE_CL_64 )
+             find_library( 	OPENCL_LIBRARY
 							NAMES OpenCL
 							PATHS ${NVIDIA_OPENCL_BASEDIR}/lib/x64 )
-         ELSE()
-             FIND_LIBRARY( 	OPENCL_LIBRARY
+         else()
+             find_library( 	OPENCL_LIBRARY
 							NAMES OpenCL
 							PATHS ${NVIDIA_OPENCL_BASEDIR}/lib/Win32 )
-         ENDIF()
+         endif()
 		 
-		 IF( OPENCL_LIBRARY )
-			MESSAGE( STATUS "NVidia-CUDA-OpenCL-Library path : " ${OPENCL_LIBRARY} )
-		 ENDIF()
+		 if( OPENCL_LIBRARY )
+			message( STATUS "NVidia-CUDA-OpenCL-Library path : " ${OPENCL_LIBRARY} )
+		 endif()
 		 
-     ELSE()
-         MESSAGE( "NVIDIA-Cuda-OpenCL-Implementation: NOT_FOUND" )
-     ENDIF()
+     else()
+         message( "NVIDIA-Cuda-OpenCL-Implementation: NOT_FOUND" )
+     endif()
 
-ENDIF()	# --------- WIN32
-
-
+endif()	# --------- WIN32
 
 
-IF( LINUX )
-     FIND_PATH(	OPENCL_INCLUDE_DIR
+
+
+if( LINUX )
+     find_path(	OPENCL_INCLUDE_DIR
                 NAMES CL/cl.h OpenCL/cl.h
                 HINTS ENV OPENCL_DIR
 
-                 PATHS     /include
+                 PATHS   /include
 
                          /usr/include
 
@@ -132,11 +132,9 @@ IF( LINUX )
 
                          ~/include )
 
-     message( STATUS
+     message( STATUS "Found OpenCL-include-path is :" ${OPENCL_INCLUDE_DIR} )
 
-              "Found OpenCL-include-path is :" ${OPENCL_INCLUDE_DIR} )
-
-     FIND_LIBRARY(    OPENCL_LIBRARY
+     find_library(   OPENCL_LIBRARY
 
                      NAMES OpenCL
 
@@ -151,22 +149,22 @@ IF( LINUX )
                              ~/lib )
 
      message( STATUS "Found OpenCL-library-path is :" ${OPENCL_LIBRARY} )
-ENDIF()
+endif()
 
 
-IF( APPLE )
-  FIND_LIBRARY(OPENCL_LIBRARY OpenCL DOC "OpenCL lib for OSX")
-  FIND_PATH(OPENCL_INCLUDE_DIR OpenCL/cl.h DOC "Include for OpenCL on OSX")
-  FIND_PATH(_OPENCL_CPP_INCLUDE_DIRS OpenCL/cl.hpp DOC "Include for OpenCL CPP bindings on OSX")
-ENDIF(APPLE)
+if( APPLE )
+  find_library(OPENCL_LIBRARY OpenCL DOC "OpenCL lib for OSX")
+  find_path(OPENCL_INCLUDE_DIR OpenCL/cl.h DOC "Include for OpenCL on OSX")
+  find_path(_OPENCL_CPP_INCLUDE_DIRS OpenCL/cl.hpp DOC "Include for OpenCL CPP bindings on OSX")
+endif(APPLE)
 
 
 SET( OPENCL_FOUND "NO" )
-IF(OPENCL_LIBRARY )
+if(OPENCL_LIBRARY )
 	SET( OPENCL_FOUND "YES" )
-ENDIF(OPENCL_LIBRARY)
+endif(OPENCL_LIBRARY)
 
-MARK_AS_ADVANCED(
+mark_as_advanced(
   OPENCL_INCLUDE_DIR
   OPENCL_LIBRARY
 )

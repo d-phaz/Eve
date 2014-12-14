@@ -32,12 +32,14 @@
 // Main class header
 #include "eve/ogl/core/win32/Context.h"
 
-#ifndef __EVE_OPENGL_DEBUG_H__
+#ifndef __EVE_OPENGL_CORE_DEBUG_H__
 #include "eve/ogl/core/Debug.h"
 #endif
 
-#ifndef __EVE_OPENCL_ENGINE_H__
+#if defined(EVE_ENABLE_OPENCL)
+#ifndef __EVE_OPENCL_CORE_ENGINE_H__
 #include "eve/ocl/core/Engine.h"
+#endif
 #endif
 
 #ifndef __EVE_SYSTEM_WINDOW_H__
@@ -155,7 +157,9 @@ void eve::ogl::Context::init(void)
 	this->updateFormatVersion();
 
 	// Init shared OpenCL context.
+#if defined(EVE_ENABLE_OPENCL)
 	m_pContextOpenCL = eve::ocl::Engine::create_context_OpenGL(m_hGLRC, m_hDC);
+#endif
 
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == 0)
@@ -443,7 +447,7 @@ void eve::ogl::SubContext::init(void)
 	m_hGLRC = wglCreateContextAttribsARB(m_hDC, eve::ogl::Context::get_handle(), contextAttribs);
 	if (m_hGLRC == 0)
 	{
-		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContext() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContextAttribsARB() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 

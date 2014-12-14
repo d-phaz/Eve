@@ -30,10 +30,10 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_UNIFORM_H__
-#define __EVE_OPENGL_UNIFORM_H__
+#ifndef __EVE_OPENGL_CORE_UNIFORM_H__
+#define __EVE_OPENGL_CORE_UNIFORM_H__
 
-#ifndef __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
 #endif
 
@@ -220,22 +220,22 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const int32_t eve::ogl::Uniform::get_max_vertex_uniform_blocks(void)			{ return m_max_vertex_uniform_blocks;			}
-inline const int32_t eve::ogl::Uniform::get_max_control_uniform_blocks(void)		{ return m_max_control_uniform_blocks;			}
-inline const int32_t eve::ogl::Uniform::get_max_evaluation_uniform_blocks(void)		{ return m_max_evaluation_uniform_blocks;		}
-inline const int32_t eve::ogl::Uniform::get_max_geometry_uniform_blocks(void)		{ return m_max_geometry_uniform_blocks;			}
-inline const int32_t eve::ogl::Uniform::get_max_fragment_uniform_blocks(void)		{ return m_max_fragment_uniform_blocks;			}	
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_vertex_uniform_blocks(void)		{ return m_max_vertex_uniform_blocks;			}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_control_uniform_blocks(void)		{ return m_max_control_uniform_blocks;			}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_evaluation_uniform_blocks(void)	{ return m_max_evaluation_uniform_blocks;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_geometry_uniform_blocks(void)		{ return m_max_geometry_uniform_blocks;			}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_fragment_uniform_blocks(void)		{ return m_max_fragment_uniform_blocks;			}	
 
 //=================================================================================================
-inline const int32_t eve::ogl::Uniform::get_max_uniform_buffer_binding(void)		{ return m_max_uniform_buffer_binding;			}
-inline const int32_t eve::ogl::Uniform::get_max_uniform_block_size(void)			{ return m_max_uniform_block_size;				}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_uniform_buffer_binding(void)		{ return m_max_uniform_buffer_binding;			}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_max_uniform_block_size(void)			{ return m_max_uniform_block_size;				}
 
 //=================================================================================================
-inline const int32_t eve::ogl::Uniform::get_uniform_buffer_offset_alignment(void)	{ return m_uniform_buffer_offset_alignment;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::Uniform::get_uniform_buffer_offset_alignment(void)	{ return m_uniform_buffer_offset_alignment;		}
 
 
 
 //=================================================================================================
-inline const GLuint eve::ogl::Uniform::getId(void) const	{ return m_id; }
+EVE_FORCE_INLINE const GLuint eve::ogl::Uniform::getId(void) const	{ return m_id; }
 
-#endif // __EVE_OPENGL_TEXTURE_H__
+#endif // __EVE_OPENGL_CORE_UNIFORM_H__

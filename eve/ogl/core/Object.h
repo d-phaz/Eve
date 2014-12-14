@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_OBJECT_H__
-#define __EVE_OPENGL_OBJECT_H__
+#ifndef __EVE_OPENGL_CORE_OBJECT_H__
+#define __EVE_OPENGL_CORE_OBJECT_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -45,7 +45,7 @@
 #include "eve/mess/Includes.h"
 #endif
 
-#ifndef __EVE_OPENGL_DEBUG_H__
+#ifndef __EVE_OPENGL_CORE_DEBUG_H__
 #include "eve/ogl/core/Debug.h"
 #endif
 
@@ -186,4 +186,4 @@ inline TOGLClass * eve::ogl::Object::create_object(eve::ogl::Format & p_format, 
 */
 #define EVE_OGL_CREATE(CLASS, FORMAT, RENDERER) eve::ogl::Object::create_object<CLASS>(FORMAT, RENDERER)
 
-#endif // __EVE_OPENGL_OBJECT_H__
+#endif // __EVE_OPENGL_CORE_OBJECT_H__
