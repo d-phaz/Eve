@@ -56,24 +56,24 @@
 
 namespace eve
 {
-	namespace __math_internal
+	namespace math
 	{
 		typedef EVE_ALIGNED16(int32_t)		__vec4i[4];
 		typedef EVE_ALIGNED16(uint32_t)		__vec4ui[4];
 		typedef EVE_ALIGNED16(float)		__vec4f[4];
 		typedef EVE_ALIGNED16(double)		__vec4d[4];
 
-	} // namespace __math_internal
+	} // namespace math
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 	//		Typedefs
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	typedef eve::__math_internal::__vec4i		vec4i_t;
-	typedef eve::__math_internal::__vec4ui		vec4iu_t;
-	typedef eve::__math_internal::__vec4f		vec4f_t;
-	typedef eve::__math_internal::__vec4d		vec4d_t;
+	typedef eve::math::__vec4i					vec4i_t;
+	typedef eve::math::__vec4ui					vec4iu_t;
+	typedef eve::math::__vec4f					vec4f_t;
+	typedef eve::math::__vec4d					vec4d_t;
 
 	
 	

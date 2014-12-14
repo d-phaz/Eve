@@ -8,7 +8,7 @@
 #include "vld.h"
 #endif
 
-/* #undef OPENCL_FOUND */
+#define OPENCL_FOUND
 #ifdef OPENCL_FOUND
 #define EVE_ENABLE_OPENCL
 #endif
