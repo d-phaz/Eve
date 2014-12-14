@@ -36,7 +36,7 @@
 #include "eve/ogl/core/Debug.h"
 #endif
 
-#if EVE_ENABLE_OPENCL
+#if defined(EVE_ENABLE_OPENCL)
 #ifndef __EVE_OPENCL_CORE_ENGINE_H__
 #include "eve/ocl/core/Engine.h"
 #endif
@@ -157,7 +157,7 @@ void eve::ogl::Context::init(void)
 	this->updateFormatVersion();
 
 	// Init shared OpenCL context.
-#if EVE_ENABLE_OPENCL
+#if defined(EVE_ENABLE_OPENCL)
 	m_pContextOpenCL = eve::ocl::Engine::create_context_OpenGL(m_hGLRC, m_hDC);
 #endif
 

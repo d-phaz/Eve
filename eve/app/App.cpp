@@ -32,7 +32,7 @@
 // Main header
 #include "eve/app/App.h"
 
-#if EVE_ENABLE_OPENCL
+#if defined(EVE_ENABLE_OPENCL)
 #ifndef __EVE_OPENCL_CORE_ENGINE_H__
 #include "eve/ocl/core/Engine.h"
 #endif
@@ -98,7 +98,7 @@ void eve::app::App::init(void)
 	eve::mess::Server::create_instance();
 
 	// OpenCL engine.
-#if EVE_ENABLE_OPENCL
+#if defined(EVE_ENABLE_OPENCL)
 	eve::ocl::Engine::create_instance();
 #endif
 	// OpenGL master context.
@@ -149,7 +149,7 @@ void eve::app::App::release(void)
 	// OpenGL master context.
 	eve::ogl::Context::release_instance();
 	// OpenCL engine.
-#if EVE_ENABLE_OPENCL
+#if defined(EVE_ENABLE_OPENCL)
 	eve::ocl::Engine::release_instance();
 #endif
 
