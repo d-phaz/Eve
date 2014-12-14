@@ -281,3 +281,10 @@ void eve::ogl::Vao::setVertices(const std::shared_ptr<float> & p_data)
 	m_pVertices = p_data;
 	this->requestOglUpdate();
 }
+
+//=================================================================================================
+void eve::ogl::Vao::setIndices(const std::shared_ptr<GLuint> & p_data)
+{
+	m_pIndices = p_data;
+	this->requestOglUpdate();
+}

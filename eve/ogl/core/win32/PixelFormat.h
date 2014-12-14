@@ -492,43 +492,43 @@ namespace eve
 } // namespace eve
 
 //=================================================================================================
-inline const eve::ogl::PixelFormat & eve::ogl::PixelFormat::default_format(void) { return m_default_format; }
+EVE_FORCE_INLINE const eve::ogl::PixelFormat & eve::ogl::PixelFormat::default_format(void) { return m_default_format; }
 
 
 
 //=================================================================================================
-inline const int32_t eve::ogl::PixelFormat::depthBufferSize(void) const		{ return m_depthSize;		}
-inline const int32_t eve::ogl::PixelFormat::redBufferSize(void) const		{ return m_redSize;			}
-inline const int32_t eve::ogl::PixelFormat::greenBufferSize(void) const		{ return m_greenSize;		}
-inline const int32_t eve::ogl::PixelFormat::blueBufferSize(void) const		{ return m_blueSize;		}
-inline const int32_t eve::ogl::PixelFormat::alphaBufferSize(void) const		{ return m_alphaSize;		}
-inline const int32_t eve::ogl::PixelFormat::accumBufferSize(void) const		{ return m_accumSize;		}
-inline const int32_t eve::ogl::PixelFormat::stencilBufferSize(void) const	{ return m_stencilSize;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::depthBufferSize(void) const		{ return m_depthSize;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::redBufferSize(void) const			{ return m_redSize;			}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::greenBufferSize(void) const		{ return m_greenSize;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::blueBufferSize(void) const		{ return m_blueSize;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::alphaBufferSize(void) const		{ return m_alphaSize;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::accumBufferSize(void) const		{ return m_accumSize;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::stencilBufferSize(void) const		{ return m_stencilSize;		}
 
 
 
 //=================================================================================================
-inline const bool eve::ogl::PixelFormat::doubleBuffer(void) const			{ return this->testOption(pf_optDoubleBuffer);		}
-inline const bool eve::ogl::PixelFormat::depth(void) const					{ return this->testOption(pf_optDepthBuffer);		}
-inline const bool eve::ogl::PixelFormat::rgba(void) const					{ return this->testOption(pf_optRgba);				}
-inline const bool eve::ogl::PixelFormat::alpha(void) const					{ return this->testOption(pf_optAlphaChannel);		}
-inline const bool eve::ogl::PixelFormat::accum(void) const					{ return this->testOption(pf_optAccumBuffer);		}
-inline const bool eve::ogl::PixelFormat::stencil(void) const				{ return this->testOption(pf_optStencilBuffer);		}
-inline const bool eve::ogl::PixelFormat::stereo(void) const					{ return this->testOption(pf_optStereoBuffers);		}
-inline const bool eve::ogl::PixelFormat::directRendering(void) const		{ return this->testOption(pf_optDirectRendering);	}
-inline const bool eve::ogl::PixelFormat::sampleBuffers(void) const			{ return this->testOption(pf_optSampleBuffers);		}
-inline const bool eve::ogl::PixelFormat::hasOverlay(void) const				{ return this->testOption(pf_optHasOverlay);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::doubleBuffer(void) const			{ return this->testOption(pf_optDoubleBuffer);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::depth(void) const				{ return this->testOption(pf_optDepthBuffer);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::rgba(void) const					{ return this->testOption(pf_optRgba);				}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::alpha(void) const				{ return this->testOption(pf_optAlphaChannel);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::accum(void) const				{ return this->testOption(pf_optAccumBuffer);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::stencil(void) const				{ return this->testOption(pf_optStencilBuffer);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::stereo(void) const				{ return this->testOption(pf_optStereoBuffers);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::directRendering(void) const		{ return this->testOption(pf_optDirectRendering);	}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::sampleBuffers(void) const		{ return this->testOption(pf_optSampleBuffers);		}
+EVE_FORCE_INLINE const bool eve::ogl::PixelFormat::hasOverlay(void) const			{ return this->testOption(pf_optHasOverlay);			}
 
 
 
 //=================================================================================================
-inline const int32_t eve::ogl::PixelFormat::samples(void) const				{ return m_numSamples;		}
-inline const int32_t eve::ogl::PixelFormat::swapInterval(void) const		{ return m_swapInterval;	}
-inline const int32_t eve::ogl::PixelFormat::plane(void) const				{ return m_pln;				}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::samples(void) const			{ return m_numSamples;		}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::swapInterval(void) const		{ return m_swapInterval;	}
+EVE_FORCE_INLINE const int32_t eve::ogl::PixelFormat::plane(void) const				{ return m_pln;				}
 
 
 
 //=================================================================================================
-inline eve::ogl::PixelFormatProfile eve::ogl::PixelFormat::profile(void) const { return m_profile; }
+EVE_FORCE_INLINE eve::ogl::PixelFormatProfile eve::ogl::PixelFormat::profile(void) const { return m_profile; }
 
 #endif // __EVE_OPENGL_CORE_PIXEL_FORMAT_H__

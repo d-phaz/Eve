@@ -227,9 +227,9 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-inline const GLuint eve::ogl::Shader::getId(void) const	{ return m_id; }
+EVE_FORCE_INLINE const GLuint eve::ogl::Shader::getId(void) const	{ return m_id; }
 
 //=================================================================================================
-inline const GLuint eve::ogl::Shader::getProgramId(eve::ogl::ProgramType p_type) const { EVE_ASSERT(m_prgmId[p_type] != 0); return m_prgmId[p_type]; }
+EVE_FORCE_INLINE const GLuint eve::ogl::Shader::getProgramId(eve::ogl::ProgramType p_type) const { EVE_ASSERT(m_prgmId[p_type] != 0); return m_prgmId[p_type]; }
 
 #endif // __EVE_OPENGL_CORE_SHADER_H__

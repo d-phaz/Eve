@@ -122,7 +122,7 @@ void Example::initThreadedData(void)
 	EVE_LOG_INFO("eve::vec4i_t[3] : %d", vec[3]);
 
 	eve::vec4f v(0.0F, 1.0F, 2.0f, 3.0f);
-	EVE_LOG_INFO("Vec4f.z : %f", v.z);
+	EVE_LOG_INFO("vec4f.z : %f", v.z);
 
 	eve::mat22f mat22(0.0f);
 	eve::mat33f mat33(0.0f);

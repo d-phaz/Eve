@@ -443,7 +443,7 @@ void eve::ogl::SubContext::init(void)
 	m_hGLRC = wglCreateContextAttribsARB(m_hDC, eve::ogl::Context::get_handle(), contextAttribs);
 	if (m_hGLRC == 0)
 	{
-		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContext() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContextAttribsARB() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 

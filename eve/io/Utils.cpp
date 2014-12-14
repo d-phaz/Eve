@@ -71,7 +71,7 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 		return NULL;
 	}
 
-	// Close the file and return the total length of the combined (preamble + source) string.
+	// Close the file and retrieve the total length of combined (preamble + source) string.
 	fclose(pFileStream);
 	if (p_finalLength)
 	{
