@@ -209,14 +209,14 @@ void eve::ogl::Shader::oglRelease(void)
 
 
 //=================================================================================================
-void eve::ogl::Shader::bind(GLenum p_index)
+void eve::ogl::Shader::bind(void)
 {
 	glBindProgramPipeline(m_id);
 	EVE_OGL_CHECK_ERROR;
 }
 
 //=================================================================================================
-void eve::ogl::Shader::unbind(GLenum p_index)
+void eve::ogl::Shader::unbind(void)
 {
 	glBindProgramPipeline(0);
 	EVE_OGL_CHECK_ERROR;

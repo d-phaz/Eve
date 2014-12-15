@@ -51,9 +51,7 @@ namespace eve
 		* \param p_alignment must be an integer power of 2.
 		*/
 		void * align_malloc(size_t p_alignment, size_t p_size);
-		/**
-		* \brief Free aligned memory.
-		*/
+		/** \brief Free aligned memory. */
 		void align_free(void * p_pPtr);		
 
 	} // namespace mem
@@ -100,6 +98,7 @@ EVE_FORCE_INLINE void eve::mem::align_free(void * p_pPtr)
 
 #endif
 }
+
 
 
 /** \def EVE_DECLARE_ALIGNED_ALLOCATOR \brief Convenience macro to declare class or struct aligned allocation operators. */

@@ -92,7 +92,7 @@ void eve::ogl::Renderer::release(void)
 	EVE_RELEASE_PTR(m_pQueueFence);
 
 	// Release context.
-	EVE_RELEASE_PTR(m_pContext);
+	EVE_RELEASE_PTR_SAFE(m_pContext);
 }
 
 
@@ -190,13 +190,6 @@ void eve::ogl::Renderer::cb_afterDisplay(void)
 {
 	m_pContext->swapBuffers();
 	m_pContext->doneCurrent();
-}
-
-
-//=================================================================================================
-void eve::ogl::Renderer::cb_display(void)
-{
-
 }
 
 

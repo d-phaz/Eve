@@ -38,10 +38,9 @@ eve::ogl::FormatUniform::FormatUniform(void)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
-	, prgmId(0)
-	, binding(0)
+	, blockSize(0)
 	, dynamic(false)
-	, data()
+	, data(nullptr)
 {}
 
 //=================================================================================================
@@ -53,8 +52,7 @@ eve::ogl::FormatUniform::FormatUniform(const eve::ogl::FormatUniform & p_other)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
-	, prgmId(p_other.prgmId)
-	, binding(p_other.binding)
+	, blockSize(p_other.blockSize)
 	, dynamic(p_other.dynamic)
 	, data(p_other.data)
 {}
@@ -64,8 +62,7 @@ const eve::ogl::FormatUniform & eve::ogl::FormatUniform::operator = (const eve::
 {
 	if (this != &p_other)
 	{
-		this->prgmId	= p_other.prgmId;
-		this->binding	= p_other.binding;
+		this->blockSize = p_other.blockSize;
 		this->dynamic	= p_other.dynamic;
 		this->data		= p_other.data;
 	}
@@ -94,10 +91,8 @@ eve::ogl::Uniform::Uniform(void)
 	, m_id(0)
 	, m_blockSize(0)
 	, m_usage(0)
-	, m_prgmId(0)
-	, m_binding(0)
 	, m_bDynamic(false)
-	, m_pData()
+	, m_pData(nullptr)
 	, m_pOglData(nullptr)
 {}
 
@@ -108,12 +103,12 @@ void eve::ogl::Uniform::setAttributes(eve::ogl::Format * p_format)
 {
 	eve::ogl::FormatUniform * format = reinterpret_cast<eve::ogl::FormatUniform*>(p_format);
 
-	m_prgmId	= format->prgmId;	
-	m_binding	= format->binding;
+	m_blockSize = format->blockSize;
 	m_bDynamic	= format->dynamic;
 	m_pData		= format->data;
 
-	EVE_ASSERT(m_prgmId != 0);
+	EVE_ASSERT(m_blockSize);
+	EVE_ASSERT(m_pData);
 }
 
 
@@ -160,11 +155,11 @@ void eve::ogl::Uniform::oglInit(void)
 	glGenBuffers(1, &m_id);
 	EVE_OGL_CHECK_ERROR;
 
-	glGetActiveUniformBlockiv(m_prgmId, m_binding, GL_UNIFORM_BLOCK_DATA_SIZE, &m_blockSize);
-	EVE_OGL_CHECK_ERROR;
+// 	glGetActiveUniformBlockiv(m_prgmId, m_binding, GL_UNIFORM_BLOCK_DATA_SIZE, &m_blockSize);
+// 	EVE_OGL_CHECK_ERROR;
 
 	glBindBuffer(GL_UNIFORM_BUFFER, m_id);
-	glBufferData(GL_UNIFORM_BUFFER, m_blockSize, m_pData.get(), m_usage);
+	glBufferData(GL_UNIFORM_BUFFER, m_blockSize, m_pData, m_usage);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	EVE_OGL_CHECK_ERROR;
 
@@ -176,7 +171,7 @@ void eve::ogl::Uniform::oglUpdate(void)
 	glBindBuffer(GL_UNIFORM_BUFFER, m_id);
 
 	m_pOglData = reinterpret_cast<float*>(glMapBufferRange(GL_UNIFORM_BUFFER, 0, m_blockSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-	memcpy(m_pOglData, m_pData.get(), m_blockSize);
+	memcpy(m_pOglData, m_pData, m_blockSize);
 
 	glUnmapBuffer(GL_UNIFORM_BUFFER); 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -196,16 +191,16 @@ void eve::ogl::Uniform::oglRelease(void)
 
 
 //=================================================================================================
-void eve::ogl::Uniform::bind(void)
+void eve::ogl::Uniform::bind(GLuint p_binding)
 {
-	glBindBufferBase(GL_UNIFORM_BUFFER, m_binding, m_id);
+	glBindBufferBase(GL_UNIFORM_BUFFER, p_binding, m_id);
 	EVE_OGL_CHECK_ERROR;
 }
 
 //=================================================================================================
-void eve::ogl::Uniform::unbind(void)
+void eve::ogl::Uniform::unbind(GLuint p_binding)
 {
-	glBindBufferBase(GL_UNIFORM_BUFFER, m_binding, 0);
+	glBindBufferBase(GL_UNIFORM_BUFFER, p_binding, 0);
 	EVE_OGL_CHECK_ERROR;
 }
 
@@ -216,7 +211,7 @@ void eve::ogl::Uniform::unbind(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-void eve::ogl::Uniform::setData(const std::shared_ptr<float> & p_data)
+void eve::ogl::Uniform::setData(float * p_data)
 {
 	m_pData = p_data;
 	this->requestOglUpdate();
