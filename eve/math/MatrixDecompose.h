@@ -63,14 +63,6 @@ namespace eve
 
 } // namespace eve
 
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		CAMERA
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 //=================================================================================================
 template <typename T> EVE_FORCE_INLINE static eve::math::TVec3<T> transform3x3(const eve::math::TMatrix44<T> & m, const eve::math::TVec3<T> & v)
 {
@@ -86,7 +78,7 @@ template <typename T> EVE_FORCE_INLINE void eve::math::get_look_at(const eve::ma
 {
 	eve::math::TMatrix44<T> inv = mat.inverted();
 
-	eye		= inv * eve::math::TVec3<T>(0.0f, 0.0f, 0.0f);
+	eye		= inv * eve::math::TVec3<T>::zero();
 	up		= transform3x3(mat, eve::math::TVec3<T>::world_up());
 	center	= transform3x3(mat, eve::math::TVec3<T>::view_direction());
 	center.normalize();
