@@ -182,7 +182,7 @@ endif()
 
 # OpenCL options.
 ###################################################################################################
-option( OPTION_BUILD_ENABLE_OPENCL "Enable OpenCL build." ON)
+option( OPTION_BUILD_ENABLE_OPENCL "Enable OpenCL build." OFF)
 
 if( OPTION_BUILD_TYPE_DEBUG )
 	option( OPTION_BUILD_ENABLE_OPENCL_BENCHMARK "Enable OpenCL benchmark." ON)

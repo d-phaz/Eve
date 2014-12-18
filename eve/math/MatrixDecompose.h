@@ -71,8 +71,6 @@ template <typename T> EVE_FORCE_INLINE static eve::math::TVec3<T> transform3x3(c
 								(m.m[2] * v.x + m.m[6] * v.y + m.m[10] * v.z));
 }
 
-
-
 //=================================================================================================
 template <typename T> EVE_FORCE_INLINE void eve::math::get_look_at(const eve::math::TMatrix44<T> & mat, eve::math::TVec3<T> & eye, eve::math::TVec3<T> & center, eve::math::TVec3<T> & up, float lookDistance)
 {
@@ -84,8 +82,6 @@ template <typename T> EVE_FORCE_INLINE void eve::math::get_look_at(const eve::ma
 	center.normalize();
 	center = eye + center*lookDistance;
 }
-
-
 
 //=================================================================================================
 template <typename T> EVE_FORCE_INLINE void eve::math::get_eye_point(const eve::math::TMatrix44<T> & mat, eve::math::TVec3<T> & eye)
