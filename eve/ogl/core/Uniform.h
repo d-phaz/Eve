@@ -42,6 +42,10 @@ namespace eve
 {
 	namespace ogl
 	{
+		/** \brief Get in byte, GLSL compliant, aligned size of target size. */
+		size_t align_size_of(size_t p_originalSize);
+
+
 		/**
 		* \class eve::ogl::FormatUniform
 		*
@@ -54,10 +58,9 @@ namespace eve
 			: public eve::ogl::Format
 		{
 		public:
-			GLuint					prgmId;				//!< Specifies OPENGL linked shader program ID.
-			GLuint					binding;			//!< Specifies buffer GLSL binding index.
+			GLint					blockSize;			//!< Specifies uniform block size.
 			bool					dynamic;			//!< Specifies whether the buffer use dynamic draw (per draw call update).
-			std::shared_ptr<float>	data;				//!< Specifies host data to send to buffer, ownership is shared.
+			float *					data;				//!< Specifies host data to send to buffer, ownership is external.
 
 		public:
 			/** \brief Class constructor. */
@@ -96,13 +99,10 @@ namespace eve
 		private:
 			GLuint						m_id;					//!< Specifies OpenGL unique uniform buffer ID.
 			GLint						m_blockSize;			//!< Specifies uniform block size.
-			GLenum						m_usage;				//!< Specifies wether the buffer use GL_STATIC_DRAW or GL_DYNAMIC_DRAW.
-
-			GLuint						m_prgmId;				//!< Specifies OPENGL linked shader program ID. 
-			GLuint						m_binding;				//!< Specifies buffer GLSL binding index.
+			GLenum						m_usage;				//!< Specifies whether the buffer use GL_STATIC_DRAW or GL_DYNAMIC_DRAW.
 			bool						m_bDynamic;				//!< Specifies whether the buffer use dynamic draw (per draw call update).
 
-			std::shared_ptr<float>		m_pData;				//!< Specifies host data to send to buffer, ownership is shared.
+			float *						m_pData;				//!< Specifies host data to send to buffer, ownership is external.
 			float *						m_pOglData;				//!< Specifies device buffer data address.
 
 
@@ -171,9 +171,9 @@ namespace eve
 
 		public:
 			/** \brief Bind (activate). */
-			void bind(void);
+			void bind(GLuint p_binding);
 			/** \brief Unbind (deactivate). */
-			void unbind(void);
+			static void unbind(GLuint p_binding);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,13 +206,55 @@ namespace eve
 
 		public:
 			/** \brief Set buffer data. */
-			void setData(const std::shared_ptr<float> & p_data);
+			void setData(float * p_data);
 			
 		}; // class Fbo
 
 	} // namespace ogl
 
 } // namespace eve
+
+
+//=================================================================================================
+EVE_FORCE_INLINE size_t eve::ogl::align_size_of(size_t p_originalSize)
+{
+	size_t ret = p_originalSize;
+
+	// Align on 4 bytes.
+	if (ret > 2)	{ ret += ret % 4; }
+	// Align on 2 bytes.
+	else			{ ret += ret % 2; }
+
+	return ret;
+}
+
+/**
+* \def EVE_OGL_SIZEOF_VEC2
+* \brief Convenience macro to retrieve GLSL convenient size of GLSL vec2 type.
+*/
+#define EVE_OGL_SIZEOF_VEC2 (sizeof(float) * 2)
+/**
+* \def EVE_OGL_SIZEOF_VEC3
+* \brief Convenience macro to retrieve GLSL convenient size of GLSL vec3 type.
+*/
+#define EVE_OGL_SIZEOF_VEC3 (sizeof(float) * 4)
+/**
+* \def EVE_OGL_SIZEOF_VEC4
+* \brief Convenience macro to retrieve GLSL convenient size of GLSL vec4 type.
+*/
+#define EVE_OGL_SIZEOF_VEC4 (sizeof(float) * 4)
+
+
+/**
+* \def EVE_OGL_SIZEOF_MAT3
+* \brief Convenience macro to retrieve GLSL convenient size of GLSL mat3 type.
+*/
+#define EVE_OGL_SIZEOF_MAT3 (sizeof(float) * 16)
+/**
+* \def EVE_OGL_SIZEOF_MAT4
+* \brief Convenience macro to retrieve GLSL convenient size of GLSL mat4 type.
+*/
+#define EVE_OGL_SIZEOF_MAT4 (sizeof(float) * 16)
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

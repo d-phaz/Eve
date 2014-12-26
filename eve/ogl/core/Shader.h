@@ -37,6 +37,10 @@
 #include "eve/ogl/core/Object.h"
 #endif
 
+#ifndef __EVE_IO_UTILS_H__
+#include "eve/io/Utils.h"
+#endif
+
 
 namespace eve
 {
@@ -178,9 +182,9 @@ namespace eve
 
 		public:
 			/** \brief Bind (activate). */
-			void bind(GLenum p_index);
+			void bind(void);
 			/** \brief Unbind (deactivate). */
-			static void unbind(GLenum p_index);
+			static void unbind(void);
 
 
 		public:

@@ -44,17 +44,20 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 #if defined(EVE_OS_WIN)   
 	if (fopen_s(&pFileStream, p_filePath, "rb") != 0)
 	{
+		// File open failed, path issue?
+		EVE_ASSERT_FAILURE;
 		return NULL;
 	}
 #else
 	pFileStream = fopen(p_filePath, "rb");
 	if (pFileStream == 0)
 	{
+		// File open failed, path issue?
+		EVE_ASSERT_FAILURE;
 		return NULL;
 	}
 #endif
 
-	size_t szPreambleLength = strlen(p_preamble);
 
 	// Get source code length.
 	fseek(pFileStream, 0, SEEK_END);
@@ -62,12 +65,26 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 	fseek(pFileStream, 0, SEEK_SET);
 
 	// Allocate string buffer.
+	size_t szPreambleLength = 0;
+	if (p_preamble)
+	{
+		szPreambleLength = strlen(p_preamble);
+	}
+
 	char * cSourceString = (char*)malloc(szSourceLength + szPreambleLength + 1);
-	memcpy(cSourceString, p_preamble, szPreambleLength);
+
+	if (p_preamble)
+	{
+		memcpy(cSourceString, p_preamble, szPreambleLength);
+	}
+
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)
 	{
 		fclose(pFileStream);
 		free(cSourceString);
+
+		// File read failed.
+		EVE_ASSERT_FAILURE;
 		return NULL;
 	}
 

@@ -346,17 +346,17 @@ namespace eve
 
 		public:
 			/** \brief Get projection matrix. */
-			const eve::math::TMatrix44<T> & getMatrixProjection(void) const;
+			eve::math::TMatrix44<T> & getMatrixProjection(void) const;
 			/** \brief Get model view matrix. */
-			virtual const eve::math::TMatrix44<T> & getMatrixModelView(void) const;
+			virtual eve::math::TMatrix44<T> & getMatrixModelView(void) const;
 			/** \brief Get model view projection matrix (MVP). */
-			const eve::math::TMatrix44<T> & getMatrixModelViewProjection(void) const;
+			eve::math::TMatrix44<T> & getMatrixModelViewProjection(void) const;
 			/** \brief Get inverse projection matrix. */
-			const eve::math::TMatrix44<T> & getMatrixInverseProjection(void) const;
+			eve::math::TMatrix44<T> & getMatrixInverseProjection(void) const;
 			/** \brief Get inverse model view matrix. */
-			const eve::math::TMatrix44<T> & getMatrixInverseModelView(void) const;
+			eve::math::TMatrix44<T> & getMatrixInverseModelView(void) const;
 			/** \brief Get viewport matrix. */
-			const eve::math::TMatrix44<T> & getMatrixViewport(void) const;
+			eve::math::TMatrix44<T> & getMatrixViewport(void) const;
 
 
 		public:
@@ -1157,17 +1157,17 @@ void eve::math::TCamera<T>::getFrustum(T * p_pLeft, T * p_pTop, T * p_pRight, T 
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixProjection(void) const				{ return m_matrixProjection; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixProjection(void) const				{ return m_matrixProjection; }
 template<typename T>								
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelView(void) const				{ return m_matrixModelView; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelView(void) const				{ return m_matrixModelView; }
 template<typename T>								
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelViewProjection(void) const		{ return m_matrixModelViewProjection; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelViewProjection(void) const		{ return m_matrixModelViewProjection; }
 template<typename T>								
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseProjection(void) const		{ return m_matrixProjectionInverse; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseProjection(void) const		{ return m_matrixProjectionInverse; }
 template<typename T>								
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseModelView(void) const		{ return m_matrixModelViewInverse; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseModelView(void) const		{ return m_matrixModelViewInverse; }
 template<typename T>								
-EVE_FORCE_INLINE const eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixViewport(void) const				{ return m_matrixViewport; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixViewport(void) const				{ return m_matrixViewport; }
 
 
 
