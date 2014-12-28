@@ -30,37 +30,29 @@
 */
 
 #pragma once
-#ifndef __EVE_EVT_INCLUDES_H__
-#define __EVE_EVT_INCLUDES_H__
-
-
-#ifndef __EVE_EVT_EVENT_H__
-#include "eve/evt/Event.h"
-#endif
-
 #ifndef __EVE_EVT_LISTENER_H__
-#include "eve/evt/Listener.h"
-#endif
+#define __EVE_EVT_LISTENER_H__
 
-#ifndef __EVE_EVT_SERVER_H__
-#include "eve/evt/Server.h"
-#endif
-
-#ifndef __EVE_EVT_TCALLBACK_H__
-#include "eve/evt/TCallback.h"
-#endif
-
-#ifndef __EVE_EVT_TCALLBACK_AUTO_H__
-#include "eve/evt/TCallbackAuto.h"
-#endif
-
-#ifndef __EVE_EVT_TEVENT_H__
-#include "eve/evt/TEvent.h"
-#endif
-
-#ifndef __EVE_EVT_TQUEUE_H__
-#include "eve/evt/TQueue.h"
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
 #endif
 
 
-#endif // __EVE_FILES_INCLUDES_H__
+namespace eve
+{
+	namespace evt
+	{
+		/** 
+		* \class eve::evt::Listener
+		* \brief Abstract base event listener class.
+		*/
+		class Listener
+		{
+			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Listener);
+		};		
+
+	} // namespace evt
+
+} // namespace eve
+
+#endif // __EVE_EVT_LISTENER_H__
