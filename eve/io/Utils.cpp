@@ -32,9 +32,25 @@
 // Main header
 #include "eve/io/Utils.h"
 
+#ifndef __EVE_STRING_UTILS_H__
+#include "eve/str/Utils.h"
+#endif
+
 
 //=================================================================================================
-char * eve::io::load_program(const char * p_filePath, const char * p_preamble, size_t * p_finalLength)
+std::string eve::io::resource_path_glsl(const std::string & p_name)
+{
+	std::string ret = EVE_RESOURCES_PATH;
+	ret += "/glsl/";
+	ret += p_name;
+
+	return ret;
+}
+
+
+
+//=================================================================================================
+std::string eve::io::load_program(const std::string & p_filePath, const char * p_preamble, size_t * p_finalLength)
 {
 	// locals
 	FILE * pFileStream = nullptr;
@@ -42,17 +58,19 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 
 	// Open source code file.
 #if defined(EVE_OS_WIN)   
-	if (fopen_s(&pFileStream, p_filePath, "rb") != 0)
+	if (fopen_s(&pFileStream, p_filePath.c_str(), "rb") != 0)
 	{
 		// File open failed, path issue?
 		EVE_ASSERT_FAILURE;
+		EVE_LOG_ERROR("File opening failed, path is %s", eve::str::to_wstring(p_filePath).c_str());
 		return NULL;
 	}
 #else
-	pFileStream = fopen(p_filePath, "rb");
+	pFileStream = fopen(p_filePath.c_str(), "rb");
 	if (pFileStream == 0)
 	{
 		// File open failed, path issue?
+		EVE_LOG_ERROR("File opening failed, path is %s", eve::str::to_wstring(p_filePath).c_str());
 		EVE_ASSERT_FAILURE;
 		return NULL;
 	}
@@ -96,5 +114,7 @@ char * eve::io::load_program(const char * p_filePath, const char * p_preamble, s
 	}
 	cSourceString[szSourceLength + szPreambleLength] = '\0';
 
-	return cSourceString;
+	std::string ret(cSourceString);
+	free(cSourceString);
+	return ret;
 }

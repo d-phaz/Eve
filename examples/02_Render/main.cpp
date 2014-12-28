@@ -95,8 +95,8 @@ void RenderGL::init(void)
 	m_pCamera = eve::math::Cameraf::create_ptr(800.0f, 600.0f);
 
 	eve::ogl::FormatShader fmtShader;
-	fmtShader.vert = eve::io::load_program("Colored3D.vert");
-	fmtShader.frag = eve::io::load_program("Colored3D.frag");
+	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Colored3D.vert"));
+	fmtShader.frag = eve::io::load_program(eve::io::resource_path_glsl("Colored3D.frag"));
 	m_pShader = this->create(fmtShader);
 
 	eve::ogl::FormatUniform fmtUniform;

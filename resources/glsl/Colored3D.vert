@@ -14,6 +14,11 @@ layout(binding = UNI_TRANSFORM) uniform transform
 layout(location = ATTR_POSITION) in vec3 AttrPosition;
 layout(location = ATTR_DIFFUSE)  in vec4 AttrColor;
 
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
+
 out block
 {
 	vec4 Color;

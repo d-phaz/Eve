@@ -442,6 +442,7 @@ set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h PRO
 			
 # External.h
 #################################################
+set( RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../resources" )
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h.in
 				${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
 set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
