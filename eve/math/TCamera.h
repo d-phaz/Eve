@@ -133,6 +133,9 @@ namespace eve
 		public:
 			/** \brief Create new pointer. */
 			static eve::math::TCamera<T> * create_ptr(T p_width = static_cast<T>(800.0), T p_height = static_cast<T>(600.0), T p_near = static_cast<T>(1.0), T p_far = static_cast<T>(1000.0), T p_fov = static_cast<T>(65.0));
+			/** \brief Create new pointer. */
+			template <typename U>
+			static eve::math::TCamera<T> * create_ptr(U p_width, U p_height, T p_near = static_cast<T>(1.0), T p_far = static_cast<T>(1000.0), T p_fov = static_cast<T>(65.0));
 			/** \brief Create new pointer, copy of \p_parent. */
 			static eve::math::TCamera<T> * create_ptr(const TCamera<T> & p_parent);
 
@@ -376,7 +379,10 @@ namespace eve
 
 		public:
 			/** \brief Set display size. */
-			virtual void setDisplaySize(T p_width, T p_height, bool p_bUpdateAspectRatio = true);
+			void setDisplaySize(T p_width, T p_height, bool p_bUpdateAspectRatio = true);
+			/** \brief Set display size. */
+			template <typename U>
+			void setDisplaySize(U p_width, U p_height, bool p_bUpdateAspectRatio = true);
 
 
 		public:
@@ -450,6 +456,14 @@ eve::math::TCamera<T> * eve::math::TCamera<T>::create_ptr(T p_width, T p_height,
 	eve::math::TCamera<T> * ptr = new eve::math::TCamera<T>(p_width, p_height, p_near, p_far, p_fov);
 	ptr->initDefault();
 	return ptr;
+}
+
+//=================================================================================================
+template <typename T>
+template <typename U>
+eve::math::TCamera<T> * eve::math::TCamera<T>::create_ptr(U p_width, U p_height, T p_near, T p_far, T p_fov)
+{
+	return eve::math::TCamera<T>::create_ptr(static_cast<T>(p_width), static_cast<T>(p_height), p_near, p_far, p_fov);
 }
 
 //=================================================================================================
@@ -1221,6 +1235,14 @@ void eve::math::TCamera<T>::setDisplaySize(T p_width, T p_height, bool p_bUpdate
 	}
 
 	this->calcViewportMatrix();
+}
+
+//=================================================================================================
+template <typename T>
+template <typename U>
+void eve::math::TCamera<T>::setDisplaySize(U p_width, U p_height, bool p_bUpdateAspectRatio)
+{
+	this->setDisplaySize(static_cast<T>(p_width), static_cast<T>(p_height), p_bUpdateAspectRatio);
 }
 
 

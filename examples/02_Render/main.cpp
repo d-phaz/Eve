@@ -73,6 +73,10 @@ public:
 	/** \brief Draw on screen callback. (pure virtual) */
 	virtual void cb_display(void) override;
 
+public:
+	/** \brief Set render size. */
+	virtual void setSize(uint32_t p_width, uint32_t p_height);
+
 };
 
 //=================================================================================================
@@ -92,7 +96,9 @@ void RenderGL::init(void)
 	// Call parent class.
 	eve::ogl::Renderer::init();
 
-	m_pCamera = eve::math::Cameraf::create_ptr(800.0f, 600.0f);
+	m_width  = 800;
+	m_height = 600;
+	m_pCamera = eve::math::Cameraf::create_ptr(m_width, m_height);
 
 	eve::ogl::FormatShader fmtShader;
 	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Colored3D.vert"));
@@ -127,7 +133,7 @@ void RenderGL::cb_display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, m_width, m_height);
 
 	m_pShader->bind();
 	m_pUniform->bind(1);
@@ -138,11 +144,26 @@ void RenderGL::cb_display(void)
 	m_pShader->unbind();
 }
 
+//=================================================================================================
+void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
+{
+	// Call parent class.
+	eve::ogl::Renderer::setSize(p_width, p_height);
+
+	m_pCamera->setDisplaySize(p_width, p_height);
+}
+
+
+
 
 class Example final
 	: public eve::sys::View
 {
 	friend class eve::mem::Pointer;
+
+private:
+	RenderGL * m_pRender;
+
 
 	EVE_DISABLE_COPY(Example);
 	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
@@ -166,7 +187,8 @@ void Example::initThreadedData(void)
 	eve::sys::View::initThreadedData();
 
 	// Register new RenderGL.
-	this->registerRenderer(EVE_CREATE_PTR(RenderGL));
+	m_pRender = EVE_CREATE_PTR(RenderGL);
+	this->registerRenderer(m_pRender);
 }
 
 void Example::releaseThreadedData(void)
@@ -177,7 +199,8 @@ void Example::releaseThreadedData(void)
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
-	
+	m_pWindow->toggleFullScreen();
+	m_pRender->setSize(m_pWindow->getWidth(), m_pWindow->getHeight());
 }
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
