@@ -274,9 +274,9 @@ if(${OPENCL_FOUND})
 		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.h )
 
 	# Generate Configuration.h
-	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h @ONLY )
-	set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h PROPERTIES GENERATED TRUE )	
-	set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
+	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/generated/ocl_core_Configuration.h @ONLY )
+	set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/include/generated/ocl_core_Configuration.h PROPERTIES GENERATED TRUE )	
+	set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/include/generated/ocl_core_Configuration.h )
 
 	set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
 	source_group( "OpenCL Core" FILES ${OPENCL_SRCS} )
@@ -425,21 +425,22 @@ endif()
 # Version.h
 #################################################
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h.in
-                ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h )
-set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h )
-set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h PROPERTIES GENERATED true )
+                ${CMAKE_CURRENT_BINARY_DIR}/include/generated/Version.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/include/generated/Version.h )
+set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/include/generated/Version.h PROPERTIES GENERATED true )
 			
 # External.h
 #################################################
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h.in
-				${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
-set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
-set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h PROPERTIES GENERATED true )
+				${CMAKE_CURRENT_BINARY_DIR}/include/generated/External.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/include/generated/External.h )
+set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/include/generated/External.h PROPERTIES GENERATED true )
 
 
 # Include directories.
 ###################################################################################################	
 include_directories( ${BASE_SOURCE_PATH} )
+include_directories( ${CMAKE_CURRENT_BINARY_DIR}/include/generated )
 include_directories( ${BASE_SOURCE_PATH}/external/include )	
 
 
