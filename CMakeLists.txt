@@ -376,7 +376,6 @@ option(OPTION_BUILD_EXAMPLE "Add example project(s) to solution" ON)
 if(OPTION_BUILD_EXAMPLE)
 	add_subdirectory( examples )
 endif()
-	
 
 # Include installer folder
 ###################################################################################################
