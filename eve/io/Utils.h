@@ -50,8 +50,12 @@ namespace eve
 {
 	namespace io
 	{
+		/** \brief In resources GLSL shader program path from name. */
+		std::string resource_path_glsl(const std::string & p_name);
+
+
 		/** \brief Loads a program (text) file and prepends \a p_preamble to it. Used to load OpenCL kernel, OpenGL shader, etc... */
-		char * load_program(const char * p_filePath, const char * p_preamble = nullptr, size_t * p_finalLength = nullptr);
+		std::string load_program(const std::string & p_filePath, const char * p_preamble = nullptr, size_t * p_finalLength = nullptr);
 
 	} // namespace io
 

@@ -147,6 +147,8 @@ set( EVENT_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Listener.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TCallback.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TCallbackAuto.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegate.h 
@@ -154,8 +156,7 @@ set( EVENT_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEventAbstract.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TQueue.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TStrategy.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h  )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TStrategy.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${EVENT_SRCS} )
 source_group( "Event" FILES ${EVENT_SRCS} )
@@ -318,6 +319,16 @@ set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
 source_group( "OpenGL Core" FILES ${OPENGL_SRCS} )
 
 
+# # Scene.
+# #################################################
+# set( SCENE_SRCS
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
+
+# set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
+# source_group( "Scene" FILES ${SCENE_SRCS} )
+
+
 # String.
 #################################################
 set( STRING_SRCS
@@ -431,6 +442,7 @@ set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h PRO
 			
 # External.h
 #################################################
+set( RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../resources" )
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h.in
 				${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
 set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
