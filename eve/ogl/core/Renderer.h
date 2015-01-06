@@ -41,6 +41,10 @@
 #include "eve/geom/Includes.h"
 #endif
 
+#ifndef __EVE_OPENGL_CORE_CONTEXT_H__
+#include "eve/ogl/core/win32/Context.h"
+#endif
+
 #ifndef __EVE_OPENGL_CORE_FBO_H__
 #include "eve/ogl/core/Fbo.h"
 #endif
