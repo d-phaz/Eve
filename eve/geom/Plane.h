@@ -50,10 +50,22 @@ namespace eve
 {
 	namespace geom
 	{
+		/** \brief Create plane indices data. */
+		GLuint * create_plane_indices(void);
+
+
 		/** \brief Create a textured plane. */
 		eve::ogl::FormatVao create_plane_textured(const eve::vec3f & p_position, const eve::vec2f & p_size);
 		/** \brief Create a colored plane. */
 		eve::ogl::FormatVao create_plane_colored(const eve::vec3f & p_position, const eve::vec2f & p_size, const eve::color4f & p_color);
+
+
+		/** \brief Create textured plane vertices data. */
+		float * create_plane_textured_vertices(const eve::vec3f & p_position, const eve::vec2f & p_size);
+
+
+		/** \brief Create colored plane vertices data. */
+		float * create_plane_colored_vertices(const eve::vec3f & p_position, const eve::vec2f & p_size, const eve::color4f & p_color);
 
 	} // namespace geom
 

@@ -50,6 +50,16 @@ namespace eve
 {
 	namespace geom
 	{
+		/** \brief Create cube indices data. */
+		GLuint * create_cube_indices(void);
+
+
+		/** \brief Create textured cube vertices data. */
+		float * create_cube_textured_vertices(const eve::vec3f & p_position, const eve::vec3f & p_size);
+		/** \brief Create colored cube vertices data. */
+		float * create_cube_colored_vertices(const eve::vec3f & p_position, const eve::vec3f & p_size, const eve::color4f & p_color);
+
+
 		/** \brief Create a textured cube. */
 		eve::ogl::FormatVao create_cube_textured(const eve::vec3f & p_position, const eve::vec3f & p_size);
 		/** \brief Create a colored cube. */

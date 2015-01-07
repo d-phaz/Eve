@@ -50,6 +50,16 @@ namespace eve
 {
 	namespace geom
 	{
+		/** \brief Create sphere indices data. */
+		GLuint * create_sphere_indices(int32_t p_segments);
+
+
+		/** \brief Create textured sphere vertices data. */
+		float * create_sphere_textured_vertices(const eve::vec3f & p_position, float p_radius, int32_t p_segments = 20);
+		/** \brief Create colored sphere vertices data. */
+		float * create_sphere_colored_vertices(const eve::vec3f & p_position, float p_radius, const eve::color4f & p_color, int32_t p_segments = 20);
+
+
 		/** \brief Create a textured sphere. */
 		eve::ogl::FormatVao create_sphere_textured(const eve::vec3f & p_position, float p_radius, int32_t p_segments = 20);
 		/** \brief Create a colored sphere. */
