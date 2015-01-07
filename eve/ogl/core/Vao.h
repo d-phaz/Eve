@@ -196,15 +196,19 @@ namespace eve
 		public:
 			/** \brief Get the pointer to vertices data in memory (used as std::shared_ptr). */
 			std::shared_ptr<float>	getVertices(void) const;
-			/** \brief Set array buffer data (vertices). */
+			/** \brief Set array buffer data (vertices), adds the object as a shared owner, increasing the use_count. */
 			void setVertices(const std::shared_ptr<float> & p_data);
+			/** \brief Set array buffer data (vertices), transfer ownership without altering the use_count. */
+			void setVertices(const std::shared_ptr<float> && p_data);
 
 
 		public:
 			/** \brief Get the pointer to indices data in memory (used as std::shared_ptr). */
 			std::shared_ptr<GLuint> getIndices(void) const;
-			/** \brief Set element buffer data (indices). */
+			/** \brief Set element buffer data (indices), adds the object as a shared owner, increasing the use_count. */
 			void setIndices(const std::shared_ptr<GLuint> & p_data);
+			/** \brief Set element buffer data (indices), transfer ownership without altering the use_count. */
+			void setIndices(const std::shared_ptr<GLuint> && p_data);
 
 			
 		}; // class Fbo

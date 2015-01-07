@@ -178,7 +178,9 @@ source_group( "Files" FILES ${FILES_SRCS} )
 set( GEOM_SRCS  
 	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Includes.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Includes.h  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Plane.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Plane.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.h )
 
