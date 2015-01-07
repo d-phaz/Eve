@@ -236,6 +236,12 @@ void eve::ogl::Context::init_OpenGL(void)
 
 		firstLaunch = false;
 	}
+
+	// Initialize default OpenGL states for context.
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one.
 }
 
 
@@ -460,12 +466,6 @@ void eve::ogl::SubContext::init(void)
 
 	// Init OpenGL extensions for this context.
 	eve::ogl::Context::init_OpenGL();
-
-	// Initialize default context states.
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one.
 
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == 0)
