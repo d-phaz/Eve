@@ -96,8 +96,8 @@ void RenderGL::init(void)
 	// Call parent class.
 	eve::ogl::Renderer::init();
 
-	m_width  = 800;
-	m_height = 600;
+	m_width   = 800;
+	m_height  = 600;
 	m_pCamera = eve::math::Cameraf::create_ptr(m_width, m_height);
 
 	eve::ogl::FormatShader fmtShader;

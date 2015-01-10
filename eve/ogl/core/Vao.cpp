@@ -98,6 +98,7 @@ eve::ogl::Vao::Vao(void)
 	, m_perVertexNumNormal(0)
 	, m_pVerticesData(nullptr)
 	, m_pVertices()
+	, m_bUpdateVertices(false)
 	, m_pIndicesData(nullptr)
 	, m_pIndices()
 	, m_bUpdateIndices(false)
@@ -220,30 +221,7 @@ void eve::ogl::Vao::oglInit(void)
 //=================================================================================================
 void eve::ogl::Vao::oglUpdate(void)
 {
-	if (m_bUpdateIndices)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
-		glBufferData(GL_ARRAY_BUFFER, m_verticesSize, m_pVertices.get(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		EVE_OGL_CHECK_ERROR;
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indicesSize, m_pIndices.get(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		EVE_OGL_CHECK_ERROR;
-
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
-
-		//m_pIndicesData = reinterpret_cast<GLuint*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, m_indicesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-		//memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
-
-		//glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		//EVE_OGL_CHECK_ERROR;
-
-		m_bUpdateIndices = false;
-	}
-	else
+	if (m_bUpdateVertices)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
 
@@ -253,6 +231,22 @@ void eve::ogl::Vao::oglUpdate(void)
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		EVE_OGL_CHECK_ERROR;
+
+		m_bUpdateVertices = false;
+	}
+
+	if (m_bUpdateIndices)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
+
+		m_pIndicesData = reinterpret_cast<GLuint*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, m_indicesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+		memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
+
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		EVE_OGL_CHECK_ERROR;
+
+		m_bUpdateIndices = false;
 	}
 }
 
@@ -346,7 +340,8 @@ void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
 
 
 	// Request full update.
-	m_bUpdateIndices = true;
+	m_bUpdateVertices = true;
+	m_bUpdateIndices  = true;
 	this->requestOglUpdate();
 }
 
@@ -367,6 +362,7 @@ void eve::ogl::Vao::merge(eve::ogl::Vao * p_pVao)
 void eve::ogl::Vao::setVertices(const std::shared_ptr<float> & p_data)
 {
 	m_pVertices = p_data;
+	m_bUpdateVertices = true;
 	this->requestOglUpdate();
 }
 
@@ -374,6 +370,7 @@ void eve::ogl::Vao::setVertices(const std::shared_ptr<float> & p_data)
 void eve::ogl::Vao::setVertices(const std::shared_ptr<float> && p_data)
 {
 	m_pVertices = p_data;
+	m_bUpdateVertices = true;
 	this->requestOglUpdate();
 }
 
@@ -383,6 +380,7 @@ void eve::ogl::Vao::setVertices(const std::shared_ptr<float> && p_data)
 void eve::ogl::Vao::setIndices(const std::shared_ptr<GLuint> & p_data)
 {
 	m_pIndices = p_data;
+	m_bUpdateIndices = true;
 	this->requestOglUpdate();
 }
 
@@ -390,5 +388,6 @@ void eve::ogl::Vao::setIndices(const std::shared_ptr<GLuint> & p_data)
 void eve::ogl::Vao::setIndices(const std::shared_ptr<GLuint> && p_data)
 {
 	m_pIndices = p_data;
+	m_bUpdateIndices = true;
 	this->requestOglUpdate();
 }

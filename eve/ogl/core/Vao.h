@@ -113,9 +113,10 @@ namespace eve
 
 			float *						m_pVerticesData;			//!< Specifies vertices device buffer data address.
 			std::shared_ptr<float>		m_pVertices;				//!< Specifies a pointer to vertices data in memory (used as std::shared_ptr).
+			bool						m_bUpdateVertices;			//!< Specifies whether or not vertices must be updated.
 			GLuint *					m_pIndicesData;				//!< Specifies indices device buffer data address.
 			std::shared_ptr<GLuint>		m_pIndices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
-			bool						m_bUpdateIndices;			//!< Specifies wether or not indices must be updated.
+			bool						m_bUpdateIndices;			//!< Specifies whether or not indices must be updated.
 
 		private:
 			GLuint						m_offsetPosition;			//<! Specifies vertices positions data offset in array.
