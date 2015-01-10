@@ -87,7 +87,7 @@ source_group( "Core" FILES ${CORE_SRCS} )
 # Directx11 Support.
 #################################################
 if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
-	set(DIRECTX11_SRCS
+	set(DIRECTX11_CORE_SRCS
 		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/BlendStates.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/BlendStates.h
 		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ConstantBuffer.cpp
@@ -136,8 +136,8 @@ if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
 		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/VertexBuffer.h
 		)
 	
-	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_SRCS} )
-	source_group( "DirectX11 Core" FILES ${DIRECTX11_SRCS} )
+	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_CORE_SRCS} )
+	source_group( "DirectX11 Core" FILES ${DIRECTX11_CORE_SRCS} )
 endif()
 
 
@@ -198,9 +198,9 @@ set( SOURCE_FILES ${SOURCE_FILES} ${IO_SRCS} )
 source_group( "Input / Output" FILES ${IO_SRCS} )
 
 
-# Math.
+# Math core.
 #################################################
-set( MATH_SRCS
+set( MATH_CORE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Math.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Simd.h 
@@ -215,9 +215,12 @@ set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector4.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Types.h )
 
-set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
-source_group( "Math Core" FILES ${MATH_SRCS} )
+set( SOURCE_FILES ${SOURCE_FILES} ${MATH_CORE_SRCS} )
+source_group( "Math Core" FILES ${MATH_CORE_SRCS} )
 
+
+# Math.
+#################################################
 set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.cpp 
@@ -261,7 +264,7 @@ source_group( "Messaging" FILES ${MESSAGING_SRCS} )
 # OpenCL.
 #################################################
 if(${OPENCL_FOUND})
-	set( OPENCL_SRCS
+	set( OPENCL_CORE_SRCS
 		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.cpp 
 		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.h 
 		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.cpp 
@@ -279,16 +282,16 @@ if(${OPENCL_FOUND})
 	# Generate Configuration.h
 	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h @ONLY )
 	set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h PROPERTIES GENERATED TRUE )	
-	set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
+	set( OPENCL_CORE_SRCS ${OPENCL_CORE_SRCS} ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h )
 
-	set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_SRCS} )
-	source_group( "OpenCL Core" FILES ${OPENCL_SRCS} )
+	set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_CORE_SRCS} )
+	source_group( "OpenCL Core" FILES ${OPENCL_CORE_SRCS} )
 endif()
 
 
-# OpenGL.
+# OpenGL core.
 #################################################
-set( OPENGL_SRCS
+set( OPENGL_CORE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Debug.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Debug.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/External.h 
@@ -310,15 +313,25 @@ set( OPENGL_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.h )
 	 
-set( OPENGL_SRCS 
-	 ${OPENGL_SRCS}
+set( OPENGL_CORE_SRCS 
+	 ${OPENGL_CORE_SRCS}
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/Context.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/Context.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.h  )
 
-set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
-source_group( "OpenGL Core" FILES ${OPENGL_SRCS} )
+set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_CORE_SRCS} )
+source_group( "OpenGL Core" FILES ${OPENGL_CORE_SRCS} )
+
+
+# # OpenGL.
+# #################################################
+# set( OPENGL_SRCS 
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/ogl/Mesh.cpp
+	 # ${CMAKE_CURRENT_SOURCE_DIR}/ogl/Mesh.h )
+
+# set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
+# source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 
 
 # # Scene.

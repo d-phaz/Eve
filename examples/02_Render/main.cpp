@@ -108,11 +108,16 @@ void RenderGL::init(void)
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize	= EVE_OGL_SIZEOF_MAT4;
 	fmtUniform.dynamic		= false;
-	fmtUniform.data			= m_pCamera->getMatrixModelViewProjection().m;
+	fmtUniform.data			= m_pCamera->getMatrixModelViewProjection().data();
 	m_pUniform = this->create(fmtUniform);
 
 	eve::ogl::FormatVao fmtVao = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f::one()*5.0f, eve::color4f::red());
 	m_pVao = this->create(fmtVao);
+
+	eve::ogl::FormatVao fmtVao2 = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f(2.0f, 1.0f, 2.0f), eve::color4f::green());
+	eve::ogl::Vao * vao2 = this->create(fmtVao2);
+
+	m_pVao->merge(vao2);
 }
 
 //=================================================================================================

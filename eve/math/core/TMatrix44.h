@@ -141,6 +141,7 @@ namespace eve
 			// Accesses
 			operator T*() { return (T*)m; }
 			operator const T*() const { return (const T*)m; }
+			T * data(void);
 
 			TMatrix44<T>&		operator=(const TMatrix44<T>& rhs);
 			TMatrix44<T>&		operator=(T rhs);
@@ -463,6 +464,11 @@ eve::math::TMatrix44<T>::TMatrix44(const eve::math::TMatrix44<T>& src)
 {
 	std::memcpy( m, src.m, MEM_LEN );
 }
+
+
+
+//=================================================================================================
+template< typename T > EVE_FORCE_INLINE T * eve::math::TMatrix44<T>::data(void) { return m; }
 
 
 

@@ -96,9 +96,11 @@ eve::ogl::Vao::Vao(void)
 	, m_perVertexNumPosition(0)
 	, m_perVertexNumDiffuse(0)
 	, m_perVertexNumNormal(0)
+	, m_pVerticesData(nullptr)
 	, m_pVertices()
+	, m_pIndicesData(nullptr)
 	, m_pIndices()
-	, m_pOglData(nullptr)
+	, m_bUpdateIndices(false)
 	, m_offsetPosition(0)
 	, m_offsetDiffuse(0)
 	, m_offsetNormals(0)
@@ -223,12 +225,27 @@ void eve::ogl::Vao::oglUpdate(void)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
 
-	m_pOglData = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, m_verticesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-	memcpy(m_pOglData, m_pVertices.get(), m_verticesSize);
+	m_pVerticesData = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, m_verticesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+	memcpy(m_pVerticesData, m_pVertices.get(), m_verticesSize);
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	EVE_OGL_CHECK_ERROR;
+
+
+	if (m_bUpdateIndices)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
+
+		m_pIndicesData = reinterpret_cast<GLuint*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, m_indicesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+		memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
+
+		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		EVE_OGL_CHECK_ERROR;
+
+		m_bUpdateIndices = false;
+	}
 }
 
 //=================================================================================================
@@ -267,6 +284,60 @@ void eve::ogl::Vao::draw(void)
 // 	
 // 	//glBindVertexArray(0);
 // 	EVE_OGL_CHECK_ERROR;
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
+{
+	EVE_ASSERT(p_pVao);
+	EVE_ASSERT(p_pVao != this);
+
+	// Test data structures compatibility.
+	EVE_ASSERT(p_pVao->getPerVertexNumPosition() == m_perVertexNumPosition);
+	EVE_ASSERT(p_pVao->getPerVertexNumDiffuse()  == m_perVertexNumDiffuse);
+	EVE_ASSERT(p_pVao->getPerVertexNumNormal()   == m_perVertexNumNormal);
+
+
+	GLint addedVerts = p_pVao->getNumVertices();
+	GLint addedInds = p_pVao->getNumIndices();
+
+
+	float * verts = (float*)malloc((m_numVertices + addedVerts) * m_verticesStride);
+	memcpy(verts, m_pVertices.get(), m_verticesSize);
+	float * newVerts = verts + addedVerts;
+	memcpy(newVerts, p_pVao->getVertices().get(), addedVerts * m_verticesStride);
+	m_pVertices.reset(verts);
+
+
+	GLuint * indices = (GLuint*)malloc((m_numIndices + addedInds) * sizeof(GLuint));
+	memcpy(indices, m_pIndices.get(), m_indicesSize);
+
+	GLuint * inds = indices + addedInds -1;
+	GLuint * newInds = p_pVao->getIndices().get() - 1;
+	for (GLint i = 0; i < addedInds; i++)
+	{
+		*++inds = *++newInds + m_numVertices;
+	}
+	m_pIndices.reset(indices);
+
+
+	m_numVertices += addedVerts;
+	m_numIndices  += addedInds;
+
+	m_verticesSize = static_cast<GLsizeiptr>(m_numVertices * m_verticesStride);
+	m_indicesSize  = static_cast<GLsizeiptr>(m_numIndices * sizeof(GLuint));
+
+	m_bUpdateIndices = true;
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Vao::merge(eve::ogl::Vao * p_pVao)
+{
+	this->add(p_pVao);
+	p_pVao->requestRelease();
 }
 
 

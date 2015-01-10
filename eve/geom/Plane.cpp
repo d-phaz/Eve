@@ -18,6 +18,8 @@ GLuint * eve::geom::create_plane_indices(void)
 	return indices;
 }
 
+
+
 //=================================================================================================
 float * eve::geom::create_plane_textured_vertices(const eve::vec3f & p_position, const eve::vec2f & p_size)
 {

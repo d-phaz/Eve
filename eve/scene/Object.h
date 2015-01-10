@@ -71,7 +71,7 @@ namespace eve
 
 			// This value is not used. It is just there to force the
 			// compiler to map this enum to a 32 Bit integer.
-			_ObjectType_SubForce32Bit = INT_MAX
+			_ObjectType_Force32Bit = INT_MAX
 
 		}; // enum ObjectType
 

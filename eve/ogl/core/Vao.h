@@ -85,7 +85,7 @@ namespace eve
 		*
 		* \note extends eve::ogl::Object
 		*/
-		class Vao final
+		class Vao
 			: public eve::ogl::Object
 		{
 
@@ -111,9 +111,11 @@ namespace eve
 			GLsizei						m_perVertexNumDiffuse;		//<! Specifies per vertex diffuse coordinates values amount (should be 2 is using texture coordinates, 4 if using color).
 			GLsizei						m_perVertexNumNormal;		//<! Specifies per vertex normals values amount (should be 3).
 
+			float *						m_pVerticesData;			//!< Specifies vertices device buffer data address.
 			std::shared_ptr<float>		m_pVertices;				//!< Specifies a pointer to vertices data in memory (used as std::shared_ptr).
+			GLuint *					m_pIndicesData;				//!< Specifies indices device buffer data address.
 			std::shared_ptr<GLuint>		m_pIndices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
-			float *						m_pOglData;					//!< Specifies device buffer data address.
+			bool						m_bUpdateIndices;			//!< Specifies wether or not indices must be updated.
 
 		private:
 			GLuint						m_offsetPosition;			//<! Specifies vertices positions data offset in array.
@@ -168,6 +170,13 @@ namespace eve
 			void draw(void);
 
 
+		public:
+			/** \brief Add target VAO, data structures have to be compatible. */
+			void add(eve::ogl::Vao * p_pVao);
+			/** \brief Merge target VAO and release it, data structures have to be compatible. */
+			void merge(eve::ogl::Vao * p_pVao);
+
+
 			///////////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////	
@@ -195,7 +204,7 @@ namespace eve
 
 		public:
 			/** \brief Get the pointer to vertices data in memory (used as std::shared_ptr). */
-			std::shared_ptr<float>	getVertices(void) const;
+			std::shared_ptr<float> getVertices(void) const;
 			/** \brief Set array buffer data (vertices), adds the object as a shared owner, increasing the use_count. */
 			void setVertices(const std::shared_ptr<float> & p_data);
 			/** \brief Set array buffer data (vertices), transfer ownership without altering the use_count. */
