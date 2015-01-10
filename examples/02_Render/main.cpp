@@ -111,10 +111,10 @@ void RenderGL::init(void)
 	fmtUniform.data			= m_pCamera->getMatrixModelViewProjection().data();
 	m_pUniform = this->create(fmtUniform);
 
-	eve::ogl::FormatVao fmtVao = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f::one()*5.0f, eve::color4f::red());
+	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f(0.1f, 2.0f, 0.1f) * 5.0f, eve::color4f::red());
 	m_pVao = this->create(fmtVao);
 
-	eve::ogl::FormatVao fmtVao2 = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f(2.0f, 1.0f, 2.0f), eve::color4f::green());
+	eve::ogl::FormatVao fmtVao2 = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f(2.0f, 0.1f, 2.0f) * 5.0f, eve::color4f::green());
 	eve::ogl::Vao * vao2 = this->create(fmtVao2);
 
 	m_pVao->merge(vao2);
@@ -136,6 +136,9 @@ void RenderGL::release(void)
 //=================================================================================================
 void RenderGL::cb_display(void)
 {
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glViewport(0, 0, m_width, m_height);
@@ -147,6 +150,9 @@ void RenderGL::cb_display(void)
 
 	m_pUniform->unbind(1);
 	m_pShader->unbind();
+
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
 }
 
 //=================================================================================================

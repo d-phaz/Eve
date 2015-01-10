@@ -173,9 +173,7 @@ void eve::ogl::Vao::oglInit(void)
 
 
 	glGenVertexArrays(1, &m_id);
-
 	glBindVertexArray(m_id);
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
 
 	glVertexAttribPointer(EVE_OGL_ATTRIBUTE_POSITION, m_perVertexNumPosition, GL_FLOAT, GL_FALSE, m_verticesStride, EVE_OGL_BUFFER_OFFSET(m_offsetPosition));
@@ -190,7 +188,6 @@ void eve::ogl::Vao::oglInit(void)
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	glBindVertexArray(0);
 	EVE_OGL_CHECK_ERROR;
 
@@ -223,28 +220,39 @@ void eve::ogl::Vao::oglInit(void)
 //=================================================================================================
 void eve::ogl::Vao::oglUpdate(void)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
-
-	m_pVerticesData = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, m_verticesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-	memcpy(m_pVerticesData, m_pVertices.get(), m_verticesSize);
-
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	EVE_OGL_CHECK_ERROR;
-
-
 	if (m_bUpdateIndices)
 	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
+		glBufferData(GL_ARRAY_BUFFER, m_verticesSize, m_pVertices.get(), GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		EVE_OGL_CHECK_ERROR;
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
-
-		m_pIndicesData = reinterpret_cast<GLuint*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, m_indicesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-		memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
-
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indicesSize, m_pIndices.get(), GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		EVE_OGL_CHECK_ERROR;
 
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
+
+		//m_pIndicesData = reinterpret_cast<GLuint*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, m_indicesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+		//memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
+
+		//glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		//EVE_OGL_CHECK_ERROR;
+
 		m_bUpdateIndices = false;
+	}
+	else
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
+
+		m_pVerticesData = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, m_verticesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
+		memcpy(m_pVerticesData, m_pVertices.get(), m_verticesSize);
+
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		EVE_OGL_CHECK_ERROR;
 	}
 }
 
@@ -291,6 +299,7 @@ void eve::ogl::Vao::draw(void)
 //=================================================================================================
 void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
 {
+	// Avoid empty and self copying.
 	EVE_ASSERT(p_pVao);
 	EVE_ASSERT(p_pVao != this);
 
@@ -300,35 +309,43 @@ void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
 	EVE_ASSERT(p_pVao->getPerVertexNumNormal()   == m_perVertexNumNormal);
 
 
+	// Grab number of added data.
 	GLint addedVerts = p_pVao->getNumVertices();
-	GLint addedInds = p_pVao->getNumIndices();
+	GLint addedInds  = p_pVao->getNumIndices();
 
 
-	float * verts = (float*)malloc((m_numVertices + addedVerts) * m_verticesStride);
-	memcpy(verts, m_pVertices.get(), m_verticesSize);
-	float * newVerts = verts + addedVerts;
-	memcpy(newVerts, p_pVao->getVertices().get(), addedVerts * m_verticesStride);
-	m_pVertices.reset(verts);
+	// Copy original vertices.
+	float * vertices = (float*)malloc((m_numVertices + addedVerts) * m_verticesStride);
+	memcpy(vertices, m_pVertices.get(), m_numVertices * m_verticesStride);
+	// Add new vertices.
+	float * verts	 = vertices + (m_numVertices * m_verticesStrideUnit);
+	memcpy(verts, p_pVao->getVertices().get(), addedVerts * m_verticesStride);
+	// Update shared pointer.
+	m_pVertices.reset(vertices);
 
 
+	// Copy original indices.
 	GLuint * indices = (GLuint*)malloc((m_numIndices + addedInds) * sizeof(GLuint));
-	memcpy(indices, m_pIndices.get(), m_indicesSize);
-
-	GLuint * inds = indices + addedInds -1;
+	memcpy(indices, m_pIndices.get(), (m_numIndices * sizeof(GLuint)));
+	// Add new indices, incremented of original vertices number.
+	GLuint * inds	 = indices + m_numIndices - 1;
 	GLuint * newInds = p_pVao->getIndices().get() - 1;
 	for (GLint i = 0; i < addedInds; i++)
 	{
 		*++inds = *++newInds + m_numVertices;
 	}
+	// Update shared pointer.
 	m_pIndices.reset(indices);
 
 
+	// Update parsing data.
 	m_numVertices += addedVerts;
 	m_numIndices  += addedInds;
-
 	m_verticesSize = static_cast<GLsizeiptr>(m_numVertices * m_verticesStride);
 	m_indicesSize  = static_cast<GLsizeiptr>(m_numIndices * sizeof(GLuint));
 
+
+	// Request full update.
 	m_bUpdateIndices = true;
 	this->requestOglUpdate();
 }
