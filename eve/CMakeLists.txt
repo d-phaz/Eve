@@ -526,6 +526,18 @@ if( APPLE )
 endif()
 
 	
+# Assimp.
+#################################################
+if( WIN32 )
+	if( OPTION_BUILD_TYPE_DEBUG )
+		set( LIBS ${LIBS} assimpd.lib)
+	elseif( OPTION_BUILD_TYPE_RELEASE ) 
+		set( LIBS ${LIBS} assimp.lib)	
+	endif()
+endif()
+add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
+
+	
 # GLEW.
 #################################################
 if( WIN32 )
