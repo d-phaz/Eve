@@ -56,15 +56,15 @@ namespace eve
 		{
 
 		public:
-			std::map<std::string, std::pair<std::string, GLenum >> shaderMap;
-			std::vector<std::string> program;
-			std::map<std::string, std::string> linkedMap;
+			std::map<std::string, std::pair<std::string, GLenum >> m_shaderMap;
+			std::vector<std::string> m_program;
+			std::map<std::string, std::string> m_linkedMap;
 
-			void loadShader(const std::string& shaderKey, const std::string& filename, GLenum type);
+			void loadShader(const std::string& p_shaderKey, const std::string& p_filename, GLenum p_type);
 
-			void createProgram(const std::string& shaderProgramKey);
+			void createProgram(const std::string& p_shaderProgramKey);
 
-			void attachShader(const std::string& shaderKey, const std::string& shaderProgramKey);
+			void attachShader(const std::string& p_shaderKey, const std::string& p_shaderProgramKey);
 
 			/** \brief Class constructor. */
 			FormatShaderAdvanced(void);
@@ -87,17 +87,17 @@ namespace eve
 			friend class eve::ogl::Object;
 
 		private:
-			ShaderBaseModel	_shaderData;
+			ShaderBaseModel	m_shaderData;
 
-			GLuint 	_VertexArrayID;
+			GLuint 	m_VertexArrayID;
 
 			ShaderManager();
 
 			~ShaderManager();
 
-			std::map<std::string, std::pair<std::string, GLenum >> shaderMap;
-			std::vector<std::string> program;
-			std::map<std::string, std::string> linkedMap;
+			std::map<std::string, std::pair<std::string, GLenum >> m_shaderMap;
+			std::vector<std::string> m_program;
+			std::map<std::string, std::string> m_linkedMap;
 
 
 
@@ -116,28 +116,28 @@ namespace eve
 
 			void init(void);
 
-			void 			loadShader(const std::string& shaderKey, const std::string& program, GLenum type);
-			void 			attachShader(const std::string& shaderKey, const std::string& shaderProgramKey);
-			void 			detachShader(const std::string& shaderKey, const std::string& shaderProgramKey);
+			void 			loadShader(const std::string& p_shaderKey, const std::string& p_program, GLenum p_type);
+			void 			attachShader(const std::string& p_shaderKey, const std::string& p_shaderProgramKey);
+			void 			detachShader(const std::string& p_shaderKey, const std::string& p_shaderProgramKey);
 
-			void 			createProgram(const std::string& shaderProgramKey);
-			void 			useProgram(const std::string& shaderProgramKey);
-			void 			linkProgram(const std::string& shaderProgramKey);
+			void 			createProgram(const std::string& p_shaderProgramKey);
+			void 			useProgram(const std::string& p_shaderProgramKey);
+			void 			linkProgram(const std::string& p_shaderProgramKey);
 
-			GLuint 			getShaderID(const std::string& shaderKey);
-			GLuint 			getShaderProgramID(const std::string& shaderProgramKey);
+			GLuint 			getShaderID(const std::string& p_shaderKey);
+			GLuint 			getShaderProgramID(const std::string& p_shaderProgramKey);
 
-			void 			deleteProgram(const std::string& shaderProgramKey);
-			void 			deleteShader(const std::string& shaderKey);
+			void 			deleteProgram(const std::string& p_shaderProgramKey);
+			void 			deleteShader(const std::string& p_shaderKey);
 
 			void 			resetProgram();
 
-			void 			loadUintUniform(const std::string& shaderProgram, const std::string& name, GLuint value);
-			void 			loadFloatUniform(const std::string& shaderProgram, const std::string& name, GLfloat value);
-			void 			loadVec4Uniform(const std::string& shaderProgram, const std::string& name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-			void 			loadMatrix4Uniform(const std::string& shaderProgram, const std::string& name, const GLfloat* value);
+			void 			loadUintUniform(const std::string& p_shaderProgram, const std::string& p_name, GLuint p_value);
+			void 			loadFloatUniform(const std::string& p_shaderProgram, const std::string& p_name, GLfloat p_value);
+			void 			loadVec4Uniform(const std::string& p_shaderProgram, const std::string& p_name, GLfloat x, GLfloat p_y, GLfloat p_z, GLfloat p_w);
+			void 			loadMatrix4Uniform(const std::string& p_shaderProgram, const std::string& p_name, const GLfloat* p_value);
 
-			void 			getBufferVariableIndices(const std::string& shaderProgram, int length, const GLchar** names, GLint* indices);
+			void 			getBufferVariableIndices(const std::string& p_shaderProgram, int p_length, const GLchar** p_names, GLint* p_indices);
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
