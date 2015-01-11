@@ -38,6 +38,10 @@
 #include "eve/evt/Event.h"
 #endif
 
+#ifndef __EVE_EVT_LISTENER_H__
+#include "eve/evt/Listener.h"
+#endif
+
 #ifndef __EVE_EVT_SERVER_H__
 #include "eve/evt/Server.h"
 #endif

@@ -236,6 +236,12 @@ void eve::ogl::Context::init_OpenGL(void)
 
 		firstLaunch = false;
 	}
+
+	// Initialize default OpenGL states for context.
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one.
 }
 
 
@@ -503,13 +509,13 @@ bool eve::ogl::SubContext::makeCurrent(void)
 
 	bool ret = true;
 
-	if (/*eve::ogl::Context::get_handle()*/ m_hGLRC  == ::wglGetCurrentContext())
+	if (eve::ogl::Context::get_handle() /*m_hGLRC*/  == ::wglGetCurrentContext())
 	{
 		EVE_LOG_ERROR("Context already current.");
 		ret = false;
 	}
 
-	if (ret && (::wglMakeCurrent(m_hDC, m_hGLRC/*eve::ogl::Context::get_handle()*/) == TRUE))
+	if (ret && (::wglMakeCurrent(m_hDC, /*m_hGLRC*/ eve::ogl::Context::get_handle()) == TRUE))
 	{
 		eve::ogl::SubContext::set_current_context(this);
 	}
@@ -545,7 +551,7 @@ bool eve::ogl::SubContext::doneCurrent(void)
 //=================================================================================================
 void eve::ogl::SubContext::swapBuffers(void)
 {
-	// Multiple rendering buffers
+	// Multiple rendering buffers.
 	if (eve::ogl::Context::get_pixel_format().doubleBuffer())
 	{
 		if (!eve::ogl::Context::get_pixel_format().plane())
@@ -554,21 +560,21 @@ void eve::ogl::SubContext::swapBuffers(void)
 			{
 				::SwapBuffers(m_hDC);
 			}
-			else // format has overlay
+			else // Format has overlay.
 			{
 				::wglSwapLayerBuffers(m_hDC, WGL_SWAP_MAIN_PLANE);
 			}
 		}
-		else // format has plane
+		else // Format has plane.
 		{
 			::wglSwapLayerBuffers(m_hDC, WGL_SWAP_OVERLAY1);
 		}
 	}
 
-	// Single rendering buffers
+	// Single rendering buffer.
 	else
 	{
-		// Force OpenGL command termination
+		// Force OpenGL command termination.
 		glFlush();
 		glFinish();
 	}

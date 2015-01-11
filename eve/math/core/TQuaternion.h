@@ -109,17 +109,17 @@ namespace eve
 
 			T getPitch(void) const
 			{
-				return eve::math::atan2(w * w - v.x * v.x - v.y * v.y + v.z * v.z, (T)2 * (v.y * v.z + w * v.x));
+				return eve::math::atan2(w * w - v.x * v.x - v.y * v.y + v.z * v.z, static_cast<T>(2) * (v.y * v.z + w * v.x));
 			}
 
 			T getYaw(void) const
 			{
-				return eve::math::sin((T)-2 * (v.x * v.z - w * v.y));
+				return eve::math::sin(static_cast<T>(-2) * (v.x * v.z - w * v.y));
 			}
 
 			T getRoll(void) const
 			{
-				return eve::math::atan2(w * w + v.x * v.x - v.y * v.y - v.z * v.z, (T)2 * (v.x * v.y + w * v.z));
+				return eve::math::atan2(w * w + v.x * v.x - v.y * v.y - v.z * v.z, static_cast<T>(2) * (v.x * v.y + w * v.z));
 			}
 
 			T dot(const eve::math::TQuaternion<T> &quat) const
@@ -181,7 +181,7 @@ namespace eve
 			// Rendering Techniques by Watt and Watt, Page 366:
 			eve::math::TQuaternion<T> log(void) const
 			{
-				T theta = eve::math::acos(std::min(w, (T) 1.0));
+				T theta = eve::math::acos(eve::math::min(w, static_cast<T>(1.0)));
 
 				if (theta == 0)
 					return eve::math::TQuaternion<T>(v, 0);
@@ -189,8 +189,8 @@ namespace eve
 				T sintheta = eve::math::sin(theta);
 
 				T k;
-				if (abs(sintheta) < 1 && abs(theta) >= 3.402823466e+38F * abs(sintheta))
-					k = 1;
+				if (eve::math::abs(sintheta) < 1 && eve::math::abs(theta) >= 3.402823466e+38F * eve::math::abs(sintheta))
+					k = static_cast<T>(1);
 				else
 					k = theta / sintheta;
 
@@ -206,7 +206,7 @@ namespace eve
 				T sintheta = eve::math::sin(theta);
 
 				T k;
-				if (abs(theta) < 1 && abs(sintheta) >= 3.402823466e+38F * abs(theta))
+				if (eve::math::abs(theta) < 1 && eve::math::abs(sintheta) >= 3.402823466e+38F * eve::math::abs(theta))
 					k = 1;
 				else
 					k = sintheta / theta;
@@ -260,8 +260,8 @@ namespace eve
 
 			void set(const eve::math::TVec3<T> &axis, T radians)
 			{
-				w = eve::math::cos(radians / 2);
-				v = axis.normalized() * eve::math::sin(radians / 2);
+				w = eve::math::cos(radians / static_cast<T>(2));
+				v = axis.normalized() * eve::math::sin(radians / static_cast<T>(2));
 			}
 
 			// assumes ZYX rotation order and radians
@@ -282,7 +282,7 @@ namespace eve
 				T Sz = eve::math::sin(zRotation);
 
 				// multiply it out
-				w = Cx*Cy*Cz - Sx*Sy*Sz;
+				w   = Cx*Cy*Cz - Sx*Sy*Sz;
 				v.x = Sx*Cy*Cz + Cx*Sy*Sz;
 				v.y = Cx*Sy*Cz - Sx*Cy*Sz;
 				v.z = Cx*Cy*Sz + Sx*Sy*Cx;
@@ -291,7 +291,7 @@ namespace eve
 			void getAxisAngle(eve::math::TVec3<T> *axis, T *radians) const
 			{
 				T cos_angle = w;
-				*radians = eve::math::acos(cos_angle) * 2;
+				*radians = eve::math::acos(cos_angle) * static_cast<T>(2);
 				T invLen = static_cast<T>(1.0) / eve::math::sqrt(static_cast<T>(1.0) - cos_angle * cos_angle);
 
 				axis->x = v.x * invLen;
@@ -341,7 +341,7 @@ namespace eve
 				T a = 2 * eve::math::atan2(lengthS, lengthD);
 				T s = 1 - t;
 
-				eve::math::TQuaternion<T> q(*this * (sinx_over_x(s * a) / sinx_over_x(a) * s) + end * (sinx_over_x(t * a) / sinx_over_x(a) * t));
+				eve::math::TQuaternion<T> q(*this * (eve::math::sinx_over_x(s * a) / eve::math::sinx_over_x(a) * s) + end * (eve::math::sinx_over_x(t * a) / eve::math::sinx_over_x(a) * t));
 
 				return q.normalized();
 			}
@@ -426,7 +426,7 @@ namespace eve
 			{
 				eve::math::TQuaternion<T> r1 = this->slerp(t, q2);
 				eve::math::TQuaternion<T> r2 = qa.slerp(t, qb);
-				return r1.slerp(2 * t * (1 - t), r2);
+				return r1.slerp(static_cast<T>(2) * t * (static_cast<T>(1) - t), r2);
 			}
 
 			// Spherical Cubic Spline Interpolation -
@@ -479,7 +479,7 @@ namespace eve
 						i = 2;
 					uint32_t j = (i + 1) % 3;
 					uint32_t k = (j + 1) % 3;
-					T s = eve::math::sqrt(m.at(i, i) - m.at(j, j) - m.at(k, k) + (T)1.0);
+					T s = eve::math::sqrt(m.at(i, i) - m.at(j, j) - m.at(k, k) + static_cast<T>(1.0));
 					(*this)[i] = static_cast<T>(0.5) * s;
 					T recip = static_cast<T>(0.5) / s;
 					w = (m.at(k, j) - m.at(j, k)) * recip;
@@ -494,7 +494,7 @@ namespace eve
 				T trace = m.trace();
 				if (trace > static_cast<T>(0.0))
 				{
-					T s = eve::math::sqrt(trace + (T)1.0);
+					T s = eve::math::sqrt(trace + static_cast<T>(1.0));
 					w = s * static_cast<T>(0.5);
 					T recip = static_cast<T>(0.5) / s;
 					v.x = (m.at(2, 1) - m.at(1, 2)) * recip;
@@ -510,7 +510,7 @@ namespace eve
 						i = 2;
 					uint32_t j = (i + 1) % 3;
 					uint32_t k = (j + 1) % 3;
-					T s = eve::math::sqrt(m.at(i, i) - m.at(j, j) - m.at(k, k) + (T)1.0);
+					T s = eve::math::sqrt(m.at(i, i) - m.at(j, j) - m.at(k, k) + static_cast<T>(1.0));
 					(*this)[i] = static_cast<T>(0.5) * s;
 					T recip = static_cast<T>(0.5) / s;
 					w = (m.at(k, j) - m.at(j, k)) * recip;
@@ -686,21 +686,21 @@ namespace eve
 				mV[0] = static_cast<T>(1) - (yy + zz);
 				mV[4] = xy - wz;
 				mV[8] = xz + wy;
-				mV[12] = 0;
+				mV[12] = static_cast<T>(0);
 
 				mV[1] = xy + wz;
 				mV[5] = static_cast<T>(1) - (xx + zz);
 				mV[9] = yz - wx;
-				mV[13] = 0;
+				mV[13] = static_cast<T>(0);
 
 				mV[2] = xz - wy;
 				mV[6] = yz + wx;
-				mV[10] = T(1) - (xx + yy);
-				mV[14] = 0;
+				mV[10] = static_cast<T>(1) - (xx + yy);
+				mV[14] = static_cast<T>(0);
 
-				mV[3] = 0;
-				mV[7] = 0;
-				mV[11] = 0;
+				mV[3] = static_cast<T>(0);
+				mV[7] = static_cast<T>(0);
+				mV[11] = static_cast<T>(0);
 				mV[15] = T(1);
 
 				return mV;

@@ -47,14 +47,9 @@ macro( add_project PROJECT_NAME_IN )
 	set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
 
 	# Include directories
-	###################################################################################################	
-	SET(${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES  
-	${BASE_SOURCE_PATH}
-	${CMAKE_INCLUDE_OUTPUT_DIRECTORY}
-	${BASE_SOURCE_PATH}/external/include
-	${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN}
-	)
-	include_directories( ${${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES} )
+	include_directories( ${BASE_SOURCE_PATH} )
+	include_directories( ${BASE_SOURCE_PATH}/external/include )	
+	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
 
 	# Create executable
 	set( exe_name "${PROJECT_NAME}_exe" )

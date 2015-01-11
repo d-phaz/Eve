@@ -53,7 +53,7 @@
 
 
 #ifndef __EVE_OPENCL_CORE_CONFIGURATION_H__
-#include "eve/generated/ocl/core/Configuration.h"
+#include "eve/ocl/core/Configuration.h"
 #endif
 
 

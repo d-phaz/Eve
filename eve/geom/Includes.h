@@ -38,6 +38,10 @@
 #include "eve/geom/Cube.h"
 #endif
 
+#ifndef __EVE_GEOMETRY_PLANE_H__
+#include "eve/geom/Plane.h"
+#endif
+
 #ifndef __EVE_GEOMETRY_SPHERE_H__
 #include "eve/geom/Sphere.h"
 #endif

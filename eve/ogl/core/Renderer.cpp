@@ -32,14 +32,6 @@
 // Main header.
 #include "eve/ogl/core/Renderer.h"
 
-#ifndef __EVE_OPENGL_CORE_CONTEXT_H__
-#include "eve/ogl/core/win32/Context.h"
-#endif
-
-#ifndef __EVE_OPENGL_CORE_OBJECT_H__
-#include "eve/ogl/core/Object.h"
-#endif
-
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
 #include "eve/thr/SpinLock.h"
 #endif 
