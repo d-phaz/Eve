@@ -77,24 +77,25 @@ namespace eve
 		*
 		* \note extends eve::mem::Pointer
 		*/
-		class App final
+		class App
 			: public eve::mem::Pointer
 		{
 
 			friend class eve::mem::Pointer;
 
+			template<typename TApp>
+			friend App * creatClass(void);
+
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
 
-		private:
+		protected:
 			static eve::app::App *				m_p_instance;		//!< Class unique instance.
 			static eve::time::Timer *			m_p_timer;			//!< Application timer, launched at startup.
 
-		private:
 			bool								m_bRunning;			//!< Application main loop running state.
-
-		private:
+		protected:
 			std::vector<eve::sys::View*> *		m_pVecViews;		//!< Application view(s) container.
 			eve::thr::SpinLock *				m_pFence;			//!< Application view(s) container protection fence.
 
@@ -108,20 +109,18 @@ namespace eve
 
 			
 		public:
-			/** \brief Create unique instance. */
-			static eve::app::App * create_instance(void);
 			/** \brief Get unique instance. */
 			static eve::app::App * get_instance(void);
 			/** \brief Release unique instance */
 			static void release_instance(void);
 
 
-		private:
+		protected:
 			/** \brief Class constructor. */
 			explicit App(void);
 
 
-		private:
+		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
@@ -130,7 +129,7 @@ namespace eve
 
 		public:
 			/** \brief Launch application main loop. */
-			void runApp(void);
+			virtual void runApp(void);
 
 
 		public:
@@ -170,6 +169,21 @@ namespace eve
 
 		}; // class App
 
+//=================================================================================================
+		template<typename TApp>
+		App * creatClass(void)
+		{
+			EVE_ASSERT((std::is_base_of<eve::app::App, TApp>::value));
+			EVE_ASSERT(!eve::app::App::m_p_instance);
+
+			EVE_ASSERT(!eve::app::App::m_p_timer);
+			eve::app::App::m_p_timer = eve::time::Timer::create_ptr(true);
+
+			eve::app::App::m_p_instance = EVE_CREATE_PTR(TApp);
+
+			return eve::app::App::m_p_instance;
+		}
+
 	} // namespace app
 
 } // namespace eve
@@ -208,16 +222,18 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 */
 #define EveAppElapsedTime	eve::app::App::get_elapsed_time()
 
+#define EVE_APPLICATION( VIEW  ) \
+	EVE_APPLICATION_CUSTOM( VIEW , eve::app::App )	
 
 #if defined(EVE_OS_WIN)
-/** 
-* \def EVE_APPLICATION 
-* \brief Convenience macro to create application entry point and launch application. 
+/**
+* \def EVE_APPLICATION
+* \brief Convenience macro to create application entry point and launch application.
 */
-#define EVE_APPLICATION( VIEW )																			\
+#define EVE_APPLICATION_CUSTOM( VIEW , APP )																	\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
-		eve::app::App *	pApp = eve::app::App::create_instance();										\
+		eve::app::App *	pApp = eve::app::creatClass<APP>(); \
 		pApp->addView<VIEW>();																			\
 		pApp->runApp();																					\
 		eve::app::App::release_instance();																\
@@ -229,10 +245,10 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION 
 * \brief Convenience macro to create application entry point and launch application. 
 */
-#define EVE_APPLICATION( VIEW )												\
+#define EVE_APPLICATION_CUSTOM( VIEW , APP )												\
 	int main(int argc, char * const argv[]) 								\
 	{																		\
-		eve::app::App *	pApp = eve::app::App::create_instance();			\
+		eve::app::App *	pApp = eve::app::creatClass<APP>(); \			\
 		pApp->addView<VIEW>();												\
 		pApp->runApp();														\
 		eve::app::App::release_instance();									\

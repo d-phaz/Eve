@@ -55,6 +55,7 @@ eve::time::Timer::Timer(void)
 	, m_startTime(0)
 	, m_endTime(0)
 	, m_elapsed(0)
+	, m_oldTime(0)
 	, m_invFrequency(1.0)
 	, m_bRunning(false)
 {}
@@ -68,6 +69,7 @@ eve::time::Timer::Timer(const Timer & p_other)
 	, m_endTime(p_other.m_endTime)
 	, m_elapsed(p_other.m_elapsed)
 	, m_invFrequency(p_other.m_invFrequency)
+	, m_oldTime(p_other.m_oldTime)
 	, m_bRunning(false)
 {
 	if (p_other.m_bRunning)
@@ -225,6 +227,53 @@ int64_t eve::time::Timer::getElapsedTime(void)
 	else
 	{
 		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+	}
+
+	return m_elapsed;
+}
+
+
+//=================================================================================================
+int64_t eve::time::Timer::getDiffTime(void)
+{
+	if (this->isStopped())
+	{
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+	}
+	else
+	{
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+	}
+
+	return m_elapsed;
+}
+
+int64_t eve::time::Timer::getDiffTimeDelta(void)
+{
+	if (this->isStopped())
+	{
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+	}
+	else
+	{
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+		int64_t timeDiff = m_elapsed - m_oldTime;
+		m_oldTime = m_elapsed;
+	}
+
+	return m_elapsed;
+}
+
+int64_t eve::time::Timer::getDiffTimeDeltaWithoutactualisation(void)
+{
+	if (this->isStopped())
+	{
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+	}
+	else
+	{
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+		int64_t timeDiff = m_elapsed - m_oldTime;
 	}
 
 	return m_elapsed;

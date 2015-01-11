@@ -71,6 +71,7 @@ namespace eve
 			int64_t						m_startTime;			//!< Timer start time in milliseconds.
 			int64_t						m_endTime;				//!< Timer end time in milliseconds.
 			int64_t						m_elapsed;				//!< Timer elapsed time.
+			int64_t						m_oldTime;
 
 			double						m_invFrequency;			//!< Convenience inverse native frequency factor.
 
@@ -146,6 +147,12 @@ namespace eve
 			const int64_t getEndTime(void) const;
 			/** \brief Get timer elapsed time in milliseconds. */
 			int64_t getElapsedTime(void);
+                        /** \brief Get timer diff time in milliseconds. */
+			int64_t getDiffTime(void);
+                        /** \brief Get timer diff delta time in milliseconds. */
+			int64_t getDiffTimeDelta(void);
+                        /** \brief Get timer diff delta time without actualisation in milliseconds. */
+			int64_t getDiffTimeDeltaWithoutactualisation(void);
 
 		}; // class Timer
 

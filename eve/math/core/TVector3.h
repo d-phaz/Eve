@@ -51,7 +51,7 @@ namespace eve
 	namespace math
 	{
 		template<class T> class TVec2;
-
+		template<class T> class TVec4;
 
 		/**
 		* \class eve::math::TVec3
@@ -80,6 +80,7 @@ namespace eve
 			TVec3(void);
 			TVec3(T nx, T ny, T nz);
 			TVec3(const TVec3<T> &src);
+			TVec3(const TVec4<T> &src);
 			TVec3(const TVec2<T> &v2, T aZ);
 			explicit TVec3(const TVec2<T> &v2);
 			explicit TVec3(const T *d);
@@ -280,6 +281,13 @@ eve::math::TVec3<T>::TVec3(T nx, T ny, T nz)
 
 template<typename T>
 eve::math::TVec3<T>::TVec3(const eve::math::TVec3<T> & src)
+	: x(src.x)
+	, y(src.y)
+	, z(src.z)
+{}
+
+template<typename T>
+eve::math::TVec3<T>::TVec3(const eve::math::TVec4<T> & src)
 	: x(src.x)
 	, y(src.y)
 	, z(src.z)
