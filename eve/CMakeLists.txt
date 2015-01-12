@@ -343,14 +343,16 @@ source_group( "OpenGL Core" FILES ${OPENGL_CORE_SRCS} )
 # source_group( "OpenGL" FILES ${OPENGL_SRCS} )
 
 
-# # Scene.
-# #################################################
-# set( SCENE_SRCS
+# Scene.
+#################################################
+set( SCENE_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h )
 	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
 	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
 
-# set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
-# source_group( "Scene" FILES ${SCENE_SRCS} )
+set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
+source_group( "Scene" FILES ${SCENE_SRCS} )
 
 
 # String.
