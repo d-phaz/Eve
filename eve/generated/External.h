@@ -35,7 +35,7 @@
 
 
 // Resources Path
-#define EVE_RESOURCES_PATH "C:/dev/Eve/eve/../resources"
+#define EVE_RESOURCES_PATH "E:/Eve/eve/../resources"
 
 
 // Visual Leak Detector for Visual Studio.
