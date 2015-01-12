@@ -175,6 +175,25 @@ macro( add_project PROJECT_NAME_IN )
 		find_required_library( Security )
 	endif()
 	
+	# Assimp.
+	#################################################
+	if( WIN32 )
+		if( OPTION_BUILD_TYPE_DEBUG )
+			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/assimpd.lib )
+			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/assimpd.lib )
+			endif()
+		elseif( OPTION_BUILD_TYPE_RELEASE ) 
+			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/assimp.lib )
+			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+				set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/assimp.lib )
+			endif()
+		endif()
+	endif()
+	add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
+	
 	# GLEW.
 	#################################################
 	if( WIN32 )
