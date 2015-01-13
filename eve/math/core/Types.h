@@ -66,19 +66,13 @@ namespace eve
 	} // namespace math
 
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	//		Typedefs
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-
 	typedef eve::math::__vec4i					vec4i_t;
 	typedef eve::math::__vec4ui					vec4iu_t;
 	typedef eve::math::__vec4f					vec4f_t;
 	typedef eve::math::__vec4d					vec4d_t;
 
 	
-	
 	typedef __m128								simd_float4_t;
-
 
 
 	typedef eve::math::TVec2<float>				vec2f;
@@ -92,8 +86,7 @@ namespace eve
 
 	typedef eve::math::TVec4<float>				color4f;
 	typedef eve::math::TVec4<double>			color4d;
-
-	
+		
 
 	typedef eve::math::TMatrix22<float>			mat22f;
 	typedef eve::math::TMatrix22<double>		mat22d;
@@ -103,12 +96,10 @@ namespace eve
 
 	typedef eve::math::TMatrix44<float>			mat44f;
 	typedef eve::math::TMatrix44<double>		mat44d;
-
-
+	
 
 	typedef eve::math::TQuaternion<float>		quatf;
 	typedef eve::math::TQuaternion<double>		quatd;
-
 
 } // namespace eve
 

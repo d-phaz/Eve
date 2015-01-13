@@ -333,7 +333,9 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
 source_group( "Scene" FILES ${SCENE_SRCS} )
