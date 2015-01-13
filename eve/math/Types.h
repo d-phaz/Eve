@@ -45,6 +45,10 @@
 #include "eve/math/TCamera.h"
 #endif 
 
+#ifndef __EVE_MATH_TMESH_H__
+#include "eve/math/TMesh.h"
+#endif
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
@@ -73,6 +77,9 @@ namespace eve
 	{
 		typedef eve::math::TCamera<float>		Cameraf;
 		typedef eve::math::TCamera<double>		Camerad;
+
+		typedef eve::math::TMesh<float>			Meshf;
+		typedef eve::math::TMesh<double>		Meshd;
 
 	} // namespace math
 

@@ -227,6 +227,7 @@ set( MATH_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TBox.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TCamera.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMesh.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TRay.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h )
 
@@ -324,16 +325,6 @@ set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_CORE_SRCS} )
 source_group( "OpenGL Core" FILES ${OPENGL_CORE_SRCS} )
 
 
-# # OpenGL.
-# #################################################
-# set( OPENGL_SRCS 
-	 # ${CMAKE_CURRENT_SOURCE_DIR}/ogl/Mesh.cpp
-	 # ${CMAKE_CURRENT_SOURCE_DIR}/ogl/Mesh.h )
-
-# set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_SRCS} )
-# source_group( "OpenGL" FILES ${OPENGL_SRCS} )
-
-
 # Scene.
 #################################################
 set( SCENE_SRCS
@@ -343,8 +334,6 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.h )
-	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
-	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
 source_group( "Scene" FILES ${SCENE_SRCS} )
