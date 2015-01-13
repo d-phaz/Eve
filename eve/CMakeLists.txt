@@ -337,6 +337,8 @@ source_group( "OpenGL Core" FILES ${OPENGL_CORE_SRCS} )
 # Scene.
 #################################################
 set( SCENE_SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h )
 	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
