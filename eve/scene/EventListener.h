@@ -58,6 +58,7 @@ namespace eve
 			/** \brief Class constructor. */
 			EventListenerScene(void);
 
+		public:
 			/** \brief Event handler callback (pure virtual). */
 			virtual void cb_evtScene(eve::scene::EventArgsScene & p_args) = 0;
 
@@ -80,6 +81,7 @@ namespace eve
 			/** \brief Class constructor. */
 			EventListenerSceneObject(void);
 
+		public:
 			/** \brief Event handler callback (pure virtual). */
 			virtual void cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_args) = 0;
 
@@ -102,8 +104,9 @@ namespace eve
 			/** \brief Class constructor. */
 			EventListenerSceneCamera(void);
 
+		public:
 			/** \brief Event handler callback (pure virtual). */
-			virtual void cb_evtSceneCamera(eve::scene::EventSceneCamera & p_args) = 0;
+			virtual void cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_args) = 0;
 
 		}; // class EventListenerSceneCamera
 
@@ -124,8 +127,9 @@ namespace eve
 			/** \brief Class constructor. */
 			EventListenerSceneLight(void);
 
+		public:
 			/** \brief Event handler callback (pure virtual). */
-			virtual void cb_evtSceneLight(eve::scene::EventSceneLight & p_args) = 0;
+			virtual void cb_evtSceneLight(eve::scene::EventArgsSceneLight & p_args) = 0;
 
 		}; // class EventListenerSceneLight		
 

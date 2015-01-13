@@ -340,7 +340,9 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.h )
 	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
 	 # ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
 
