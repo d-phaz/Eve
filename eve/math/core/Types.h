@@ -75,15 +75,23 @@ namespace eve
 	typedef __m128								simd_float4_t;
 
 
+	typedef eve::math::TVec2<int32_t>			vec2i;
+	typedef eve::math::TVec2<uint32_t>			vec2ui;
 	typedef eve::math::TVec2<float>				vec2f;
 	typedef eve::math::TVec2<double>			vec2d;
 
+	typedef eve::math::TVec3<int32_t>			vec3i;
+	typedef eve::math::TVec3<uint32_t>			vec3ui;
 	typedef eve::math::TVec3<float>				vec3f;
 	typedef eve::math::TVec3<double>			vec3d;
 
+	typedef eve::math::TVec4<int32_t>			vec4i;
+	typedef eve::math::TVec4<uint32_t>			vec4ui;
 	typedef eve::math::TVec4<float>				vec4f;
 	typedef eve::math::TVec4<double>			vec4d;
 
+	typedef eve::math::TVec4<int32_t>			color4i;
+	typedef eve::math::TVec4<uint32_t>			color4ui;
 	typedef eve::math::TVec4<float>				color4f;
 	typedef eve::math::TVec4<double>			color4d;
 		

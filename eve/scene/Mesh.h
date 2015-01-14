@@ -81,9 +81,10 @@ namespace eve
 			eve::ogl::Vao *			m_pVao;					//<! Specifies OpenGL vertex array object.
 			const aiMesh *			m_pAiMesh;				//<! Specifies Assimp mesh (shared pointer).
 
+
 		protected:
 			int32_t					m_numBones;				//<! Specifies the number of bones in mesh.
-			eve::vec4ui_t *			m_pBoneIndices;			//<! Specifies bone indices array.
+			eve::vec4ui *			m_pBoneIndices;			//<! Specifies bone indices array.
 			eve::vec4f *			m_pWeights;				//<! Specifies bones weights array.
 
 
