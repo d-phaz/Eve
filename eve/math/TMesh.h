@@ -122,13 +122,13 @@ namespace eve
 
 
 		public:
-			/** \brief Rotate object. */
+			/** \brief Rotate object (radians). */
 			virtual void rotate(const eve::math::TVec3<T> & p_rotation);
-			/** \brief Rotate object on X-axis. */
+			/** \brief Rotate object on X-axis (radians). */
 			virtual void rotateX(float p_rotationX);
-			/** \brief Rotate object on Y-axis. */
+			/** \brief Rotate object on Y-axis (radians). */
 			virtual void rotateY(float p_rotationY);
-			/** \brief Rotate object on Z-axis. */
+			/** \brief Rotate object on Z-axis (radians). */
 			virtual void rotateZ(float p_rotationZ);
 
 
@@ -159,22 +159,22 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Get rotation. */
+			/** \brief Get rotation (radians). */
 			const eve::math::TVec3<T> & getRotation(void) const;
-			/** \brief Get rotation on X-axis. */
+			/** \brief Get rotation on X-axis (radians). */
 			const float getRotationX(void) const;
-			/** \brief Get rotation on Y-axis. */
+			/** \brief Get rotation on Y-axis (radians). */
 			const float getRotationY(void) const;
-			/** \brief Get rotation on Z-axis. */
+			/** \brief Get rotation on Z-axis (radians). */
 			const float getRotationZ(void) const;
 
-			/** \brief Set rotation. */
+			/** \brief Set rotation (radians). */
 			virtual void setRotation(const eve::math::TVec3<T> & p_value);
-			/** \brief Set rotation on X-axis. */
+			/** \brief Set rotation on X-axis (radians). */
 			virtual void setRotationX(float p_value);
-			/** \brief Set rotation on Y-axis. */
+			/** \brief Set rotation on Y-axis (radians). */
 			virtual void setRotationY(float p_value);
-			/** \brief Set rotation on Z-axis. */
+			/** \brief Set rotation on Z-axis (radians). */
 			virtual void setRotationZ(float p_value);
 
 
