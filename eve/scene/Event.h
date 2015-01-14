@@ -107,15 +107,25 @@ namespace eve
 		{
 			SceneObjectEventType_UNDEFINED = 0,
 
-			SceneObjectEventType_TranslationX,
-			SceneObjectEventType_TranslationY,
-			SceneObjectEventType_TranslationZ,
-			SceneObjectEventType_RotationX,
-			SceneObjectEventType_RotationY,
-			SceneObjectEventType_RotationZ,
+			SceneObjectEventType_RotateX,
+			SceneObjectEventType_RotateY,
+			SceneObjectEventType_RotateZ,
+			SceneObjectEventType_TranslateX,
+			SceneObjectEventType_TranslateY,
+			SceneObjectEventType_TranslateZ,
 			SceneObjectEventType_ScaleX,
 			SceneObjectEventType_ScaleY,
 			SceneObjectEventType_ScaleZ,
+
+			SceneObjectEventType_SetRotationX,
+			SceneObjectEventType_SetRotationY,
+			SceneObjectEventType_SetRotationZ,
+			SceneObjectEventType_SetTranslationX,
+			SceneObjectEventType_SetTranslationY,
+			SceneObjectEventType_SetTranslationZ,
+			SceneObjectEventType_SetScaleX,
+			SceneObjectEventType_SetScaleY,
+			SceneObjectEventType_SetScaleZ,
 
 			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
 			_SceneObjectEventType_Force32Bit = INT_MAX

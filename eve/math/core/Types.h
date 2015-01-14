@@ -67,7 +67,7 @@ namespace eve
 
 
 	typedef eve::math::__vec4i					vec4i_t;
-	typedef eve::math::__vec4ui					vec4iu_t;
+	typedef eve::math::__vec4ui					vec4ui_t;
 	typedef eve::math::__vec4f					vec4f_t;
 	typedef eve::math::__vec4d					vec4d_t;
 

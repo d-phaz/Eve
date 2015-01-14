@@ -97,7 +97,10 @@ namespace eve
 	{
 		Axis_X,
 		Axis_Y,
-		Axis_Z
+		Axis_Z,
+
+		//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+		_Axis_Force32Bit = INT_MAX
 
 	}; // enum Axis
 

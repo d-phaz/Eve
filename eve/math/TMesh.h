@@ -285,7 +285,10 @@ eve::math::TMesh<T>::TMesh(const eve::math::TMesh<T> & p_parent)
 template <typename T>
 void eve::math::TMesh<T>::init(void)
 {
-	// Nothing to do for now.
+	m_matrixRotation	= eve::math::TMatrix44<T>::createRotation(m_rotation);
+	m_matrixTranslation	= eve::math::TMatrix44<T>::createTranslation(m_translation);
+	m_matrixScale		= eve::math::TMatrix44<T>::createScale(m_scale);
+	m_matrixModelView	= m_matrixRotation * m_matrixTranslation * m_matrixScale;
 }
 
 //=================================================================================================

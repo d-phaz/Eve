@@ -68,7 +68,7 @@ namespace eve
 			SceneObject_Scene				= 0x59,
 
 			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
-			_SceneObject_SubForce32Bit = INT_MAX
+			_SceneObject_Force32Bit			= INT_MAX
 
 		}; // enum SceneObjectType
 
@@ -76,7 +76,7 @@ namespace eve
 
 		/** 
 		* \class eve::scene::Object
-		* \brief Base scene object (mesh, light, camera...).
+		* \brief Abstract base scene object (mesh, light, camera...).
 		* \note extends eve::mem::Pointer
 		*/
 		class Object
@@ -125,7 +125,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Object);
-			EVE_PROTECT_DESTRUCTOR(Object);
+			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Object);
 
 		protected:
 			/** \brief Class constructor. */
@@ -137,6 +137,11 @@ namespace eve
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
+
+
+		public:
+			/** \brief OpenGL VAO draw. */
+			virtual void oglDraw(void) = 0;
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
