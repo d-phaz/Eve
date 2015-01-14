@@ -32,6 +32,10 @@
 // Main header
 #include "eve/scene/Mesh.h"
 
+#ifndef __EVE_SCENE_SKELETON_H__
+#include "eve/scene/Skeleton.h"
+#endif
+
 
 //=================================================================================================
 eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Object * p_pParent, const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
@@ -61,10 +65,7 @@ eve::scene::Mesh::Mesh(eve::scene::Object * p_pParent)
 	// Members init
 	, m_pVao(nullptr)
 	, m_pAiMesh(nullptr)
-
-	, m_numBones(0)
-	, m_pBoneIndices(nullptr)
-	, m_pWeights(nullptr)
+	, m_pSkeleton(nullptr)
 {}
 
 
@@ -91,13 +92,13 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	{
 		if (!m_pAiMesh->HasTextureCoords(0))
 		{
-			//NATIVESYSTEM::createErrorWindow("Loading error.", "Unable to load selected scene mesh, Texture Coordinates are missing.");
+			EVE_LOG_ERROR("Unable to load selected scene mesh, Texture Coordinates are missing.");
 			ret = false;
 		}
 
 		if (!m_pAiMesh->HasNormals())
 		{
-			//NATIVESYSTEM::createErrorWindow("Loading info.", "Unable to load selected scene mesh, Normals Coordinates are missing.");
+			EVE_LOG_ERROR("Unable to load selected scene mesh, Normals Coordinates are missing.");
 			ret = false;
 		}
 	}
@@ -192,60 +193,8 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		// TODO
 		// Create VAO from scene renderer.
 
-
-		/////////////////////////////////////////
-		//	SKELETON
-		/////////////////////////////////////////
-
-		// Test mesh bones exist.
-		if (m_pAiMesh->HasBones())
-		{
-			int32_t numBones = m_pAiMesh->mNumBones;
-			m_numBones		 = numBones;
-
-			// Allocate arrays memory.
-			m_pBoneIndices = (eve::vec4ui*)malloc(sizeof(eve::vec4ui) * numVertices);
-			m_pWeights	   = (eve::vec4f*)malloc(sizeof(eve::vec4f) * numVertices);
-
-			// Read bone indices and weights for bone animation.
-			std::vector<aiVertexWeight> * vTempWeightsPerVertex = new std::vector<aiVertexWeight>[numVertices];
-
-			const aiBone * Bone = nullptr;
-			for (int32_t j = 0; j < numBones; j++)
-			{
-				Bone = m_pAiMesh->mBones[j];
-
-				for (uint32_t b = 0; b < Bone->mNumWeights; b++) {
-					vTempWeightsPerVertex[Bone->mWeights[b].mVertexId].push_back(aiVertexWeight(j, Bone->mWeights[b].mWeight));
-				}
-			}
-
-			for (int32_t j = 0; j<numVertices; j++)
-			{
-				m_pBoneIndices[j] = eve::vec4ui::zero();
-				m_pWeights[j]	  = eve::vec4f::zero();
-
-				if (vTempWeightsPerVertex[j].size() > 4) {
-					EVE_LOG_ERROR("Mesh has invalid bone weights, no animation loaded.");
-				}
-				for (uint32_t k = 0; k < vTempWeightsPerVertex[j].size(); k++)
-				{
-					m_pBoneIndices[j][k] = vTempWeightsPerVertex[j][k].mVertexId;
-					m_pWeights[j][k]	 = vTempWeightsPerVertex[j][k].mWeight;
-				}
-			}
-
-			if (vTempWeightsPerVertex)
-			{
-				delete[] vTempWeightsPerVertex;
-			}
-
-			m_objectType = SceneObject_Mesh_Animated;
-		}
-		else
-		{
-			m_objectType = SceneObject_Mesh;
-		}
+		// Skeleton.
+		m_pSkeleton = eve::scene::Skeleton::create_ptr(p_pMesh, p_pScene, p_upAxis);
 
 
 		/////////////////////////////////////////
@@ -340,6 +289,8 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 //=================================================================================================
 void eve::scene::Mesh::init(void)
 {
+	m_objectType = SceneObject_Mesh;
+
 	// Call parent class
 	eve::scene::Object::init();
 	eve::math::TMesh<float>::init();
@@ -353,9 +304,6 @@ void eve::scene::Mesh::release(void)
 
 	// Do not delete -> shared pointer.
 	m_pAiMesh = nullptr;
-
-	EVE_RELEASE_PTR_C_SAFE(m_pBoneIndices);
-	EVE_RELEASE_PTR_C_SAFE(m_pWeights);
 
 	// Call parent class
 	eve::scene::Object::release();

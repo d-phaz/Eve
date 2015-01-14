@@ -30,32 +30,19 @@
 */
 
 #pragma once
-#ifndef __EVE_SCENE_MESH_H__
-#define __EVE_SCENE_MESH_H__
+#ifndef __EVE_SCENE_SKELETON_H__
+#define __EVE_SCENE_SKELETON_H__
 
 
-#ifndef __EVE_SCENE_OBJECT_H__
-#include "eve/scene/Object.h"
-#endif
-
-#ifndef __EVE_SCENE_EVENT_LISTENER_H__
-#include "eve/scene/EventListener.h"
-#endif
-
-#ifndef __EVE_MATH_TMESH_H__
-#include "eve/math/TMesh.h"
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
 #endif
 
 #ifndef __EVE_MATH_INCLUDES_H__
 #include "eve/math/Includes.h"
 #endif
 
-#ifndef __EVE_OPENGL_CORE_VAO_H__
-#include "eve/ogl/core/Vao.h"
-#endif
-
-
-namespace eve { namespace scene { class Skeleton; } }
+#include <assimp/scene.h>
 
 
 namespace eve
@@ -64,14 +51,12 @@ namespace eve
 	{
 
 		/** 
-		* \class eve::scene::Mesh
-		* \brief Scene mesh object.
-		* \note extends eve::scene::Object, eve::scene::EventListenerSceneObject, eve::math::TMesh
+		* \class eve::scene::Skeleton
+		* \brief Bones rigging skeleton used in mesh animation.
+		* \note extends eve::mem::Pointer.
 		*/
-		class Mesh
-			: public eve::scene::Object
-			, public eve::scene::EventListenerSceneObject
-			, public eve::math::TMesh<float>
+		class Skeleton
+			: public eve::mem::Pointer
 		{
 
 			friend class eve::mem::Pointer;
@@ -81,31 +66,33 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::ogl::Vao *			m_pVao;					//<! Specifies OpenGL vertex array object.
 			const aiMesh *			m_pAiMesh;				//<! Specifies Assimp mesh (shared pointer).
-			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
+
+			int32_t					m_numBones;				//<! Specifies the number of bones in mesh.
+			eve::vec4ui *			m_pBoneIndices;			//<! Specifies bone indices array.
+			eve::vec4f *			m_pWeights;				//<! Specifies bones weights array.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Mesh);
-			EVE_PROTECT_DESTRUCTOR(Mesh);
+			EVE_DISABLE_COPY(Skeleton);
+			EVE_PROTECT_DESTRUCTOR(Skeleton);
 
 		public:
 			/** \brief Create, init and return new pointer based on ASSIMP aiMesh \a pMesh. */
-			static eve::scene::Mesh * create_ptr(eve::scene::Object * p_pParent, const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			static eve::scene::Skeleton * create_ptr(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
 		protected:
 			/** \brief Class constructor. */
-			explicit Mesh(eve::scene::Object * p_pParent);
+			explicit Skeleton(void);
 
 
 		protected:
 			/** \! Allocate and init class members based on ASSIMP aiMesh \a pMesh. */
-			bool initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			bool initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
 		protected:
@@ -114,37 +101,10 @@ namespace eve
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
 
-
-		public:
-			/** \brief Event handler callback (pure virtual). */
-			virtual void cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_args) override;
-
-
-		public:
-			/** \brief OpenGL VAO draw. */
-			virtual void oglDraw(void) override;
-
-
-			///////////////////////////////////////////////////////////////////////////////////////
-			//		GET / SET
-			///////////////////////////////////////////////////////////////////////////////////////
-
-		public:
-			/** \brief Get OpenGL VAO. */
-			eve::ogl::Vao * getVao(void) const;
-
-		}; // class Mesh		
+		}; // class Skeleton		
 
 	} // namespace scene
 
 } // namespace eve
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-EVE_FORCE_INLINE eve::ogl::Vao * eve::scene::Mesh::getVao(void) const { return m_pVao; }
-
-#endif // __EVE_SCENE_MESH_H__
+#endif // __EVE_SCENE_SKELETON_H__

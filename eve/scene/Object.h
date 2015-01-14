@@ -54,7 +54,6 @@ namespace eve
 			SceneObject_UNDEFINED			= 0x00,
 
 			SceneObject_Mesh				= 0x11,
-			SceneObject_Mesh_Animated		= 0x12,
 
 			SceneObject_Light_Area			= 0x23,
 			SceneObject_Light_Directional	= 0x24,

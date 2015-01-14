@@ -337,7 +337,9 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
 source_group( "Scene" FILES ${SCENE_SRCS} )
