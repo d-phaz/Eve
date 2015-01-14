@@ -154,9 +154,9 @@ namespace eve
 
 		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void);
+			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void);
+			virtual void release(void) override;
 
 
 		protected:

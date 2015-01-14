@@ -55,7 +55,7 @@
 
 #if defined( EVE_OS_DARWIN )
 #include <OpenGL/ogl.h>
-#  define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
+#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
 #include <OpenGL/gl3.h>
 #include <OpenGL/glext.h>
 #endif

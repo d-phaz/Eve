@@ -1315,7 +1315,7 @@ void eve::math::TMatrix44<T>::fromZupToYup(void)
 template<typename T>
 eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createTranslation(const eve::math::TVec3<T> &v, T w)
 {
-	eve::math::TMatrix44 ret;
+	eve::math::TMatrix44<T> ret;
 	ret.m[12] = v.x;
 	ret.m[13] = v.y;
 	ret.m[14] = v.z;

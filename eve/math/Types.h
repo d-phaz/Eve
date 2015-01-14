@@ -45,6 +45,10 @@
 #include "eve/math/TCamera.h"
 #endif 
 
+#ifndef __EVE_MATH_TMESH_H__
+#include "eve/math/TMesh.h"
+#endif
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
@@ -74,7 +78,31 @@ namespace eve
 		typedef eve::math::TCamera<float>		Cameraf;
 		typedef eve::math::TCamera<double>		Camerad;
 
+		typedef eve::math::TMesh<float>			Meshf;
+		typedef eve::math::TMesh<double>		Meshd;
+
 	} // namespace math
+
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	//		Enumeration
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	* \def eve::Axis
+	* \brief 3D axis enumeration.
+	*/
+	enum Axis
+	{
+		Axis_X,
+		Axis_Y,
+		Axis_Z,
+
+		//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+		_Axis_Force32Bit = INT_MAX
+
+	}; // enum Axis
 
 } // namespace eve
 

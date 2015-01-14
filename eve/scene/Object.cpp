@@ -1,101 +1,66 @@
 
+/*
+ Copyright (c) 2014, The eve Project
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ 
+ * Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ * Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
+ 
+ * Neither the name of the {organization} nor the names of its
+ contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 // Main header
-#include "scene/Item.h"
+#include "eve/scene/Object.h"
 
-#ifndef __GL_BOX_3D_CORNERED_H__
-#include "gl/primitive/Box3DCornered.h"
-#endif
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		scene::Item class
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-scene::Item::Item( scene::Item * pParent )
-
+eve::scene::Object::Object(eve::scene::Object * p_pParent)
 	// Inheritance
-	: EventListenner()
+	: eve::mem::Pointer()
 
-	// Members initialization
-	, m_name				()
-
-	, m_itemType			( Item_UNDEFINED )
-	, m_itemSubType			( Item_SUBUNDEFINED )
-
-	, m_pItemParent			( pParent )
-
-	, m_bVisible			( true )
-	, m_bLocked				( false )
-
-	, m_pBox				( NULL )
-
-#ifndef NDEBUG
-	, m_bReleaseEnforcer	( false )
-#endif
+	// Members init
+	, m_name()
+	, m_objectType(eve::scene::SceneObject_UNDEFINED)
+	, m_pParent(p_pParent)
+	, m_bVisible(true)
+	, m_bLocked(false)
 {}
 
-//=================================================================================================
-scene::Item::~Item( void )
-{
-#ifndef NDEBUG
-	NATIVE_ASSERT( m_bReleaseEnforcer );
-#endif
-}
-
 
 
 //=================================================================================================
-void scene::Item::init( void )
+void eve::scene::Object::init(void)
 {
-#ifndef NDEBUG
-	NATIVE_ASSERT( (m_itemSubType!=Item_SUBUNDEFINED) );
-#endif
-
-	m_objectType = ObjectID_t( m_itemSubType, this, m_pItemParent );
+	EVE_ASSERT(m_objectType != eve::scene::SceneObject_UNDEFINED);
 }
 
 //=================================================================================================
-void scene::Item::release( void )
+void eve::scene::Object::release(void)
 {
-	if( m_pBox != NULL )
-	{
-		m_pBox->requestRelease();
-		m_pBox = NULL;
-	}
+	m_bVisible	 = true;
+	m_bLocked	 = false;
+	m_objectType = eve::scene::SceneObject_UNDEFINED;
 
-
-	m_bVisible = true;
-	m_bLocked  = false;
-
-	// Do not delete -> shared pointer
-	m_pItemParent = NULL;
-
-	m_itemType		= Item_UNDEFINED;
-	m_itemSubType	= Item_SUBUNDEFINED;
-
-
-	// De initialization enforcer
-#ifndef NDEBUG
-	m_bReleaseEnforcer = true;
-#endif
-}
-
-
-
-//=================================================================================================
-bool scene::Item::hitTestBox( const Vec3f & p_origin, const Vec3f & p_direction )
-{
-	return this->hitTestBox( Rayf(p_origin, p_direction) );
-}
-
-//=================================================================================================
-bool scene::Item::hitTestBox( const Rayf & p_ray )
-{
-#ifndef NDEBUG
-	NATIVE_ASSERT( m_pBox!=NULL );
-#endif
-
-	return m_pBox->intersects( p_ray );
+	// Do not delete -> shared pointer.
+	m_pParent = nullptr;
 }

@@ -50,6 +50,10 @@
 #include "eve/math/TCamera.h"
 #endif 
 
+#ifndef __EVE_MATH_TMESH_H__
+#include "eve/math/TMesh.h"
+#endif
+
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
