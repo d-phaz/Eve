@@ -211,11 +211,11 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 		case WM_RBUTTONDBLCLK:	
 		case WM_XBUTTONDBLCLK:	res = this->handleMouseDoubleClick(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
+		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:		res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
-		//case WM_SYSKEYDOWN:	res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
+		case WM_SYSKEYUP:
 		case WM_KEYUP:			res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
-		//case WM_SYSKEYUP:		res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
 		case WM_DEADCHAR:	
 		case WM_SYSDEADCHAR:

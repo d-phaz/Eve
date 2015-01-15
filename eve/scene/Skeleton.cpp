@@ -84,7 +84,7 @@ bool eve::scene::Skeleton::initFromAssimpMesh(const aiMesh * p_pMesh, const aiSc
 	// Test mesh bones exist.
 	if (!m_pAiMesh->HasBones())
 	{
-		EVE_LOG_ERROR("Loaded mesh contains no skeleton animation.");
+		EVE_LOG_INFO("Loaded mesh contains no skeleton animation.");
 		ret = false;
 	}
 	else
@@ -110,7 +110,7 @@ bool eve::scene::Skeleton::initFromAssimpMesh(const aiMesh * p_pMesh, const aiSc
 			}
 		}
 
-		for (int32_t j = 0; j<numVertices; j++)
+		for (uint32_t j = 0; j<numVertices; j++)
 		{
 			m_pBoneIndices[j] = eve::vec4ui::zero();
 			m_pWeights[j]	  = eve::vec4f::zero();

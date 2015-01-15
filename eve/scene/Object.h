@@ -34,8 +34,16 @@
 #define __EVE_SCENE_OBJECT_H__
 
 
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
+#endif
+
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
 #endif
 
 #include <assimp/scene.h>

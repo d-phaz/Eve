@@ -112,6 +112,8 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 
 		// In scene mesh name. 
 		m_name = std::string(m_pAiMesh->mName.C_Str());
+		std::wstring wname = eve::str::to_wstring(m_name);
+		EVE_LOG_PROGRESS("Loading Mesh %s vertices.", wname.c_str());
 
 		// Mesh base data.
 		int32_t	numVertices = m_pAiMesh->mNumVertices;
@@ -171,7 +173,7 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		//m_pBox = gl::Box3DCornered::create_ptr(Vec3f(min_x, min_y, min_z), Vec3f(max_x, max_y, max_z), UILayoutConfigColor::STAGE_BOUNDING_BOX);
 
 		// Run threw indices and copy data.
-		GLuint * ind = pIndices - 1;
+		GLuint * ind	 = pIndices - 1;
 		aiFace * ai_face = m_pAiMesh->mFaces - 1;
 		for (int32_t j = 0; j < numFaces; j++)
 		{
@@ -193,13 +195,11 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		// TODO
 		// Create VAO from scene renderer.
 
-		// Skeleton.
-		m_pSkeleton = eve::scene::Skeleton::create_ptr(p_pMesh, p_pScene, p_upAxis);
-
 
 		/////////////////////////////////////////
 		//	MATRIX
 		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s matrices.", wname.c_str());
 
 		aiMatrix4x4 mat;
 		while (pNode != pRoot)
@@ -234,8 +234,16 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 
 
 		/////////////////////////////////////////
+		//	SKELETON ANIMATIONS
+		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s skeleton animation(s).", wname.c_str());
+		m_pSkeleton = eve::scene::Skeleton::create_ptr(p_pMesh, p_pScene, p_upAxis);
+
+
+		/////////////////////////////////////////
 		//	MATERIAL
 		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s materials.", wname.c_str());
 
 // 		// Create material
 // 		m_pMaterial = scene::ItemMaterial::create_ptr(this);
@@ -279,6 +287,7 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 // 		}
 
 		this->init();
+		EVE_LOG_PROGRESS("Mesh %s loaded.", wname.c_str());
 	}
 
 	return ret;
