@@ -573,7 +573,9 @@ namespace eve
 		const KeyModifier KEY_MODIFIER_NUM_LOCK_MASK	= 1 << 5;		//!< Specifies NUM_LOCK key mask.
 		const KeyModifier KEY_MODIFIER_CAPS_LOCK_MASK	= 1 << 6;		//!< Specifies CAPS_LOCK key mask.
 
-
+		
+		/** \brief Get key symbol from WPARAM. */
+		Key map_key_code(WPARAM p_code);
 		/** \brief Convert system key event to eve::sys::Key. */
 		Key translate_key(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam, bool & p_bFilter);
 
@@ -592,6 +594,12 @@ namespace eve
 		bool get_async_key_state_alt(void);
 		/** \brief Get shift key pressed state at the time the function is called. */
 		bool get_async_key_state_shift(void);
+
+
+		/** \brief Test if modifier(s) is/are pressed at event time. */
+		KeyModifier get_key_modifier_state(void);
+		/** \brief Test modifier key from WPARAM. */
+		KeyModifier map_key_modifier(WPARAM p_wParam);
 
 	} // namespace sys
 
