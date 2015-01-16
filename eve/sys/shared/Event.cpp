@@ -43,7 +43,7 @@ eve::sys::Event::Event(void)
 
 	, m_keyPressed()
 	, m_keyReleased()
-	, m_keyInput()
+	, m_textInput()
 	
 	, m_mousePassiveMotion()
 	, m_mouseMotion()
@@ -104,7 +104,6 @@ void eve::sys::Event::enableEventsKey(void)
 {
 	m_keyPressed.enable();
 	m_keyReleased.enable();
-	m_keyInput.enable();
 }
 
 //=================================================================================================
@@ -112,7 +111,6 @@ void eve::sys::Event::disableEventsKey(void)
 {
 	m_keyPressed.disable();
 	m_keyReleased.disable();
-	m_keyInput.disable();
 }
 
 //=================================================================================================
@@ -136,15 +134,29 @@ void eve::sys::Event::notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifi
 	eve::evt::notify_event(m_keyReleased, keyEventArgs);
 }
 
-//=================================================================================================
-void eve::sys::Event::notifyKeyInput(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
-{
-	eve::evt::KeyEventArgs keyEventArgs;
-	keyEventArgs.key	  = p_key;
-	keyEventArgs.modifier = p_modifier;
-	keyEventArgs.repeat	  = p_bRepeat;
 
-	eve::evt::notify_event(m_keyInput, keyEventArgs);
+
+//=================================================================================================
+void eve::sys::Event::enableEventsText(void)
+{
+	m_textInput.enable();
+}
+
+//=================================================================================================
+void eve::sys::Event::disableEventsText(void)
+{
+	m_textInput.disable();
+}
+
+//=================================================================================================
+void eve::sys::Event::notifyTextInput(wchar_t p_text, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
+{
+	eve::evt::TextEventArgs args;
+	args.text	  = p_text;
+	args.modifier = p_modifier;
+	args.repeat	  = p_bRepeat;
+
+	eve::evt::notify_event(m_textInput, args);
 }
 
 

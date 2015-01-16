@@ -160,14 +160,12 @@ eve::evt::KeyEventArgs & eve::evt::KeyEventArgs::operator = (const eve::evt::Key
 //=================================================================================================
 eve::evt::KeyEvent 		eve::evt::EvtKey::keyPressed;
 eve::evt::KeyEvent 		eve::evt::EvtKey::keyReleased;
-eve::evt::KeyEvent 		eve::evt::EvtKey::keyInput;
 
 //=================================================================================================
 void eve::evt::enable_events_key(void)
 {
 	eve::evt::EvtKey::keyPressed.enable();
 	eve::evt::EvtKey::keyReleased.enable();
-	eve::evt::EvtKey::keyInput.enable();
 }
 
 //=================================================================================================
@@ -175,7 +173,6 @@ void eve::evt::disable_events_key(void)
 {
 	eve::evt::EvtKey::keyPressed.disable();
 	eve::evt::EvtKey::keyReleased.disable();
-	eve::evt::EvtKey::keyInput.disable();
 }
 
 
@@ -201,15 +198,66 @@ void eve::evt::notify_key_released(eve::sys::Key p_key, eve::sys::KeyModifier p_
 	eve::evt::notify_event(eve::evt::EvtKey::keyReleased, keyEventArgs);
 }
 
-//=================================================================================================
-void eve::evt::notify_key_input(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
-{
-	eve::evt::KeyEventArgs keyEventArgs;
-	keyEventArgs.key	  = p_key;
-	keyEventArgs.modifier = p_modifier;
-	keyEventArgs.repeat	  = p_bRepeat;
 
-	eve::evt::notify_event(eve::evt::EvtKey::keyInput, keyEventArgs);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		TEXT EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+eve::evt::TextEventArgs::TextEventArgs(void)
+	: eve::evt::EventArgs()
+	, text()
+	, modifier(0)
+	, repeat(false)
+{}
+
+//=================================================================================================
+eve::evt::TextEventArgs::TextEventArgs(const eve::evt::TextEventArgs & p_other)
+	: eve::evt::EventArgs(p_other)
+	, text(p_other.text)
+	, modifier(p_other.modifier)
+	, repeat(p_other.repeat)
+{}
+
+//=================================================================================================
+eve::evt::TextEventArgs & eve::evt::TextEventArgs::operator = (const eve::evt::TextEventArgs & p_other)
+{
+	this->time		= p_other.time;
+	this->text		= p_other.text;
+	this->modifier	= p_other.modifier;
+	this->repeat	= p_other.repeat;
+	return *this;
+}
+
+
+
+//=================================================================================================
+eve::evt::TextEvent		eve::evt::EvtText::textInput;
+
+//=================================================================================================
+void eve::evt::enable_events_text(void)
+{
+	eve::evt::EvtText::textInput.enable();
+}
+
+//=================================================================================================
+void eve::evt::disable_events_text(void)
+{
+	eve::evt::EvtText::textInput.disable();
+}
+
+
+
+//=================================================================================================
+void eve::evt::notify_text_input(wchar_t p_text, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
+{
+	eve::evt::TextEventArgs args;
+	args.text	  = p_text;
+	args.modifier = p_modifier;
+	args.repeat	  = p_bRepeat;
+
+	eve::evt::notify_event(eve::evt::EvtText::textInput, args);
 }
 
 

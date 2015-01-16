@@ -188,7 +188,7 @@ private:
 public:
 	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
 	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
-	virtual void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args) override;
+	virtual void cb_evtTextInput(eve::evt::TextEventArgs & p_args) override;
 	virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) override;
 
 };
@@ -218,15 +218,18 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 {
 	EVE_LOG_INFO("Pressed key: %s", eve::sys::get_key_name(p_args.key));
-// 	if (p_args.key == eve::sys::key_Escape)
-// 	{
-// 		eve::evt::notify_application_exit();
-// 	}
+	if (p_args.key == eve::sys::key_Escape)
+	{
+		eve::evt::notify_application_exit();
+	}
 }
 
-void Example::cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
+void Example::cb_evtTextInput(eve::evt::TextEventArgs & p_args)
 {
-	EVE_LOG_INFO("Pressed key: %s", eve::sys::get_key_name(p_args.key));
+	wchar_t txt[2];
+	txt[0] = p_args.text;
+	txt[1] = EVE_TXT('\0');
+	EVE_LOG_INFO("Pressed key: %s", txt);
 }
 
 void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)

@@ -305,20 +305,13 @@ LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wP
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	int32_t	vk			= static_cast<int32_t>(p_wParam);
-	int32_t	repeats		= HIWORD(p_lParam);
-	bool	repeat		= ((repeats & KF_REPEAT) ? true : false);
+	wchar_t ch		= (TCHAR)p_wParam;
+	eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+	int32_t	repeats	= HIWORD(p_lParam);
+	bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
 
-	int32_t key = eve::sys::get_key(vk);
-	if (key > 0)
-	{
-		eve::sys::Key symbol		   = eve::sys::Key(key);
-		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+	m_pEvent->notifyTextInput(ch, modifier, repeat);
 
-		m_pEvent->notifyKeyInput(symbol, modifier, repeat);
-	}
-
-	//m_pEvent->notifyKeyInput(this->wparam2unicode(p_wParam));
 	return 0;
 }
 

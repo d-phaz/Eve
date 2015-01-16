@@ -562,12 +562,6 @@ namespace eve
 		/** \brief Get key name from key symbol enum. */
 		const wchar_t * get_key_name(Key p_key);
 
-
-		/** \brief Convert VK Windows input to special key. Returns key symbol or 0. */
-		int32_t vk_to_special(INT32 p_vk);
-		/** \brief Get key from Windows input. */
-		int32_t get_key(int32_t p_vk);
-
 		
 		/** \brief Get key symbol from WPARAM. */
 		Key map_key_code(WPARAM p_code);

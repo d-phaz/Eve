@@ -88,7 +88,7 @@ namespace eve
 			/** \brief Key up event handler. (pure virtual) */
 			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args) override{}
 			/** \brief Text input event handler. (pure virtual) */
-			virtual void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args) override{}
+			virtual void cb_evtTextInput(eve::evt::TextEventArgs & p_args) override{}
 
 
 			/** \brief Mouse down event handler. (pure virtual) */
