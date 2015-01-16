@@ -438,7 +438,7 @@ namespace
 		0,                  // QUESTION
 		0,                  // AT
 
-#if 1
+#if 0
 		// A to Z -> unused
 		0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0,
@@ -749,9 +749,9 @@ eve::sys::Key eve::sys::translate_key(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam,
 
 
 //=================================================================================================
-bool eve::sys::get_key_state_ctrl(void)			{ return (::GetKeyState(VK_CONTROL) == 1);	}
-bool eve::sys::get_key_state_alt(void)			{ return (::GetKeyState(VK_MENU) == 1);		}
-bool eve::sys::get_key_state_shift(void)		{ return (::GetKeyState(VK_SHIFT) == 1);	}
+bool eve::sys::get_key_state_ctrl(void)			{ return (::GetKeyState(VK_CONTROL) == 1); }
+bool eve::sys::get_key_state_alt(void)			{ return (::GetKeyState(VK_MENU)    == 1); }
+bool eve::sys::get_key_state_shift(void)		{ return (::GetKeyState(VK_SHIFT)   == 1); }
 
 //=================================================================================================
 bool eve::sys::get_async_key_state_ctrl(void)	{ return ((::GetAsyncKeyState(VK_CONTROL) & 0x8000)	!= 0); }
@@ -761,17 +761,24 @@ bool eve::sys::get_async_key_state_shift(void)	{ return ((::GetAsyncKeyState(VK_
 
 
 //=================================================================================================
+bool eve::sys::modifier_crtl(eve::sys::KeyModifier p_mod)  { return (p_mod & eve::sys::KEY_MODIFIER_CONTROL_MASK) != 0; }
+bool eve::sys::modifier_alt(eve::sys::KeyModifier p_mod)   { return (p_mod & eve::sys::KEY_MODIFIER_ALT_MASK)	  != 0;	}
+bool eve::sys::modifier_shift(eve::sys::KeyModifier p_mod) { return (p_mod & eve::sys::KEY_MODIFIER_SHIFT_MASK)	  != 0;	}
+
+
+
+//=================================================================================================
 eve::sys::KeyModifier eve::sys::get_key_modifier_state(void)
 {
-	return	(eve::sys::get_key_state_shift() ? eve::sys::KEY_MODIFIER_SHIFT_MASK   : 0)
-		  | (eve::sys::get_key_state_ctrl()  ? eve::sys::KEY_MODIFIER_CONTROL_MASK : 0)
-		  | (eve::sys::get_key_state_alt()   ? eve::sys::KEY_MODIFIER_ALT_MASK     : 0);
+	return	(eve::sys::get_async_key_state_shift() ? eve::sys::KEY_MODIFIER_SHIFT_MASK   : 0)
+		  | (eve::sys::get_async_key_state_ctrl()  ? eve::sys::KEY_MODIFIER_CONTROL_MASK : 0)
+		  | (eve::sys::get_async_key_state_alt()   ? eve::sys::KEY_MODIFIER_ALT_MASK	 : 0);
 }
 
 //=================================================================================================
 eve::sys::KeyModifier eve::sys::map_key_modifier(WPARAM p_wParam)
 {
 	return	((p_wParam & MK_CONTROL) ? eve::sys::KEY_MODIFIER_CONTROL_MASK : 0)
-		  | ((p_wParam & MK_SHIFT)   ? eve::sys::KEY_MODIFIER_SHIFT_MASK   : 0);
-		//|	((p_wParam & MK_ALT)	 ? eve::sys::KEY_MODIFIER_ALT_MASK     : 0);
+		  | ((p_wParam & MK_SHIFT)   ? eve::sys::KEY_MODIFIER_SHIFT_MASK   : 0)
+		  |	((p_wParam & MK_ALT)	 ? eve::sys::KEY_MODIFIER_ALT_MASK     : 0);
 }

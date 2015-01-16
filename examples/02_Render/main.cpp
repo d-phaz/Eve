@@ -217,8 +217,14 @@ void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 
 void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 {
-	EVE_LOG_INFO("Pressed key: %s", eve::sys::get_key_name(p_args.key));
-	if (p_args.key == eve::sys::key_Escape)
+	EVE_LOG_INFO("Pressed key: %d ctrl: %d   alt: %d   shift: %d"
+				, p_args.key
+				, eve::sys::modifier_crtl(p_args.modifier)
+				, eve::sys::modifier_alt(p_args.modifier)
+				, eve::sys::modifier_shift(p_args.modifier));
+
+	if (p_args.key == eve::sys::key_Escape
+	 || p_args.key == eve::sys::key_Q && eve::sys::modifier_crtl(p_args.modifier))
 	{
 		eve::evt::notify_application_exit();
 	}

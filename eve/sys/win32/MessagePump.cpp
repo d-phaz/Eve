@@ -278,7 +278,7 @@ LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
 	if(!filter) 
 	{
-		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state(); // | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
 		int32_t	repeats	= HIWORD(p_lParam);
 		bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
 

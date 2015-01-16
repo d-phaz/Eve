@@ -573,7 +573,7 @@ namespace eve
 		* \def eve::sys::KeyModifier
 		* \brief Keyboard modifier mask type. 
 		*/
-		typedef uint8_t KeyModifier;
+		typedef int32_t KeyModifier;
 		const KeyModifier KEY_MODIFIER_SHIFT_MASK		= 1 << 0;		//!< Specifies SHIFT key mask.
 		const KeyModifier KEY_MODIFIER_CONTROL_MASK		= 1 << 1;		//!< Specifies CONTROL key mask.
 		const KeyModifier KEY_MODIFIER_ALT_MASK			= 1 << 2;		//!< Specifies ALT key mask.
@@ -597,6 +597,14 @@ namespace eve
 		bool get_async_key_state_alt(void);
 		/** \brief Get shift key pressed state at the time the function is called. */
 		bool get_async_key_state_shift(void);
+
+
+		/** \brief Retrieve ctrl pressed state from modifier. */
+		bool modifier_crtl(KeyModifier p_mod);
+		/** \brief Retrieve ctrl pressed state from modifier. */
+		bool modifier_alt(KeyModifier p_mod);
+		/** \brief Retrieve ctrl pressed state from modifier. */
+		bool modifier_shift(KeyModifier p_mod);
 
 
 		/** \brief Test if modifier(s) is/are pressed at event time. */
