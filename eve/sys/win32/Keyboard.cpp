@@ -424,7 +424,11 @@ namespace
 		0,                  // SLASH
 
 		//	Number 0-9, NO VK_0 to VK_9 ( KEY_0 to KEY_9 )
+#if 0
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#else
 		0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
+#endif
 
 		0,                  // COLON
 		0,                  // SEMICOLON
@@ -434,32 +438,22 @@ namespace
 		0,                  // QUESTION
 		0,                  // AT
 
-		'A',                // KEY_A
-		'B',                // KEY_B
-		'C',                // KEY_C
-		'D',                // KEY_D
-		'E',                // KEY_E
-		'F',                // KEY_F
-		'G',                // KEY_G
-		'H',                // KEY_H
-		'I',                // KEY_I
-		'J',                // KEY_J
-		'K',                // KEY_K
-		'L',                // KEY_L
-		'M',                // KEY_M
-		'N',                // KEY_N
-		'O',                // KEY_O
-		'P',                // KEY_P
-		'Q',                // KEY_Q
-		'R',                // KEY_R
-		'S',                // KEY_S
-		'T',                // KEY_T 
-		'U',                // KEY_U
-		'V',                // KEY_V
-		'W',                // KEY_W
-		'X',                // KEY_X
-		'Y',                // KEY_Y
-		'Z',                // KEY_Z
+#if 1
+		// A to Z -> unused
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 
+		0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0,
+		0,
+#else
+		'A', 'B', 'C', 'D', 'E',                
+		'F', 'G', 'H', 'I', 'J',                
+		'K', 'L', 'M', 'N', 'O',                
+		'P', 'Q', 'R', 'S', 'T',                 
+		'U', 'V', 'W', 'X', 'Y',                
+		'Z',                
+#endif
 
 		0,                  // LEFTBRACKET
 		0,                  // BACKSLASH
@@ -467,7 +461,8 @@ namespace
 		0,                  // CARET
 		0,                  // UNDERSCORE
 		0,                  // BACKQUOTE
-#if 0
+
+#if 1
 		0, 0, 0, 0, 0,      // 0x61 - 0x7e unused (total: 30)
 		0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0,
@@ -481,7 +476,6 @@ namespace
 		'p', 'q', 'r', 's', 't',
 		'u', 'v', 'w', 'x', 'y',
 		'z',
-
 		0, 0, 0, 0,						// 0x7b - 0x7e
 #endif
 		VK_DELETE,          // DELETE
@@ -519,6 +513,9 @@ namespace
 		0, 0, 0, 0, 0,
 		0,
 
+#if 0
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#else
 		VK_NUMPAD0,         // KEYPAD_0
 		VK_NUMPAD1,         // KEYPAD_1
 		VK_NUMPAD2,         // KEYPAD_2
@@ -529,6 +526,7 @@ namespace
 		VK_NUMPAD7,         // KEYPAD_7
 		VK_NUMPAD8,         // KEYPAD_8
 		VK_NUMPAD9,         // KEYPAD_9
+#endif
 
 		VK_DECIMAL,			// KEYPAD_SEPARATOR
 		VK_DIVIDE,          // KEYPAD_DIVIDE
