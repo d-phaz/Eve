@@ -43,7 +43,7 @@ namespace eve
 	namespace sys
 	{
 		/**
-		* \brief Key symbol enumeration.
+		* \brief eve::sys::Key symbol enumeration.
 		* 
 		* \note Keys representing the Latin-1 supplement characters (Unicode 0xa0-0xff) are usually
 		* mapped to lower case characters, for example aDIARESIS instead of ADIARESIS.
@@ -474,15 +474,15 @@ namespace eve
 			key_PageDown = 0x118,
 
 			// Function keys
-			key_F1 = 0x119,
-			key_F2 = 0x11a,
-			key_F3 = 0x11b,
-			key_F4 = 0x11c,
-			key_F5 = 0x11d,
-			key_F6 = 0x11e,
-			key_F7 = 0x11f,
-			key_F8 = 0x120,
-			key_F9 = 0x121,
+			key_F1  = 0x119,
+			key_F2  = 0x11a,
+			key_F3  = 0x11b,
+			key_F4  = 0x11c,
+			key_F5  = 0x11d,
+			key_F6  = 0x11e,
+			key_F7  = 0x11f,
+			key_F8  = 0x120,
+			key_F9  = 0x121,
 			key_F10 = 0x122,
 			key_F11 = 0x123,
 			key_F12 = 0x124,
@@ -563,7 +563,22 @@ namespace eve
 		const wchar_t * get_key_name(Key p_key);
 
 
-		// Keyboard modifier mask type
+		/** \brief Convert VK Windows input to special key. Returns key symbol or 0. */
+		int32_t vk_to_special(INT32 p_vk);
+		/** \brief Get key from Windows input. */
+		int32_t get_key(int32_t p_vk);
+
+		
+		/** \brief Get key symbol from WPARAM. */
+		Key map_key_code(WPARAM p_code);
+		/** \brief Convert system key event to eve::sys::Key. */
+		Key translate_key(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam, bool & p_bFilter);
+
+
+		/** 
+		* \def eve::sys::KeyModifier
+		* \brief Keyboard modifier mask type. 
+		*/
 		typedef uint8_t KeyModifier;
 		const KeyModifier KEY_MODIFIER_SHIFT_MASK		= 1 << 0;		//!< Specifies SHIFT key mask.
 		const KeyModifier KEY_MODIFIER_CONTROL_MASK		= 1 << 1;		//!< Specifies CONTROL key mask.
@@ -572,12 +587,6 @@ namespace eve
 		const KeyModifier KEY_MODIFIER_ALT_GR_MASK		= 1 << 4;		//!< Specifies ALT_GR key mask.
 		const KeyModifier KEY_MODIFIER_NUM_LOCK_MASK	= 1 << 5;		//!< Specifies NUM_LOCK key mask.
 		const KeyModifier KEY_MODIFIER_CAPS_LOCK_MASK	= 1 << 6;		//!< Specifies CAPS_LOCK key mask.
-
-		
-		/** \brief Get key symbol from WPARAM. */
-		Key map_key_code(WPARAM p_code);
-		/** \brief Convert system key event to eve::sys::Key. */
-		Key translate_key(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam, bool & p_bFilter);
 
 
 		/** \brief Get ctrl key pressed state at the time a key is pressed. */

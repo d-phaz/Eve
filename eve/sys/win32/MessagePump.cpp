@@ -273,11 +273,16 @@ LRESULT eve::sys::MessagePump::handleEraseBackground(HWND p_hWnd, UINT p_uMsg, W
 
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
-{
+{	
 	bool filter;	
 	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
-	if(!filter) {
-		m_pEvent->notifyKeyPressed(translated);
+	if(!filter) 
+	{
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+		int32_t	repeats	= HIWORD(p_lParam);
+		bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
+
+		m_pEvent->notifyKeyPressed(translated, modifier, repeat);
 	}
 
 	return 0;
@@ -286,11 +291,13 @@ LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	bool filter;
-	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
-	if (!filter) {
-		m_pEvent->notifyKeyReleased(translated);
-	}
+ 	bool filter;
+ 	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
+ 	if (!filter) 
+	{
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+		m_pEvent->notifyKeyReleased(translated, modifier);
+ 	}
 
 	return 0;
 }
@@ -298,7 +305,20 @@ LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wP
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	m_pEvent->notifyKeyInput(this->wparam2unicode(p_wParam));
+	int32_t	vk			= static_cast<int32_t>(p_wParam);
+	int32_t	repeats		= HIWORD(p_lParam);
+	bool	repeat		= ((repeats & KF_REPEAT) ? true : false);
+
+	int32_t key = eve::sys::get_key(vk);
+	if (key >= 0)
+	{
+		eve::sys::Key symbol		   = eve::sys::Key(key);
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+
+		m_pEvent->notifyKeyInput(symbol, modifier, repeat);
+	}
+
+	//m_pEvent->notifyKeyInput(this->wparam2unicode(p_wParam));
 	return 0;
 }
 

@@ -150,11 +150,11 @@ namespace eve
 			void disableEventsKey(void);
 
 			/** \brief Notify key pressed event to all listeners. */
-			void notifyKeyPressed(uint8_t p_key);
+			void notifyKeyPressed(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat);
 			/** \brief Notify key released event to all listeners. */
-			void notifyKeyReleased(uint8_t p_key);
+			void notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier);
 			/** \brief Notify text input event to all listeners. */
-			void notifyKeyInput(uint8_t p_key);
+			void notifyKeyInput(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat);
 
 			/**
 			* \brief Register listener class to key events.

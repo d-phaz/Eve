@@ -45,6 +45,10 @@
 #include "eve/evt/Server.h"
 #endif
 
+#ifndef __EVE_SYSTEM_KEYBOARD_H__
+#include "eve/sys/win32/Keyboard.h"
+#endif
+
 
 namespace eve
 {
@@ -155,7 +159,9 @@ namespace eve
 			: public EventArgs
 		{
 		public:
-			uint8_t		key;
+			eve::sys::Key			key;
+			eve::sys::KeyModifier	modifier;
+			bool					repeat;
 
 			/** \brief Default constructor. */
 			KeyEventArgs(void);
@@ -186,11 +192,11 @@ namespace eve
 		void disable_events_key(void);
 
 		/** \brief Notify key pressed event to all listeners. */
-		void notify_key_pressed(uint8_t p_key);
+		void notify_key_pressed(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat);
 		/** \brief Notify key released event to all listeners. */
-		void notify_key_released(uint8_t p_key);
+		void notify_key_released(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier);
 		/** \brief Notify text input event to all listeners. */
-		void notify_key_input(uint8_t p_key);
+		void notify_key_input(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat);
 
 		/**
 		* \brief Register listener class to key events.

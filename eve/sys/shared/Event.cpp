@@ -116,28 +116,33 @@ void eve::sys::Event::disableEventsKey(void)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyKeyPressed(uint8_t p_key)
+void eve::sys::Event::notifyKeyPressed(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
 {
 	eve::evt::KeyEventArgs keyEventArgs;
-	keyEventArgs.key = p_key;
+	keyEventArgs.key	  = p_key;
+	keyEventArgs.modifier = p_modifier;
+	keyEventArgs.repeat	  = p_bRepeat;
 
 	eve::evt::notify_event(m_keyPressed, keyEventArgs);
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyKeyReleased(uint8_t p_key)
+void eve::sys::Event::notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier)
 {
 	eve::evt::KeyEventArgs keyEventArgs;
-	keyEventArgs.key = p_key;
+	keyEventArgs.key	  = p_key;
+	keyEventArgs.modifier = p_modifier;
 
 	eve::evt::notify_event(m_keyReleased, keyEventArgs);
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyKeyInput(uint8_t p_key)
+void eve::sys::Event::notifyKeyInput(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
 {
 	eve::evt::KeyEventArgs keyEventArgs;
-	keyEventArgs.key = p_key;
+	keyEventArgs.key	  = p_key;
+	keyEventArgs.modifier = p_modifier;
+	keyEventArgs.repeat	  = p_bRepeat;
 
 	eve::evt::notify_event(m_keyInput, keyEventArgs);
 }

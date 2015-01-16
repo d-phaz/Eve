@@ -174,7 +174,7 @@ namespace
 		EVE_TXT("right acolade"),
 		EVE_TXT("tilde"),
 
-		EVE_TXT("Delete"),                      
+		EVE_TXT("Delete"),
 
 		// END OF ASCII
 
@@ -337,47 +337,50 @@ namespace
 		EVE_TXT("F23"),
 		EVE_TXT("F24"),
 
-		EVE_TXT("Num Lock"),             
-		EVE_TXT("Caps Lock"),            
-		EVE_TXT("Scroll Lock"),          
-		EVE_TXT("Left shift"),           
-		EVE_TXT("Right shift"),          
-		EVE_TXT("Left CTRL"),            
-		EVE_TXT("Right CTRL"),           
-		EVE_TXT("Left ALT"),             
-		EVE_TXT("Right ALT"),            
-		EVE_TXT("Left Super"),           
-		EVE_TXT("Right Super"),          
+		EVE_TXT("Num Lock"),
+		EVE_TXT("Caps Lock"),
+		EVE_TXT("Scroll Lock"),
+		EVE_TXT("Left shift"),
+		EVE_TXT("Right shift"),
+		EVE_TXT("Left CTRL"),
+		EVE_TXT("Right CTRL"),
+		EVE_TXT("Left ALT"),
+		EVE_TXT("Right ALT"),
+		EVE_TXT("Left Super"),
+		EVE_TXT("Right Super"),
 
-		EVE_TXT("Alt Gr"),                       
-		EVE_TXT("Compose"),                      
-		EVE_TXT("Menu"),                         
+		EVE_TXT("Alt Gr"),
+		EVE_TXT("Compose"),
+		EVE_TXT("Menu"),
 
-		EVE_TXT("System request"),       
-		EVE_TXT("Pause"),                
-		EVE_TXT("Print screen"),         
+		EVE_TXT("System request"),
+		EVE_TXT("Pause"),
+		EVE_TXT("Print screen"),
 
-		EVE_TXT("Dead grave"),           
-		EVE_TXT("Dead acute"),           
-		EVE_TXT("Dead circumflex"),      
-		EVE_TXT("Dead tilde"),           
-		EVE_TXT("Dead macron"),          
-		EVE_TXT("Dead breve"),           
-		EVE_TXT("Dead abovedot"),        
-		EVE_TXT("Dead diaeresis"),       
-		EVE_TXT("Dead abovering"),       
+		EVE_TXT("Dead grave"),
+		EVE_TXT("Dead acute"),
+		EVE_TXT("Dead circumflex"),
+		EVE_TXT("Dead tilde"),
+		EVE_TXT("Dead macron"),
+		EVE_TXT("Dead breve"),
+		EVE_TXT("Dead abovedot"),
+		EVE_TXT("Dead diaeresis"),
+		EVE_TXT("Dead abovering"),
 
 		0 // terminator
 	};
+}
 
-	const wchar_t * get_key_name(eve::sys::Key p_key)
-	{
-		if (p_key < eve::sys::key_Num_Keys && symbol_names[p_key] != 0) return symbol_names[p_key];
-		return EVE_TXT("");
-	}
+//=================================================================================================
+const wchar_t * eve::sys::get_key_name(eve::sys::Key p_key)
+{
+	if (p_key < eve::sys::key_Num_Keys && symbol_names[p_key] != 0) return symbol_names[p_key];
+	return EVE_TXT("");
+}
 
 
-
+namespace
+{
 	static WPARAM reverse_keymap[eve::sys::key_Num_Keys] =
 	{
 		0,                  // UNKNOWN
@@ -464,7 +467,7 @@ namespace
 		0,                  // CARET
 		0,                  // UNDERSCORE
 		0,                  // BACKQUOTE
-#if 1
+#if 0
 		0, 0, 0, 0, 0,      // 0x61 - 0x7e unused (total: 30)
 		0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0,
@@ -479,7 +482,7 @@ namespace
 		'u', 'v', 'w', 'x', 'y',
 		'z',
 
-		0, 0, 0, 0,						// 0x7b - 0x7a
+		0, 0, 0, 0,						// 0x7b - 0x7e
 #endif
 		VK_DELETE,          // DELETE
 
@@ -621,6 +624,114 @@ namespace
 
 		Keymap map;
 	} mapper;
+}
+
+
+
+//=================================================================================================
+int32_t eve::sys::vk_to_special(INT32 p_vk)
+{
+	switch (p_vk)
+	{
+	case VK_F1:			return eve::sys::key_F1;
+	case VK_F2:			return eve::sys::key_F2;
+	case VK_F3:			return eve::sys::key_F3;
+	case VK_F4:			return eve::sys::key_F4;
+	case VK_F5:			return eve::sys::key_F5;
+	case VK_F6:			return eve::sys::key_F6;
+	case VK_F7:			return eve::sys::key_F7;
+	case VK_F8:			return eve::sys::key_F8;
+	case VK_F9:			return eve::sys::key_F9;
+	case VK_F10:		return eve::sys::key_F10;
+	case VK_F11:		return eve::sys::key_F11;
+	case VK_F12:		return eve::sys::key_F12;
+
+	case VK_LEFT:		return eve::sys::key_Left;
+	case VK_UP:			return eve::sys::key_Up;
+	case VK_RIGHT:		return eve::sys::key_Right;
+	case VK_DOWN:		return eve::sys::key_Down;
+	case VK_PRIOR:		return eve::sys::key_PageUp;
+	case VK_NEXT:		return eve::sys::key_PageDown;
+	case VK_HOME:		return eve::sys::key_Home;
+	case VK_END:		return eve::sys::key_End;
+	case VK_INSERT:		return eve::sys::key_Insert;
+
+	case VK_MULTIPLY:	return eve::sys::key_Pad_Multiply;
+	case VK_ADD:		return eve::sys::key_Pad_Plus;
+	case VK_SUBTRACT:	return eve::sys::key_Pad_Minus;
+	case VK_DIVIDE:		return eve::sys::key_Pad_Divide;
+	case VK_SEPARATOR:	return eve::sys::key_Pad_Separator;
+
+	case VK_SNAPSHOT:	return eve::sys::key_Print;
+
+		/*
+		case VK_DECIMAL:	return keyboard::DECIMAL;
+		case VK_PRINT:		return keyboard::PRINT;
+		case VK_PAUSE:		return keyboard::PAUSE;
+		case VK_NUMLOCK:	return keyboard::NUMLOCK;
+		case VK_SCROLL:		return keyboard::SCROLL;
+
+		case VK_LWIN:		return keyboard::LWIN;
+		case VK_RWIN:		return keyboard::RWIN;
+		case VK_APPS:		return keyboard::APPS;
+
+		case VK_NUMPAD0:	return keyboard::NUMPAD0;
+		case VK_NUMPAD1:	return keyboard::NUMPAD1;
+		case VK_NUMPAD2:	return keyboard::NUMPAD2;
+		case VK_NUMPAD3:	return keyboard::NUMPAD3;
+		case VK_NUMPAD4:	return keyboard::NUMPAD4;
+		case VK_NUMPAD5:	return keyboard::NUMPAD5;
+		case VK_NUMPAD6:	return keyboard::NUMPAD6;
+		case VK_NUMPAD7:	return keyboard::NUMPAD7;
+		case VK_NUMPAD8:	return keyboard::NUMPAD8;
+		case VK_NUMPAD9:	return keyboard::NUMPAD9;
+
+
+
+		case VK_BROWSER_BACK:			return keyboard::BROWSER_BACK;
+		case VK_BROWSER_FORWARD:		return keyboard::BROWSER_FORWARD;
+		case VK_BROWSER_REFRESH:		return keyboard::BROWSER_REFRESH;
+		case VK_BROWSER_STOP:			return keyboard::BROWSER_STOP;
+		case VK_BROWSER_SEARCH:			return keyboard::BROWSER_SEARCH;
+		case VK_BROWSER_FAVORITES:		return keyboard::BROWSER_FAVORITES;
+		case VK_BROWSER_HOME:			return keyboard::BROWSER_HOME;
+		case VK_VOLUME_MUTE:			return keyboard::VOLUME_MUTE;
+		case VK_VOLUME_DOWN:			return keyboard::VOLUME_DOWN;
+		case VK_VOLUME_UP:				return keyboard::VOLUME_UP;
+		case VK_MEDIA_NEXT_TRACK:		return keyboard::MEDIA_NEXT_TRACK;
+		case VK_MEDIA_PREV_TRACK:		return keyboard::MEDIA_PREV_TRACK;
+		case VK_MEDIA_STOP:				return keyboard::MEDIA_STOP;
+		case VK_MEDIA_PLAY_PAUSE:		return keyboard::MEDIA_PLAY_PAUSE;
+		case VK_LAUNCH_MAIL:			return keyboard::LAUNCH_MAIL;
+		case VK_LAUNCH_MEDIA_SELECT:	return keyboard::LAUNCH_MEDIA_SELECT;
+		case VK_LAUNCH_APP1:			return keyboard::LAUNCH_APP1;
+		case VK_LAUNCH_APP2:			return keyboard::LAUNCH_APP2;
+		*/
+	default:			return 0;
+	}
+}
+
+//=================================================================================================
+int32_t eve::sys::get_key(int32_t p_vk)
+{
+	BYTE keyState[256];
+	WORD c[2];
+
+	::GetKeyboardState(keyState);
+
+	if (::ToAscii(p_vk, 0, keyState, c, 0) == 1)
+	{
+		return c[0] & 0xff;
+	}
+	else
+	{
+		switch (p_vk)
+		{
+		case VK_TAB:		return eve::sys::key_Tab;
+		case VK_DELETE:		return eve::sys::key_Delete;
+		default:			return -eve::sys::vk_to_special(p_vk);
+		}
+	}
 }
 
 
