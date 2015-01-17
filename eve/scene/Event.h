@@ -56,8 +56,7 @@ namespace eve
 		{
 			SceneEventType_UNDEFINED = 0,
 			
-			SceneEventType_add_sceneFromPath,
-			SceneEventType_add_meshFromPath,
+			SceneEventType_add_fromPath,
 
 			SceneEventType_add_defaultLightArea,
 			SceneEventType_add_defaultLightDirectional,

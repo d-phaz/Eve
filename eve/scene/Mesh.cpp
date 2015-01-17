@@ -32,19 +32,28 @@
 // Main header
 #include "eve/scene/Mesh.h"
 
+#ifndef __EVE_SCENE_SCENE_H__
+#include "eve/scene/Scene.h"
+#endif
+
 #ifndef __EVE_SCENE_SKELETON_H__
 #include "eve/scene/Skeleton.h"
 #endif
 
 
 //=================================================================================================
-eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Object * p_pParent, const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
+eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentScene
+											  , eve::scene::Object *	p_pParent
+											  , const aiMesh *			p_pMesh
+											  , const aiScene *			p_pScene
+											  , eve::Axis				p_upAxis
+											  , const std::string &		p_fullPath)
 {
 	EVE_ASSERT(p_pParent);
 	EVE_ASSERT(p_pMesh);
 	EVE_ASSERT(p_pScene);
 
-	eve::scene::Mesh * ptr = new eve::scene::Mesh(p_pParent);
+	eve::scene::Mesh * ptr = new eve::scene::Mesh(p_pParentScene, p_pParent);
 	if (!ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis, p_fullPath))
 	{
 		EVE_RELEASE_PTR(ptr);
@@ -56,9 +65,9 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Object * p_pParent, 
 
 
 //=================================================================================================
-eve::scene::Mesh::Mesh(eve::scene::Object * p_pParent)
+eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent)
 	// Inheritance
-	: eve::scene::Object(p_pParent)
+	: eve::scene::Object(p_pParentScene, p_pParent)
 	, eve::scene::EventListenerSceneObject()
 	, eve::math::TMesh<float>()
 
@@ -111,8 +120,8 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		/////////////////////////////////////////
 
 		// In scene mesh name. 
-		m_name = std::string(m_pAiMesh->mName.C_Str());
-		std::wstring wname = eve::str::to_wstring(m_name);
+		m_name				= std::string(m_pAiMesh->mName.C_Str());
+		std::wstring wname	= eve::str::to_wstring(m_name);
 		EVE_LOG_PROGRESS("Loading Mesh %s vertices.", wname.c_str());
 
 		// Mesh base data.
@@ -191,9 +200,8 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		format.perVertexNumNormal	= 3;
 		format.vertices.reset(pVertices);
 		format.indices.reset(pIndices);
-
-		// TODO
-		// Create VAO from scene renderer.
+		// Create VAO.
+		m_pVao = m_pScene->create(format);
 
 
 		/////////////////////////////////////////
@@ -224,7 +232,7 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		eve::math::TVec3<float> target, worldUp;
 		eve::math::get_look_at(matrix, m_translation, target, worldUp);
 
-		eve::math::TVec3<float> viewDirection = (target - m_translation).normalized();
+		eve::math::TVec3<float>		  viewDirection = (target - m_translation).normalized();
 		eve::math::TQuaternion<float> orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-viewDirection, worldUp)).normalized();
 
 		// Grab rotation.

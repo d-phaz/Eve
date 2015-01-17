@@ -338,6 +338,8 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Scene.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Scene.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.h )
 

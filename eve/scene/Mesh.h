@@ -81,8 +81,8 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::ogl::Vao *			m_pVao;					//<! Specifies OpenGL vertex array object.
-			const aiMesh *			m_pAiMesh;				//<! Specifies Assimp mesh (shared pointer).
+			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
+			const aiMesh *			m_pAiMesh;				//!< Specifies Assimp mesh (shared pointer).
 			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
 
 
@@ -94,13 +94,18 @@ namespace eve
 			EVE_PROTECT_DESTRUCTOR(Mesh);
 
 		public:
-			/** \brief Create, init and return new pointer based on ASSIMP aiMesh \a pMesh. */
-			static eve::scene::Mesh * create_ptr(eve::scene::Object * p_pParent, const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			/** \brief Create, init and return new pointer based on ASSIMP aiMesh \a p_pMesh. */
+			static eve::scene::Mesh * create_ptr(eve::scene::Scene *	p_pParentScene
+											   , eve::scene::Object *	p_pParent
+											   , const aiMesh *			p_pMesh
+											   , const aiScene *		p_pScene
+											   , eve::Axis				p_upAxis
+											   , const std::string &	p_fullPath);
 
 
 		protected:
 			/** \brief Class constructor. */
-			explicit Mesh(eve::scene::Object * p_pParent);
+			explicit Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent);
 
 
 		protected:
@@ -122,7 +127,7 @@ namespace eve
 
 		public:
 			/** \brief OpenGL VAO draw. */
-			virtual void oglDraw(void) override;
+			void oglDraw(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////

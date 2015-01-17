@@ -49,6 +49,9 @@
 #include <assimp/scene.h>
 
 
+namespace eve { namespace scene { class Scene; } }
+
+
 namespace eve
 {
 	namespace scene
@@ -71,8 +74,6 @@ namespace eve
 			SceneObject_Camera				= 0x37,
 
 			SceneObject_Material			= 0x48,
-
-			SceneObject_Scene				= 0x59,
 
 			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
 			_SceneObject_Force32Bit			= INT_MAX
@@ -120,11 +121,12 @@ namespace eve
 
 
 		protected:
-			eve::scene::SceneObjectType			m_objectType;			//<! Specifies object type (mesh, light, camera, ...).
-			eve::scene::Object *				m_pParent;				//<! Specifies parent object shared pointer.
+			eve::scene::SceneObjectType			m_objectType;			//!< Specifies object type (mesh, light, camera, ...).
+			eve::scene::Scene *					m_pScene;				//!< Specifies parent scene shared pointer.
+			eve::scene::Object *				m_pParent;				//!< Specifies parent object shared pointer.
 
-			bool								m_bVisible;				//<! Specifies object visible state.
-			bool								m_bLocked;				//<! Specifies object locked state.
+			bool								m_bVisible;				//!< Specifies object visible state.
+			bool								m_bLocked;				//!< Specifies object locked state.
 
 
 			//////////////////////////////////////
@@ -136,7 +138,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			explicit Object(eve::scene::Object * p_pParent);
+			explicit Object(eve::scene::Scene * p_pScene, eve::scene::Object * p_pParent);
 
 
 		protected:
@@ -144,11 +146,6 @@ namespace eve
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
-
-
-		public:
-			/** \brief OpenGL VAO draw. */
-			virtual void oglDraw(void) = 0;
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
