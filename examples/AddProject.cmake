@@ -193,6 +193,20 @@ macro( add_project PROJECT_NAME_IN )
 		endif()
 	endif()
 	add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
+
+	
+	# FreeImage.
+	#################################################
+	if( WIN32 )
+		if( OPTION_BUILD_TYPE_DEBUG )
+			set( FREEIMAGE_LIBS  glewd.lib  glewmxsd.lib )
+		elseif( OPTION_BUILD_TYPE_RELEASE ) 
+			set( FREEIMAGE_LIBS  glew.lib  glewmxs.lib )		
+		endif()
+		set( LIBS ${LIBS} ${FREEIMAGE_LIBS})
+	endif()
+	add_definitions( -DFREEIMAGE_LIB )
+	
 	
 	# GLEW.
 	#################################################
