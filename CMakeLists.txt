@@ -256,7 +256,7 @@ if( WIN32 )
 	# Generally there isn’t too much of a performance difference 
 	# (a Visual C++ lead states that they measured about a 6% difference in this feedback / bug page) so it may be worth leaving it on most of the time.
 	# reference : http://msdn.microsoft.com/en-us/library/aa985896.aspx
-	OPTION( OPTION_BUILD_SECURE_SCL "Activate _SECURE_SCL=0 and _HAS_ITERATOR_DEBUGGING=0 optimizations" OFF )
+	option( OPTION_BUILD_SECURE_SCL "Activate _SECURE_SCL=0 and _HAS_ITERATOR_DEBUGGING=0 optimizations" ON )
 	if( OPTION_BUILD_SECURE_SCL )
 		add_definitions( -D_SECURE_SCL=0 -D_HAS_ITERATOR_DEBUGGING=0 )
 	endif()
