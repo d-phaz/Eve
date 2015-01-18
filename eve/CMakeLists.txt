@@ -314,8 +314,8 @@ set( OPENGL_CORE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Renderer.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.h 
-     ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.cpp
-     ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.cpp 
@@ -346,7 +346,11 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Scene.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Scene.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
 source_group( "Scene" FILES ${SCENE_SRCS} )
@@ -544,6 +548,19 @@ endif()
 add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
 
 	
+# FreeImage.
+#################################################
+if( WIN32 )
+	if( OPTION_BUILD_TYPE_DEBUG )
+		set( FREEIMAGE_LIBS  glewd.lib  glewmxsd.lib )
+	elseif( OPTION_BUILD_TYPE_RELEASE ) 
+		set( FREEIMAGE_LIBS  glew.lib  glewmxs.lib )		
+	endif()
+	set( LIBS ${LIBS} ${FREEIMAGE_LIBS})
+endif()
+add_definitions( -DFREEIMAGE_LIB )
+
+	
 # GLEW.
 #################################################
 if( WIN32 )
@@ -552,7 +569,7 @@ if( WIN32 )
 	elseif( OPTION_BUILD_TYPE_RELEASE ) 
 		set( GLEW_LIBS  glew.lib  glewmxs.lib )		
 	endif()
-	ADD_DEFINITIONS( -DGLEW_STATIC=1 )
+	add_definitions( -DGLEW_STATIC=1 )
 	set( LIBS ${LIBS} ${GLEW_LIBS})
 endif()
 
