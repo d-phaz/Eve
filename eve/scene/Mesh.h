@@ -55,6 +55,7 @@
 #endif
 
 
+namespace eve { namespace scene { class Material; } }
 namespace eve { namespace scene { class Skeleton; } }
 
 
@@ -84,6 +85,7 @@ namespace eve
 			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
 			const aiMesh *			m_pAiMesh;				//!< Specifies Assimp mesh (shared pointer).
 			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
+			eve::scene::Material *	m_pMaterial;			//!< Specifies material.
 
 
 			//////////////////////////////////////
@@ -109,7 +111,7 @@ namespace eve
 
 
 		protected:
-			/** \! Allocate and init class members based on ASSIMP aiMesh \a pMesh. */
+			/** \brief Allocate and init class members based on ASSIMP aiMesh \a pMesh. */
 			bool initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
 
 

@@ -336,6 +336,8 @@ set( SCENE_SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Material.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Material.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp

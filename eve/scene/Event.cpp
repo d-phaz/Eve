@@ -62,6 +62,35 @@ eve::scene::EventArgsSceneObject & eve::scene::EventArgsSceneObject::operator = 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+//		SCENE Material EVENT
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+eve::scene::EventArgsSceneMaterial::EventArgsSceneMaterial(void)
+	: eve::evt::EventArgs()
+	, type(SceneMaterialEventType_UNDEFINED)
+	, value()
+{}
+
+//=================================================================================================
+eve::scene::EventArgsSceneMaterial::EventArgsSceneMaterial(const eve::scene::EventArgsSceneMaterial & p_other)
+	: eve::evt::EventArgs(p_other)
+	, type(p_other.type)
+	, value(p_other.value)
+{}
+
+//=================================================================================================
+eve::scene::EventArgsSceneMaterial & eve::scene::EventArgsSceneMaterial::operator = (const eve::scene::EventArgsSceneMaterial & p_other)
+{
+	this->time	= p_other.time;
+	this->type  = p_other.type;
+	this->value = p_other.value;
+	return *this;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 //		SCENE CAMERA EVENT
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

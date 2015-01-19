@@ -138,7 +138,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			explicit Object(eve::scene::Scene * p_pScene, eve::scene::Object * p_pParent);
+			explicit Object(eve::scene::Scene * p_pScene, eve::scene::Object * p_pParent, eve::scene::SceneObjectType p_type);
 
 
 		protected:

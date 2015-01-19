@@ -40,6 +40,10 @@
 #include "eve/scene/Skeleton.h"
 #endif
 
+#ifndef __EVE_SCENE_MATERIAL_H__
+#include "eve/scene/Material.h"
+#endif
+
 
 //=================================================================================================
 eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentScene
@@ -49,6 +53,7 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentSc
 											  , eve::Axis				p_upAxis
 											  , const std::string &		p_fullPath)
 {
+	EVE_ASSERT(p_pParentScene);
 	EVE_ASSERT(p_pParent);
 	EVE_ASSERT(p_pMesh);
 	EVE_ASSERT(p_pScene);
@@ -67,7 +72,7 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentSc
 //=================================================================================================
 eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent)
 	// Inheritance
-	: eve::scene::Object(p_pParentScene, p_pParent)
+	: eve::scene::Object(p_pParentScene, p_pParent, SceneObject_Mesh)
 	, eve::scene::EventListenerSceneObject()
 	, eve::math::TMesh<float>()
 
@@ -75,6 +80,7 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 	, m_pVao(nullptr)
 	, m_pAiMesh(nullptr)
 	, m_pSkeleton(nullptr)
+	, m_pMaterial(nullptr)
 {}
 
 
@@ -253,47 +259,16 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		/////////////////////////////////////////
 		EVE_LOG_PROGRESS("Loading Mesh %s materials.", wname.c_str());
 
-// 		// Create material
-// 		m_pMaterial = scene::ItemMaterial::create_ptr(this);
-// 
-// 		// Grab material
-// 		if (p_pScene->HasMaterials())
-// 		{
-// 			aiMaterial * mat = p_pScene->mMaterials[m_pMesh->mMaterialIndex];
-// 
-// 			aiString path;
-// 			std::string folderPath = NATIVESYSTEM::removeFileNameFromPath(p_fullPath);
-// 			std::string fullPath;
-// 
-// 			if (aiGetMaterialString(mat, AI_MATKEY_TEXTURE_DIFFUSE(0), &path)/*mat->GetTexture(aiTextureType_DIFFUSE, 0, &path)*/ == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexDiffuse(fullPath);
-// 			}
-// 
-// 			if (mat->GetTexture(aiTextureType_NORMALS, 0, &path) == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexNormal(fullPath);
-// 			}
-// 
-// 			if (mat->GetTexture(aiTextureType_EMISSIVE, 0, &path) == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexEmissive(fullPath);
-// 			}
-// 
-// 			if (mat->GetTexture(aiTextureType_OPACITY, 0, &path) == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexOpacity(fullPath);
-// 			}
-// 
-// 			float shininess = 0.0f;
-// 			aiGetMaterialFloat(mat, AI_MATKEY_SHININESS_STRENGTH, &shininess); // AI_MATKEY_SHININESS
-// 			m_pMaterial->setShininess(shininess);
-// 		}
+ 		// Create material
+		aiMaterial * material = nullptr;
+		if (p_pScene->HasMaterials())
+		{
+			material = p_pScene->mMaterials[m_pAiMesh->mMaterialIndex];
+		}
+		m_pMaterial = eve::scene::Material::create_ptr(m_pScene, this, material, p_fullPath);
 
+		
+		// Complete.
 		this->init();
 		EVE_LOG_PROGRESS("Mesh %s loaded.", wname.c_str());
 	}
@@ -306,8 +281,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 //=================================================================================================
 void eve::scene::Mesh::init(void)
 {
-	m_objectType = SceneObject_Mesh;
-
 	// Call parent class
 	eve::scene::Object::init();
 	eve::math::TMesh<float>::init();
@@ -369,5 +342,7 @@ void eve::scene::Mesh::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_ar
 //=================================================================================================
 void eve::scene::Mesh::oglDraw(void)
 {
+	m_pMaterial->bind();
 	m_pVao->draw();
+	m_pMaterial->unbind();
 }

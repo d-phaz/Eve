@@ -100,6 +100,7 @@ eve::ogl::Texture::Texture(void)
 	, m_pPixels()
 	, m_filter(GL_LINEAR)
 	, m_wrap(GL_CLAMP_TO_EDGE)
+	, m_bSubUpdate(false)
 {}
 
 
@@ -117,6 +118,14 @@ void eve::ogl::Texture::setAttributes(eve::ogl::Format * p_format)
 	m_filter		 = format->filter;
 	m_wrap			 = format->wrap;
 	m_pPixels		 = format->pixels;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::updateAttributes(eve::ogl::Format * p_format)
+{
+	this->setAttributes(p_format);
+	m_bSubUpdate = false;
+	this->requestOglUpdate();
 }
 
 
@@ -151,7 +160,7 @@ void eve::ogl::Texture::oglInit(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_wrap);
 	EVE_OGL_CHECK_ERROR;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, reinterpret_cast<void*>(m_pPixels.get()));
+	glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, m_pPixels.get());
 	EVE_OGL_CHECK_ERROR;
 
 	glBindTexture( GL_TEXTURE_2D, 0 );
@@ -161,10 +170,20 @@ void eve::ogl::Texture::oglInit(void)
 //=================================================================================================
 void eve::ogl::Texture::oglUpdate(void)
 {
-	glBindTexture(GL_TEXTURE_2D, m_id);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, m_format, m_type, m_pPixels.get());
-	glBindTexture(GL_TEXTURE_2D, 0);
-	EVE_OGL_CHECK_ERROR;
+	if (m_bSubUpdate)
+	{
+		glBindTexture(GL_TEXTURE_2D, m_id);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, m_format, m_type, m_pPixels.get());
+		glBindTexture(GL_TEXTURE_2D, 0);
+		EVE_OGL_CHECK_ERROR;
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, m_id);
+		glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, m_pPixels.get());
+		glBindTexture(GL_TEXTURE_2D, 0);
+		EVE_OGL_CHECK_ERROR;
+	}
 }
 
 //=================================================================================================
@@ -201,7 +220,7 @@ void eve::ogl::Texture::unbind(GLenum p_index)
 void eve::ogl::Texture::setPixels(std::shared_ptr<GLvoid> p_pPixels)
 {
 	EVE_ASSERT(p_pPixels.get());
-	m_pPixels = p_pPixels;
+	m_pPixels	 = p_pPixels;
 
 	this->requestOglUpdate();
 }

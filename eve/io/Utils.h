@@ -50,6 +50,10 @@ namespace eve
 {
 	namespace io
 	{
+		/** \brief In resources material path from name. */
+		std::string resource_path_material(const std::string & p_name);
+
+
 		/** \brief In resources GLSL shader program path from name. */
 		std::string resource_path_glsl(const std::string & p_name);
 

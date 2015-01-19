@@ -54,7 +54,7 @@ namespace eve
 	namespace io
 	{
 		/** \brief Load an image from a path and fill an eve::ogl::FormatTex with data, returns false on failure. */
-		bool load_image(const std::wstring & p_path, eve::ogl::FormatTex * p_pFormat);		
+		bool load_image(const std::string & p_path, eve::ogl::FormatTex * p_pFormat);		
 
 	} // namespace io
 

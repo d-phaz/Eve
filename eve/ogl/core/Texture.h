@@ -121,6 +121,8 @@ namespace eve
 			GLint						m_filter;				//!< Specifies the filter used to interpolate texels.
 			GLint						m_wrap;					//!< Specifies texture wrap mode.
 
+			bool						m_bSubUpdate;			//!< Specifies whether sub update is required.
+
 
 			//////////////////////////////////////
 			//				METHOD				//
@@ -140,6 +142,9 @@ namespace eve
 			* Object attributes MUST be retrieved before init() call.
 			*/
 			virtual void setAttributes(eve::ogl::Format * p_format);
+		public:
+			/** \brief Update attributes from eve::ogl::Format. */
+			void updateAttributes(eve::ogl::Format * p_format);
 
 
 		protected:

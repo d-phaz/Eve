@@ -115,7 +115,7 @@ void RenderGL::init(void)
 	m_pUniform = this->create(fmtUniform);
 
 	eve::ogl::FormatTex fmtTex;
-	std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\1.jpg"));
+	std::string path("C:\\Users\\aleister_doe\\Desktop\\import\\1.jpg");
 	if (!eve::io::load_image(path, &fmtTex))
 	{
 		EVE_LOG_ERROR("Unable to load file %s", path.c_str());

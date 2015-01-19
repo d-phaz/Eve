@@ -104,7 +104,7 @@ bool eve::files::copy(const std::wstring & p_pathSource, const std::wstring & p_
 //=================================================================================================
 std::wstring eve::files::remove_file_name(const std::wstring & p_path)
 {
-	std::wstring str = std::wstring(p_path);
+	std::wstring str(p_path);
 
 	const size_t last_slash_idx = str.find_last_of(EVE_TXT("\\/"));
 	if (std::wstring::npos != last_slash_idx)
@@ -117,9 +117,26 @@ std::wstring eve::files::remove_file_name(const std::wstring & p_path)
 }
 
 //=================================================================================================
+std::string eve::files::remove_file_name(const std::string & p_path)
+{
+	std::string str(p_path);
+
+	const size_t last_slash_idx = str.find_last_of("\\/");
+	if (std::string::npos != last_slash_idx)
+	{
+		const size_t length = str.length();
+		str.erase(last_slash_idx + 1, length);
+	}
+
+	return str;
+}
+
+
+
+//=================================================================================================
 std::wstring eve::files::remove_extension(const std::wstring & p_name)
 {
-	std::wstring str = std::wstring(p_name);
+	std::wstring str(p_name);
 
 	const size_t last_dot_idx = str.find_last_of(EVE_TXT("."));
 	if (std::wstring::npos != last_dot_idx)
@@ -132,12 +149,43 @@ std::wstring eve::files::remove_extension(const std::wstring & p_name)
 }
 
 //=================================================================================================
+std::string eve::files::remove_extension(const std::string & p_name)
+{
+	std::string str(p_name);
+
+	const size_t last_dot_idx = str.find_last_of(".");
+	if (std::string::npos != last_dot_idx)
+	{
+		const size_t length = str.length();
+		str.erase(last_dot_idx, length);
+	}
+
+	return str;
+}
+
+
+
+//=================================================================================================
 std::wstring eve::files::get_file_name(const std::wstring & p_path)
 {
-	std::wstring str = std::wstring(p_path);
+	std::wstring str(p_path);
 
 	const size_t last_slash_idx = str.find_last_of(EVE_TXT("\\/"));
 	if (std::wstring::npos != last_slash_idx)
+	{
+		str.erase(0, last_slash_idx + 1);
+	}
+
+	return str;
+}
+
+//=================================================================================================
+std::string eve::files::get_file_name(const std::string & p_path)
+{
+	std::string str(p_path);
+
+	const size_t last_slash_idx = str.find_last_of("\\/");
+	if (std::string::npos != last_slash_idx)
 	{
 		str.erase(0, last_slash_idx + 1);
 	}

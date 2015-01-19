@@ -157,6 +157,53 @@ namespace eve
 
 
 		///////////////////////////////////////////////////////////////////////////////////////////
+		//		SCENE MATERIAL EVENT
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		/**
+		* \def eve::scene::EventTypeSceneMaterial
+		* \brief enumerate scene material event types.
+		*/
+		enum EventTypeSceneMaterial
+		{
+			SceneMaterialEventType_UNDEFINED = 0,
+
+			SceneMaterialEventType_ValueDiffuse,
+			SceneMaterialEventType_ValueSpecular,
+			SceneMaterialEventType_ValueShininess,
+			SceneMaterialEventType_ValueFresnel,
+
+			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+			_SceneMaterialEventType_Force32Bit = INT_MAX
+		};
+		/**
+		* \class eve::scene::EventArgsSceneMaterial
+		* \brief Scene material event arguments class.
+		* \note extends eve::evt::EventArgs.
+		*/
+		class EventArgsSceneMaterial
+			: public eve::evt::EventArgs
+		{
+		public:
+			EventTypeSceneMaterial	type;
+			float					value;
+
+			/** \brief Default constructor. */
+			EventArgsSceneMaterial(void);
+			/** \brief Copy constructor. */
+			EventArgsSceneMaterial(const EventArgsSceneMaterial & p_other);
+			/** \brief Assignment operator. */
+			EventArgsSceneMaterial & operator = (const EventArgsSceneMaterial & p_other);
+		};
+		/**
+		* \def eve::scene::EventSceneMaterial
+		* \brief scene material event type definition.
+		*/
+		typedef eve::evt::TEvent<EventArgsSceneMaterial> EventSceneMaterial;
+
+
+
+		///////////////////////////////////////////////////////////////////////////////////////////
 		//		SCENE CAMERA EVENT
 		///////////////////////////////////////////////////////////////////////////////////////////
 

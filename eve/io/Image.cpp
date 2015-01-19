@@ -41,19 +41,16 @@
 
 
 //=================================================================================================
-bool eve::io::load_image(const std::wstring & p_path, eve::ogl::FormatTex * p_pFormat)
+bool eve::io::load_image(const std::string & p_path, eve::ogl::FormatTex * p_pFormat)
 {
 	bool bret = false;
 
-	// String path.
-	std::string path = eve::str::to_string(p_path);
-
 	// Check the file signature and deduce its format.
-	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(path.c_str(), 0);
+	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(p_path.c_str(), 0);
 	// If still unknown, try to guess the file format from the file extension.
 	if (fif == FIF_UNKNOWN) 
 	{
-		fif = FreeImage_GetFIFFromFilename(path.c_str());
+		fif = FreeImage_GetFIFFromFilename(p_path.c_str());
 	}
 
 	// Format found.
@@ -63,7 +60,7 @@ bool eve::io::load_image(const std::wstring & p_path, eve::ogl::FormatTex * p_pF
 		if (FreeImage_FIFSupportsReading(fif))
 		{
 			// Pointer to the image.
-			FIBITMAP * dib = FreeImage_Load(fif, path.c_str());
+			FIBITMAP * dib = FreeImage_Load(fif, p_path.c_str());
 			dib = FreeImage_ConvertTo32Bits(dib);
 
 			if (dib)

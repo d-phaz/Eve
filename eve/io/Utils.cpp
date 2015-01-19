@@ -38,6 +38,16 @@
 
 
 //=================================================================================================
+std::string eve::io::resource_path_material(const std::string & p_name)
+{
+	std::string ret = EVE_RESOURCES_PATH;
+	ret += "/material/";
+	ret += p_name;
+
+	return ret;
+}
+
+//=================================================================================================
 std::string eve::io::resource_path_glsl(const std::string & p_name)
 {
 	std::string ret = EVE_RESOURCES_PATH;
