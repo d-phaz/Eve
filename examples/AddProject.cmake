@@ -8,7 +8,7 @@
 
 ###################################################################################################
 # NOTE:
-#	These are set in root/PRODUCT_INFO.cmake
+#	These are set in root/ProductInfo.cmake
 #
 #  		PRODUCT_VENDOR_NAME
 #  		PROJECT_NAME

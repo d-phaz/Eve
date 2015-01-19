@@ -42,6 +42,8 @@
 #include "eve/ogl/core/win32/Context.h"
 #endif
 
+#include <FreeImage/FreeImage.h>
+
 
 //=================================================================================================
 eve::app::App *		eve::app::App::m_p_instance = nullptr;
@@ -112,6 +114,11 @@ void eve::app::App::init(void)
 	}
 #endif
 
+	// FreeImage.
+#ifdef FREEIMAGE_LIB
+	FreeImage_Initialise();
+#endif
+
 	// View container.
 	m_pVecViews = new std::vector<eve::sys::View*>();
 	// Fence.
@@ -140,6 +147,11 @@ void eve::app::App::release(void)
 
 	// Fence.
 	EVE_RELEASE_PTR(m_pFence);
+
+	// FreeImage.
+#ifdef FREEIMAGE_LIB
+	FreeImage_DeInitialise();
+#endif
 
 	// Release Win32 COM.
 #if defined(EVE_OS_WIN)

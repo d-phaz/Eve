@@ -8,7 +8,7 @@
 
 ###################################################################################################
 # NOTE:
-#	These are set in root/PRODUCT_INFO.cmake
+#	These are set in root/ProductInfo.cmake
 #
 #  		PRODUCT_VENDOR_NAME
 #  		PRODUCT_PRODUCT_NAME
@@ -191,6 +191,8 @@ source_group( "Geometry" FILES ${GEOM_SRCS} )
 # Input / Output.
 #################################################
 set( IO_SRCS  
+	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Image.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Image.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.h )
 

@@ -6,7 +6,7 @@
 
 ###################################################################################################
 # NOTE:
-#	These are set in root/PRODUCT_INFO.cmake
+#	These are set in root/ProductInfo.cmake
 #
 #  		PRODUCT_VENDOR_NAME
 #  		PRODUCT_PRODUCT_NAME
@@ -19,7 +19,7 @@
 #		PRODUCT_WEBSITE
 #  		PRODUCT_SUPPORT_EMAIL
 ###################################################################################################
-include( ${BASE_SOURCE_PATH}/PRODUCT_INFO.cmake )
+include( ${BASE_SOURCE_PATH}/ProductInfo.cmake )
 
 
 # CPACK RULES
