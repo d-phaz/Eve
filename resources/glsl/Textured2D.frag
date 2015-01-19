@@ -2,7 +2,7 @@
 #version 420
 
 #define FRAG_COLOR	0
-#define UNI_DIFFUSE	0
+#define UNI_DIFFUSE	1
 
 layout(binding = UNI_DIFFUSE) uniform sampler2D UniDiffuse;
 

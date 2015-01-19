@@ -154,11 +154,11 @@ void RenderGL::cb_display(void)
 	m_pShader->bind();
 	m_pUniform->bind(1);
 
-	m_pTexture->bind(0);
+	m_pTexture->bind(1);
 
 	m_pVao->draw();
 
-	m_pTexture->unbind(0);
+	m_pTexture->unbind(1);
 
 	m_pUniform->unbind(1);
 	m_pShader->unbind();
