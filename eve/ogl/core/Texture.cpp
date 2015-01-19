@@ -151,7 +151,7 @@ void eve::ogl::Texture::oglInit(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_wrap);
 	EVE_OGL_CHECK_ERROR;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, m_pPixels.get());
+	glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, reinterpret_cast<void*>(m_pPixels.get()));
 	EVE_OGL_CHECK_ERROR;
 
 	glBindTexture( GL_TEXTURE_2D, 0 );

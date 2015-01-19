@@ -64,56 +64,60 @@ bool eve::io::load_image(const std::wstring & p_path, eve::ogl::FormatTex * p_pF
 		{
 			// Pointer to the image.
 			FIBITMAP * dib = FreeImage_Load(fif, path.c_str());
+			dib = FreeImage_ConvertTo32Bits(dib);
 
-			// Grab image format.
-			uint32_t channels(0);
-			switch (FreeImage_GetBPP(dib))
+			if (dib)
 			{
-			case 8:
-				p_pFormat->internalFormat = GL_LUMINANCE;
-				p_pFormat->format = GL_LUMINANCE;
-				channels = 1;
-				break;
+				// Grab image format.
+				uint32_t channels(0);
+				switch (FreeImage_GetBPP(dib))
+				{
+				case 8:
+					p_pFormat->internalFormat = GL_LUMINANCE;
+					p_pFormat->format = GL_LUMINANCE;
+					channels = 1;
+					break;
 
-			case 32:
-				p_pFormat->internalFormat = GL_RGBA;
+				case 32:
+					p_pFormat->internalFormat = GL_RGBA;
 #if (FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB)
-				p_pFormat->format = GL_RGBA;
+					p_pFormat->format = GL_RGBA;
 #else
-				p_pFormat->format = GL_BGRA;
+					p_pFormat->format = GL_BGRA;
 #endif
-				channels = 4;
-				break;
+					channels = 4;
+					break;
 
-			case 24:
-			default:
-				p_pFormat->internalFormat = GL_RGB;
+				case 24:
+				default:
+					p_pFormat->internalFormat = GL_RGB;
 #if (FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB)
-				p_pFormat->format = GL_RGB;
+					p_pFormat->format = GL_RGB;
 #else
-				p_pFormat->format = GL_BGR;
+					p_pFormat->format = GL_BGR;
 #endif
-				channels = 3;
-				break;
+					channels = 3;
+					break;
+				}
+
+				// FreeImage loads unsigned bytes.
+				p_pFormat->type   = GL_UNSIGNED_BYTE;
+				p_pFormat->width  = static_cast<GLsizei>(FreeImage_GetWidth(dib));
+				p_pFormat->height = static_cast<GLsizei>(FreeImage_GetHeight(dib));
+
+				// Allocate and copy pixels.
+				size_t size = channels * p_pFormat->width * p_pFormat->height * sizeof(GLubyte);
+				GLubyte * pixels = (GLubyte*)malloc(size);
+				GLubyte * fiPix  = FreeImage_GetBits(dib);
+				memcpy(pixels, fiPix, size);
+
+				p_pFormat->pixels.reset(pixels);
+
+				// Free FreeImage's copy of the data.
+				FreeImage_Unload(dib);
+
+				bret = true;
 			}
-
-			// FreeImage loads unsigned bytes.
-			p_pFormat->type   = GL_UNSIGNED_BYTE;
-			p_pFormat->width  = static_cast<GLsizei>(FreeImage_GetWidth(dib));
-			p_pFormat->height = static_cast<GLsizei>(FreeImage_GetHeight(dib));
-
-			// Allocate and copy pixels.
-			size_t size = channels * p_pFormat->width * p_pFormat->height * sizeof(GLubyte);
-			GLubyte * pixels = (GLubyte*)malloc(size);
-			GLubyte * fiPix  = FreeImage_GetBits(dib);
-			memcpy(pixels, fiPix, size);
-
-			p_pFormat->pixels.reset(pixels);
-
-			// Free FreeImage's copy of the data.
-			FreeImage_Unload(dib);
-
-			bret = true;
 		}
 	}
 

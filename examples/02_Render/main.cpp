@@ -31,6 +31,7 @@
 
 #include "eve/app/App.h"
 #include "eve/math/Includes.h"
+#include "eve/io/Image.h"
 #include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 
@@ -49,6 +50,7 @@ private:
 
 	eve::ogl::Shader *		m_pShader;
 	eve::ogl::Uniform *		m_pUniform;
+	eve::ogl::Texture *		m_pTexture;
 	eve::ogl::Vao *			m_pVao;
 
 
@@ -87,6 +89,7 @@ RenderGL::RenderGL(void)
 	, m_pCamera(nullptr)
 	, m_pShader(nullptr)
 	, m_pUniform(nullptr)
+	, m_pTexture(nullptr)
 	, m_pVao(nullptr)
 {}
 
@@ -101,8 +104,8 @@ void RenderGL::init(void)
 	m_pCamera = eve::math::Cameraf::create_ptr(m_width, m_height);
 
 	eve::ogl::FormatShader fmtShader;
-	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Colored3D.vert"));
-	fmtShader.frag = eve::io::load_program(eve::io::resource_path_glsl("Colored3D.frag"));
+	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Textured3D.vert"));
+	fmtShader.frag = eve::io::load_program(eve::io::resource_path_glsl("Textured3D.frag"));
 	m_pShader = this->create(fmtShader);
 
 	eve::ogl::FormatUniform fmtUniform;
@@ -111,19 +114,24 @@ void RenderGL::init(void)
 	fmtUniform.data			= m_pCamera->getMatrixModelViewProjection().data();
 	m_pUniform = this->create(fmtUniform);
 
-	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f(0.1f, 2.0f, 0.1f) * 5.0f, eve::color4f::red());
+	eve::ogl::FormatTex fmtTex;
+	std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\1.jpg"));
+	if (!eve::io::load_image(path, &fmtTex))
+	{
+		EVE_LOG_ERROR("Unable to load file %s", path.c_str());
+		EVE_ASSERT_FAILURE;
+	}
+	m_pTexture = this->create(fmtTex);
+
+	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_textured(eve::vec3f::zero(), eve::vec3f::one() * 10.0f);
 	m_pVao = this->create(fmtVao);
-
-	eve::ogl::FormatVao fmtVao2 = eve::geom::create_cube_colored(eve::vec3f::zero(), eve::vec3f(2.0f, 0.1f, 2.0f) * 5.0f, eve::color4f::green());
-	eve::ogl::Vao * vao2 = this->create(fmtVao2);
-
-	m_pVao->merge(vao2);
 }
 
 //=================================================================================================
 void RenderGL::release(void)
 {
 	m_pVao->requestRelease();
+	m_pTexture->requestRelease();
 	m_pUniform->requestRelease();
 	m_pShader->requestRelease();
 
@@ -146,7 +154,11 @@ void RenderGL::cb_display(void)
 	m_pShader->bind();
 	m_pUniform->bind(1);
 
+	m_pTexture->bind(0);
+
 	m_pVao->draw();
+
+	m_pTexture->unbind(0);
 
 	m_pUniform->unbind(1);
 	m_pShader->unbind();
