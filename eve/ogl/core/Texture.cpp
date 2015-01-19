@@ -38,6 +38,7 @@ eve::ogl::FormatTex::FormatTex(void)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
+	, internalFormat(GL_RGBA)
 	, format(GL_RGBA)
 	, width(0)
 	, height(0)
@@ -56,6 +57,7 @@ eve::ogl::FormatTex::FormatTex(const eve::ogl::FormatTex & p_other)
 	// Inheritance
 	: eve::ogl::Format()
 	// Members init
+	, internalFormat(p_other.internalFormat)
 	, format(p_other.format)
 	, width(p_other.width)
 	, height(p_other.height)
@@ -70,13 +72,14 @@ const eve::ogl::FormatTex & eve::ogl::FormatTex::operator = (const eve::ogl::For
 {
 	if (this != &p_other)
 	{
-		this->format		= p_other.format;
-		this->width		= p_other.width;
-		this->height		= p_other.height;
-		this->type		= p_other.type;
-		this->filter		= p_other.filter;
-		this->wrap		= p_other.wrap;
-		this->pixels		= p_other.pixels;
+		this->internalFormat	= p_other.internalFormat;
+		this->format			= p_other.format;
+		this->width				= p_other.width;
+		this->height			= p_other.height;
+		this->type				= p_other.type;
+		this->filter			= p_other.filter;
+		this->wrap				= p_other.wrap;
+		this->pixels			= p_other.pixels;
 	}
 	return *this;
 }
@@ -89,6 +92,7 @@ eve::ogl::Texture::Texture(void)
 	: eve::ogl::Object()
 	// Members init
 	, m_id(0)
+	, m_internalFormat(GL_RGBA)
 	, m_format(GL_RGBA)
 	, m_width(0)
 	, m_height(0)
@@ -105,13 +109,14 @@ void eve::ogl::Texture::setAttributes(eve::ogl::Format * p_format)
 {
 	eve::ogl::FormatTex * format = reinterpret_cast<eve::ogl::FormatTex*>(p_format);
 
-	m_format		= format->format;
-	m_width			= format->width;
-	m_height		= format->height;
-	m_type			= format->type;
-	m_filter		= format->filter;
-	m_wrap			= format->wrap;
-	m_pPixels		= format->pixels;
+	m_internalFormat = format->internalFormat;
+	m_format		 = format->format;
+	m_width			 = format->width;
+	m_height		 = format->height;
+	m_type			 = format->type;
+	m_filter		 = format->filter;
+	m_wrap			 = format->wrap;
+	m_pPixels		 = format->pixels;
 }
 
 
@@ -146,7 +151,7 @@ void eve::ogl::Texture::oglInit(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_wrap);
 	EVE_OGL_CHECK_ERROR;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, m_format, m_width, m_height, 0, m_format, m_type, m_pPixels.get());
+	glTexImage2D(GL_TEXTURE_2D, 0, m_internalFormat, m_width, m_height, 0, m_format, m_type, m_pPixels.get());
 	EVE_OGL_CHECK_ERROR;
 
 	glBindTexture( GL_TEXTURE_2D, 0 );
