@@ -157,12 +157,6 @@ uint32_t eve::sys::MessagePump::wparam2unicode(WPARAM p_wParam)
 LRESULT CALLBACK eve::sys::MessagePump::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	eve::sys::MessagePump * handler = eve::sys::MessagePump::get_handler(hWnd);
-	//if (!handler)
-	//{
-	//	EVE_LOG_ERROR("Unregistered window message target.");
-	//	return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
-	//}
-
 	return handler->cb_wndProc(hWnd, uMsg, wParam, lParam);
 }
 
@@ -278,7 +272,7 @@ LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
 	if(!filter) 
 	{
-		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state(); // | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
 		int32_t	repeats	= HIWORD(p_lParam);
 		bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
 
@@ -295,7 +289,7 @@ LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wP
  	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
  	if (!filter) 
 	{
-		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
 		m_pEvent->notifyKeyReleased(translated, modifier);
  	}
 
@@ -306,7 +300,7 @@ LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wP
 LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
 	wchar_t ch		= (TCHAR)p_wParam;
-	eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state() | ((p_lParam & 0x20000000) ? eve::sys::KEY_MODIFIER_ALT_MASK : 0);
+	eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
 	int32_t	repeats	= HIWORD(p_lParam);
 	bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
 
