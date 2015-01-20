@@ -78,24 +78,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/str/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/sys/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/thr/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/time/CMakeLists.txt )
-
-
-# Time.
-#################################################
-set( TIME_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Clock.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Clock.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Timer.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Timer.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${TIME_SRCS} )
-source_group( "Time" FILES ${TIME_SRCS} )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/xml/CMakeLists.txt )
 
 	
 # Visual Leak Detector.

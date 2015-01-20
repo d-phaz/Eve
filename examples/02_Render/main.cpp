@@ -123,7 +123,7 @@ void RenderGL::init(void)
 	}
 	m_pTexture = this->create(fmtTex);
 
-	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_textured(eve::vec3f::zero(), eve::vec3f::one() * 10.0f);
+	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_textured(eve::vec3f::zero(), eve::vec3f::one() * 5.0f);
 	m_pVao = this->create(fmtVao);
 }
 

@@ -73,104 +73,104 @@ float * eve::geom::create_cube_textured_vertices(const eve::vec3f & p_position, 
 
 	// 1
 	*++vert = posX + sizeX;		*++vert = posY + sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 0.0f;				*++vert = 1.0f;
+	*++vert = 1.0f;				*++vert = 1.0f;
 	*++vert = 1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 	// 2
 	*++vert = posX + sizeX;		*++vert = posY - sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 1.0f;				*++vert = 1.0f;
+	*++vert = 0.0f;				*++vert = 1.0f;
 	*++vert = 1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 	// 3
 	*++vert = posX + sizeX;		*++vert = posY - sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 1.0f;				*++vert = 0.0f;
+	*++vert = 0.0f;				*++vert = 0.0f;
 	*++vert = 1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 	// 4
 	*++vert = posX + sizeX;		*++vert = posY + sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 0.0f;				*++vert = 0.0f;
+	*++vert = 1.0f;				*++vert = 0.0f;
 	*++vert = 1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 
 	// 1
 	*++vert = posX + sizeX;		*++vert = posY + sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 1.0f;				*++vert = 1.0f;
+	*++vert = 0.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = 1.0f;				*++vert = 0.0f;
 	// 2
 	*++vert = posX + sizeX;		*++vert = posY + sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 1.0f;				*++vert = 0.0f;
+	*++vert = 0.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = 1.0f;				*++vert = 0.0f;
 	// 3
 	*++vert = posX - sizeX;		*++vert = posY + sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 0.0f;				*++vert = 0.0f;
+	*++vert = 1.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = 1.0f;				*++vert = 0.0f;
 	// 4
 	*++vert = posX - sizeX;		*++vert = posY + sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 0.0f;				*++vert = 1.0f;
+	*++vert = 1.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = 1.0f;				*++vert = 0.0f;
 
 	// 1
 	*++vert = posX + sizeX;		*++vert = posY + sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 0.0f;				*++vert = 1.0f;
+	*++vert = 1.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = 1.0f;
 	// 2
 	*++vert = posX - sizeX;		*++vert = posY + sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 1.0f;				*++vert = 1.0f;
+	*++vert = 0.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = 1.0f;
 	// 3
 	*++vert = posX - sizeX;		*++vert = posY - sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 1.0f;				*++vert = 0.0f;
+	*++vert = 0.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = 1.0f;
 	// 4
 	*++vert = posX + sizeX;		*++vert = posY - sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 0.0f;				*++vert = 0.0f;
+	*++vert = 1.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = 1.0f;
 
 	// 1
 	*++vert = posX - sizeX;		*++vert = posY + sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 1.0f;				*++vert = 1.0f;
+	*++vert = 0.0f;				*++vert = 1.0f;
 	*++vert = -1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 	// 2
 	*++vert = posX - sizeX;		*++vert = posY + sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 1.0f;				*++vert = 0.0f;
+	*++vert = 0.0f;				*++vert = 0.0f;
 	*++vert = -1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 	// 3
 	*++vert = posX - sizeX;		*++vert = posY - sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 0.0f;				*++vert = 0.0f;
+	*++vert = 1.0f;				*++vert = 0.0f;
 	*++vert = -1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 	// 4
 	*++vert = posX - sizeX;		*++vert = posY - sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 0.0f;				*++vert = 1.0f;
+	*++vert = 1.0f;				*++vert = 1.0f;
 	*++vert = -1.0f;				*++vert = 0.0f;				*++vert = 0.0f;
 
 	// 1
 	*++vert = posX - sizeX;		*++vert = posY - sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 1.0f;				*++vert = 0.0f;
+	*++vert = 0.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = -1.0f;				*++vert = 0.0f;
 	// 2
 	*++vert = posX + sizeX;		*++vert = posY - sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 0.0f;				*++vert = 0.0f;
+	*++vert = 1.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = -1.0f;				*++vert = 0.0f;
 	// 3
 	*++vert = posX + sizeX;		*++vert = posY - sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 0.0f;				*++vert = 1.0f;
+	*++vert = 1.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = -1.0f;				*++vert = 0.0f;
 	// 4
 	*++vert = posX - sizeX;		*++vert = posY - sizeY;		*++vert = posZ + sizeZ;
-	*++vert = 1.0f;				*++vert = 1.0f;
+	*++vert = 0.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = -1.0f;				*++vert = 0.0f;
 
 	// 1
 	*++vert = posX + sizeX;		*++vert = posY - sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 1.0f;				*++vert = 0.0f;
+	*++vert = 0.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = -1.0f;
 	// 2
 	*++vert = posX - sizeX;		*++vert = posY - sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 0.0f;				*++vert = 0.0f;
+	*++vert = 1.0f;				*++vert = 0.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = -1.0f;
 	// 3
 	*++vert = posX - sizeX;		*++vert = posY + sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 0.0f;				*++vert = 1.0f;
+	*++vert = 1.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = -1.0f;
 	// 4
 	*++vert = posX + sizeX;		*++vert = posY + sizeY;		*++vert = posZ - sizeZ;
-	*++vert = 1.0f;				*++vert = 1.0f;
+	*++vert = 0.0f;				*++vert = 1.0f;
 	*++vert = 0.0f;				*++vert = 0.0f;				*++vert = -1.0f;
 
 	return vertices;

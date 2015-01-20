@@ -115,7 +115,7 @@ void eve::app::App::init(void)
 #endif
 
 	// FreeImage.
-#ifdef FREEIMAGE_LIB
+#if defined(FREEIMAGE_LIB)
 	FreeImage_Initialise();
 #endif
 
@@ -149,7 +149,7 @@ void eve::app::App::release(void)
 	EVE_RELEASE_PTR(m_pFence);
 
 	// FreeImage.
-#ifdef FREEIMAGE_LIB
+#if defined(FREEIMAGE_LIB)
 	FreeImage_DeInitialise();
 #endif
 
