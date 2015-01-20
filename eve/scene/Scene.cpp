@@ -81,6 +81,12 @@ bool eve::scene::Scene::add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axi
 {
 	bool ret = false;
 
+	eve::scene::Mesh * mesh = eve::scene::Mesh::create_ptr(this, nullptr, p_pMesh, p_pScene, p_upAxis, p_fullPath);
+	if (mesh) 
+	{
+		m_pVecMesh->push_back(mesh);
+		ret = true;
+	}
 
 	return ret;
 }

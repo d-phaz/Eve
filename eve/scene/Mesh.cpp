@@ -54,7 +54,6 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentSc
 											  , const std::string &		p_fullPath)
 {
 	EVE_ASSERT(p_pParentScene);
-	EVE_ASSERT(p_pParent);
 	EVE_ASSERT(p_pMesh);
 	EVE_ASSERT(p_pScene);
 
@@ -121,13 +120,14 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	// If scene node found and mesh contains required data.
 	if (ret)
 	{
+		// In scene mesh name. 
+		m_name = std::string(m_pAiMesh->mName.C_Str());
+		std::wstring wname = eve::str::to_wstring(m_name);
+
+
 		/////////////////////////////////////////
 		//	MESH
 		/////////////////////////////////////////
-
-		// In scene mesh name. 
-		m_name				= std::string(m_pAiMesh->mName.C_Str());
-		std::wstring wname	= eve::str::to_wstring(m_name);
 		EVE_LOG_PROGRESS("Loading Mesh %s vertices.", wname.c_str());
 
 		// Mesh base data.
@@ -258,8 +258,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		//	MATERIAL
 		/////////////////////////////////////////
 		EVE_LOG_PROGRESS("Loading Mesh %s materials.", wname.c_str());
-
- 		// Create material
 		aiMaterial * material = nullptr;
 		if (p_pScene->HasMaterials())
 		{
