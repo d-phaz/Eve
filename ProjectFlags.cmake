@@ -82,4 +82,10 @@ if( WIN32 )
 	mark_as_advanced( CMAKE_CXX_FLAGS 
 					  CMAKE_C_FLAGS )
 	
+#	if (MSVC11)
+#		set(CMAKE_GENERATOR_TOOLSET "v110" CACHE STRING "Platform Toolset" FORCE) 
+#	elseif (MSVC12)
+#		set(CMAKE_GENERATOR_TOOLSET "v120" CACHE STRING "Platform Toolset" FORCE) 
+#	endif ()
+	
 endif()

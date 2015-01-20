@@ -33,32 +33,40 @@
 #ifndef __EVE_SYSTEM_INCLUDES_H__
 #define __EVE_SYSTEM_INCLUDES_H__
 
-#ifndef __EVE_SYSTEM_CURSOR_H__
-#include "eve/sys/win32/Cursor.h"
+
+#ifndef __EVE_CORE_SYSTEM_DEFINITION__
+#include "eve/core/SystemDefinition.h"
 #endif
 
-#ifndef __EVE_SYSTEM_DISPLAY_H__
-#include "eve/sys/win32/Display.h"
-#endif
 
-#ifndef __EVE_SYSTEM_KEYBOARD_H__
-#include "eve/sys/win32/Keyboard.h"
-#endif
+#if defined(EVE_OS_WIN)
+	#ifndef __EVE_SYSTEM_CURSOR_H__
+	#include "eve/sys/win32/Cursor.h"
+	#endif
 
-#ifndef __EVE_SYSTEM_MOUSE_H__
-#include "eve/sys/shared/Mouse.h"
-#endif
+	#ifndef __EVE_SYSTEM_DISPLAY_H__
+	#include "eve/sys/win32/Display.h"
+	#endif
 
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
-#endif
+	#ifndef __EVE_SYSTEM_KEYBOARD_H__
+	#include "eve/sys/win32/Keyboard.h"
+	#endif
 
-#ifndef __EVE_SYSTEM_NOTIFICATION_H__
-#include "eve/sys/win32/Notification.h"
-#endif
+	#ifndef __EVE_SYSTEM_MOUSE_H__
+	#include "eve/sys/shared/Mouse.h"
+	#endif
 
-#ifndef __EVE_SYSTEM_WINDOW_H__
-#include "eve/sys/win32/Window.h"
+	#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
+	#include "eve/sys/win32/MessagePump.h"
+	#endif
+
+	#ifndef __EVE_SYSTEM_NOTIFICATION_H__
+	#include "eve/sys/win32/Notification.h"
+	#endif
+
+	#ifndef __EVE_SYSTEM_WINDOW_H__
+	#include "eve/sys/win32/Window.h"
+	#endif
 #endif
 
 

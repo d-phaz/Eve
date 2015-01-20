@@ -78,8 +78,8 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 	// Members init
 	, m_pVao(nullptr)
 	, m_pAiMesh(nullptr)
-	, m_pSkeleton(nullptr)
 	, m_pMaterial(nullptr)
+	, m_pSkeleton(nullptr)
 {}
 
 
@@ -248,13 +248,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 
 
 		/////////////////////////////////////////
-		//	SKELETON ANIMATIONS
-		/////////////////////////////////////////
-		EVE_LOG_PROGRESS("Loading Mesh %s skeleton animation(s).", wname.c_str());
-		m_pSkeleton = eve::scene::Skeleton::create_ptr(p_pMesh, p_pScene, p_upAxis);
-
-
-		/////////////////////////////////////////
 		//	MATERIAL
 		/////////////////////////////////////////
 		EVE_LOG_PROGRESS("Loading Mesh %s materials.", wname.c_str());
@@ -264,6 +257,13 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 			material = p_pScene->mMaterials[m_pAiMesh->mMaterialIndex];
 		}
 		m_pMaterial = eve::scene::Material::create_ptr(m_pScene, this, material, p_fullPath);
+
+
+		/////////////////////////////////////////
+		//	SKELETON ANIMATIONS
+		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s skeleton animation(s).", wname.c_str());
+		m_pSkeleton = eve::scene::Skeleton::create_ptr(p_pMesh, p_pScene, p_upAxis);
 
 		
 		// Complete.
@@ -292,6 +292,9 @@ void eve::scene::Mesh::release(void)
 
 	// Do not delete -> shared pointer.
 	m_pAiMesh = nullptr;
+
+	EVE_RELEASE_PTR(m_pMaterial);
+	EVE_RELEASE_PTR(m_pSkeleton);
 
 	// Call parent class
 	eve::scene::Object::release();
@@ -343,4 +346,26 @@ void eve::scene::Mesh::oglDraw(void)
 	m_pMaterial->bind();
 	m_pVao->draw();
 	m_pMaterial->unbind();
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::scene::Mesh::setMaterial(eve::scene::Material * p_pMaterial)
+{
+	eve::scene::Material * temp = m_pMaterial;
+	m_pMaterial = p_pMaterial;
+	EVE_RELEASE_PTR(temp);
+}
+
+//=================================================================================================
+void eve::scene::Mesh::setSkeleton(eve::scene::Skeleton * p_pSkeleton)
+{
+	eve::scene::Skeleton * temp = m_pSkeleton;
+	m_pSkeleton = p_pSkeleton;
+	EVE_RELEASE_PTR(temp);
 }

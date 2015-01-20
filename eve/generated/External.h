@@ -46,7 +46,7 @@
 
 
 // OpenCL Activation.
-#define OPENCL_FOUND
+/* #undef OPENCL_FOUND */
 #ifdef OPENCL_FOUND
 #define EVE_ENABLE_OPENCL
 #endif

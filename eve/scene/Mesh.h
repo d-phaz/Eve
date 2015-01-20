@@ -84,8 +84,8 @@ namespace eve
 		protected:
 			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
 			const aiMesh *			m_pAiMesh;				//!< Specifies Assimp mesh (shared pointer).
-			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
 			eve::scene::Material *	m_pMaterial;			//!< Specifies material.
+			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
 
 
 			//////////////////////////////////////
@@ -140,6 +140,20 @@ namespace eve
 			/** \brief Get OpenGL VAO. */
 			eve::ogl::Vao * getVao(void) const;
 
+
+		public:
+			/** \brief Get material. */
+			eve::scene::Material * getMaterial(void) const;
+			/** \brief Set material and release previous one. */
+			void setMaterial(eve::scene::Material *	p_pMaterial);
+
+
+		public:
+			/** \brief Get bones rigging skeleton used in mesh animation. */
+			eve::scene::Skeleton * getSkeleton(void) const;
+			/** \brief Set bones rigging skeleton used in mesh animation and release previous one. */
+			void setSkeleton(eve::scene::Skeleton * p_pSkeleton);
+
 		}; // class Mesh		
 
 	} // namespace scene
@@ -152,6 +166,8 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE eve::ogl::Vao * eve::scene::Mesh::getVao(void) const { return m_pVao; }
+EVE_FORCE_INLINE eve::ogl::Vao *		eve::scene::Mesh::getVao(void) const		{ return m_pVao;		}
+EVE_FORCE_INLINE eve::scene::Material * eve::scene::Mesh::getMaterial(void) const	{ return m_pMaterial;	}
+EVE_FORCE_INLINE eve::scene::Skeleton * eve::scene::Mesh::getSkeleton(void) const	{ return m_pSkeleton;	}
 
 #endif // __EVE_SCENE_MESH_H__
