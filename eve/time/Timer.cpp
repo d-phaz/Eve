@@ -151,7 +151,7 @@ void eve::time::Timer::init(void)
 	{
 		EVE_LOG_ERROR("Unable to retrieve time, clock_gettime() failed, %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
-}
+	}
 	m_i64PerformanceTimerStart = static_cast<int64_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
 
 #elif defined(EVE_OS_LINUX)

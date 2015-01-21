@@ -70,7 +70,7 @@ namespace eve
 
 		private:
 			//std::atomic_flag	m_state; // kept for future use
-			HANDLE m_hSemaphore;
+			HANDLE				m_hSemaphore;
 			volatile uint32_t	m_dest;
 			uint32_t			m_exchange;
 			uint32_t			m_compare;

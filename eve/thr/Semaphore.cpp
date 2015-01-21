@@ -43,15 +43,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 //=================================================================================================
 eve::thr::Semaphore::Semaphore(void)
-// Inheritance
-: eve::thr::Fence()
+	// Inheritance
+	: eve::thr::Fence()
 	
-// Members init
-, m_dest(0)
-, m_exchange(100)
-, m_compare(0)
-, m_iter(0)
-, m_bMultiProc(false)
+	// Members init
+	, m_dest(0)
+	, m_exchange(100)
+	, m_compare(0)
+	, m_iter(0)
+	, m_bMultiProc(false)
 {}
 
 //=================================================================================================
@@ -99,8 +99,8 @@ void eve::thr::Semaphore::lock(void)
 void eve::thr::Semaphore::unlock(void)
 {
 	if (!::ReleaseSemaphore(m_hSemaphore,  // handle to semaphore
-		1,            // increase count by one
-		NULL))       // not interested in previous count
+							1,            // increase count by one
+							NULL))       // not interested in previous count
 	{
 		EVE_LOG_ERROR("ReleaseSemaphore() failed with error: %s", eve::mess::get_error_msg());
 		EVE_ASSERT_FAILURE;

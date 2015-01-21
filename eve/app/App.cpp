@@ -50,9 +50,9 @@
 
 
 //=================================================================================================
-eve::app::App *		eve::app::App::m_p_instance = nullptr;
-eve::time::Timer *	eve::app::App::m_p_timer	= nullptr;
-eve::thr::Semaphore * eve::app::App::m_p_semaphore = nullptr;
+eve::app::App *			eve::app::App::m_p_instance  = nullptr;
+eve::time::Timer *		eve::app::App::m_p_timer	 = nullptr;
+eve::thr::Semaphore *	eve::app::App::m_p_semaphore = nullptr;
 
 
 //=================================================================================================
@@ -131,8 +131,8 @@ void eve::app::App::init(void)
 //=================================================================================================
 void eve::app::App::release(void)
 {
-		// Unregister from application events.
-		eve::evt::unregister_events_application(this);
+	// Unregister from application events.
+	eve::evt::unregister_events_application(this);
 
 		// View container.
 		eve::sys::View * view = nullptr;
@@ -153,20 +153,20 @@ void eve::app::App::release(void)
 	FreeImage_DeInitialise();
 #endif
 
-		// Release Win32 COM.
+	// Release Win32 COM.
 #if defined(EVE_OS_WIN)
-		::CoUninitialize();
+	::CoUninitialize();
 #endif
 
-		// OpenGL master context.
-		eve::ogl::Context::release_instance();
-		// OpenCL engine.
+	// OpenGL master context.
+	eve::ogl::Context::release_instance();
+	// OpenCL engine.
 #if defined(EVE_ENABLE_OPENCL)
-		eve::ocl::Engine::release_instance();
+	eve::ocl::Engine::release_instance();
 #endif
 
-		// Messaging server (log).
-		eve::mess::Server::release_instance();
+	// Messaging server (log).
+	eve::mess::Server::release_instance();
 }
 
 

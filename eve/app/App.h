@@ -110,7 +110,7 @@ namespace eve
 			EVE_DISABLE_COPY(App);
 			EVE_PROTECT_DESTRUCTOR(App);
 
-			
+
 		public:
 			/** \brief Create application pointer from template type. */
 			template<class TApp>
@@ -189,22 +189,22 @@ namespace eve
 #define EveApp	eve::app::App::get_instance()
 
 //=================================================================================================
-		template<typename TApp>
+template<typename TApp>
 eve::app::App * eve::app::create_class(void)
-		{
-			EVE_ASSERT((std::is_base_of<eve::app::App, TApp>::value));
-			EVE_ASSERT(!eve::app::App::m_p_instance);
+{
+	EVE_ASSERT((std::is_base_of<eve::app::App, TApp>::value));
+	EVE_ASSERT(!eve::app::App::m_p_instance);
 
-			EVE_ASSERT(!eve::app::App::m_p_timer);
-			eve::app::App::m_p_timer = eve::time::Timer::create_ptr(true);
+	EVE_ASSERT(!eve::app::App::m_p_timer);
+	eve::app::App::m_p_timer = eve::time::Timer::create_ptr(true);
 
-			EVE_ASSERT(!eve::app::App::m_p_semaphore);
+	EVE_ASSERT(!eve::app::App::m_p_semaphore);
 	eve::app::App::m_p_semaphore = EVE_CREATE_PTR(eve::thr::Semaphore);
 
-			eve::app::App::m_p_instance = EVE_CREATE_PTR(TApp);
+	eve::app::App::m_p_instance = EVE_CREATE_PTR(TApp);
 
-			return eve::app::App::m_p_instance;
-		}
+	return eve::app::App::m_p_instance;
+}
 
 
 //=================================================================================================
@@ -260,7 +260,7 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 	}
 
 #elif defined(EVE_OS_DARWIN)
-/** 
+/**
 * \def EVE_APPLICATION_CUSTOM
 * \brief Convenience macro to create application entry point and launch application from taget class.
 */

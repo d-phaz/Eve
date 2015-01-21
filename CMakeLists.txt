@@ -97,7 +97,7 @@ set( CMAKE_INCLUDE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/include )
 # USING_WINDOWS_ICL 	: Intel's Windows compiler 
 # USING_LLVM_CLANG 		: Mac OSX 10.8 and higher (XCode) compiler
 include( ${BASE_SOURCE_PATH}/CMake/CheckCompiler.cmake )
-	
+
 
 # Project compiler and linker flags.
 ###################################################################################################
