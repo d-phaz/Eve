@@ -32,6 +32,10 @@
 // Main header
 #include "eve/time/Timer.h"
 
+#ifndef __EVE_MATH_INCLUDES_H__
+#include "eve/math/Includes.h"
+#endif
+
 
 //=================================================================================================
 eve::time::Timer * eve::time::Timer::create_ptr(bool p_start)
@@ -55,8 +59,17 @@ eve::time::Timer::Timer(void)
 	, m_startTime(0)
 	, m_endTime(0)
 	, m_elapsed(0)
+	, m_oldTime(0)
 	, m_invFrequency(1.0)
 	, m_bRunning(false)
+	, m_fFPS(0.0f)
+	, m_fTargetFPS(60.0f)
+	, m_fTime1(0.0f)
+	, m_fTime2(0.0f)
+	, m_fDiffTimeNextFrame(0)
+	, m_fDiffTime(0.0f)
+	, m_iFramesElapsed(0)
+	, m_iFramesCompuation(3)
 {}
 
 //=================================================================================================
@@ -68,6 +81,7 @@ eve::time::Timer::Timer(const Timer & p_other)
 	, m_endTime(p_other.m_endTime)
 	, m_elapsed(p_other.m_elapsed)
 	, m_invFrequency(p_other.m_invFrequency)
+	, m_oldTime(p_other.m_oldTime)
 	, m_bRunning(false)
 {
 	if (p_other.m_bRunning)
@@ -102,13 +116,15 @@ void eve::time::Timer::init(void)
 #if defined(EVE_OS_WIN)
 	// The frequency of the performance counter is fixed at system boot and is consistent across all processors. 
 	// Therefore, the frequency need only be queried upon application initialization, and the result can be cached.
-	::LARGE_INTEGER nativeFreq;
-	if (::QueryPerformanceFrequency(&nativeFreq) == 0) {
+	int64_t nativeFreq;
+	 if (::QueryPerformanceFrequency(reinterpret_cast<::LARGE_INTEGER*>(&nativeFreq)) == 0) {
 		EVE_LOG_ERROR("Unable to retrieve time, QueryPerformanceFrequency() failed, %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
-	}
 
-	m_invFrequency = 1.0 / nativeFreq.QuadPart;
+		m_invFrequency = (1.0 / static_cast<double>(nativeFreq));
+
+		::QueryPerformanceCounter(reinterpret_cast<::LARGE_INTEGER*>(&m_i64PerformanceTimerStart));
+	 }
 
 #elif defined(EVE_OS_DARWIN)
 	uint64_t numerator;
@@ -129,6 +145,14 @@ void eve::time::Timer::init(void)
 	}
 
 	m_invFrequency = numerator / static_cast<double>(denominator);
+
+	timespec t;
+	if( clock_gettime(CLOCK_MONOTONIC, &t) != 0 )
+	{
+		EVE_LOG_ERROR("Unable to retrieve time, clock_gettime() failed, %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+	m_i64PerformanceTimerStart = static_cast<int64_t>(t.tv_sec * 1000 + t.tv_nsec / 1000000);
 
 #elif defined(EVE_OS_LINUX)
 	m_invFrequency = 0.001;
@@ -211,12 +235,58 @@ int64_t eve::time::Timer::restart(void)
 
 
 
+//=================================================================================================
+void eve::time::Timer::updateFPS(bool p_bincreaseFrame)
+{
+	//increase the number of frames that have passed
+	if (p_bincreaseFrame)
+		m_iFramesElapsed++;
+
+	if (p_bincreaseFrame && m_iFramesElapsed % m_iFramesCompuation == 1)
+	{
+		m_fTime1 = static_cast<float>(getTime());
+	}
+
+	else if (!p_bincreaseFrame || m_iFramesElapsed % m_iFramesCompuation == 0)
+	{
+		if (p_bincreaseFrame)
+			m_fTime1 = m_fTime2;
+
+		m_fTime2 = static_cast<float>(getTime());
+		m_fDiffTime = eve::math::abs(m_fTime2 - m_fTime1) / 1000;
+
+	}
+
+	if (m_fDiffTime > 0.0f)
+	{
+		m_fFPS = m_iFramesCompuation / (m_fDiffTime);
+		m_fDiffTimeNextFrame = static_cast<int64_t>((m_iFramesCompuation / m_fTargetFPS - m_fDiffTime) * 1000);
+
+		if (m_fDiffTimeNextFrame <= 0)
+			m_fDiffTimeNextFrame = 0;
+	}
+	else
+		m_fFPS = 0.0f;
+
+	/*m_fTime2   = GetTime( )/1000;
+	m_fDiffTime= ( float )fabs( m_fTime2-m_fTime1 );
+	if (m_fDiffTime > 1.0f)
+	{
+	m_fTime1 = m_fTime2;
+	m_fFPS= m_iFramesElapsed / ( m_fDiffTime );
+	m_iFramesElapsed = 0;
+	}
+	*/
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		GET / SET
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-int64_t eve::time::Timer::getElapsedTime(void)
+const int64_t eve::time::Timer::getElapsedTime(void) 
 {
 	if (this->isStopped())
 	{
@@ -228,4 +298,67 @@ int64_t eve::time::Timer::getElapsedTime(void)
 	}
 
 	return m_elapsed;
+}
+
+
+
+//=================================================================================================
+const int64_t eve::time::Timer::getTime(void)  const
+{
+
+	return static_cast<int64_t>((query_absolute_time() - m_i64PerformanceTimerStart) * 1000 * m_invFrequency);
+
+}
+
+
+//=================================================================================================
+const int64_t eve::time::Timer::getDiffTime(void) 
+{
+	if (this->isStopped())
+	{
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+	}
+	else
+	{
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+	}
+
+	return m_elapsed;
+}
+
+//=================================================================================================
+const int64_t eve::time::Timer::getDiffTimeDelta(void) 
+{
+	int64_t timeDiff;
+	if (this->isStopped())
+	{
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+		timeDiff = m_elapsed;
+	}
+	else
+	{
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+		timeDiff = m_elapsed - m_oldTime;
+		m_oldTime = m_elapsed;
+	}
+
+	return timeDiff;
+}
+
+//=================================================================================================
+const int64_t eve::time::Timer::getDiffTimeDeltaWithoutactualisation(void) 
+{
+	int64_t timeDiff;
+	if (this->isStopped())
+	{
+		m_elapsed = static_cast<int64_t>((m_endTime - m_startTime) * 1000.0 * m_invFrequency);
+		timeDiff = m_elapsed;
+	}
+	else
+	{
+		m_elapsed = static_cast<int64_t>((eve::time::Timer::query_absolute_time() - m_startTime) * 1000.0 * m_invFrequency);
+		timeDiff = m_elapsed - m_oldTime;
+	}
+
+	return timeDiff;
 }

@@ -35,6 +35,8 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 # Instruct CMake to run moc automatically when needed.
 set( CMAKE_AUTOMOC TRUE )
 set( CMAKE_AUTOMOC_RELAXED_MODE TRUE )
+set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
+set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
 
 
 # Parse files in project.
@@ -42,15 +44,20 @@ set( CMAKE_AUTOMOC_RELAXED_MODE TRUE )
 set( SOURCE_FILES )
 set( LIBS )
 
+# Include directories.
+###################################################################################################	
+SET(${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES  
+${BASE_SOURCE_PATH}
+${CMAKE_INCLUDE_OUTPUT_DIRECTORY}
+${BASE_SOURCE_PATH}/external/include)
+
 	
 # OpenCL.
 ###################################################################################################
 if(OPTION_BUILD_ENABLE_OPENCL)
-	set(CMAKE_MODULE_PATH_OLD "${CMAKE_MODULE_PATH}" )
-	set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
 	find_package( OpenCL REQUIRED )
 	if(${OPENCL_FOUND})
-		include_directories( ${OPENCL_INCLUDE_DIR} )
+		LIST(APPEND ${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES ${OPENCL_INCLUDE_DIR})
 		set( LIBS ${LIBS} ${OPENCL_LIBRARY})
 	else()
 		message(FATAL_ERROR "OpenCL not found on this platform.")
@@ -95,24 +102,22 @@ endif()
 # Version.h
 #################################################
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h.in
-                ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h )
-set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h )
-set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h PROPERTIES GENERATED true )
+				${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h )
+set_source_files_properties( ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h PROPERTIES GENERATED true )
 			
 # External.h
 #################################################
 set( RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../resources" )
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h.in
-				${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
-set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h )
-set_source_files_properties( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h PROPERTIES GENERATED true )
+				${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h )
+set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h )
+set_source_files_properties( ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h PROPERTIES GENERATED true )
 
 
 # Include directories.
 ###################################################################################################	
-include_directories( ${BASE_SOURCE_PATH} )
-include_directories( ${BASE_SOURCE_PATH}/external/include )	
-
+include_directories( ${${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES} )
 
 # Libraries.
 ###################################################################################################	 
@@ -150,23 +155,23 @@ if( APPLE )
 	endif( OPTION_BUILD_TYPE_RELEASE )
 
 	macro( find_required_library TARGET_LIB )
-        find_library( FOUND_LIB ${TARGET_LIB} )
+		find_library( FOUND_LIB ${TARGET_LIB} )
 
-        if( NOT FOUND_LIB )
-            message( FATAL_ERROR "${TARGET_LIB} not found" )
-        else()
-            message( "\n ${TARGET_LIB} found at ${FOUND_LIB} \n adding ${TARGET_LIB} to link. \n")
-        endif()
-        mark_as_advanced( FOUND_LIB )
-        
-        set( LIBS ${LIBS} ${FOUND_LIB} )
-    endmacro()
+		if( NOT FOUND_LIB )
+			message( FATAL_ERROR "${TARGET_LIB} not found" )
+		else()
+			message( "\n ${TARGET_LIB} found at ${FOUND_LIB} \n adding ${TARGET_LIB} to link. \n")
+		endif()
+		mark_as_advanced( FOUND_LIB )
+		
+		set( LIBS ${LIBS} ${FOUND_LIB} )
+	endmacro()
 
-    find_required_library( AppKit )
-    find_required_library( CFNetwork )
-    find_required_library( CoreFoundation )
-    find_required_library( CoreServices )
-    find_required_library( Security )
+	find_required_library( AppKit )
+	find_required_library( CFNetwork )
+	find_required_library( CoreFoundation )
+	find_required_library( CoreServices )
+	find_required_library( Security )
 endif()
 
 	

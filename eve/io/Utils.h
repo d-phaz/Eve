@@ -52,10 +52,10 @@ namespace eve
 	{
 		/** \brief In resources material path from name. */
 		std::string resource_path_material(const std::string & p_name);
-
-
 		/** \brief In resources GLSL shader program path from name. */
 		std::string resource_path_glsl(const std::string & p_name);
+		/** \brief In resources image path from name. */
+		std::string resource_path_image(const std::string & p_name);
 
 
 		/** \brief Loads a program (text) file and prepends \a p_preamble to it. Used to load OpenCL kernel, OpenGL shader, etc... */

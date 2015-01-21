@@ -217,10 +217,19 @@ void eve::ogl::Texture::unbind(GLenum p_index)
 
 
 //=================================================================================================
-void eve::ogl::Texture::setPixels(std::shared_ptr<GLvoid> p_pPixels)
+void eve::ogl::Texture::setPixels(const std::shared_ptr<GLvoid> & p_pPixels)
 {
 	EVE_ASSERT(p_pPixels.get());
-	m_pPixels	 = p_pPixels;
+	m_pPixels = p_pPixels;
+
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Texture::setPixels(const std::shared_ptr<GLvoid> && p_pPixels)
+{
+	EVE_ASSERT(p_pPixels.get());
+	m_pPixels = p_pPixels;
 
 	this->requestOglUpdate();
 }

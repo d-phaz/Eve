@@ -21,6 +21,8 @@ set( SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Renderer.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.cpp 

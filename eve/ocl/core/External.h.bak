@@ -30,26 +30,31 @@
 */
 
 #pragma once
-#ifndef __EVE_EXTERNAL_H__
-#define __EVE_EXTERNAL_H__
+#ifndef __EVE_OPENCL_CORE_EXTERNAL_H__
+#define __EVE_OPENCL_CORE_EXTERNAL_H__
 
 
-// Resources Path
-#define EVE_RESOURCES_PATH "E:/Eve/eve/../resources"
-
-
-// Visual Leak Detector for Visual Studio.
-#define OPTION_BUILD_USE_VLD
-#ifdef OPTION_BUILD_USE_VLD
-#include "vld.h"
+#ifndef __EVE_CORE_SYSTEM_DEFINITION__
+#include "eve/core/SystemDefinition.h"
 #endif
 
 
-// OpenCL Activation.
-#define OPENCL_FOUND
-#ifdef OPENCL_FOUND
-#define EVE_ENABLE_OPENCL
+#if defined(EVE_OS_WIN) || defined(EVE_OS_LINUX)
+#include <CL/cl_platform.h>
+#include <CL/cl.h>
+#include <CL/cl_gl.h>
+
+#elif defined(EVE_OS_DARWIN)
+#include <OpenCL/cl_platform.h>
+#include <OpenCL/cl.h>
+#include <CGLDevice.h> // Khronos version : #include <OpenGL/CGLDevice.h>
+
 #endif
 
 
-#endif 	// __EVE_EXTERNAL_H__
+#ifndef __EVE_OPENCL_CORE_CONFIGURATION_H__
+#include "eve/ocl/core/Configuration.h"
+#endif
+
+
+#endif // __EVE_OPENCL_CORE_EXTERNAL_H__

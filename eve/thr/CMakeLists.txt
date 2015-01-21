@@ -17,6 +17,8 @@ set( SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Mutex.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Mutex.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ScopedFence.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Semaphore.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Semaphore.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.cpp 

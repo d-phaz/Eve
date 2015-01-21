@@ -289,6 +289,11 @@ namespace eve
 
 
 		public:
+            /** \brief Get Rigth Vector. */
+			const eve::math::TVec3<T> getRightVector(void) const;
+
+
+		public:
 			/** \brief Get view direction. */
 			const eve::math::TVec3<T> getViewDirection(void) const;
 			/** \brief Set view direction. */
@@ -1034,6 +1039,12 @@ void eve::math::TCamera<T>::setWorldUp(const eve::math::TVec3<T> & p_worldUp)
 
 	this->calcModelView();
 }
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getRightVector(void) const { return m_U; }
 
 
 

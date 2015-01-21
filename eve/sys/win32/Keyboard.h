@@ -455,13 +455,13 @@ namespace eve
 			key_Pad_Enter = 0x10f,
 
 			// The up arrow
-			key_Up = 0x10,
+			key_Up = 0x110,
 			// The down arrow
-			key_Down = 0x11,
+			key_Down = 0x111,
 			// The left arrow
-			key_Left = 0x12,
+			key_Left = 0x112,
 			// The right arrow
-			key_Right = 0x13,
+			key_Right = 0x113,
 			//	Insert
 			key_Insert = 0x114,
 			// Home

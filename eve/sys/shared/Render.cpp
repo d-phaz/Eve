@@ -56,6 +56,9 @@ void eve::sys::Render::init(void)
 
 	// Render engines.
 	m_pVecRenderers = new std::vector<eve::core::Renderer*>();
+
+	// Timer.
+	m_pTimerRender = eve::time::Timer::create_ptr(false);
 }
 
 //=================================================================================================
@@ -95,19 +98,29 @@ void eve::sys::Render::releaseThreadedData(void)
 //=================================================================================================
 void eve::sys::Render::run(void)
 {
+	m_pTimerRender->start();
+
 	do
 	{
-		// Launch render as there is no message to handle.
-		m_pFence->lock();
-
-		for (auto & itr : (*m_pVecRenderers))
+		
+		if (m_pTimerRender->getTimeNextFrame() < 10)
 		{
-			itr->cb_beforeDisplay();
-			itr->cb_display();
-			itr->cb_afterDisplay();
-		}
+			// Launch render.
+			m_pFence->lock();
 
-		m_pFence->unlock();
+			for (auto & itr : (*m_pVecRenderers))
+			{
+				itr->cb_beforeDisplay();
+				itr->cb_display();
+				itr->cb_afterDisplay();
+			}
+
+			m_pFence->unlock();	
+
+			m_pTimerRender->updateFPS(true);
+		}
+		m_pTimerRender->updateFPS(false);
+		this->setRunWait(static_cast<uint32_t>(m_pTimerRender->getTimeNextFrame()));
 
 	} while (this->running());
 }

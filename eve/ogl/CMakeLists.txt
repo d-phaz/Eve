@@ -8,3 +8,4 @@
 # Files listing.
 #################################################
 include( ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/ogl/particule/CMakeLists.txt )

@@ -37,6 +37,9 @@
 #include "eve/thr/Thread.h"
 #endif 
 
+#ifndef __EVE_TIME_TIMER_H__
+#include "eve/time/Timer.h"
+#endif
 
 namespace eve { namespace core	{ class Renderer; } }
 
@@ -64,7 +67,8 @@ namespace eve
 
 		protected:
 			std::vector<eve::core::Renderer*> *		m_pVecRenderers;	//!< Render Engine(s) container.
-			
+
+			eve::time::Timer *						m_pTimerRender;		//!< Specifies timer used to compute FPS.
 
 
 			//////////////////////////////////////

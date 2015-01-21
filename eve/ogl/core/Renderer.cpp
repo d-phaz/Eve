@@ -202,6 +202,12 @@ eve::ogl::Pbo * eve::ogl::Renderer::create(eve::ogl::FormatPbo & p_format)
 }
 
 //=================================================================================================
+eve::ogl::ShaderManager * eve::ogl::Renderer::create(eve::ogl::FormatShaderAdvanced & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::ShaderManager, p_format, this);
+}
+
+//=================================================================================================
 eve::ogl::Shader * eve::ogl::Renderer::create(eve::ogl::FormatShader & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Shader, p_format, this);

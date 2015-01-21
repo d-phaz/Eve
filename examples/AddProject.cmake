@@ -47,9 +47,12 @@ macro( add_project PROJECT_NAME_IN )
 	set_source_files_properties( ${SOURCE_FILES} PROPERTIES GENERATED true )
 
 	# Include directories
-	include_directories( ${BASE_SOURCE_PATH} )
-	include_directories( ${BASE_SOURCE_PATH}/external/include )	
-	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
+	###################################################################################################	
+	SET(${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES  
+		${BASE_SOURCE_PATH}
+		${CMAKE_INCLUDE_OUTPUT_DIRECTORY}
+		${BASE_SOURCE_PATH}/external/include
+		${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
 
 	# Create executable
 	set( exe_name "${PROJECT_NAME}_exe" )
@@ -250,7 +253,7 @@ macro( add_project PROJECT_NAME_IN )
 		set(CMAKE_MODULE_PATH "${BASE_SOURCE_PATH}/CMake")
 		find_package( OpenCL REQUIRED )
 		if(${OPENCL_FOUND})
-			include_directories( ${OPENCL_INCLUDE_DIR} )
+			LIST(APPEND ${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES ${OPENCL_INCLUDE_DIR})
 			set( LIBS ${LIBS} ${OPENCL_LIBRARY})
 		else()
 			message(FATAL_ERROR "OpenCL not found on this platform.")
@@ -286,6 +289,8 @@ macro( add_project PROJECT_NAME_IN )
 			# set( LIBS ${LIBS} ${BASE_SOURCE_PATH}/external/lib_osx/Release/libPocoFoundationmd.a )
 		# endif()
 	# endif()
+	
+	include_directories( ${${PRODUCT_PRODUCT_NAME}_INCLUDE_DIRECTORIES} )
 	
 	target_link_libraries( ${exe_name} ${LIBS} )
 

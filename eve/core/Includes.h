@@ -85,6 +85,10 @@
 #elif defined(EVE_OS_LINUX)
 #include <time.h>
 #endif
+//random
+#include <random>
+// STD exception
+#include <stdexcept>
 
 
 #if defined(EVE_OS_WIN)

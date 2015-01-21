@@ -42,24 +42,18 @@
 #include "eve/ogl/core/win32/Context.h"
 #endif
 
+#ifndef __EVE_THREADING_SEMAPHORE_H__
+#include "eve/thr/Semaphore.h"
+#endif
+
 #include <FreeImage/FreeImage.h>
 
 
 //=================================================================================================
-eve::app::App *		eve::app::App::m_p_instance = nullptr;
-eve::time::Timer *	eve::app::App::m_p_timer	= nullptr;
+eve::app::App *			eve::app::App::m_p_instance  = nullptr;
+eve::time::Timer *		eve::app::App::m_p_timer	 = nullptr;
+eve::thr::Semaphore *	eve::app::App::m_p_semaphore = nullptr;
 
-//=================================================================================================
-eve::app::App * eve::app::App::create_instance(void)
-{
-	EVE_ASSERT(!m_p_timer);
-	m_p_timer = eve::time::Timer::create_ptr(true);
-
-	EVE_ASSERT(!m_p_instance);
-	m_p_instance = new eve::app::App();
-	m_p_instance->init();
-	return m_p_instance;
-}
 
 //=================================================================================================
 eve::app::App * eve::app::App::get_instance(void)
@@ -76,6 +70,9 @@ void eve::app::App::release_instance(void)
 
 	EVE_ASSERT(m_p_timer);
 	EVE_RELEASE_PTR(m_p_timer);
+
+	EVE_ASSERT(m_p_semaphore);
+	EVE_RELEASE_PTR(m_p_semaphore);
 }
 
 
@@ -122,10 +119,13 @@ void eve::app::App::init(void)
 	// View container.
 	m_pVecViews = new std::vector<eve::sys::View*>();
 	// Fence.
-	m_pFence	= EVE_CREATE_PTR(eve::thr::SpinLock);
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 
 	// Register to application events.
 	eve::evt::register_events_application(this);
+
+	// Initial application lock.
+	m_p_semaphore->lock();
 }
 
 //=================================================================================================
@@ -134,19 +134,19 @@ void eve::app::App::release(void)
 	// Unregister from application events.
 	eve::evt::unregister_events_application(this);
 
-	// View container.
-	eve::sys::View * view = nullptr;
-	while (!m_pVecViews->empty())
-	{
-		view = m_pVecViews->back();
-		m_pVecViews->pop_back();
+		// View container.
+		eve::sys::View * view = nullptr;
+		while (!m_pVecViews->empty())
+		{
+			view = m_pVecViews->back();
+			m_pVecViews->pop_back();
 
-		EVE_RELEASE_PTR(view);
-	}
-	EVE_RELEASE_PTR_CPP(m_pVecViews);
+			EVE_RELEASE_PTR(view);
+		}
+		EVE_RELEASE_PTR_CPP(m_pVecViews);
 
-	// Fence.
-	EVE_RELEASE_PTR(m_pFence);
+		// Fence.
+		EVE_RELEASE_PTR(m_pFence);
 
 	// FreeImage.
 #if defined(FREEIMAGE_LIB)
@@ -176,11 +176,8 @@ void eve::app::App::runApp(void)
 {
 	m_bRunning = true;
 
-	do 
-	{
-		::Sleep(30);
-	} while (m_bRunning);
-	
+	m_p_semaphore->lock();
+
 	EVE_LOG_INFO("Exiting application main loop.");
 	this->release();
 }
@@ -230,5 +227,6 @@ bool eve::app::App::releaseView(eve::sys::View * p_pView)
 //=================================================================================================
 void eve::app::App::cb_evtApplicationExit(eve::evt::EventArgs & p_arg)
 {
+	m_p_semaphore->unlock();
 	m_bRunning = false;
 }

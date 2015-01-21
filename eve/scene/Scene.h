@@ -55,6 +55,21 @@ namespace eve
 {
 	namespace scene
 	{
+		/** 
+		* \enum eve::scene::ImportParams
+		* \brief Enumerates ASSIMP import parameters.
+		*/
+		enum SceneImportParams
+		{
+			SceneImportParam_UNDEFINED = 0,
+
+			SceneImportParam_Flip_UV,
+
+			SceneImportParam_Generate_Normals,
+			SceneImportParam_Normals_Max_Angle
+
+		}; // enum ImportParams
+
 
 		/**
 		* \class eve::scene::Scene
@@ -71,6 +86,14 @@ namespace eve
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
+
+		protected:
+			//<! Import parameters map.
+			//<!	Parameters are					Values are			Note
+			//<!	"Flip_UV"						"Y" / "N"
+			//<!	"Generate_Normals"				"Y" / "N"
+			//<!	"Normals_Max_Angle"				"0.0... 175.0"		Used only when Generate_Normals is set to Y
+			std::map<std::string, std::string>	m_mapImportParams;
 
 		protected:
 			std::vector<eve::scene::Mesh*> *			m_pVecMesh;		//!< Specifies Mesh objects vector.
