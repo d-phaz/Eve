@@ -56,19 +56,24 @@ namespace eve
 	namespace scene
 	{
 		/** 
-		* \enum eve::scene::ImportParams
+		* \enum eve::scene::SceneImportParam
 		* \brief Enumerates ASSIMP import parameters.
 		*/
-		enum SceneImportParams
+		enum SceneImportParam
 		{
-			SceneImportParam_UNDEFINED = 0,
+			SceneImportParam_UNDEFINED		= 0,
+
+			SceneImportParam_Up_Axis,
 
 			SceneImportParam_Flip_UV,
 
 			SceneImportParam_Generate_Normals,
-			SceneImportParam_Normals_Max_Angle
+			SceneImportParam_Normals_Max_Angle,
 
-		}; // enum ImportParams
+			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+			_SceneImportParam_Force32Bit	= INT_MAX
+
+		}; // enum SceneImportParam
 
 
 		/**
@@ -89,11 +94,12 @@ namespace eve
 
 		protected:
 			//<! Import parameters map.
-			//<!	Parameters are					Values are			Note
-			//<!	"Flip_UV"						"Y" / "N"
-			//<!	"Generate_Normals"				"Y" / "N"
-			//<!	"Normals_Max_Angle"				"0.0... 175.0"		Used only when Generate_Normals is set to Y
-			std::map<std::string, std::string>	m_mapImportParams;
+			//<!	Parameters are							Values are			Note
+			//!<	SceneImportParam_Up_Axis				"X" / "Y" / "Z"
+			//<!	SceneImportParam_Flip_UV				"Y" / "N"
+			//<!	SceneImportParam_Generate_Normals		"Y" / "N"
+			//<!	SceneImportParam_Normals_Max_Angle		"0.0... 175.0"		Used only when Generate_Normals is set to "Y"
+			std::map<SceneImportParam, std::string>		m_mapImportParams;
 
 		protected:
 			std::vector<eve::scene::Mesh*> *			m_pVecMesh;		//!< Specifies Mesh objects vector.
@@ -136,6 +142,14 @@ namespace eve
 		public:
 			/** \brief Draw on screen callback. (pure virtual) */
 			virtual void cb_display(void) override;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+			/** \brief Assign value to target import parameter. */
+			void setImportParam(eve::scene::SceneImportParam p_param, const std::string & p_value);
 
 		}; // class Scene
 

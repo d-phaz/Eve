@@ -6,6 +6,9 @@
 #include "eve/scene/Mesh.h"
 #endif
 
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+
 
 //=================================================================================================
 eve::scene::Scene::Scene(void)
@@ -13,6 +16,7 @@ eve::scene::Scene::Scene(void)
 	: eve::ogl::Renderer()
 	, eve::scene::EventListenerScene()
 	// Members init.
+	, m_mapImportParams()
 	, m_pVecMesh(nullptr)
 {}
 
@@ -23,6 +27,12 @@ void eve::scene::Scene::init(void)
 {
 	// Call parent class.
 	eve::ogl::Renderer::init();
+
+	// Default import parameters.
+	m_mapImportParams[SceneImportParam_Up_Axis]				= "Y";
+	m_mapImportParams[SceneImportParam_Flip_UV]				= "Y";
+	m_mapImportParams[SceneImportParam_Generate_Normals]	= "Y";
+	m_mapImportParams[SceneImportParam_Normals_Max_Angle]	= "80.0";
 
 	m_pVecMesh = new std::vector<eve::scene::Mesh*>();
 }
@@ -70,6 +80,109 @@ bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
 {
 	bool ret = false;
 
+	// String path.
+	std::string path = eve::str::to_string(p_filePath);
+
+	// Assimp base importer
+	Assimp::Importer * pImporter = new Assimp::Importer();
+	// Set verbose mode
+#ifndef NDEBUG
+	pImporter->SetExtraVerbose(true);
+#endif
+
+	// Set common importer params.
+	pImporter->SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_LINE | aiPrimitiveType_POINT);
+
+	// Import flags.
+	uint32_t flags = aiProcess_Triangulate;
+				// | aiProcess_JoinIdenticalVertices
+				// | aiProcess_RemoveRedundantMaterials
+				// | aiProcess_SortByPType;
+
+	if (m_mapImportParams[SceneImportParam_Flip_UV] == "Y")
+	{
+		flags |= aiProcess_FlipUVs;
+	}
+
+	if (m_mapImportParams[SceneImportParam_Generate_Normals] == "Y")
+	{
+		flags |= aiProcess_GenSmoothNormals;
+
+		float angle = static_cast<float>(::atof(m_mapImportParams[SceneImportParam_Normals_Max_Angle].c_str()));
+		pImporter->SetPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE, angle);
+	}
+
+	// Do not use these flags for now, it seems it could damage the scene -> will have to hardly test it !!!
+	//if( p_bOptimize ) 
+	//	flags |= aiProcess_ImproveCacheLocality 
+	//		  | aiProcess_OptimizeGraph
+	//		  | aiProcess_OptimizeMeshes 
+	//		  | aiProcess_FindDegenerates;
+
+
+
+	// Import scene.
+	const aiScene * pAiScene = pImporter->ReadFile(path.c_str(), flags);
+	if (pAiScene)
+	{
+		// Grab scene Up axis.
+		eve::Axis upAxis;
+		std::string axis = m_mapImportParams[SceneImportParam_Up_Axis];
+			 if (axis == "X") { upAxis = eve::Axis_X; }
+		else if (axis == "Y") { upAxis = eve::Axis_Y; }
+		else if (axis == "Z") { upAxis = eve::Axis_Z; }
+
+		// Run threw scene meshes.
+		if (pAiScene->HasMeshes())
+		{
+			for (size_t i = 0; i < pAiScene->mNumMeshes; i++)
+			{
+				this->add(pAiScene->mMeshes[i], pAiScene, upAxis, path);
+			}
+		}
+
+// 		// Run threw scene lights.
+// 		if (pAiScene->HasLights())
+// 		{
+// 			aiLight * light = NULL;
+// 			for (size_t i = 0; i < pAiScene->mNumLights; i++)
+// 			{
+// 				light = pAiScene->mLights[i];
+// 				this->add(light, pAiScene, upAxis);
+// 			}
+// 		} 
+// 
+// 		// Run threw scene cameras.
+// 		if (pAiScene->HasCameras())
+// 		{
+// 			for (size_t i = 0; i < pAiScene->mNumCameras; i++)
+// 			{
+// 				this->add(pAiScene->mCameras[i], pAiScene, upAxis);
+// 			}
+// 		} 
+// 
+// // 		// Run threw scene animations
+// // 		if (pAiScene->HasAnimations())
+// // 		{
+// // 			for (size_t i = 0; i < pAiScene->mNumAnimations; i++)
+// // 			{
+// // 				aiNodeAnim * pAnim = pAiScene->mAnimations[i]->mChannels[i]; // Do not use mMeshChannels !!!
+// // 
+// // 				pAnim->mNodeName;
+// // 			}
+// // 		}
+
+		ret = true;
+	}
+	// Loading failed.
+	else
+	{
+		EVE_LOG_ERROR("File import failed, report: %s", eve::str::to_wstring(pImporter->GetErrorString()));
+		// TODO: create error window.
+	}
+
+	// Free ASSIMP importer.
+	delete pImporter;
 
 	return ret;
 }
@@ -97,6 +210,20 @@ bool eve::scene::Scene::add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axi
 void eve::scene::Scene::cb_display(void)
 {
 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::scene::Scene::setImportParam(eve::scene::SceneImportParam p_param, const std::string & p_value)
+{
+	auto & itr = m_mapImportParams.find(p_param);
+	EVE_ASSERT(itr != m_mapImportParams.end());
+	itr->second = p_value;
 }
 
 
