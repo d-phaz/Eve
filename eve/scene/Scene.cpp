@@ -18,6 +18,7 @@ eve::scene::Scene::Scene(void)
 	// Members init.
 	, m_mapImportParams()
 	, m_pVecMesh(nullptr)
+	, m_pShaderMesh(nullptr)
 {}
 
 
@@ -35,11 +36,22 @@ void eve::scene::Scene::init(void)
 	m_mapImportParams[SceneImportParam_Normals_Max_Angle]	= "80.0";
 
 	m_pVecMesh = new std::vector<eve::scene::Mesh*>();
+
+	// Mesh shader.
+	eve::ogl::FormatShader fmtShader;
+	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("SceneGBuffer.vert"));
+	fmtShader.frag = eve::io::load_program(eve::io::resource_path_glsl("SceneGBuffer.frag"));
+	m_pShaderMesh = this->create(fmtShader);
 }
 
 //=================================================================================================
 void eve::scene::Scene::release(void)
 {
+	// Shader.
+	m_pShaderMesh->requestRelease();
+	m_pShaderMesh = nullptr;
+
+	// Meshes.
 	eve::scene::Mesh * mesh = nullptr;
 	while (m_pVecMesh->size() > 0)
 	{
@@ -209,7 +221,12 @@ bool eve::scene::Scene::add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axi
 //=================================================================================================
 void eve::scene::Scene::cb_display(void)
 {
-
+	m_pShaderMesh->bind();
+	for (auto && itr : (*m_pVecMesh))
+	{
+		itr->oglDraw();
+	}
+	m_pShaderMesh->unbind();
 }
 
 

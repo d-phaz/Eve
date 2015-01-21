@@ -191,6 +191,23 @@ void eve::ogl::Uniform::oglRelease(void)
 
 
 //=================================================================================================
+void eve::ogl::Uniform::oglUpdateData(float * p_data)
+{
+	EVE_ASSERT(p_data);
+#if !defined(NDEBUG)
+	if (!m_bDynamic)
+	{
+		EVE_LOG_WARNING("Uniform buffer data updated at draw time but buffer declared as static: performance issue.");
+	}
+#endif
+
+	m_pData = p_data;
+	this->oglUpdate();
+}
+
+
+
+//=================================================================================================
 void eve::ogl::Uniform::bind(GLuint p_binding)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, p_binding, m_id);
@@ -198,9 +215,53 @@ void eve::ogl::Uniform::bind(GLuint p_binding)
 }
 
 //=================================================================================================
+void eve::ogl::Uniform::bindCamera(void)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_CAMERA, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::bindModel(void)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_MODEL, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::bindSkeleton(void)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_SKELETON, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+
+
+//=================================================================================================
 void eve::ogl::Uniform::unbind(GLuint p_binding)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, p_binding, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::unbind_camera(void)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_CAMERA, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::unbind_model(void)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_MODEL, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::unbind_skeleton(void)
+{
+	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_SKELETON, 0);
 	EVE_OGL_CHECK_ERROR;
 }
 
@@ -213,6 +274,8 @@ void eve::ogl::Uniform::unbind(GLuint p_binding)
 //=================================================================================================
 void eve::ogl::Uniform::setData(float * p_data)
 {
+	EVE_ASSERT(p_data);
+
 	m_pData = p_data;
 	this->requestOglUpdate();
 }

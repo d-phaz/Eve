@@ -168,12 +168,30 @@ namespace eve
 			/** \brief Deallocate and release OpenGL components. */
 			virtual void oglRelease(void);
 
+		public:
+			/** \brief Set buffer data immediately (needs active OpenGL context). */
+			void oglUpdateData(float * p_data);
+
 
 		public:
 			/** \brief Bind (activate). */
 			void bind(GLuint p_binding);
+			/** \brief Bind to camera transform buffer. */
+			void bindCamera(void);
+			/** \brief Bind to model transform buffer. */
+			void bindModel(void);
+			/** \brief Bind to skeleton transform buffer. */
+			void bindSkeleton(void);
+
+
 			/** \brief Unbind (deactivate). */
 			static void unbind(GLuint p_binding);
+			/** \brief Unbind (deactivate) from camera buffer. */
+			static void unbind_camera(void);
+			/** \brief Unbind (deactivate) from model buffer. */
+			static void unbind_model(void);
+			/** \brief Unbind (deactivate) from skeleton buffer. */
+			static void unbind_skeleton(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////

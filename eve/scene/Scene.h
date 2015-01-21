@@ -102,7 +102,11 @@ namespace eve
 			std::map<SceneImportParam, std::string>		m_mapImportParams;
 
 		protected:
-			std::vector<eve::scene::Mesh*> *			m_pVecMesh;		//!< Specifies Mesh objects vector.
+			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
+
+
+		protected:
+			eve::ogl::Shader *							m_pShaderMesh;		//!< Specifies mesh render shader.
 
 
 			//////////////////////////////////////

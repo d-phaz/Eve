@@ -50,13 +50,12 @@
 #include "eve/math/Includes.h"
 #endif
 
-#ifndef __EVE_OPENGL_CORE_VAO_H__
-#include "eve/ogl/core/Vao.h"
-#endif
-
 
 namespace eve { namespace scene { class Material; } }
 namespace eve { namespace scene { class Skeleton; } }
+
+namespace eve { namespace ogl { class Uniform; } }
+namespace eve { namespace ogl { class Vao; } }
 
 
 namespace eve
@@ -86,6 +85,8 @@ namespace eve
 			const aiMesh *			m_pAiMesh;				//!< Specifies Assimp mesh (shared pointer).
 			eve::scene::Material *	m_pMaterial;			//!< Specifies material.
 			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
+
+			eve::ogl::Uniform *		m_pUniformMatrix;		//!< Specifies uniform buffer containing model view matrix.
 
 
 			//////////////////////////////////////
