@@ -119,6 +119,8 @@ namespace eve
 
 		public:
 			/** \brief Event handler callback (pure virtual). */
+			virtual void cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_args) override;
+			/** \brief Event handler callback (pure virtual). */
 			virtual void cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_args) override;
 
 

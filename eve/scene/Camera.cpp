@@ -85,15 +85,75 @@ eve::scene::Camera::Camera(eve::scene::Scene * p_pParentScene, eve::scene::Objec
 //=================================================================================================
 bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis)
 {
+	EVE_ASSERT(p_pCamera);
+	EVE_ASSERT(p_pScene);
+
 	// Grab scene node. 
 	const aiNode * pRoot = p_pScene->mRootNode;
 	const aiNode * pNode = pRoot->FindNode(m_name.c_str());
 
 	// Test scene node.
-	bool ret = pNode != NULL;
+	bool ret = pNode != NULL; 
 	EVE_ASSERT(ret);
 
-	
+	if (ret)
+	{
+		m_pAiCamera = p_pCamera;
+
+		// Loaded camera data copy.
+		m_name = std::string(m_pAiCamera->mName.data);
+
+		m_aspectRatio	= m_pAiCamera->mAspect;
+		m_nearClip		= m_pAiCamera->mClipPlaneNear;
+		m_farClip		= m_pAiCamera->mClipPlaneFar;
+		m_frustumDepth	= m_farClip - m_nearClip;
+		m_fov			= eve::math::toDegrees(m_pAiCamera->mHorizontalFOV);
+
+		m_eyePoint.x	= m_pAiCamera->mPosition.x;
+		m_eyePoint.y	= m_pAiCamera->mPosition.y;
+		m_eyePoint.z	= m_pAiCamera->mPosition.z;
+
+		m_worldUp.x		= m_pAiCamera->mUp.x;
+		m_worldUp.y		= m_pAiCamera->mUp.y;
+		m_worldUp.z		= m_pAiCamera->mUp.z;
+
+		m_target.x		= m_pAiCamera->mLookAt.x;
+		m_target.y		= m_pAiCamera->mLookAt.y;
+		m_target.z		= m_pAiCamera->mLookAt.z;
+
+		
+		// Compute scene node matrix 
+		aiMatrix4x4 mat;
+		while (pNode != pRoot)
+		{
+			mat = pNode->mTransformation * mat;
+			pNode = pNode->mParent;
+		}
+		eve::math::TMatrix44<float> matrix(mat.a1, mat.b1, mat.c1, mat.d1
+										 , mat.a2, mat.b2, mat.c2, mat.d2
+										 , mat.a3, mat.b3, mat.c3, mat.d3
+										 , mat.a4, mat.b4, mat.c4, mat.d4);
+
+		// Correct Up Axis if needed.
+		if (p_upAxis == eve::Axis_Z)
+		{
+			matrix.fromZupToYup();
+		}
+
+		// Invert matrix to retrieve camera view coordinates.
+		matrix.invert();
+
+		// Extract camera data from model view matrix.
+		eve::math::get_look_at(matrix, m_eyePoint, m_target, m_worldUp);
+
+		// Compute camera matrix required data.
+		m_viewDirection		= (m_target - m_eyePoint).normalized();
+		m_orientation		= eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
+		m_centerOfInterest  = m_eyePoint.distance(m_target);	
+
+		// Members init.
+		this->init();
+	}	
 
 	return ret;
 }
@@ -134,38 +194,32 @@ void eve::scene::Camera::release(void)
 
 
 //=================================================================================================
+void eve::scene::Camera::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_args)
+{
+	switch (p_args.type)
+	{
+	 	case SceneObjectEventType_RotateX:				this->rotateX(p_args.value);				break;
+	 	case SceneObjectEventType_RotateY:				this->rotateY(p_args.value);				break;
+	 	case SceneObjectEventType_RotateZ:				this->rotateZ(p_args.value);				break;
+	 
+	 	case SceneObjectEventType_TranslateX:			this->translateX(p_args.value);				break;
+	 	case SceneObjectEventType_TranslateY:			this->translateY(p_args.value);				break;
+	 	case SceneObjectEventType_TranslateZ:			this->translateZ(p_args.value);				break;	 
+	 
+	 	default: EVE_ASSERT_FAILURE; break;
+	}
+}
+
+//=================================================================================================
 void eve::scene::Camera::cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_args)
 {
-// 	switch (p_args.type)
-// 	{
-// 	case SceneObjectEventType_RotateX:				this->rotateX(p_args.value);				break;
-// 	case SceneObjectEventType_RotateY:				this->rotateY(p_args.value);				break;
-// 	case SceneObjectEventType_RotateZ:				this->rotateZ(p_args.value);				break;
-// 
-// 	case SceneObjectEventType_TranslateX:			this->translateX(p_args.value);				break;
-// 	case SceneObjectEventType_TranslateY:			this->translateY(p_args.value);				break;
-// 	case SceneObjectEventType_TranslateZ:			this->translateZ(p_args.value);				break;
-// 
-// 	case SceneObjectEventType_ScaleX:				this->scaleX(p_args.value);					break;
-// 	case SceneObjectEventType_ScaleY:				this->scaleY(p_args.value);					break;
-// 	case SceneObjectEventType_ScaleZ:				this->scaleZ(p_args.value);					break;
-// 
-// 
-// 	case SceneObjectEventType_SetRotationX:			this->setRotationX(p_args.value);			break;
-// 	case SceneObjectEventType_SetRotationY:			this->setRotationY(p_args.value);			break;
-// 	case SceneObjectEventType_SetRotationZ:			this->setRotationZ(p_args.value);			break;
-// 
-// 	case SceneObjectEventType_SetTranslationX:		this->setTranslationX(p_args.value);		break;
-// 	case SceneObjectEventType_SetTranslationY:		this->setTranslationY(p_args.value);		break;
-// 	case SceneObjectEventType_SetTranslationZ:		this->setTranslationZ(p_args.value);		break;
-// 
-// 	case SceneObjectEventType_SetScaleX:			this->setScaleX(p_args.value);				break;
-// 	case SceneObjectEventType_SetScaleY:			this->setScaleY(p_args.value);				break;
-// 	case SceneObjectEventType_SetScaleZ:			this->setScaleZ(p_args.value);				break;
-// 
-// 
-// 	default: EVE_ASSERT_FAILURE; break;
-// 	}
+	switch (p_args.type)
+	{
+	case SceneCameraEventType_Fov:				this->setFov(p_args.value);				break;
+	//case SceneCameraEventType_Zoom:				this->zoom(p_args.value);				break; // TODO !!!
+
+	default: EVE_ASSERT_FAILURE; break;
+	}
 }
 
 

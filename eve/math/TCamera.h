@@ -517,7 +517,7 @@ eve::math::TCamera<T>::TCamera(void)
 	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
-	, m_matrixViewport(eve::math::TMatrix44<T>::zero())
+	, m_matrixViewport(eve::math::TMatrix44<T>::identity())
 
 	, m_frustumLeft(static_cast<T>(0.0))
 	, m_frustumRight(static_cast<T>(0.0))
@@ -559,7 +559,7 @@ eve::math::TCamera<T>::TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov
 	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
-	, m_matrixViewport(eve::math::TMatrix44<T>::zero())
+	, m_matrixViewport(eve::math::TMatrix44<T>::identity())
 
 	, m_frustumLeft(static_cast<T>(0.0))
 	, m_frustumRight(static_cast<T>(0.0))
@@ -645,19 +645,10 @@ void eve::math::TCamera<T>::initDefault(void)
 template <typename T>
 void eve::math::TCamera<T>::init(void)
 {
-// 	// Test values.
-// 	if (m_aspectRatio < static_cast<T>(0.000001)) {
-// 		m_aspectRatio = m_width / m_height;
-// 	}
-
-// 	// Init matrices.
-// 	m_matrixProjection.setToNull();
-// 	m_matrixProjectionInverse.setToNull();
-// 	m_matrixModelView.setToNull();
-// 	m_matrixModelViewInverse.setToNull();
-// 	m_matrixModelViewProjection.setToNull();
-// 	m_matrixViewport.setToIdentity();
-
+	// Test values.
+	if (m_aspectRatio < static_cast<T>(0.000001)) {
+		m_aspectRatio = m_width / m_height;
+	}
 
 	// Compute matrices.
 	this->calcMatrices();

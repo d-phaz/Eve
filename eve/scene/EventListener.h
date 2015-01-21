@@ -115,10 +115,10 @@ namespace eve
 		/**
 		* \class eve::scene::EventListenerSceneCamera
 		* \brief Abstract base scene camera event listener.
-		* \note extends eve::evt::Listener.
+		* \note extends eve::scene::EventListenerSceneObject.
 		*/
 		class EventListenerSceneCamera
-			: public eve::evt::Listener
+			: public eve::scene::EventListenerSceneObject
 		{
 			EVE_DISABLE_COPY(EventListenerSceneCamera);
 			EVE_PROTECT_DESTRUCTOR(EventListenerSceneCamera);
@@ -138,10 +138,10 @@ namespace eve
 		/**
 		* \class eve::scene::EventListenerSceneLight
 		* \brief Abstract base scene light event listener.
-		* \note extends eve::evt::Listener.
+		* \note extends eve::scene::EventListenerSceneObject.
 		*/
 		class EventListenerSceneLight
-			: public eve::evt::Listener
+			: public eve::scene::EventListenerSceneObject
 		{
 			EVE_DISABLE_COPY(EventListenerSceneLight);
 			EVE_PROTECT_DESTRUCTOR(EventListenerSceneLight);

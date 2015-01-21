@@ -107,13 +107,15 @@ void eve::scene::EventSenderSceneMaterial::notify(eve::scene::EventTypeSceneMate
 
 //=================================================================================================
 eve::scene::EventSenderSceneCamera::EventSenderSceneCamera(void)
-	: m_evt()
+	: eve::scene::EventSenderSceneObject()
+	, m_evt()
 {}
 
 //=================================================================================================
 void eve::scene::EventSenderSceneCamera::addListener(eve::scene::EventListenerSceneCamera * p_pListener)
 {
 	EVE_ASSERT(p_pListener);
+	eve::scene::EventSenderSceneObject::addListener(p_pListener);
 	eve::evt::add_listener(m_evt, p_pListener, &eve::scene::EventListenerSceneCamera::cb_evtSceneCamera);
 }
 
@@ -121,6 +123,7 @@ void eve::scene::EventSenderSceneCamera::addListener(eve::scene::EventListenerSc
 void eve::scene::EventSenderSceneCamera::removeListener(eve::scene::EventListenerSceneCamera * p_pListener)
 {
 	EVE_ASSERT(p_pListener);
+	eve::scene::EventSenderSceneObject::removeListener(p_pListener);
 	eve::evt::remove_listener(m_evt, p_pListener, &eve::scene::EventListenerSceneCamera::cb_evtSceneCamera);
 }
 
@@ -138,13 +141,15 @@ void eve::scene::EventSenderSceneCamera::notify(eve::scene::EventTypeSceneCamera
 
 //=================================================================================================
 eve::scene::EventSenderSceneLight::EventSenderSceneLight(void)
-	: m_evt()
+	: eve::scene::EventSenderSceneObject()
+	, m_evt()
 {}
 
 //=================================================================================================
 void eve::scene::EventSenderSceneLight::addListener(eve::scene::EventListenerSceneLight * p_pListener)
 {
 	EVE_ASSERT(p_pListener);
+	eve::scene::EventSenderSceneObject::addListener(p_pListener);
 	eve::evt::add_listener(m_evt, p_pListener, &eve::scene::EventListenerSceneLight::cb_evtSceneLight);
 }
 
@@ -152,6 +157,7 @@ void eve::scene::EventSenderSceneLight::addListener(eve::scene::EventListenerSce
 void eve::scene::EventSenderSceneLight::removeListener(eve::scene::EventListenerSceneLight * p_pListener)
 {
 	EVE_ASSERT(p_pListener);
+	eve::scene::EventSenderSceneObject::removeListener(p_pListener);
 	eve::evt::remove_listener(m_evt, p_pListener, &eve::scene::EventListenerSceneLight::cb_evtSceneLight);
 }
 

@@ -148,8 +148,10 @@ namespace eve
 		/**
 		* \class eve::scene::EventSenderSceneCamera
 		* \brief Base scene camera event sender.
+		* \note extends eve::scene::EventSenderSceneObject.
 		*/
 		class EventSenderSceneCamera
+			: public eve::scene::EventSenderSceneObject
 		{
 
 		protected:
@@ -180,8 +182,10 @@ namespace eve
 		/**
 		* \class eve::scene::EventSenderSceneLight
 		* \brief Base scene light event sender.
+		* \note extends eve::scene::EventSenderSceneObject.
 		*/
 		class EventSenderSceneLight
+			: public eve::scene::EventSenderSceneObject
 		{
 
 		protected:
