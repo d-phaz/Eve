@@ -18,6 +18,13 @@ eve::scene::EventListenerSceneObject::EventListenerSceneObject(void)
 
 
 //=================================================================================================
+eve::scene::EventListenerSceneMaterial::EventListenerSceneMaterial(void)
+	: eve::evt::Listener()
+{}
+
+
+
+//=================================================================================================
 eve::scene::EventListenerSceneCamera::EventListenerSceneCamera(void)
 	: eve::evt::Listener()
 {}

@@ -76,7 +76,7 @@ namespace eve
 
 			eve::evt::KeyEvent 									m_keyPressed;			//!< Key pressed event.
 			eve::evt::KeyEvent 									m_keyReleased;			//!< Key released event.
-			eve::evt::KeyEvent 									m_keyInput;				//!< Text input event.
+			eve::evt::TextEvent 								m_textInput;			//!< Text input event.
 
 			eve::evt::MouseEvent 								m_mousePassiveMotion;	//!< Mouse passive motion (no mouse button pressed) event.
 			eve::evt::MouseEvent 								m_mouseMotion;			//!< Mouse motion (mouse button pressed) event.
@@ -150,18 +150,15 @@ namespace eve
 			void disableEventsKey(void);
 
 			/** \brief Notify key pressed event to all listeners. */
-			void notifyKeyPressed(uint8_t p_key);
+			void notifyKeyPressed(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat);
 			/** \brief Notify key released event to all listeners. */
-			void notifyKeyReleased(uint8_t p_key);
-			/** \brief Notify text input event to all listeners. */
-			void notifyKeyInput(uint8_t p_key);
+			void notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier);
 
 			/**
 			* \brief Register listener class to key events.
 			* Listener class must provide key event handler methods using the following signatures:
 			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
-			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 			*/
 			template<class ListenerClass>
 			void registerEventsKey(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
@@ -170,10 +167,38 @@ namespace eve
 			* Listener class must provide key event handler methods using the following signatures:
 			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
-			*		void cb_evtKeyInput(eve::evt::KeyEventArgs & p_args)
 			*/
 			template<class ListenerClass>
 			void unregisterEventsKey(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////////
+			//		TEXT EVENTS
+			///////////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \! Enable text events dispatch. */
+			void enableEventsText(void);
+			/** \! Disable text events dispatch. */
+			void disableEventsText(void);
+
+			/** \brief Notify text input event to all listeners. */
+			void notifyTextInput(wchar_t p_text, eve::sys::KeyModifier p_modifier, bool p_bRepeat);
+
+			/**
+			* \brief Register listener class to text events.
+			* Listener class must provide text event handler methods using the following signatures:
+			*		void cb_evtTextInput(eve::evt::TextEventArgs & p_args)
+			*/
+			template<class ListenerClass>
+			void registerEventsText(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
+			/**
+			* \brief Unregister listener class from text events.
+			* Listener class must provide text event handler methods using the following signatures:
+			*		void cb_evtTextInput(eve::evt::TextEventArgs & p_args)
+			*/
+			template<class ListenerClass>
+			void unregisterEventsText(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -354,7 +379,6 @@ void eve::sys::Event::registerEventsKey(ListenerClass * p_pListener, int32_t p_p
 {
 	eve::evt::add_listener(m_keyPressed,	p_pListener, &ListenerClass::cb_evtKeyDown,		p_prio);
 	eve::evt::add_listener(m_keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
-	eve::evt::add_listener(m_keyInput,		p_pListener, &ListenerClass::cb_evtKeyInput,	p_prio);
 }
 
 //=================================================================================================
@@ -363,7 +387,26 @@ void eve::sys::Event::unregisterEventsKey(ListenerClass * p_pListener, int32_t p
 {
 	eve::evt::remove_listener(m_keyPressed,		p_pListener, &ListenerClass::cb_evtKeyDown,		p_prio);
 	eve::evt::remove_listener(m_keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
-	eve::evt::remove_listener(m_keyInput,		p_pListener, &ListenerClass::cb_evtKeyInput,	p_prio);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		TEXT EVENTS
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::sys::Event::registerEventsText(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::add_listener(m_textInput, p_pListener, &ListenerClass::cb_evtTextInput, p_prio);
+}
+
+//=================================================================================================
+template<class ListenerClass>
+void eve::sys::Event::unregisterEventsText(ListenerClass * p_pListener, int32_t p_prio)
+{
+	eve::evt::remove_listener(m_textInput, p_pListener, &ListenerClass::cb_evtTextInput, p_prio);
 }
 
 
@@ -434,6 +477,7 @@ void eve::sys::Event::registerEvents(ListenerClass * p_pListener, int32_t p_prio
 {
 	this->registerEventsFile(p_pListener, p_prio);
 	this->registerEventsKey(p_pListener, p_prio);
+	this->registerEventsText(p_pListener, p_prio);
 	this->registerEventsMouse(p_pListener, p_prio);
 	this->registerEventsWindow(p_pListener, p_prio);
 }
@@ -444,6 +488,7 @@ void eve::sys::Event::unregisterEvents(ListenerClass * p_pListener, int32_t p_pr
 {
 	this->unregisterEventsFile(p_pListener, p_prio);
 	this->unregisterEventsKey(p_pListener, p_prio);
+	this->unregisterEventsText(p_pListener, p_prio);
 	this->unregisterEventsMouse(p_pListener, p_prio);
 	this->unregisterEventsWindow(p_pListener, p_prio);
 }

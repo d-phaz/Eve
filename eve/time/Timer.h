@@ -72,11 +72,22 @@ namespace eve
 			int64_t						m_endTime;				//!< Timer end time in milliseconds.
 			int64_t						m_elapsed;				//!< Timer elapsed time.
 			int64_t						m_oldTime;
+			int64_t						m_i64PerformanceTimerStart;
+
 
 			double						m_invFrequency;			//!< Convenience inverse native frequency factor.
 
 			bool						m_bRunning;				//!< Timer running state.
 
+			float						m_fFPS;
+			float						m_fTargetFPS;
+
+			int							m_iFramesElapsed;
+			int							m_iFramesCompuation;
+			float						m_fTime1;
+			float						m_fTime2;
+			int64_t						m_fDiffTimeNextFrame;
+			float						m_fDiffTime;
 
 			//////////////////////////////////////
 			//				METHOD				//
@@ -128,6 +139,8 @@ namespace eve
 			/** \brief Stop and restart timer immediately. Returns elapsed time. */
 			int64_t restart(void);
 
+			void UpdateFPS(bool p_bincreaseFrame = true);
+
 
 			///////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
@@ -145,14 +158,20 @@ namespace eve
 			const int64_t getStartTime(void) const;
 			/** \brief Get timer end time in milliseconds. */
 			const int64_t getEndTime(void) const;
+			/** \brief Get FPS. */
+			const float getFPS(void) const;
+			/** \brief Get timer elapsed time to Next frame. */
+			const int64_t getTimeNextFrame(void) const;
 			/** \brief Get timer elapsed time in milliseconds. */
-			int64_t getElapsedTime(void);
-                        /** \brief Get timer diff time in milliseconds. */
-			int64_t getDiffTime(void);
-                        /** \brief Get timer diff delta time in milliseconds. */
-			int64_t getDiffTimeDelta(void);
-                        /** \brief Get timer diff delta time without actualisation in milliseconds. */
-			int64_t getDiffTimeDeltaWithoutactualisation(void);
+			const int64_t getElapsedTime(void);
+			/** \brief Get timer elapsed time in milliseconds. */
+			const int64_t getTime(void) const;
+			/** \brief Get timer diff time in milliseconds. */
+			const int64_t getDiffTime(void);
+			/** \brief Get timer diff delta time in milliseconds. */
+			const int64_t getDiffTimeDelta(void);
+			/** \brief Get timer diff delta time without actualisation in milliseconds. */
+			const int64_t getDiffTimeDeltaWithoutactualisation(void);
 
 		}; // class Timer
 
@@ -167,5 +186,7 @@ inline const bool eve::time::Timer::isStopped(void) const			{ return !m_bRunning
 //=================================================================================================
 inline const int64_t eve::time::Timer::getStartTime(void) const		{ return m_startTime;		}
 inline const int64_t eve::time::Timer::getEndTime(void) const		{ return m_endTime;			}
+inline const float eve::time::Timer::getFPS(void) const				{ return m_fFPS; }
+inline const int64_t eve::time::Timer::getTimeNextFrame(void) const	{ return m_fDiffTimeNextFrame; }
 
 #endif // __EVE_TIME_TIMER_H__

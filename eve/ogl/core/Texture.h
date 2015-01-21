@@ -59,14 +59,15 @@ namespace eve
 			: public eve::ogl::Format
 		{
 		public:
-			GLenum						format;		//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
-			GLsizei						width;		//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
-			GLsizei						height;		//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
-			GLenum						type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
+			GLint						internalFormat;		//!< Specifies the number of color components in the texture.
+			GLenum						format;				//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
+			GLsizei						width;				//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
+			GLsizei						height;				//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
+			GLenum						type;				//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
 			
-			GLint						filter;		//!< Specifies the filter used to interpolate texels.
-			GLint						wrap;		//!< Specifies texture wrap mode.
-			std::shared_ptr<GLvoid>		pixels;		//!< Specifies a pointer to the image data in memory.
+			GLint						filter;				//!< Specifies the filter used to interpolate texels.
+			GLint						wrap;				//!< Specifies texture wrap mode.
+			std::shared_ptr<GLvoid>		pixels;				//!< Specifies a pointer to the image data in memory.
 
 
 		public:
@@ -108,16 +109,19 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
-			GLuint						m_id;		//!< Specifies OpenGL unique texture ID.
+			GLuint						m_id;					//!< Specifies OpenGL unique texture ID.
 
-			GLenum						m_format;	//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
-			GLsizei						m_width;	//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
-			GLsizei						m_height;	//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
-			GLenum						m_type;		//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
-			std::shared_ptr<GLvoid>		m_pPixels;	//!< Specifies a pointer to the image data in memory.
+			GLint						m_internalFormat;		//!< Specifies the number of color components in the texture.
+			GLenum						m_format;				//!< Specifies the format of the texel data. The following symbolic values are accepted: GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
+			GLsizei						m_width;				//!< Specifies the width of the texture image. All implementations support 2D texture images that are at least 64 texels wide.
+			GLsizei						m_height;				//!< Specifies the height of the texture image. All implementations support 2D texture images that are at least 64 texels high.
+			GLenum						m_type;					//!< Specifies the data type of the texel data. The following symbolic values are accepted: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1.
+			std::shared_ptr<GLvoid>		m_pPixels;				//!< Specifies a pointer to the image data in memory.
 
-			GLint						m_filter;	//!< Specifies the filter used to interpolate texels.
-			GLint						m_wrap;		//!< Specifies texture wrap mode.
+			GLint						m_filter;				//!< Specifies the filter used to interpolate texels.
+			GLint						m_wrap;					//!< Specifies texture wrap mode.
+
+			bool						m_bSubUpdate;			//!< Specifies whether sub update is required.
 
 
 			//////////////////////////////////////
@@ -138,6 +142,9 @@ namespace eve
 			* Object attributes MUST be retrieved before init() call.
 			*/
 			virtual void setAttributes(eve::ogl::Format * p_format);
+		public:
+			/** \brief Update attributes from eve::ogl::Format. */
+			void updateAttributes(eve::ogl::Format * p_format);
 
 
 		protected:

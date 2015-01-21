@@ -8,7 +8,7 @@
 
 ###################################################################################################
 # NOTE:
-#	These are set in root/PRODUCT_INFO.cmake
+#	These are set in root/ProductInfo.cmake
 #
 #  		PRODUCT_VENDOR_NAME
 #  		PRODUCT_PRODUCT_NAME
@@ -66,387 +66,26 @@ if(OPTION_BUILD_ENABLE_OPENCL)
 endif()
 
 
-# App.
+# Files listing and folder creation.
 #################################################
-set( APP_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/app/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/app/App.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/app/App.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${APP_SRCS} )
-source_group( "Application" FILES ${APP_SRCS} )
-
-
-# Core.
-#################################################
-set( CORE_SRCS 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Flags.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Macro.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Renderer.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Renderer.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/core/SystemDefinition.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${CORE_SRCS} )
-source_group( "Core" FILES ${CORE_SRCS} )
-
-	
-# Directx11 Support.
-#################################################
-if( WIN32 AND OPTION_BUILD_ENABLE_DX11 )
-	set(DIRECTX11_CORE_SRCS
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/BlendStates.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/BlendStates.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ConstantBuffer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ConstantBuffer.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Context.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Context.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencil.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencil.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencilStates.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/DepthStencilStates.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Device.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Device.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Enums.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Formats.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Formats.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Includes.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/IndexBuffer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/IndexBuffer.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Macros.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RasterizerStates.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RasterizerStates.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RawBuffer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RawBuffer.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Renderer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/Renderer.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTarget.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTarget.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTargetStack.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/RenderTargetStack.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourceFactory.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourceFactory.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourcePool.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ResourcePool.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SamplerStates.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SamplerStates.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/StructuredBuffer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/StructuredBuffer.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderCompiler.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderCompiler.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderInstance.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/ShaderInstance.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SwapChain.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SwapChain.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/SwapChain.h
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/VertexBuffer.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/dx11/core/VertexBuffer.h
-		)
-	
-	set( SOURCE_FILES ${SOURCE_FILES} ${DIRECTX11_CORE_SRCS} )
-	source_group( "DirectX11 Core" FILES ${DIRECTX11_CORE_SRCS} )
-endif()
-
-
-# Event.
-#################################################
-set( EVENT_SRCS  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Event.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Includes.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Listener.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/Server.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TCallback.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TCallbackAuto.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegate.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TDelegateAbstract.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEvent.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TEventAbstract.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TQueue.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/evt/TStrategy.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${EVENT_SRCS} )
-source_group( "Event" FILES ${EVENT_SRCS} )
-
-
-# Files.
-#################################################
-set( FILES_SRCS 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/files/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/files/Utils.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/files/Utils.h  )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${FILES_SRCS} )
-source_group( "Files" FILES ${FILES_SRCS} )
-
-
-# Geometry.
-#################################################
-set( GEOM_SRCS  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Cube.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Includes.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Plane.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Plane.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/geom/Sphere.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${GEOM_SRCS} )
-source_group( "Geometry" FILES ${GEOM_SRCS} )
-
-
-# Input / Output.
-#################################################
-set( IO_SRCS  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/io/Utils.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${IO_SRCS} )
-source_group( "Input / Output" FILES ${IO_SRCS} )
-
-
-# Math core.
-#################################################
-set( MATH_CORE_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Math.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Simd.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix22.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix33.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TMatrix44.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TQuaternion.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector2.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector3.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/TVector4.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/core/Types.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${MATH_CORE_SRCS} )
-source_group( "Math Core" FILES ${MATH_CORE_SRCS} )
-
-
-# Math.
-#################################################
-set( MATH_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TBox.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TCamera.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMesh.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TRay.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${MATH_SRCS} )
-source_group( "Math" FILES ${MATH_SRCS} )
-
-
-# Memory.
-#################################################
-set( MEMORY_SRCS
-	 # ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Scoped.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${MEMORY_SRCS} )
-source_group( "Memory" FILES ${MEMORY_SRCS} )
-
-
-# Messaging.
-#################################################
-set( MESSAGING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Error.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Error.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Server.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/mess/Server.cpp )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${MESSAGING_SRCS} )
-source_group( "Messaging" FILES ${MESSAGING_SRCS} )
-
-
-# OpenCL.
-#################################################
-if(${OPENCL_FOUND})
-	set( OPENCL_CORE_SRCS
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.cpp 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/CommandQueue.h 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.cpp 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Context.h 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.cpp 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Debug.h 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/External.h
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.cpp 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Engine.h 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.cpp 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Kernel.h 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.cpp 
-		 ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Program.h )
-
-	# Generate Configuration.h
-    configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/core/Configuration.h.in ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/ocl/core/Configuration.h @ONLY )
-    set_source_files_properties( ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/ocl/core/Configuration.h PROPERTIES GENERATED TRUE )	
-    set( OPENCL_SRCS ${OPENCL_SRCS} ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/ocl/core/Configuration.h )
-
-	set( SOURCE_FILES ${SOURCE_FILES} ${OPENCL_CORE_SRCS} )
-	source_group( "OpenCL Core" FILES ${OPENCL_CORE_SRCS} )
-endif()
-
-
-# OpenGL core.
-#################################################
-set( OPENGL_CORE_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Debug.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Debug.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/External.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Fbo.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Fbo.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Macro.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Object.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Object.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Pbo.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Pbo.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Renderer.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Renderer.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Shader.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/ShaderManager.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Texture.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.h )
-	 
-set( OPENGL_CORE_SRCS 
-	 ${OPENGL_CORE_SRCS}
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/Context.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/Context.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/win32/PixelFormat.h  )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${OPENGL_CORE_SRCS} )
-source_group( "OpenGL Core" FILES ${OPENGL_CORE_SRCS} )
-
-
-# Scene.
-#################################################
-set( SCENE_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventSender.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Mesh.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Object.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Scene.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Scene.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Skeleton.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${SCENE_SRCS} )
-source_group( "Scene" FILES ${SCENE_SRCS} )
-
-
-# String.
-#################################################
-set( STRING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/str/Utils.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/str/Utils.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${STRING_SRCS} )
-source_group( "String" FILES ${STRING_SRCS} )
-
-
-# System.
-#################################################
-set( SYSTEM_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/Includes.h )
-	 
-set( SYSTEM_SRCS	
-	 ${SYSTEM_SRCS}  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Event.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Event.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Mouse.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Render.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/Render.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/View.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/shared/View.h )
-	 
-set( SYSTEM_SRCS
-	 ${SYSTEM_SRCS} 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Cursor.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Cursor.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Display.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Display.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Info.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Info.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Keyboard.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Keyboard.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/MessagePump.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/MessagePump.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Notification.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Notification.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Node.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Node.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${SYSTEM_SRCS} )
-source_group( "System" FILES ${SYSTEM_SRCS} )
-
-
-# Thread.
-#################################################
-set( THREADING_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Condition.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Condition.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Includes.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Fence.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Fence.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Lock.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Lock.h
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Mutex.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Mutex.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/ScopedFence.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/SpinLock.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Thread.h  
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/TPCQueue.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Utils.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Worker.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/thr/Worker.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${THREADING_SRCS} )
-source_group( "Threading" FILES ${THREADING_SRCS} )
-
-
-# Time.
-#################################################
-set( TIME_SRCS
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Absolute.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Clock.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Clock.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Relative.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Timer.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Timer.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.cpp
-	 ${CMAKE_CURRENT_SOURCE_DIR}/time/Utils.h )
-
-set( SOURCE_FILES ${SOURCE_FILES} ${TIME_SRCS} )
-source_group( "Time" FILES ${TIME_SRCS} )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/app/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/core/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/dx11/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/evt/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/files/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/geom/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/io/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/math/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/mem/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/mess/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/ocl/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/ogl/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/scene/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/str/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/sys/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/thr/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/time/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/xml/CMakeLists.txt )
 
 	
 # Visual Leak Detector.
@@ -463,7 +102,7 @@ endif()
 # Version.h
 #################################################
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/Version.h.in
-                ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h )
+				${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h )
 set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h )
 set_source_files_properties( ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Version.h PROPERTIES GENERATED true )
 			
@@ -471,7 +110,7 @@ set_source_files_properties( ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/Ver
 #################################################
 set( RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../resources" )
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/generated/External.h.in
-                ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h )
+				${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h )
 set( SOURCE_FILES ${SOURCE_FILES} ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h )
 set_source_files_properties( ${CMAKE_INCLUDE_OUTPUT_DIRECTORY}/eve/generated/External.h PROPERTIES GENERATED true )
 
@@ -516,23 +155,23 @@ if( APPLE )
 	endif( OPTION_BUILD_TYPE_RELEASE )
 
 	macro( find_required_library TARGET_LIB )
-        find_library( FOUND_LIB ${TARGET_LIB} )
+		find_library( FOUND_LIB ${TARGET_LIB} )
 
-        if( NOT FOUND_LIB )
-            message( FATAL_ERROR "${TARGET_LIB} not found" )
-        else()
-            message( "\n ${TARGET_LIB} found at ${FOUND_LIB} \n adding ${TARGET_LIB} to link. \n")
-        endif()
-        mark_as_advanced( FOUND_LIB )
-        
-        set( LIBS ${LIBS} ${FOUND_LIB} )
-    endmacro()
+		if( NOT FOUND_LIB )
+			message( FATAL_ERROR "${TARGET_LIB} not found" )
+		else()
+			message( "\n ${TARGET_LIB} found at ${FOUND_LIB} \n adding ${TARGET_LIB} to link. \n")
+		endif()
+		mark_as_advanced( FOUND_LIB )
+		
+		set( LIBS ${LIBS} ${FOUND_LIB} )
+	endmacro()
 
-    find_required_library( AppKit )
-    find_required_library( CFNetwork )
-    find_required_library( CoreFoundation )
-    find_required_library( CoreServices )
-    find_required_library( Security )
+	find_required_library( AppKit )
+	find_required_library( CFNetwork )
+	find_required_library( CoreFoundation )
+	find_required_library( CoreServices )
+	find_required_library( Security )
 endif()
 
 	
@@ -552,9 +191,9 @@ add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
 #################################################
 if( WIN32 )
 	if( OPTION_BUILD_TYPE_DEBUG )
-		set( FREEIMAGE_LIBS  glewd.lib  glewmxsd.lib )
+		set( FREEIMAGE_LIBS  FreeImaged.lib )
 	elseif( OPTION_BUILD_TYPE_RELEASE ) 
-		set( FREEIMAGE_LIBS  glew.lib  glewmxs.lib )		
+		set( FREEIMAGE_LIBS  FreeImage.lib )		
 	endif()
 	set( LIBS ${LIBS} ${FREEIMAGE_LIBS})
 endif()

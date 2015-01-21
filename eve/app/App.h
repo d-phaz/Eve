@@ -61,6 +61,10 @@
 #include "eve/thr/SpinLock.h"
 #endif 
 
+#ifndef __EVE_THREADING_SEMAPHORE_H__
+#include "eve/thr/Semaphore.h"
+#endif 
+
 #ifndef __EVE_TIME_TIMER_H__
 #include "eve/time/Timer.h"
 #endif
@@ -93,6 +97,7 @@ namespace eve
 		protected:
 			static eve::app::App *				m_p_instance;		//!< Class unique instance.
 			static eve::time::Timer *			m_p_timer;			//!< Application timer, launched at startup.
+			static eve::thr::Semaphore *		m_p_semaphore;			//!< Application timer, launched at startup.
 
 			bool								m_bRunning;			//!< Application main loop running state.
 		protected:
@@ -178,6 +183,9 @@ namespace eve
 
 			EVE_ASSERT(!eve::app::App::m_p_timer);
 			eve::app::App::m_p_timer = eve::time::Timer::create_ptr(true);
+
+			EVE_ASSERT(!eve::app::App::m_p_semaphore);
+			eve::app::App::m_p_semaphore = eve::thr::Semaphore::create_ptr();
 
 			eve::app::App::m_p_instance = EVE_CREATE_PTR(TApp);
 

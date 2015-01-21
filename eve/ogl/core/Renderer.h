@@ -168,7 +168,7 @@ namespace eve
 			eve::ogl::Pbo *		create(eve::ogl::FormatPbo & p_format);
 			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
 			eve::ogl::Shader *	create(eve::ogl::FormatShader & p_format);
-                        /** \brief Create and return new eve::ogl::ShaderManager pointer based on eve::ogl::FormatShaderAdvanced. */
+						/** \brief Create and return new eve::ogl::ShaderManager pointer based on eve::ogl::FormatShaderAdvanced. */
 			eve::ogl::ShaderManager * create(eve::ogl::FormatShaderAdvanced & p_format);
 			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
 			eve::ogl::Texture * create(eve::ogl::FormatTex & p_format);

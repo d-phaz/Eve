@@ -8,7 +8,7 @@
 
 ###################################################################################################
 # NOTE:
-#	These are set in root/PRODUCT_INFO.cmake
+#	These are set in root/ProductInfo.cmake
 #
 #  		PRODUCT_VENDOR_NAME
 #  		PROJECT_NAME
@@ -198,32 +198,52 @@ macro( add_project PROJECT_NAME_IN )
 	endif()
 	add_definitions( -DASSIMP_BUILD_BOOST_WORKAROUND )
 	
+	
+	# FreeImage.
+	#################################################
+	if( WIN32 )
+		if( OPTION_BUILD_TYPE_DEBUG )
+			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+				set( LIBS ${LIBS}  ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/FreeImaged.lib )
+			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+				set( LIBS ${LIBS}  ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/FreeImaged.lib )
+			endif()			
+		elseif( OPTION_BUILD_TYPE_RELEASE ) 
+			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+				set( LIBS ${LIBS}  ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/FreeImage.lib )
+			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+				set( LIBS ${LIBS}  ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/FreeImage.lib )
+			endif()	
+		endif()
+	endif()
+	add_definitions( -DFREEIMAGE_LIB )
+	
+	
 	# GLEW.
 	#################################################
 	if( WIN32 )
 		if( OPTION_BUILD_TYPE_DEBUG )
 			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-				set( GLEW_LIBS 
+				set( LIBS ${LIBS}  
 					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glewd.lib
 					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glewmxsd.lib )
 			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-				set( GLEW_LIBS 
+				set( LIBS ${LIBS}  
 					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewd.lib
 					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewmxsd.lib )
 			endif()			
 		elseif( OPTION_BUILD_TYPE_RELEASE ) 
 			if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-				set( GLEW_LIBS 
+				set( LIBS ${LIBS}  
 					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glew.lib
 					 ${BASE_SOURCE_PATH}/external/lib_x64/${CMAKE_CFG_INTDIR}/glewmxs.lib )
 			elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-				set( GLEW_LIBS 
+				set( LIBS ${LIBS}  
 					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glew.lib
 					 ${BASE_SOURCE_PATH}/external/lib_x86/${CMAKE_CFG_INTDIR}/glewmxs.lib )
 			endif()	
 		endif()
 		add_definitions( -DGLEW_STATIC=1 )
-		set( LIBS ${LIBS} ${GLEW_LIBS})
 	endif()
 
 	

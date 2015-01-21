@@ -157,12 +157,6 @@ uint32_t eve::sys::MessagePump::wparam2unicode(WPARAM p_wParam)
 LRESULT CALLBACK eve::sys::MessagePump::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	eve::sys::MessagePump * handler = eve::sys::MessagePump::get_handler(hWnd);
-	//if (!handler)
-	//{
-	//	EVE_LOG_ERROR("Unregistered window message target.");
-	//	return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
-	//}
-
 	return handler->cb_wndProc(hWnd, uMsg, wParam, lParam);
 }
 
@@ -211,11 +205,11 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 		case WM_RBUTTONDBLCLK:	
 		case WM_XBUTTONDBLCLK:	res = this->handleMouseDoubleClick(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
+		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:		res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
-		//case WM_SYSKEYDOWN:	res = this->handleKeyDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
+		case WM_SYSKEYUP:
 		case WM_KEYUP:			res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
-		//case WM_SYSKEYUP:		res = this->handleKeyUp(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
 		case WM_DEADCHAR:	
 		case WM_SYSDEADCHAR:
@@ -273,11 +267,16 @@ LRESULT eve::sys::MessagePump::handleEraseBackground(HWND p_hWnd, UINT p_uMsg, W
 
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
-{
+{	
 	bool filter;	
 	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
-	if(!filter) {
-		m_pEvent->notifyKeyPressed(translated);
+	if(!filter) 
+	{
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
+		int32_t	repeats	= HIWORD(p_lParam);
+		bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
+
+		m_pEvent->notifyKeyPressed(translated, modifier, repeat);
 	}
 
 	return 0;
@@ -286,11 +285,13 @@ LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	bool filter;
-	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
-	if (!filter) {
-		m_pEvent->notifyKeyReleased(translated);
-	}
+ 	bool filter;
+ 	eve::sys::Key translated = eve::sys::translate_key(p_hWnd, p_uMsg, p_wParam, p_lParam, filter);
+ 	if (!filter) 
+	{
+		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
+		m_pEvent->notifyKeyReleased(translated, modifier);
+ 	}
 
 	return 0;
 }
@@ -298,7 +299,13 @@ LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wP
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	m_pEvent->notifyKeyInput(this->wparam2unicode(p_wParam));
+	wchar_t ch		= (TCHAR)p_wParam;
+	eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
+	int32_t	repeats	= HIWORD(p_lParam);
+	bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
+
+	m_pEvent->notifyTextInput(ch, modifier, repeat);
+
 	return 0;
 }
 

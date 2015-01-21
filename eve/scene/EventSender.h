@@ -114,6 +114,38 @@ namespace eve
 
 
 		/**
+		* \class eve::scene::EventSenderSceneMaterial
+		* \brief Base scene material event sender.
+		*/
+		class EventSenderSceneMaterial
+		{
+
+		protected:
+			eve::scene::EventSceneMaterial		m_evt;
+
+
+			EVE_DISABLE_COPY(EventSenderSceneMaterial);
+			EVE_PROTECT_DESTRUCTOR(EventSenderSceneMaterial);
+
+		protected:
+			/** \brief Class constructor. */
+			EventSenderSceneMaterial(void);
+
+		public:
+			/** \brief Add event listener. */
+			void addListener(eve::scene::EventListenerSceneMaterial * p_pListener);
+			/** \brief Remove event listener. */
+			void removeListener(eve::scene::EventListenerSceneMaterial * p_pListener);
+
+		public:
+			/** \brief Notify event. */
+			void notify(eve::scene::EventTypeSceneMaterial p_type, float p_value);
+
+		}; // class EventSenderSceneMaterial
+
+
+
+		/**
 		* \class eve::scene::EventSenderSceneCamera
 		* \brief Base scene camera event sender.
 		*/

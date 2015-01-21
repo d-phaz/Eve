@@ -90,6 +90,29 @@ namespace eve
 
 
 		/**
+		* \class eve::scene::EventListenerSceneMaterial
+		* \brief Abstract base scene material event listener.
+		* \note extends eve::evt::Listener.
+		*/
+		class EventListenerSceneMaterial
+			: public eve::evt::Listener
+		{
+			EVE_DISABLE_COPY(EventListenerSceneMaterial);
+			EVE_PROTECT_DESTRUCTOR(EventListenerSceneMaterial);
+
+		protected:
+			/** \brief Class constructor. */
+			EventListenerSceneMaterial(void);
+
+		public:
+			/** \brief Event handler callback (pure virtual). */
+			virtual void cb_evtSceneMaterial(eve::scene::EventArgsSceneMaterial & p_args) = 0;
+
+		}; // class EventListenerSceneMaterial
+
+
+
+		/**
 		* \class eve::scene::EventListenerSceneCamera
 		* \brief Abstract base scene camera event listener.
 		* \note extends eve::evt::Listener.

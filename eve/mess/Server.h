@@ -41,6 +41,10 @@
 #include "eve/files/Includes.h"
 #endif
 
+#ifndef __EVE_STRING_UTILS_H__
+#include "eve/str/Utils.h"
+#endif
+
 #ifndef __EVE_THREADING_INCLUDES_H__
 #include "eve/thr/Includes.h"
 #endif

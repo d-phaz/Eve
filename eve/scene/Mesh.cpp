@@ -32,15 +32,32 @@
 // Main header
 #include "eve/scene/Mesh.h"
 
+#ifndef __EVE_SCENE_SCENE_H__
+#include "eve/scene/Scene.h"
+#endif
+
+#ifndef __EVE_SCENE_SKELETON_H__
+#include "eve/scene/Skeleton.h"
+#endif
+
+#ifndef __EVE_SCENE_MATERIAL_H__
+#include "eve/scene/Material.h"
+#endif
+
 
 //=================================================================================================
-eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Object * p_pParent, const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
+eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentScene
+											  , eve::scene::Object *	p_pParent
+											  , const aiMesh *			p_pMesh
+											  , const aiScene *			p_pScene
+											  , eve::Axis				p_upAxis
+											  , const std::string &		p_fullPath)
 {
-	EVE_ASSERT(p_pParent);
+	EVE_ASSERT(p_pParentScene);
 	EVE_ASSERT(p_pMesh);
 	EVE_ASSERT(p_pScene);
 
-	eve::scene::Mesh * ptr = new eve::scene::Mesh(p_pParent);
+	eve::scene::Mesh * ptr = new eve::scene::Mesh(p_pParentScene, p_pParent);
 	if (!ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis, p_fullPath))
 	{
 		EVE_RELEASE_PTR(ptr);
@@ -52,19 +69,17 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Object * p_pParent, 
 
 
 //=================================================================================================
-eve::scene::Mesh::Mesh(eve::scene::Object * p_pParent)
+eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent)
 	// Inheritance
-	: eve::scene::Object(p_pParent)
+	: eve::scene::Object(p_pParentScene, p_pParent, SceneObject_Mesh)
 	, eve::scene::EventListenerSceneObject()
 	, eve::math::TMesh<float>()
 
 	// Members init
 	, m_pVao(nullptr)
 	, m_pAiMesh(nullptr)
-
-	, m_numBones(0)
-	, m_pBoneIndices(nullptr)
-	, m_pWeights(nullptr)
+	, m_pMaterial(nullptr)
+	, m_pSkeleton(nullptr)
 {}
 
 
@@ -91,13 +106,13 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	{
 		if (!m_pAiMesh->HasTextureCoords(0))
 		{
-			//NATIVESYSTEM::createErrorWindow("Loading error.", "Unable to load selected scene mesh, Texture Coordinates are missing.");
+			EVE_LOG_ERROR("Unable to load selected scene mesh, Texture Coordinates are missing.");
 			ret = false;
 		}
 
 		if (!m_pAiMesh->HasNormals())
 		{
-			//NATIVESYSTEM::createErrorWindow("Loading info.", "Unable to load selected scene mesh, Normals Coordinates are missing.");
+			EVE_LOG_ERROR("Unable to load selected scene mesh, Normals Coordinates are missing.");
 			ret = false;
 		}
 	}
@@ -105,12 +120,15 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	// If scene node found and mesh contains required data.
 	if (ret)
 	{
+		// In scene mesh name. 
+		m_name = std::string(m_pAiMesh->mName.C_Str());
+		std::wstring wname = eve::str::to_wstring(m_name);
+
+
 		/////////////////////////////////////////
 		//	MESH
 		/////////////////////////////////////////
-
-		// In scene mesh name. 
-		m_name = std::string(m_pAiMesh->mName.C_Str());
+		EVE_LOG_PROGRESS("Loading Mesh %s vertices.", wname.c_str());
 
 		// Mesh base data.
 		int32_t	numVertices = m_pAiMesh->mNumVertices;
@@ -170,7 +188,7 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		//m_pBox = gl::Box3DCornered::create_ptr(Vec3f(min_x, min_y, min_z), Vec3f(max_x, max_y, max_z), UILayoutConfigColor::STAGE_BOUNDING_BOX);
 
 		// Run threw indices and copy data.
-		GLuint * ind = pIndices - 1;
+		GLuint * ind	 = pIndices - 1;
 		aiFace * ai_face = m_pAiMesh->mFaces - 1;
 		for (int32_t j = 0; j < numFaces; j++)
 		{
@@ -188,69 +206,14 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		format.perVertexNumNormal	= 3;
 		format.vertices.reset(pVertices);
 		format.indices.reset(pIndices);
-
-		// TODO
-		// Create VAO from scene renderer.
-
-
-		/////////////////////////////////////////
-		//	SKELETON
-		/////////////////////////////////////////
-
-		// Test mesh bones exist.
-		if (m_pAiMesh->HasBones())
-		{
-			int32_t numBones = m_pAiMesh->mNumBones;
-			m_numBones		 = numBones;
-
-			// Allocate arrays memory.
-			m_pBoneIndices = (eve::vec4ui*)malloc(sizeof(eve::vec4ui) * numVertices);
-			m_pWeights	   = (eve::vec4f*)malloc(sizeof(eve::vec4f) * numVertices);
-
-			// Read bone indices and weights for bone animation.
-			std::vector<aiVertexWeight> * vTempWeightsPerVertex = new std::vector<aiVertexWeight>[numVertices];
-
-			const aiBone * Bone = nullptr;
-			for (int32_t j = 0; j < numBones; j++)
-			{
-				Bone = m_pAiMesh->mBones[j];
-
-				for (uint32_t b = 0; b < Bone->mNumWeights; b++) {
-					vTempWeightsPerVertex[Bone->mWeights[b].mVertexId].push_back(aiVertexWeight(j, Bone->mWeights[b].mWeight));
-				}
-			}
-
-			for (int32_t j = 0; j<numVertices; j++)
-			{
-				m_pBoneIndices[j] = eve::vec4ui::zero();
-				m_pWeights[j]	  = eve::vec4f::zero();
-
-				if (vTempWeightsPerVertex[j].size() > 4) {
-					EVE_LOG_ERROR("Mesh has invalid bone weights, no animation loaded.");
-				}
-				for (uint32_t k = 0; k < vTempWeightsPerVertex[j].size(); k++)
-				{
-					m_pBoneIndices[j][k] = vTempWeightsPerVertex[j][k].mVertexId;
-					m_pWeights[j][k]	 = vTempWeightsPerVertex[j][k].mWeight;
-				}
-			}
-
-			if (vTempWeightsPerVertex)
-			{
-				delete[] vTempWeightsPerVertex;
-			}
-
-			m_objectType = SceneObject_Mesh_Animated;
-		}
-		else
-		{
-			m_objectType = SceneObject_Mesh;
-		}
+		// Create VAO.
+		m_pVao = m_pScene->create(format);
 
 
 		/////////////////////////////////////////
 		//	MATRIX
 		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s matrices.", wname.c_str());
 
 		aiMatrix4x4 mat;
 		while (pNode != pRoot)
@@ -275,7 +238,7 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		eve::math::TVec3<float> target, worldUp;
 		eve::math::get_look_at(matrix, m_translation, target, worldUp);
 
-		eve::math::TVec3<float> viewDirection = (target - m_translation).normalized();
+		eve::math::TVec3<float>		  viewDirection = (target - m_translation).normalized();
 		eve::math::TQuaternion<float> orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-viewDirection, worldUp)).normalized();
 
 		// Grab rotation.
@@ -287,49 +250,25 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 		/////////////////////////////////////////
 		//	MATERIAL
 		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s materials.", wname.c_str());
+		aiMaterial * material = nullptr;
+		if (p_pScene->HasMaterials())
+		{
+			material = p_pScene->mMaterials[m_pAiMesh->mMaterialIndex];
+		}
+		m_pMaterial = eve::scene::Material::create_ptr(m_pScene, this, material, p_fullPath);
 
-// 		// Create material
-// 		m_pMaterial = scene::ItemMaterial::create_ptr(this);
-// 
-// 		// Grab material
-// 		if (p_pScene->HasMaterials())
-// 		{
-// 			aiMaterial * mat = p_pScene->mMaterials[m_pMesh->mMaterialIndex];
-// 
-// 			aiString path;
-// 			std::string folderPath = NATIVESYSTEM::removeFileNameFromPath(p_fullPath);
-// 			std::string fullPath;
-// 
-// 			if (aiGetMaterialString(mat, AI_MATKEY_TEXTURE_DIFFUSE(0), &path)/*mat->GetTexture(aiTextureType_DIFFUSE, 0, &path)*/ == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexDiffuse(fullPath);
-// 			}
-// 
-// 			if (mat->GetTexture(aiTextureType_NORMALS, 0, &path) == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexNormal(fullPath);
-// 			}
-// 
-// 			if (mat->GetTexture(aiTextureType_EMISSIVE, 0, &path) == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexEmissive(fullPath);
-// 			}
-// 
-// 			if (mat->GetTexture(aiTextureType_OPACITY, 0, &path) == AI_SUCCESS)
-// 			{
-// 				fullPath = folderPath + path.data;
-// 				m_pMaterial->setTexOpacity(fullPath);
-// 			}
-// 
-// 			float shininess = 0.0f;
-// 			aiGetMaterialFloat(mat, AI_MATKEY_SHININESS_STRENGTH, &shininess); // AI_MATKEY_SHININESS
-// 			m_pMaterial->setShininess(shininess);
-// 		}
 
+		/////////////////////////////////////////
+		//	SKELETON ANIMATIONS
+		/////////////////////////////////////////
+		EVE_LOG_PROGRESS("Loading Mesh %s skeleton animation(s).", wname.c_str());
+		m_pSkeleton = eve::scene::Skeleton::create_ptr(p_pMesh, p_pScene, p_upAxis);
+
+		
+		// Complete.
 		this->init();
+		EVE_LOG_PROGRESS("Mesh %s loaded.", wname.c_str());
 	}
 
 	return ret;
@@ -354,8 +293,8 @@ void eve::scene::Mesh::release(void)
 	// Do not delete -> shared pointer.
 	m_pAiMesh = nullptr;
 
-	EVE_RELEASE_PTR_C_SAFE(m_pBoneIndices);
-	EVE_RELEASE_PTR_C_SAFE(m_pWeights);
+	EVE_RELEASE_PTR(m_pMaterial);
+	EVE_RELEASE_PTR(m_pSkeleton);
 
 	// Call parent class
 	eve::scene::Object::release();
@@ -404,5 +343,29 @@ void eve::scene::Mesh::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_ar
 //=================================================================================================
 void eve::scene::Mesh::oglDraw(void)
 {
+	m_pMaterial->bind();
 	m_pVao->draw();
+	m_pMaterial->unbind();
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::scene::Mesh::setMaterial(eve::scene::Material * p_pMaterial)
+{
+	eve::scene::Material * temp = m_pMaterial;
+	m_pMaterial = p_pMaterial;
+	EVE_RELEASE_PTR(temp);
+}
+
+//=================================================================================================
+void eve::scene::Mesh::setSkeleton(eve::scene::Skeleton * p_pSkeleton)
+{
+	eve::scene::Skeleton * temp = m_pSkeleton;
+	m_pSkeleton = p_pSkeleton;
+	EVE_RELEASE_PTR(temp);
 }

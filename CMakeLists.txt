@@ -98,74 +98,9 @@ set( CMAKE_INCLUDE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/include )
 # USING_LLVM_CLANG 		: Mac OSX 10.8 and higher (XCode) compiler
 include( ${BASE_SOURCE_PATH}/CMake/CheckCompiler.cmake )
 	
-
-# Visual Studio configuration.
+# Project compiler and linker flags.
 ###################################################################################################
-if( WIN32 )
-
-	if( ${CMAKE_SIZEOF_VOID_P} EQUAL 4 )
-		# /Gr = fastCall
-		# /Ob2 = inline functions expansion
-		
-		set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Gr /Ob2" )
-		list( REMOVE_DUPLICATES CMAKE_CXX_FLAGS_RELEASE )
-		
-		set( CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Gr /Ob2" )
-		list( REMOVE_DUPLICATES CMAKE_C_FLAGS_RELEASE )
-		
-		mark_as_advanced( CMAKE_CXX_FLAGS_RELEASE 
-						  CMAKE_C_FLAGS_RELEASE )
-		
-		# Linker
-		set( CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
-		list( REMOVE_DUPLICATES CMAKE_EXE_LINKER_FLAGS_DEBUG )	
-		set( CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
-		list( REMOVE_DUPLICATES CMAKE_SHARED_LINKER_FLAGS_DEBUG )	
-		set( CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
-		list( REMOVE_DUPLICATES CMAKE_MODULE_LINKER_FLAGS_DEBUG )
-
-		mark_as_advanced( CMAKE_EXE_LINKER_FLAGS_DEBUG 
-						  CMAKE_SHARED_LINKER_FLAGS_DEBUG 
-						  CMAKE_MODULE_LINKER_FLAGS_DEBUG )
-						  
-		set( CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /SAFESEH:NO")
-		list( REMOVE_DUPLICATES CMAKE_EXE_LINKER_FLAGS_RELEASE )	
-		set( CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /SAFESEH:NO")
-		list( REMOVE_DUPLICATES CMAKE_SHARED_LINKER_FLAGS_RELEASE )	
-		set( CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /SAFESEH:NO")
-		list( REMOVE_DUPLICATES CMAKE_MODULE_LINKER_FLAGS_RELEASE )
-
-		mark_as_advanced( CMAKE_EXE_LINKER_FLAGS_RELEASE 
-						  CMAKE_SHARED_LINKER_FLAGS_RELEASE 
-						  CMAKE_MODULE_LINKER_FLAGS_RELEASE )	
-	
-		# VS 2013 Edit And Continue is not available for x64.
-		set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI" )
-		list( REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG )
-		set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /ZI" )
-		list( REMOVE_DUPLICATES CMAKE_C_FLAGS_DEBUG )
-	
-		mark_as_advanced( CMAKE_CXX_FLAGS_DEBUG 
-						  CMAKE_C_FLAGS_DEBUG )
-	endif()
-
-	# Multi Proc Build
-	if(NOT OPTION_BUILD_TYPE_DEBUG)	
-		option(OPTION_BUILD_USE_MP "Use /MP compiler flag." ON)
-		if(OPTION_BUILD_USE_MP)
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-			set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
-		endif()
-	endif()
-	
-	mark_as_advanced( CMAKE_CXX_FLAGS 
-					  CMAKE_C_FLAGS )
-
-	# Warning Level 3 for Debug builds
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W3" )
-	list( REMOVE_DUPLICATES CMAKE_CXX_FLAGS_DEBUG )
-	
-endif()
+include( ${BASE_SOURCE_PATH}/ProjectFlags.cmake )
 
 
 # Visual Leak Detector.
@@ -197,7 +132,7 @@ endif()
 
 ###################################################################################################
 # NOTE:
-#	These are set in root/PRODUCT_INFO.cmake
+#	These are set in root/ProductInfo.cmake
 #
 #  		PRODUCT_VENDOR_NAME
 #  		PRODUCT_PRODUCT_NAME
@@ -210,10 +145,10 @@ endif()
 #		PRODUCT_WEBSITE
 #  		PRODUCT_SUPPORT_EMAIL
 ###################################################################################################
-include( ${BASE_SOURCE_PATH}/PRODUCT_INFO.cmake )
+include( ${BASE_SOURCE_PATH}/ProductInfo.cmake )
 
 
-# Versioning (GIT and PRODUCT_INFO).
+# Versioning (GIT).
 ###################################################################################################
 include( ${CMAKE_CURRENT_SOURCE_DIR}/CMake/modules/GetGitRevisionDescription.cmake )
 git_describe( GIT_VERSION )
@@ -252,14 +187,14 @@ if( WIN32 )
 	# reference : http://msdn.microsoft.com/en-us/library/aa985974.aspx	
 	add_definitions( -D_SCL_SECURE_NO_WARNINGS )	
 	
-	# /D_SECURE_SCL=0 : Disables checked iterators. Disabling this feature can improve performance when using iterators, at the expense of less protection against unsafe iterator use.
-	# Generally there isn’t too much of a performance difference 
-	# (a Visual C++ lead states that they measured about a 6% difference in this feedback / bug page) so it may be worth leaving it on most of the time.
-	# reference : http://msdn.microsoft.com/en-us/library/aa985896.aspx
-	OPTION( OPTION_BUILD_SECURE_SCL "Activate _SECURE_SCL=0 and _HAS_ITERATOR_DEBUGGING=0 optimizations" OFF )
-	if( OPTION_BUILD_SECURE_SCL )
-		add_definitions( -D_SECURE_SCL=0 -D_HAS_ITERATOR_DEBUGGING=0 )
-	endif()
+	# # /D_SECURE_SCL=0 : Disables checked iterators. Disabling this feature can improve performance when using iterators, at the expense of less protection against unsafe iterator use.
+	# # Generally there isn’t too much of a performance difference 
+	# # (a Visual C++ lead states that they measured about a 6% difference in this feedback / bug page) so it may be worth leaving it on most of the time.
+	# # reference : http://msdn.microsoft.com/en-us/library/aa985896.aspx
+	# option( OPTION_BUILD_SECURE_SCL "Activate _SECURE_SCL=0 and _HAS_ITERATOR_DEBUGGING=0 optimizations" ON )
+	# if( OPTION_BUILD_SECURE_SCL )
+		# add_definitions( -D_SECURE_SCL=0 -D_HAS_ITERATOR_DEBUGGING=0 )
+	# endif()
 	
 	# __STDC_LIMIT_MACROS and __STDC_CONSTANT_MACROS are a workaround to allow C++ programs to use macros specified in the C99 standard that aren't in the C++ standard. 
 	# The macros, such as UINT8_MAX, INT64_MIN, and INT32_C() may be defined already in C++ applications in other ways. 

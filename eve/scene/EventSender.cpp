@@ -75,6 +75,37 @@ void eve::scene::EventSenderSceneObject::notify(eve::scene::EventTypeSceneObject
 
 
 //=================================================================================================
+eve::scene::EventSenderSceneMaterial::EventSenderSceneMaterial(void)
+	: m_evt()
+{}
+
+//=================================================================================================
+void eve::scene::EventSenderSceneMaterial::addListener(eve::scene::EventListenerSceneMaterial * p_pListener)
+{
+	EVE_ASSERT(p_pListener);
+	eve::evt::add_listener(m_evt, p_pListener, &eve::scene::EventListenerSceneMaterial::cb_evtSceneMaterial);
+}
+
+//=================================================================================================
+void eve::scene::EventSenderSceneMaterial::removeListener(eve::scene::EventListenerSceneMaterial * p_pListener)
+{
+	EVE_ASSERT(p_pListener);
+	eve::evt::remove_listener(m_evt, p_pListener, &eve::scene::EventListenerSceneMaterial::cb_evtSceneMaterial);
+}
+
+//=================================================================================================
+void eve::scene::EventSenderSceneMaterial::notify(eve::scene::EventTypeSceneMaterial p_type, float p_value)
+{
+	eve::scene::EventArgsSceneMaterial args;
+	args.type  = p_type;
+	args.value = p_value;
+
+	eve::evt::notify_event(m_evt, args);
+}
+
+
+
+//=================================================================================================
 eve::scene::EventSenderSceneCamera::EventSenderSceneCamera(void)
 	: m_evt()
 {}

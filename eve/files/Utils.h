@@ -66,17 +66,39 @@ namespace eve
 		*/
 		std::wstring remove_file_name(const std::wstring & p_path);
 		/**
+		* \brief remove file name from path.
+		* \param p_path target path as std::string.
+		* \return new path as std::string.
+		*/
+		std::string remove_file_name(const std::string & p_path);
+
+
+		/**
 		* \brief remove extension from file name.
 		* \param p_name target file name as std::wstring.
 		* \return new name as std::wstring.
 		*/
 		std::wstring remove_extension(const std::wstring & p_name);
 		/**
+		* \brief remove extension from file name.
+		* \param p_name target file name as std::string.
+		* \return new name as std::string.
+		*/
+		std::string remove_extension(const std::string & p_name);
+
+
+		/**
 		* \brief get file name from path.
 		* \param p_path target path as std::wstring.
 		* \return file name as std::wstring.
 		*/
 		std::wstring get_file_name(const std::wstring & p_path);
+		/**
+		* \brief get file name from path.
+		* \param p_path target path as std::string.
+		* \return file name as std::string.
+		*/
+		std::string get_file_name(const std::string & p_path);
 
 
 //#if defined(EVE_OS_WIN)

@@ -42,10 +42,17 @@
 #include "eve/ogl/core/win32/Context.h"
 #endif
 
+#ifndef __EVE_THREADING_SEMAPHORE_H__
+#include "eve/thr/Semaphore.h"
+#endif
+
+#include <FreeImage/FreeImage.h>
+
 
 //=================================================================================================
 eve::app::App *		eve::app::App::m_p_instance = nullptr;
 eve::time::Timer *	eve::app::App::m_p_timer	= nullptr;
+eve::thr::Semaphore * eve::app::App::m_p_semaphore = nullptr;
 
 //=================================================================================================
 
@@ -64,6 +71,9 @@ void eve::app::App::release_instance(void)
 
 	EVE_ASSERT(m_p_timer);
 	EVE_RELEASE_PTR(m_p_timer);
+
+	EVE_ASSERT(m_p_semaphore);
+	EVE_RELEASE_PTR(m_p_semaphore);
 }
 
 
@@ -102,6 +112,11 @@ void eve::app::App::init(void)
 	}
 #endif
 
+	// FreeImage.
+#if defined(FREEIMAGE_LIB)
+	FreeImage_Initialise();
+#endif
+
 	// View container.
 	m_pVecViews = new std::vector<eve::sys::View*>();
 	// Fence.
@@ -109,6 +124,9 @@ void eve::app::App::init(void)
 
 	// Register to application events.
 	eve::evt::register_events_application(this);
+
+	// initial lock of application
+	m_p_semaphore->lock();
 }
 
 //=================================================================================================
@@ -130,6 +148,11 @@ void eve::app::App::release(void)
 
 		// Fence.
 		EVE_RELEASE_PTR(m_pFence);
+
+	// FreeImage.
+#if defined(FREEIMAGE_LIB)
+	FreeImage_DeInitialise();
+#endif
 
 		// Release Win32 COM.
 #if defined(EVE_OS_WIN)
@@ -154,11 +177,8 @@ void eve::app::App::runApp(void)
 {
 	m_bRunning = true;
 
-	do 
-	{
-		::Sleep(30);
-	} while (m_bRunning);
-	
+	m_p_semaphore->lock();
+
 	EVE_LOG_INFO("Exiting application main loop.");
 	this->release();
 }
@@ -208,5 +228,6 @@ bool eve::app::App::releaseView(eve::sys::View * p_pView)
 //=================================================================================================
 void eve::app::App::cb_evtApplicationExit(eve::evt::EventArgs & p_arg)
 {
+	m_p_semaphore->unlock();
 	m_bRunning = false;
 }

@@ -34,13 +34,14 @@
 
 
 //=================================================================================================
-eve::scene::Object::Object(eve::scene::Object * p_pParent)
+eve::scene::Object::Object(eve::scene::Scene * p_pScene, eve::scene::Object * p_pParent, eve::scene::SceneObjectType p_type)
 	// Inheritance
 	: eve::mem::Pointer()
 
 	// Members init
 	, m_name()
-	, m_objectType(eve::scene::SceneObject_UNDEFINED)
+	, m_objectType(p_type)
+	, m_pScene(p_pScene)
 	, m_pParent(p_pParent)
 	, m_bVisible(true)
 	, m_bLocked(false)
@@ -61,6 +62,7 @@ void eve::scene::Object::release(void)
 	m_bLocked	 = false;
 	m_objectType = eve::scene::SceneObject_UNDEFINED;
 
-	// Do not delete -> shared pointer.
+	// Do not delete -> shared pointers.
+	m_pScene  = nullptr;
 	m_pParent = nullptr;
 }
