@@ -407,7 +407,7 @@ void Example::initThreadedData(void)
 	m_pRender = EVE_CREATE_PTR(RenderGL);
 	this->registerRenderer(m_pRender);
 
-	m_pWindow->toggleFullScreen();
+	//m_pWindow->toggleFullScreen();
 	m_pRender->setSize(m_pWindow->getWidth(), m_pWindow->getHeight());
 
 }

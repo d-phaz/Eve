@@ -57,6 +57,7 @@ std::string eve::io::resource_path_glsl(const std::string & p_name)
 	return ret;
 }
 
+//=================================================================================================
 std::string eve::io::resource_path_image(const std::string & p_name)
 {
 	std::string ret = EVE_RESOURCES_PATH;

@@ -61,25 +61,41 @@ namespace eve
 	//		Typedefs
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	typedef eve::math::TBox<float>			boxf;
-	typedef eve::math::TBox<double>			boxd;
-
-	typedef eve::math::TRay<float>			rayf;
-	typedef eve::math::TRay<double>			rayd;
-
-
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	//		Typedefs, convenience pointer classes.
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-
 	namespace math
 	{
-		typedef eve::math::TCamera<float>		Cameraf;
-		typedef eve::math::TCamera<double>		Camerad;
+		typedef eve::math::TBox<double>			Boxd;
+		typedef eve::math::TBox<float>			Boxf;
+#if defined(EVE_PRECISION_DOUBLE)
+		typedef eve::math::TBox<double>			Box;
+#else
+		typedef eve::math::TBox<float>			Box;
+#endif
 
-		typedef eve::math::TMesh<float>			Meshf;
+		typedef eve::math::TRay<double>			Rayd;
+		typedef eve::math::TRay<float>			Rayf;
+#if defined(EVE_PRECISION_DOUBLE)
+		typedef eve::math::TRay<double>			Ray;
+#else
+		typedef eve::math::TRay<float>			Ray;
+#endif
+
+
+		typedef eve::math::TCamera<double>		Camerad;
+		typedef eve::math::TCamera<float>		Cameraf;
+#if defined(EVE_PRECISION_DOUBLE)
+		typedef eve::math::TCamera<double>		Camera;
+#else
+		typedef eve::math::TCamera<float>		Camera;
+#endif
+
+
 		typedef eve::math::TMesh<double>		Meshd;
+		typedef eve::math::TMesh<float>			Meshf;
+#if defined(EVE_PRECISION_DOUBLE)
+		typedef eve::math::TMesh<double>		Mesh;
+#else
+		typedef eve::math::TMesh<float>			Mesh;
+#endif
 
 	} // namespace math
 

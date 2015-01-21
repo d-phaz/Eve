@@ -26,12 +26,12 @@ eve::scene::EventListenerSceneMaterial::EventListenerSceneMaterial(void)
 
 //=================================================================================================
 eve::scene::EventListenerSceneCamera::EventListenerSceneCamera(void)
-	: eve::evt::Listener()
+	: eve::scene::EventListenerSceneObject()
 {}
 
 
 
 //=================================================================================================
 eve::scene::EventListenerSceneLight::EventListenerSceneLight(void)
-	: eve::evt::Listener()
+	: eve::scene::EventListenerSceneObject()
 {}

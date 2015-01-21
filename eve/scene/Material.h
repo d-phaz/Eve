@@ -181,15 +181,15 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE void eve::scene::Material::setDiffuse(float p_coeff)				{ m_diffuse			= p_coeff; }
-EVE_FORCE_INLINE void eve::scene::Material::setSpecular(float p_coeff)				{ m_specular		= p_coeff; }
-EVE_FORCE_INLINE void eve::scene::Material::setShininess(float p_coeff)				{ m_shininess		= p_coeff; }
-EVE_FORCE_INLINE void eve::scene::Material::setFresnelExponent(float p_coeff)		{ m_fresnelExponent = p_coeff; }
+EVE_FORCE_INLINE void eve::scene::Material::setDiffuse(float p_coeff)				{ m_diffuse			= p_coeff;	}
+EVE_FORCE_INLINE void eve::scene::Material::setSpecular(float p_coeff)				{ m_specular		= p_coeff;	}
+EVE_FORCE_INLINE void eve::scene::Material::setShininess(float p_coeff)				{ m_shininess		= p_coeff;	}
+EVE_FORCE_INLINE void eve::scene::Material::setFresnelExponent(float p_coeff)		{ m_fresnelExponent = p_coeff;	}
 
 //=================================================================================================
-EVE_FORCE_INLINE const float eve::scene::Material::getDiffuse(void) const			{ return m_diffuse; }
-EVE_FORCE_INLINE const float eve::scene::Material::getSpecular(void) const			{ return m_specular; }
-EVE_FORCE_INLINE const float eve::scene::Material::getShininess(void) const			{ return m_shininess; }
-EVE_FORCE_INLINE const float eve::scene::Material::getFresnelExponent(void) const	{ return m_fresnelExponent; }
+EVE_FORCE_INLINE const float eve::scene::Material::getDiffuse(void) const			{ return m_diffuse;				}
+EVE_FORCE_INLINE const float eve::scene::Material::getSpecular(void) const			{ return m_specular;			}
+EVE_FORCE_INLINE const float eve::scene::Material::getShininess(void) const			{ return m_shininess;			}
+EVE_FORCE_INLINE const float eve::scene::Material::getFresnelExponent(void) const	{ return m_fresnelExponent;		}
 
 #endif // __EVE_SCENE_MATERIAL_H__

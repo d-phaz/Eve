@@ -7,6 +7,8 @@
 # Files listing.
 #################################################
 set( SRCS
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.cpp
+	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Camera.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.cpp
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/Event.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/scene/EventListener.cpp

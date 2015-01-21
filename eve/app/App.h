@@ -87,9 +87,6 @@ namespace eve
 
 			friend class eve::mem::Pointer;
 
-			template<typename TApp>
-			friend App * creatClass(void);
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -97,9 +94,10 @@ namespace eve
 		protected:
 			static eve::app::App *				m_p_instance;		//!< Class unique instance.
 			static eve::time::Timer *			m_p_timer;			//!< Application timer, launched at startup.
-			static eve::thr::Semaphore *		m_p_semaphore;			//!< Application timer, launched at startup.
+			static eve::thr::Semaphore *		m_p_semaphore;		//!< Application main run loop semaphore.
 
 			bool								m_bRunning;			//!< Application main loop running state.
+		
 		protected:
 			std::vector<eve::sys::View*> *		m_pVecViews;		//!< Application view(s) container.
 			eve::thr::SpinLock *				m_pFence;			//!< Application view(s) container protection fence.
@@ -111,6 +109,12 @@ namespace eve
 
 			EVE_DISABLE_COPY(App);
 			EVE_PROTECT_DESTRUCTOR(App);
+
+			
+		public:
+			/** \brief Create application pointer from template type. */
+			template<class TApp>
+			friend App * create_class(void);
 
 			
 		public:
@@ -174,24 +178,6 @@ namespace eve
 
 		}; // class App
 
-//=================================================================================================
-		template<typename TApp>
-		App * creatClass(void)
-		{
-			EVE_ASSERT((std::is_base_of<eve::app::App, TApp>::value));
-			EVE_ASSERT(!eve::app::App::m_p_instance);
-
-			EVE_ASSERT(!eve::app::App::m_p_timer);
-			eve::app::App::m_p_timer = eve::time::Timer::create_ptr(true);
-
-			EVE_ASSERT(!eve::app::App::m_p_semaphore);
-			eve::app::App::m_p_semaphore = eve::thr::Semaphore::create_ptr();
-
-			eve::app::App::m_p_instance = EVE_CREATE_PTR(TApp);
-
-			return eve::app::App::m_p_instance;
-		}
-
 	} // namespace app
 
 } // namespace eve
@@ -201,6 +187,24 @@ namespace eve
 * \brief Convenience macro to access application instance. 
 */
 #define EveApp	eve::app::App::get_instance()
+
+//=================================================================================================
+		template<typename TApp>
+eve::app::App * eve::app::create_class(void)
+		{
+			EVE_ASSERT((std::is_base_of<eve::app::App, TApp>::value));
+			EVE_ASSERT(!eve::app::App::m_p_instance);
+
+			EVE_ASSERT(!eve::app::App::m_p_timer);
+			eve::app::App::m_p_timer = eve::time::Timer::create_ptr(true);
+
+			EVE_ASSERT(!eve::app::App::m_p_semaphore);
+	eve::app::App::m_p_semaphore = EVE_CREATE_PTR(eve::thr::Semaphore);
+
+			eve::app::App::m_p_instance = EVE_CREATE_PTR(TApp);
+
+			return eve::app::App::m_p_instance;
+		}
 
 
 //=================================================================================================
@@ -230,18 +234,25 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 */
 #define EveAppElapsedTime	eve::app::App::get_elapsed_time()
 
-#define EVE_APPLICATION( VIEW  ) \
-	EVE_APPLICATION_CUSTOM( VIEW , eve::app::App )	
 
-#if defined(EVE_OS_WIN)
+
 /**
 * \def EVE_APPLICATION
 * \brief Convenience macro to create application entry point and launch application.
 */
+#define EVE_APPLICATION( VIEW  ) \
+	EVE_APPLICATION_CUSTOM( VIEW , eve::app::App )	
+
+
+#if defined(EVE_OS_WIN)
+/**
+* \def EVE_APPLICATION_CUSTOM
+* \brief Convenience macro to create application entry point and launch application from taget class.
+*/
 #define EVE_APPLICATION_CUSTOM( VIEW , APP )																	\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
-		eve::app::App *	pApp = eve::app::creatClass<APP>(); \
+		eve::app::App *	pApp = eve::app::create_class<APP>(); \
 		pApp->addView<VIEW>();																			\
 		pApp->runApp();																					\
 		eve::app::App::release_instance();																\
@@ -250,13 +261,13 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 
 #elif defined(EVE_OS_DARWIN)
 /** 
-* \def EVE_APPLICATION 
-* \brief Convenience macro to create application entry point and launch application. 
+* \def EVE_APPLICATION_CUSTOM
+* \brief Convenience macro to create application entry point and launch application from taget class.
 */
 #define EVE_APPLICATION_CUSTOM( VIEW , APP )												\
 	int main(int argc, char * const argv[]) 								\
 	{																		\
-		eve::app::App *	pApp = eve::app::creatClass<APP>(); \			\
+		eve::app::App *	pApp = eve::app::create_class<APP>(); \			\
 		pApp->addView<VIEW>();												\
 		pApp->runApp();														\
 		eve::app::App::release_instance();									\

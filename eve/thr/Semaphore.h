@@ -85,13 +85,6 @@ namespace eve
 			EVE_DISABLE_COPY(Semaphore)
 			EVE_PROTECT_DESTRUCTOR(Semaphore)
 
-		public:
-			/**
-			* \brief Create and return new pointer.
-			* \param p_start decide if the timer shall start at creation time.
-			*/
-			static Semaphore * create_ptr(void);
-
 		private:
 			/** \brief Class constructor. */
 			explicit Semaphore(void);
@@ -104,9 +97,9 @@ namespace eve
 
 
 		public:
-			/** \brief Acquire the lock exclusively. */
+			/** \brief Acquire the lock exclusively. (pure virtual) */
 			virtual void lock(void) override;
-			/** \brief Release an exclusive lock. */
+			/** \brief Release an exclusive lock. (pure virtual) */
 			virtual void unlock(void) override;
 
 		}; // class Semaphore

@@ -68,7 +68,7 @@ namespace eve
 		protected:
 			std::vector<eve::core::Renderer*> *		m_pVecRenderers;	//!< Render Engine(s) container.
 
-			eve::time::Timer *							m_pTimerRender;			//!< compute FPS.
+			eve::time::Timer *						m_pTimerRender;		//!< Specifies timer used to compute FPS.
 
 
 			//////////////////////////////////////

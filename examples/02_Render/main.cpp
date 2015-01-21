@@ -115,7 +115,7 @@ void RenderGL::init(void)
 	m_pUniform = this->create(fmtUniform);
 
 	eve::ogl::FormatTex fmtTex;
-	std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\1.jpg"));
+	std::string path("C:\\Users\\aleister_doe\\Desktop\\import\\1.jpg");
 	if (!eve::io::load_image(path, &fmtTex))
 	{
 		EVE_LOG_ERROR("Unable to load file %s", path.c_str());
@@ -123,7 +123,7 @@ void RenderGL::init(void)
 	}
 	m_pTexture = this->create(fmtTex);
 
-	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_textured(eve::vec3f::zero(), eve::vec3f::one() * 10.0f);
+	eve::ogl::FormatVao fmtVao  = eve::geom::create_cube_textured(eve::vec3f::zero(), eve::vec3f::one() * 5.0f);
 	m_pVao = this->create(fmtVao);
 }
 
@@ -154,11 +154,11 @@ void RenderGL::cb_display(void)
 	m_pShader->bind();
 	m_pUniform->bind(1);
 
-	m_pTexture->bind(0);
+	m_pTexture->bind(1);
 
 	m_pVao->draw();
 
-	m_pTexture->unbind(0);
+	m_pTexture->unbind(1);
 
 	m_pUniform->unbind(1);
 	m_pShader->unbind();

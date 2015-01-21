@@ -142,6 +142,8 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
+			explicit TCamera(void);
+			/** \brief Class constructor. */
 			explicit TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov);
 			/** \brief Copy constructor. */
 			explicit TCamera(const TCamera<T> & p_parent);
@@ -287,8 +289,9 @@ namespace eve
 			/** \brief Set world up. */
 			void setWorldUp(const eve::math::TVec3<T> & p_worldUp);
 
+
 		public:
-                        /** \brief Get Rigth Vector. */
+            /** \brief Get Right Vector. */
 			const eve::math::TVec3<T> getRightVector(void) const;
 
 
@@ -482,6 +485,48 @@ eve::math::TCamera<T> * eve::math::TCamera<T>::create_ptr(const eve::math::TCame
 
 //=================================================================================================
 template <typename T>
+eve::math::TCamera<T>::TCamera(void)
+	// Inheritance
+	: eve::mem::Pointer()
+
+	// Members init
+	, m_width(static_cast<T>(800.0))
+	, m_height(static_cast<T>(600.0))
+
+	, m_eyePoint(eve::math::TVec3<T>::zero())
+	, m_target(eve::math::TVec3<T>::zero())
+	, m_worldUp(eve::math::TVec3<T>::zero())
+
+	, m_viewDirection(eve::math::TVec3<T>::zero())
+	, m_orientation(eve::math::TQuaternion<T>::identity())
+	, m_centerOfInterest(static_cast<T>(0.0))
+
+	, m_fov(static_cast<T>(65.0))
+	, m_aspectRatio(static_cast<T>(0.0))
+	, m_nearClip(static_cast<T>(1.0))
+	, m_farClip(static_cast<T>(1000.0))
+	, m_frustumDepth(static_cast<T>(0.0))
+	, m_lensShift(eve::math::TVec2<T>::zero())
+
+	, m_U(eve::math::TVec3<T>::xAxis())
+	, m_V(eve::math::TVec3<T>::yAxis())
+	, m_W(eve::math::TVec3<T>::zero())
+
+	, m_matrixProjection(eve::math::TMatrix44<T>::zero())
+	, m_matrixProjectionInverse(eve::math::TMatrix44<T>::zero())
+	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
+	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
+	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
+	, m_matrixViewport(eve::math::TMatrix44<T>::identity())
+
+	, m_frustumLeft(static_cast<T>(0.0))
+	, m_frustumRight(static_cast<T>(0.0))
+	, m_frustumTop(static_cast<T>(0.0))
+	, m_frustumBottom(static_cast<T>(0.0))
+{}
+
+//=================================================================================================
+template <typename T>
 eve::math::TCamera<T>::TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov)
 	// Inheritance
 	: eve::mem::Pointer()
@@ -514,7 +559,7 @@ eve::math::TCamera<T>::TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov
 	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
-	, m_matrixViewport(eve::math::TMatrix44<T>::zero())
+	, m_matrixViewport(eve::math::TMatrix44<T>::identity())
 
 	, m_frustumLeft(static_cast<T>(0.0))
 	, m_frustumRight(static_cast<T>(0.0))
@@ -600,19 +645,10 @@ void eve::math::TCamera<T>::initDefault(void)
 template <typename T>
 void eve::math::TCamera<T>::init(void)
 {
-// 	// Test values.
-// 	if (m_aspectRatio < static_cast<T>(0.000001)) {
-// 		m_aspectRatio = m_width / m_height;
-// 	}
-
-// 	// Init matrices.
-// 	m_matrixProjection.setToNull();
-// 	m_matrixProjectionInverse.setToNull();
-// 	m_matrixModelView.setToNull();
-// 	m_matrixModelViewInverse.setToNull();
-// 	m_matrixModelViewProjection.setToNull();
-// 	m_matrixViewport.setToIdentity();
-
+	// Test values.
+	if (m_aspectRatio < static_cast<T>(0.000001)) {
+		m_aspectRatio = m_width / m_height;
+	}
 
 	// Compute matrices.
 	this->calcMatrices();
@@ -1039,6 +1075,9 @@ void eve::math::TCamera<T>::setWorldUp(const eve::math::TVec3<T> & p_worldUp)
 	this->calcModelView();
 }
 
+
+
+//=================================================================================================
 template<typename T>
 EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getRightVector(void) const { return m_U; }
 

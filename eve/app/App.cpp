@@ -54,7 +54,6 @@ eve::app::App *		eve::app::App::m_p_instance = nullptr;
 eve::time::Timer *	eve::app::App::m_p_timer	= nullptr;
 eve::thr::Semaphore * eve::app::App::m_p_semaphore = nullptr;
 
-//=================================================================================================
 
 //=================================================================================================
 eve::app::App * eve::app::App::get_instance(void)
@@ -125,7 +124,7 @@ void eve::app::App::init(void)
 	// Register to application events.
 	eve::evt::register_events_application(this);
 
-	// initial lock of application
+	// Initial application lock.
 	m_p_semaphore->lock();
 }
 

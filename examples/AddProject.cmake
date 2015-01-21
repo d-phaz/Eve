@@ -52,8 +52,7 @@ macro( add_project PROJECT_NAME_IN )
 	${BASE_SOURCE_PATH}
 	${CMAKE_INCLUDE_OUTPUT_DIRECTORY}
 	${BASE_SOURCE_PATH}/external/include
-	${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN}
-	)
+	${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_IN} )
 
 	# Create executable
 	set( exe_name "${PROJECT_NAME}_exe" )

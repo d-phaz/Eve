@@ -175,8 +175,10 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Set texture data from host memory pointer. */
-			void setPixels(std::shared_ptr<GLvoid> p_pPixels);
+			/** \brief Set texture data from host memory pointer, adds the object as a shared owner, increasing the use_count. */
+			void setPixels(const std::shared_ptr<GLvoid> & p_pPixels);
+			/** \brief Set texture data from host memory pointer, transfer ownership without altering the use_count. */
+			void setPixels(const std::shared_ptr<GLvoid> && p_pPixels);
 
 
 		public:

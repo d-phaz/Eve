@@ -139,7 +139,8 @@ namespace eve
 			/** \brief Stop and restart timer immediately. Returns elapsed time. */
 			int64_t restart(void);
 
-			void UpdateFPS(bool p_bincreaseFrame = true);
+			/** \brief Update FPS. */
+			void updateFPS(bool p_bincreaseFrame = true);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////

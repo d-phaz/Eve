@@ -98,6 +98,7 @@ set( CMAKE_INCLUDE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/include )
 # USING_LLVM_CLANG 		: Mac OSX 10.8 and higher (XCode) compiler
 include( ${BASE_SOURCE_PATH}/CMake/CheckCompiler.cmake )
 	
+
 # Project compiler and linker flags.
 ###################################################################################################
 include( ${BASE_SOURCE_PATH}/ProjectFlags.cmake )
@@ -119,7 +120,7 @@ endif()
 ###################################################################################################
 option( OPTION_BUILD_ENABLE_OPENCL "Enable OpenCL build." OFF)
 
-if( OPTION_BUILD_TYPE_DEBUG )
+if( OPTION_BUILD_ENABLE_OPENCL AND OPTION_BUILD_TYPE_DEBUG )
 	option( OPTION_BUILD_ENABLE_OPENCL_BENCHMARK "Enable OpenCL benchmark." ON)
 else()
 	option( OPTION_BUILD_ENABLE_OPENCL_BENCHMARK "Enable OpenCL benchmark." OFF)
@@ -128,6 +129,10 @@ endif()
 if(OPTION_BUILD_ENABLE_OPENCL_BENCHMARK)
 	set(EVE_OPENCL_ENABLE_BENCHMARK ON)
 endif()
+
+# Double precision option.
+###################################################################################################
+option( OPTION_BUILD_DOUBLE_PRECISION "Enable double precision build." OFF)
 
 
 ###################################################################################################

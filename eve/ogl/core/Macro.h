@@ -34,19 +34,32 @@
 #define __EVE_OPENGL_CORE_MACRO_H__
 
 
-// Required OpenGL version
+// Required OpenGL version.
 #define EVE_WINDOWS_OPENGL_MAJOR_VERSION 4
 #define EVE_WINDOWS_OPENGL_MINOR_VERSION 2
 
 
-// Buffer offset
+// Buffer offset.
 #define EVE_OGL_BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 
-// Attributes
+// Attributes.
 #define EVE_OGL_ATTRIBUTE_POSITION  0
 #define EVE_OGL_ATTRIBUTE_DIFFUSE   4
 #define EVE_OGL_ATTRIBUTE_NORMAL    7
+
+
+// Uniform buffer indices.
+#define  EVE_OGL_TRANSFORM_CAMERA		1
+#define  EVE_OGL_TRANSFORM_MODEL		2
+#define  EVE_OGL_TRANSFORM_SKELETON		3
+
+
+// GLSL texture sampler2D indices.
+#define  EVE_OGL_SAMPLER_DIFFUSE		1
+#define  EVE_OGL_SAMPLER_NORMAL			2
+#define  EVE_OGL_SAMPLER_EMISSIVE		3
+#define  EVE_OGL_SAMPLER_OPACITY		4
 
 
 #endif // __EVE_OPENGL_CORE_MACRO_H__

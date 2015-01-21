@@ -705,8 +705,7 @@ template <class T> EVE_FORCE_INLINE void eve::math::TVec4<T>::normalize(void)
 	w *= invS;
 }
 
-template<typename T>
-EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::normalize(const eve::math::TVec4<T> & p_v)
+template<class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::normalize(const eve::math::TVec4<T> & p_v)
 {
 	T length = eve::math::sqrt(p_v.x*p_v.x + p_v.y*p_v.y + p_v.z*p_v.z ++ p_v.w*p_v.w);
 

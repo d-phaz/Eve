@@ -118,7 +118,7 @@ namespace eve
 			/** \brief Update scale matrix. */
 			void updateMatrixScale(void);
 			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
-			void updateMatrixModelView(void);
+			virtual void updateMatrixModelView(void);
 
 
 		public:
@@ -220,13 +220,13 @@ namespace eve
 
 		public:
 			/** \brief Get rotation matrix. */
-			const eve::math::TMatrix44<T> & getMatrixRotation(void) const;
+			eve::math::TMatrix44<T> & getMatrixRotation(void) const;
 			/** \brief Get translation matrix. */
-			const eve::math::TMatrix44<T> & getMatrixTranslation(void) const;
+			eve::math::TMatrix44<T> & getMatrixTranslation(void) const;
 			/** \brief Get scale matrix. */
-			const eve::math::TMatrix44<T> & getMatrixScale(void) const;
+			eve::math::TMatrix44<T> & getMatrixScale(void) const;
 			/** \brief Get model view matrix. */
-			const eve::math::TMatrix44<T> & getMatrixModelView(void) const;
+			eve::math::TMatrix44<T> & getMatrixModelView(void) const;
 
 		}; // class TMesh
 
@@ -560,9 +560,9 @@ void eve::math::TMesh<T>::setScaleZ(float p_value)
 
 
 //=================================================================================================
-template <typename T> EVE_FORCE_INLINE const eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixRotation(void) const		{ return m_matrixRotation;		}
-template <typename T> EVE_FORCE_INLINE const eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixTranslation(void) const	{ return m_matrixTranslation;	}
-template <typename T> EVE_FORCE_INLINE const eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixScale(void) const			{ return m_matrixScale;			}
-template <typename T> EVE_FORCE_INLINE const eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixModelView(void) const		{ return m_matrixModelView;		}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixRotation(void) const		{ return m_matrixRotation;		}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixTranslation(void) const	{ return m_matrixTranslation;	}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixScale(void) const		{ return m_matrixScale;			}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixModelView(void) const	{ return m_matrixModelView;		}
 
 #endif // __EVE_MATH_TMESH_H__

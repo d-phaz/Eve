@@ -48,6 +48,7 @@ struct aiLight;
 struct aiMesh;
 struct aiScene;
 
+namespace eve { namespace scene { class Camera; } }
 namespace eve { namespace scene { class Mesh; } }
 
 
@@ -55,6 +56,26 @@ namespace eve
 {
 	namespace scene
 	{
+		/** 
+		* \enum eve::scene::SceneImportParam
+		* \brief Enumerates ASSIMP import parameters.
+		*/
+		enum SceneImportParam
+		{
+			SceneImportParam_UNDEFINED		= 0,
+
+			SceneImportParam_Up_Axis,
+
+			SceneImportParam_Flip_UV,
+
+			SceneImportParam_Generate_Normals,
+			SceneImportParam_Normals_Max_Angle,
+
+			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+			_SceneImportParam_Force32Bit	= INT_MAX
+
+		}; // enum SceneImportParam
+
 
 		/**
 		* \class eve::scene::Scene
@@ -73,7 +94,21 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			std::vector<eve::scene::Mesh*> *			m_pVecMesh;		//!< Specifies Mesh objects vector.
+			//<! Import parameters map.
+			//<!	Parameters are							Values are			Note
+			//!<	SceneImportParam_Up_Axis				"X" / "Y" / "Z"
+			//<!	SceneImportParam_Flip_UV				"Y" / "N"
+			//<!	SceneImportParam_Generate_Normals		"Y" / "N"
+			//<!	SceneImportParam_Normals_Max_Angle		"0.0... 175.0"		Used only when Generate_Normals is set to "Y"
+			std::map<SceneImportParam, std::string>		m_mapImportParams;
+
+		protected:
+			std::vector<eve::scene::Camera*> *			m_pVecCamera;		//!< Specifies Camera objects vector.
+			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
+
+
+		protected:
+			eve::ogl::Shader *							m_pShaderMesh;		//!< Specifies mesh render shader.
 
 
 			//////////////////////////////////////
@@ -107,12 +142,23 @@ namespace eve
 
 		public:
 			/** \brief Add new mesh item based on ASSIMP aiMesh pointer \a p_pMesh. */
-			virtual bool add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			virtual bool add(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			/** \brief Add new mesh item based on ASSIMP aiCamera pointer \a p_pCamera. */
+			virtual bool add(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
 		public:
 			/** \brief Draw on screen callback. (pure virtual) */
 			virtual void cb_display(void) override;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Assign value to target import parameter. */
+			void setImportParam(eve::scene::SceneImportParam p_param, const std::string & p_value);
 
 		}; // class Scene
 

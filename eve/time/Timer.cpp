@@ -32,6 +32,11 @@
 // Main header
 #include "eve/time/Timer.h"
 
+#ifndef __EVE_MATH_INCLUDES_H__
+#include "eve/math/Includes.h"
+#endif
+
+
 //=================================================================================================
 eve::time::Timer * eve::time::Timer::create_ptr(bool p_start)
 {
@@ -112,14 +117,13 @@ void eve::time::Timer::init(void)
 	// The frequency of the performance counter is fixed at system boot and is consistent across all processors. 
 	// Therefore, the frequency need only be queried upon application initialization, and the result can be cached.
 	int64_t nativeFreq;
-	 if (::QueryPerformanceFrequency((::LARGE_INTEGER *) &nativeFreq) == 0) {
+	 if (::QueryPerformanceFrequency(reinterpret_cast<::LARGE_INTEGER*>(&nativeFreq)) == 0) {
 		EVE_LOG_ERROR("Unable to retrieve time, QueryPerformanceFrequency() failed, %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 
-		m_invFrequency = (((double)1.0f) / ((double)nativeFreq));
+		m_invFrequency = (1.0 / static_cast<double>(nativeFreq));
 
-		QueryPerformanceCounter((LARGE_INTEGER*)&m_i64PerformanceTimerStart);
-
+		::QueryPerformanceCounter(reinterpret_cast<::LARGE_INTEGER*>(&m_i64PerformanceTimerStart));
 	 }
 
 #elif defined(EVE_OS_DARWIN)
@@ -231,6 +235,52 @@ int64_t eve::time::Timer::restart(void)
 
 
 
+//=================================================================================================
+void eve::time::Timer::updateFPS(bool p_bincreaseFrame)
+{
+	//increase the number of frames that have passed
+	if (p_bincreaseFrame)
+		m_iFramesElapsed++;
+
+	if (p_bincreaseFrame && m_iFramesElapsed % m_iFramesCompuation == 1)
+	{
+		m_fTime1 = static_cast<float>(getTime());
+	}
+
+	else if (!p_bincreaseFrame || m_iFramesElapsed % m_iFramesCompuation == 0)
+	{
+		if (p_bincreaseFrame)
+			m_fTime1 = m_fTime2;
+
+		m_fTime2 = static_cast<float>(getTime());
+		m_fDiffTime = eve::math::abs(m_fTime2 - m_fTime1) / 1000;
+
+	}
+
+	if (m_fDiffTime > 0.0f)
+	{
+		m_fFPS = m_iFramesCompuation / (m_fDiffTime);
+		m_fDiffTimeNextFrame = static_cast<int64_t>((m_iFramesCompuation / m_fTargetFPS - m_fDiffTime) * 1000);
+
+		if (m_fDiffTimeNextFrame <= 0)
+			m_fDiffTimeNextFrame = 0;
+	}
+	else
+		m_fFPS = 0.0f;
+
+	/*m_fTime2   = GetTime( )/1000;
+	m_fDiffTime= ( float )fabs( m_fTime2-m_fTime1 );
+	if (m_fDiffTime > 1.0f)
+	{
+	m_fTime1 = m_fTime2;
+	m_fFPS= m_iFramesElapsed / ( m_fDiffTime );
+	m_iFramesElapsed = 0;
+	}
+	*/
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //		GET / SET
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,10 +300,13 @@ const int64_t eve::time::Timer::getElapsedTime(void)
 	return m_elapsed;
 }
 
+
+
+//=================================================================================================
 const int64_t eve::time::Timer::getTime(void)  const
 {
 
-	return (int64_t)(query_absolute_time() - m_i64PerformanceTimerStart) * 1000 * m_invFrequency;
+	return static_cast<int64_t>((query_absolute_time() - m_i64PerformanceTimerStart) * 1000 * m_invFrequency);
 
 }
 
@@ -273,6 +326,7 @@ const int64_t eve::time::Timer::getDiffTime(void)
 	return m_elapsed;
 }
 
+//=================================================================================================
 const int64_t eve::time::Timer::getDiffTimeDelta(void) 
 {
 	int64_t timeDiff;
@@ -291,6 +345,7 @@ const int64_t eve::time::Timer::getDiffTimeDelta(void)
 	return timeDiff;
 }
 
+//=================================================================================================
 const int64_t eve::time::Timer::getDiffTimeDeltaWithoutactualisation(void) 
 {
 	int64_t timeDiff;
@@ -306,45 +361,4 @@ const int64_t eve::time::Timer::getDiffTimeDeltaWithoutactualisation(void)
 	}
 
 	return timeDiff;
-}
-
-void eve::time::Timer::UpdateFPS(bool p_bincreaseFrame)
-{
-	//increase the number of frames that have passed
-	if (p_bincreaseFrame)
-		m_iFramesElapsed++;
-
-	if (p_bincreaseFrame && m_iFramesElapsed % m_iFramesCompuation == 1)
-		m_fTime1 = getTime();
-
-	else if (!p_bincreaseFrame || m_iFramesElapsed % m_iFramesCompuation == 0)
-	{
-		if (p_bincreaseFrame)
-			m_fTime1 = m_fTime2;
-
-		m_fTime2 = getTime();
-		m_fDiffTime = (float)fabs(m_fTime2 - m_fTime1)/1000;
-
-	}
-
-	if (m_fDiffTime > 0.0f)
-	{
-		m_fFPS = m_iFramesCompuation / (m_fDiffTime);
-		m_fDiffTimeNextFrame = (m_iFramesCompuation / m_fTargetFPS - m_fDiffTime) * 1000;
-
-		if (m_fDiffTimeNextFrame <= 0)
-			m_fDiffTimeNextFrame = 0.0f;
-	}
-	else
-		m_fFPS = 0.0f;
-
-	/*m_fTime2   = GetTime( )/1000;
-	m_fDiffTime= ( float )fabs( m_fTime2-m_fTime1 );
-	if (m_fDiffTime > 1.0f)
-	{
-	m_fTime1 = m_fTime2;
-	m_fFPS= m_iFramesElapsed / ( m_fDiffTime );
-	m_iFramesElapsed = 0;
-	}
-	*/
 }

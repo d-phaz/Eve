@@ -44,6 +44,14 @@
 #include "eve/scene/Material.h"
 #endif
 
+#ifndef __EVE_OPENGL_CORE_UNIFORM_H__
+#include "eve/ogl/core/Uniform.h"
+#endif
+
+#ifndef __EVE_OPENGL_CORE_VAO_H__
+#include "eve/ogl/core/Vao.h"
+#endif
+
 
 //=================================================================================================
 eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentScene
@@ -80,6 +88,7 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 	, m_pAiMesh(nullptr)
 	, m_pMaterial(nullptr)
 	, m_pSkeleton(nullptr)
+	, m_pUniformMatrix(nullptr)
 {}
 
 
@@ -282,11 +291,20 @@ void eve::scene::Mesh::init(void)
 	// Call parent class
 	eve::scene::Object::init();
 	eve::math::TMesh<float>::init();
+
+	// Uniform buffer.
+	eve::ogl::FormatUniform fmtUniform;
+	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4;
+	fmtUniform.dynamic	 = false;
+	fmtUniform.data		 = this->getMatrixModelView().data();
+	m_pUniformMatrix	 = m_pScene->create(fmtUniform);
 }
 
 //=================================================================================================
 void eve::scene::Mesh::release(void)
 {
+	m_pUniformMatrix->requestRelease();
+	m_pUniformMatrix = nullptr;
 	m_pVao->requestRelease();
 	m_pVao = nullptr;
 
@@ -341,11 +359,26 @@ void eve::scene::Mesh::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_ar
 
 
 //=================================================================================================
+void eve::scene::Mesh::updateMatrixModelView(void)
+{
+	// Call parent class.
+	eve::math::TMesh<float>::updateMatrixModelView();
+	// Update uniform buffer.
+	m_pUniformMatrix->setData(m_matrixModelView.data());
+}
+
+
+
+//=================================================================================================
 void eve::scene::Mesh::oglDraw(void)
 {
+	m_pUniformMatrix->bindModel();
+
 	m_pMaterial->bind();
 	m_pVao->draw();
 	m_pMaterial->unbind();
+
+	m_pUniformMatrix->unbind_model();
 }
 
 
