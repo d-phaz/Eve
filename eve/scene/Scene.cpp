@@ -6,6 +6,10 @@
 #include "eve/scene/Mesh.h"
 #endif
 
+#ifndef __EVE_SCENE_CAMERA_H__
+#include "eve/scene/Camera.h"
+#endif
+
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
@@ -17,6 +21,7 @@ eve::scene::Scene::Scene(void)
 	, eve::scene::EventListenerScene()
 	// Members init.
 	, m_mapImportParams()
+	, m_pVecCamera(nullptr)
 	, m_pVecMesh(nullptr)
 	, m_pShaderMesh(nullptr)
 {}
@@ -35,7 +40,9 @@ void eve::scene::Scene::init(void)
 	m_mapImportParams[SceneImportParam_Generate_Normals]	= "Y";
 	m_mapImportParams[SceneImportParam_Normals_Max_Angle]	= "80.0";
 
-	m_pVecMesh = new std::vector<eve::scene::Mesh*>();
+	// Vectors.
+	m_pVecCamera = new std::vector<eve::scene::Camera*>();
+	m_pVecMesh	 = new std::vector<eve::scene::Mesh*>();
 
 	// Mesh shader.
 	eve::ogl::FormatShader fmtShader;
@@ -60,6 +67,16 @@ void eve::scene::Scene::release(void)
 		EVE_RELEASE_PTR(mesh);
 	}
 	EVE_RELEASE_PTR_CPP(m_pVecMesh);
+
+	// Cameras.
+	eve::scene::Camera * cam = nullptr;
+	while (m_pVecCamera->size() > 0)
+	{
+		cam = m_pVecCamera->back();
+		m_pVecCamera->pop_back();
+		EVE_RELEASE_PTR(cam);
+	}
+	EVE_RELEASE_PTR_CPP(m_pVecCamera);
 
 	// Call parent class.
 	eve::ogl::Renderer::release();
@@ -164,14 +181,14 @@ bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
 // 			}
 // 		} 
 // 
-// 		// Run threw scene cameras.
-// 		if (pAiScene->HasCameras())
-// 		{
-// 			for (size_t i = 0; i < pAiScene->mNumCameras; i++)
-// 			{
-// 				this->add(pAiScene->mCameras[i], pAiScene, upAxis);
-// 			}
-// 		} 
+		// Run threw scene cameras.
+		if (pAiScene->HasCameras())
+		{
+			for (size_t i = 0; i < pAiScene->mNumCameras; i++)
+			{
+				this->add(pAiScene->mCameras[i], pAiScene, upAxis);
+			}
+		} 
 // 
 // // 		// Run threw scene animations
 // // 		if (pAiScene->HasAnimations())
@@ -202,7 +219,7 @@ bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
 
 
 //=================================================================================================
-bool eve::scene::Scene::add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
+bool eve::scene::Scene::add(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
 {
 	bool ret = false;
 
@@ -210,6 +227,21 @@ bool eve::scene::Scene::add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axi
 	if (mesh) 
 	{
 		m_pVecMesh->push_back(mesh);
+		ret = true;
+	}
+
+	return ret;
+}
+
+//=================================================================================================
+bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis)
+{
+	bool ret = false;
+
+	eve::scene::Camera * cam = eve::scene::Camera::create_ptr(this, nullptr, p_pCamera, p_pScene, p_upAxis);
+	if (cam)
+	{
+		m_pVecCamera->push_back(cam);
 		ret = true;
 	}
 

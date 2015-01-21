@@ -295,7 +295,7 @@ void eve::scene::Mesh::init(void)
 	// Uniform buffer.
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4;
-	fmtUniform.dynamic	 = true;
+	fmtUniform.dynamic	 = false;
 	fmtUniform.data		 = this->getMatrixModelView().data();
 	m_pUniformMatrix	 = m_pScene->create(fmtUniform);
 }
@@ -359,9 +359,19 @@ void eve::scene::Mesh::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_ar
 
 
 //=================================================================================================
+void eve::scene::Mesh::updateMatrixModelView(void)
+{
+	// Call parent class.
+	eve::math::TMesh<float>::updateMatrixModelView();
+	// Update uniform buffer.
+	m_pUniformMatrix->setData(m_matrixModelView.data());
+}
+
+
+
+//=================================================================================================
 void eve::scene::Mesh::oglDraw(void)
 {
-	m_pUniformMatrix->oglUpdateData(m_matrixModelView.data());
 	m_pUniformMatrix->bindModel();
 
 	m_pMaterial->bind();

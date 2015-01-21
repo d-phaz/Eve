@@ -48,6 +48,7 @@ struct aiLight;
 struct aiMesh;
 struct aiScene;
 
+namespace eve { namespace scene { class Camera; } }
 namespace eve { namespace scene { class Mesh; } }
 
 
@@ -102,6 +103,7 @@ namespace eve
 			std::map<SceneImportParam, std::string>		m_mapImportParams;
 
 		protected:
+			std::vector<eve::scene::Camera*> *			m_pVecCamera;		//!< Specifies Camera objects vector.
 			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
 
 
@@ -140,7 +142,9 @@ namespace eve
 
 		public:
 			/** \brief Add new mesh item based on ASSIMP aiMesh pointer \a p_pMesh. */
-			virtual bool add(aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			virtual bool add(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			/** \brief Add new mesh item based on ASSIMP aiCamera pointer \a p_pCamera. */
+			virtual bool add(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
 		public:
@@ -152,6 +156,7 @@ namespace eve
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////
 
+		public:
 			/** \brief Assign value to target import parameter. */
 			void setImportParam(eve::scene::SceneImportParam p_param, const std::string & p_value);
 

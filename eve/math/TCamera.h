@@ -142,6 +142,8 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
+			explicit TCamera(void);
+			/** \brief Class constructor. */
 			explicit TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov);
 			/** \brief Copy constructor. */
 			explicit TCamera(const TCamera<T> & p_parent);
@@ -289,7 +291,7 @@ namespace eve
 
 
 		public:
-            /** \brief Get Rigth Vector. */
+            /** \brief Get Right Vector. */
 			const eve::math::TVec3<T> getRightVector(void) const;
 
 
@@ -480,6 +482,48 @@ eve::math::TCamera<T> * eve::math::TCamera<T>::create_ptr(const eve::math::TCame
 }
 
 
+
+//=================================================================================================
+template <typename T>
+eve::math::TCamera<T>::TCamera(void)
+	// Inheritance
+	: eve::mem::Pointer()
+
+	// Members init
+	, m_width(static_cast<T>(800.0))
+	, m_height(static_cast<T>(600.0))
+
+	, m_eyePoint(eve::math::TVec3<T>::zero())
+	, m_target(eve::math::TVec3<T>::zero())
+	, m_worldUp(eve::math::TVec3<T>::zero())
+
+	, m_viewDirection(eve::math::TVec3<T>::zero())
+	, m_orientation(eve::math::TQuaternion<T>::identity())
+	, m_centerOfInterest(static_cast<T>(0.0))
+
+	, m_fov(static_cast<T>(65.0))
+	, m_aspectRatio(static_cast<T>(0.0))
+	, m_nearClip(static_cast<T>(1.0))
+	, m_farClip(static_cast<T>(1000.0))
+	, m_frustumDepth(static_cast<T>(0.0))
+	, m_lensShift(eve::math::TVec2<T>::zero())
+
+	, m_U(eve::math::TVec3<T>::xAxis())
+	, m_V(eve::math::TVec3<T>::yAxis())
+	, m_W(eve::math::TVec3<T>::zero())
+
+	, m_matrixProjection(eve::math::TMatrix44<T>::zero())
+	, m_matrixProjectionInverse(eve::math::TMatrix44<T>::zero())
+	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
+	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
+	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
+	, m_matrixViewport(eve::math::TMatrix44<T>::zero())
+
+	, m_frustumLeft(static_cast<T>(0.0))
+	, m_frustumRight(static_cast<T>(0.0))
+	, m_frustumTop(static_cast<T>(0.0))
+	, m_frustumBottom(static_cast<T>(0.0))
+{}
 
 //=================================================================================================
 template <typename T>

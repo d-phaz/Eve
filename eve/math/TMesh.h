@@ -118,7 +118,7 @@ namespace eve
 			/** \brief Update scale matrix. */
 			void updateMatrixScale(void);
 			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
-			void updateMatrixModelView(void);
+			virtual void updateMatrixModelView(void);
 
 
 		public:

@@ -129,6 +129,11 @@ namespace eve
 
 
 		public:
+			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
+			virtual void updateMatrixModelView(void) override;
+
+
+		public:
 			/** \brief OpenGL VAO draw. */
 			void oglDraw(void);
 

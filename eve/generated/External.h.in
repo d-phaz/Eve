@@ -52,4 +52,11 @@
 #endif
 
 
+// Double precision.
+#cmakedefine OPTION_BUILD_DOUBLE_PRECISION
+#ifdef OPTION_BUILD_DOUBLE_PRECISION
+#define EVE_PRECISION_DOUBLE
+#endif
+
+
 #endif 	// __EVE_EXTERNAL_H__
