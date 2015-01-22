@@ -36,7 +36,7 @@ void eve::scene::Scene::init(void)
 	eve::ogl::Renderer::init();
 
 	// Default import parameters.
-	m_mapImportParams[SceneImportParam_Up_Axis]				= "Y";
+	m_mapImportParams[SceneImportParam_Up_Axis]				= "Z";
 	m_mapImportParams[SceneImportParam_Flip_UV]				= "Y";
 	m_mapImportParams[SceneImportParam_Generate_Normals]	= "Y";
 	m_mapImportParams[SceneImportParam_Normals_Max_Angle]	= "80.0";
@@ -193,7 +193,7 @@ bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
 				this->add(pAiScene->mCameras[i], pAiScene, upAxis);
 			}
 		} 
-// 
+ 
 // // 		// Run threw scene animations
 // // 		if (pAiScene->HasAnimations())
 // // 		{

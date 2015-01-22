@@ -1077,7 +1077,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::transposed() const
 template< typename T >
 inline eve::math::TMatrix44<T> eve::math::TMatrix44<T>::inverted(T epsilon) const
 {
-	eve::math::TMatrix44<T> inv((T)0);
+	eve::math::TMatrix44<T> inv(static_cast<T>(0.0));
 
 	T a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
 	T a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];

@@ -166,8 +166,26 @@ namespace eve
 		public:
 			/** \brief Bind (activate) texture. */
 			void bind(GLenum p_index);
+			/** \brief Bind (activate) texture to diffuse slot. */
+			void bindDiffuse(void);
+			/** \brief Bind (activate) texture to normal slot. */
+			void bindNormal(void);
+			/** \brief Bind (activate) texture to emissive slot. */
+			void bindEmissive(void);
+			/** \brief Bind (activate) texture to opacity slot. */
+			void bindOpacity(void);
+
+
 			/** \brief Unbind (deactivate) texture. */
 			static void unbind(GLenum p_index);
+			/** \brief Unbind (deactivate) texture from diffuse slot. */
+			static void unbind_diffuse(void);
+			/** \brief Unbind (deactivate) texture from normal slot. */
+			static void unbind_normal(void);
+			/** \brief Unbind (deactivate) texture from emissive slot. */
+			static void unbind_emissive(void);
+			/** \brief Unbind (deactivate) texture from opacity slot. */
+			static void unbind_opacity(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////

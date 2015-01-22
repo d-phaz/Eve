@@ -280,19 +280,19 @@ void eve::scene::Material::cb_evtSceneMaterial(eve::scene::EventArgsSceneMateria
 //=================================================================================================
 void eve::scene::Material::bind(void)
 {
-	m_pTexDiffuse->bind(EVE_OGL_SAMPLER_DIFFUSE);
-	m_pTexNormal->bind(EVE_OGL_SAMPLER_NORMAL);
-	m_pTexEmissive->bind(EVE_OGL_SAMPLER_EMISSIVE);
-	m_pTexOpacity->bind(EVE_OGL_SAMPLER_OPACITY);
+	m_pTexDiffuse->bindDiffuse();
+	m_pTexNormal->bindNormal();
+	m_pTexEmissive->bindEmissive();
+	m_pTexOpacity->bindOpacity();
 }
 
 //=================================================================================================
 void eve::scene::Material::unbind(void)
 {
-	eve::ogl::Texture::unbind(EVE_OGL_SAMPLER_OPACITY);
-	eve::ogl::Texture::unbind(EVE_OGL_SAMPLER_EMISSIVE);
-	eve::ogl::Texture::unbind(EVE_OGL_SAMPLER_NORMAL);
-	eve::ogl::Texture::unbind(EVE_OGL_SAMPLER_DIFFUSE);
+	m_pTexOpacity->unbind_opacity();
+	m_pTexEmissive->unbind_emissive();
+	m_pTexNormal->unbind_normal();
+	m_pTexDiffuse->unbind_diffuse();
 }
 
 

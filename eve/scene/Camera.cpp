@@ -114,19 +114,19 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 		m_frustumDepth	= m_farClip - m_nearClip;
 		m_fov			= eve::math::toDegrees(m_pAiCamera->mHorizontalFOV);
 
-		m_eyePoint.x	= m_pAiCamera->mPosition.x;
-		m_eyePoint.y	= m_pAiCamera->mPosition.y;
-		m_eyePoint.z	= m_pAiCamera->mPosition.z;
-
-		m_worldUp.x		= m_pAiCamera->mUp.x;
-		m_worldUp.y		= m_pAiCamera->mUp.y;
-		m_worldUp.z		= m_pAiCamera->mUp.z;
-
-		m_target.x		= m_pAiCamera->mLookAt.x;
-		m_target.y		= m_pAiCamera->mLookAt.y;
-		m_target.z		= m_pAiCamera->mLookAt.z;
+//  		m_eyePoint.x	= m_pAiCamera->mPosition.x;
+//  		m_eyePoint.y	= m_pAiCamera->mPosition.y;
+//  		m_eyePoint.z	= m_pAiCamera->mPosition.z;
+//  
+//  		m_worldUp.x		= m_pAiCamera->mUp.x;
+//  		m_worldUp.y		= m_pAiCamera->mUp.y;
+//  		m_worldUp.z		= m_pAiCamera->mUp.z;
+//  
+//  		m_target.x		= m_pAiCamera->mLookAt.x;
+//  		m_target.y		= m_pAiCamera->mLookAt.y;
+//  		m_target.z		= m_pAiCamera->mLookAt.z;
 		
-		// Compute scene node matrix 
+		// Compute scene node matrix.
 		aiMatrix4x4 mat;
 		while (pNode != pRoot)
 		{
@@ -143,7 +143,7 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 		{
 			matrix.fromZupToYup();
 		}
-
+		
 		// Invert matrix to retrieve camera view coordinates.
 		matrix.invert();
 
@@ -154,6 +154,30 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 		m_viewDirection		= (m_target - m_eyePoint).normalized();
 		m_orientation		= eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
 		m_centerOfInterest  = m_eyePoint.distance(m_target);	
+
+//  		// //
+//  		m_aspectRatio = m_width / m_height;
+//  		m_nearClip = 0.1f;
+//  		m_farClip = 1000.0f;
+//  		m_frustumDepth = m_farClip - m_nearClip;
+//  		m_fov = 65.0f;
+//  
+//  		m_eyePoint.x = 10.0f;
+//  		m_eyePoint.y = 10.0f;
+//  		m_eyePoint.z = 10.0f;
+//  
+//  		m_worldUp.x = 0.0f;
+//  		m_worldUp.y = 1.0f;
+//  		m_worldUp.z = 0.0f;
+//  
+//  		m_target.x = 0.0f;
+//  		m_target.y = 0.0f;
+//  		m_target.z = 0.0f;
+//  
+//  		m_viewDirection = (m_target - m_eyePoint).normalized();
+//  		m_orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
+//  		m_centerOfInterest = m_eyePoint.distance(m_target);
+//  		// //
 
 		// Members init.
 		this->init();
@@ -210,6 +234,7 @@ void eve::scene::Camera::calcModelView(void) const
 	// Update uniform buffer.
 	memcpy(m_pMatrices, this->getMatrixModelView().data(), EVE_OGL_SIZEOF_MAT4);
 	m_pUniformMatrices->setData(m_pMatrices);
+	//m_pUniformMatrices->setData(this->getMatrixModelViewProjection().data());
 }
 
 //=================================================================================================
@@ -220,6 +245,7 @@ void eve::scene::Camera::calcProjection(void) const
 	// Update uniform buffer.
 	memcpy(m_pMatrices + 16, this->getMatrixProjection().data(), EVE_OGL_SIZEOF_MAT4);
 	m_pUniformMatrices->setData(m_pMatrices);
+	//m_pUniformMatrices->setData(this->getMatrixModelViewProjection().data());
 }
 
 
@@ -258,13 +284,13 @@ void eve::scene::Camera::cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_
 //=================================================================================================
 void eve::scene::Camera::oglBindMatrices(void)
 {
-	m_pUniformMatrices->bind(EVE_OGL_TRANSFORM_CAMERA);
+	m_pUniformMatrices->bindCamera();
 }
 
 //=================================================================================================
 void eve::scene::Camera::oglUnbindMatrices(void)
 {
-	m_pUniformMatrices->unbind(EVE_OGL_TRANSFORM_CAMERA);
+	m_pUniformMatrices->unbind_camera();
 }
 
 
