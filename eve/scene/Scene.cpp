@@ -14,13 +14,14 @@
 #include <assimp/postprocess.h>
 
 
+std::map<eve::scene::SceneImportParam, std::string>	eve::scene::Scene::m_map_import_params;
+
 //=================================================================================================
 eve::scene::Scene::Scene(void)
 	// Inheritance.
 	: eve::ogl::Renderer()
 	, eve::scene::EventListenerScene()
 	// Members init.
-	, m_mapImportParams()
 	, m_pVecCamera(nullptr)
 	, m_pCameraActive(nullptr)
 	, m_pVecMesh(nullptr)
@@ -36,10 +37,15 @@ void eve::scene::Scene::init(void)
 	eve::ogl::Renderer::init();
 
 	// Default import parameters.
-	m_mapImportParams[SceneImportParam_Up_Axis]				= "Z";
-	m_mapImportParams[SceneImportParam_Flip_UV]				= "Y";
-	m_mapImportParams[SceneImportParam_Generate_Normals]	= "Y";
-	m_mapImportParams[SceneImportParam_Normals_Max_Angle]	= "80.0";
+	static bool bImportParamsInitialized = false;
+	if (!bImportParamsInitialized)
+	{
+		m_map_import_params[SceneImportParam_Up_Axis]			= "Z";
+		m_map_import_params[SceneImportParam_Flip_UV]			= "N";
+		m_map_import_params[SceneImportParam_Generate_Normals]	= "Y";
+		m_map_import_params[SceneImportParam_Normals_Max_Angle]	= "80.0";
+		bImportParamsInitialized = true;
+	}
 
 	// Vectors.
 	m_pVecCamera = new std::vector<eve::scene::Camera*>();
@@ -93,7 +99,7 @@ void eve::scene::Scene::cb_evtScene(eve::scene::EventArgsScene & p_args)
 {
 	switch (p_args.type)
 	{
-	case SceneEventType_add_fromPath:					this->loadFromFilePath(p_args.path); break;
+	case SceneEventType_add_fromPath:					this->load(p_args.path); break;
 			
 	case SceneEventType_add_defaultLightArea:			
 	case SceneEventType_add_defaultLightDirectional:	
@@ -109,7 +115,7 @@ void eve::scene::Scene::cb_evtScene(eve::scene::EventArgsScene & p_args)
 
 
 //=================================================================================================
-bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
+bool eve::scene::Scene::load(const std::wstring & p_filePath)
 {
 	bool ret = false;
 
@@ -132,16 +138,16 @@ bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
 				// | aiProcess_RemoveRedundantMaterials
 				// | aiProcess_SortByPType;
 
-	if (m_mapImportParams[SceneImportParam_Flip_UV] == "Y")
+	if (m_map_import_params[SceneImportParam_Flip_UV] == "Y")
 	{
 		flags |= aiProcess_FlipUVs;
 	}
 
-	if (m_mapImportParams[SceneImportParam_Generate_Normals] == "Y")
+	if (m_map_import_params[SceneImportParam_Generate_Normals] == "Y")
 	{
 		flags |= aiProcess_GenSmoothNormals;
 
-		float angle = static_cast<float>(::atof(m_mapImportParams[SceneImportParam_Normals_Max_Angle].c_str()));
+		float angle = static_cast<float>(::atof(m_map_import_params[SceneImportParam_Normals_Max_Angle].c_str()));
 		pImporter->SetPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE, angle);
 	}
 
@@ -160,7 +166,7 @@ bool eve::scene::Scene::loadFromFilePath(const std::wstring & p_filePath)
 	{
 		// Grab scene Up axis.
 		eve::Axis upAxis;
-		std::string axis = m_mapImportParams[SceneImportParam_Up_Axis];
+		std::string axis = m_map_import_params[SceneImportParam_Up_Axis];
 			 if (axis == "X") { upAxis = eve::Axis_X; }
 		else if (axis == "Y") { upAxis = eve::Axis_Y; }
 		else if (axis == "Z") { upAxis = eve::Axis_Z; }
@@ -263,16 +269,31 @@ void eve::scene::Scene::cb_display(void)
 			 , static_cast<GLsizei>(m_pCameraActive->getDisplayWidth())
 			 , static_cast<GLsizei>(m_pCameraActive->getDisplayHeight()));
 
+	// Enable depth read/write.
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	// Cull triangles which normal is not towards the camera.
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	m_pShaderMesh->bind();
-	m_pCameraActive->oglBindMatrices();
+	m_pCameraActive->oglBind();
 
 	for (auto && itr : (*m_pVecMesh))
 	{
 		itr->oglDraw();
 	}
 
-	m_pCameraActive->oglUnbindMatrices();
+	m_pCameraActive->oglUnbind();
 	m_pShaderMesh->unbind();
+
+	// Disable culling
+	glDisable(GL_CULL_FACE);
+	// Disable depth read/write
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
 }
 
 
@@ -282,10 +303,10 @@ void eve::scene::Scene::cb_display(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-void eve::scene::Scene::setImportParam(eve::scene::SceneImportParam p_param, const std::string & p_value)
+void eve::scene::Scene::set_import_param(eve::scene::SceneImportParam p_param, const std::string & p_value)
 {
-	auto & itr = m_mapImportParams.find(p_param);
-	EVE_ASSERT(itr != m_mapImportParams.end());
+	auto & itr = m_map_import_params.find(p_param);
+	EVE_ASSERT(itr != m_map_import_params.end());
 	itr->second = p_value;
 }
 

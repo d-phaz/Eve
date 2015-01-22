@@ -66,7 +66,7 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentSc
 	EVE_ASSERT(p_pScene);
 
 	eve::scene::Mesh * ptr = new eve::scene::Mesh(p_pParentScene, p_pParent);
-	if (!ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis, p_fullPath))
+	if (!ptr->init(p_pMesh, p_pScene, p_upAxis, p_fullPath))
 	{
 		EVE_RELEASE_PTR(ptr);
 	}
@@ -94,7 +94,7 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 
 
 //=================================================================================================
-bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
+bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
 {
 	// Stock mesh pointer.
 	m_pAiMesh = p_pMesh;

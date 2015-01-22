@@ -108,7 +108,7 @@ namespace eve
 
 		protected:
 			/** \brief Allocate and init class members based on ASSIMP aiCamera \a p_pCamera. */
-			bool initFromAssimpCamera(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
+			bool init(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
 		protected:
@@ -134,9 +134,9 @@ namespace eve
 
 		public:
 			/** \brief Bind matrices buffer. */
-			void oglBindMatrices(void);
+			void oglBind(void);
 			/** \brief Unbind matrices buffer. */
-			void oglUnbindMatrices(void);
+			void oglUnbind(void);
 
 			/** \brief OpenGL VAO draw. */
 			void oglDraw(void);

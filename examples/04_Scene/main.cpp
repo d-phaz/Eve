@@ -72,7 +72,7 @@ void Example::initThreadedData(void)
 	// Register new RenderGL.
 	m_pScene = EVE_CREATE_PTR(eve::scene::Scene);
 	std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
-	m_pScene->loadFromFilePath(path);
+	m_pScene->load(path);
 	this->registerRenderer(m_pScene);
 }
 

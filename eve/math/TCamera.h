@@ -507,7 +507,7 @@ eve::math::TCamera<T>::TCamera(void)
 	, m_centerOfInterest(static_cast<T>(0.0))
 
 	, m_fov(static_cast<T>(65.0))
-	, m_aspectRatio(static_cast<T>(0.0))
+	, m_aspectRatio(static_cast<T>(4.0/3.0))
 	, m_nearClip(static_cast<T>(1.0))
 	, m_farClip(static_cast<T>(1000.0))
 	, m_frustumDepth(static_cast<T>(0.0))
