@@ -96,6 +96,14 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 //=================================================================================================
 bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
 {
+	// Stock mesh pointer.
+	m_pAiMesh = p_pMesh;
+	EVE_ASSERT(m_pAiMesh);
+
+	// In scene mesh name. 
+	m_name = std::string(m_pAiMesh->mName.C_Str());
+	std::wstring wname = eve::str::to_wstring(m_name);
+
 	// Grab scene node. 
 	const aiNode * pRoot = p_pScene->mRootNode;
 	const aiNode * pNode = pRoot->FindNode(m_name.c_str());
@@ -104,8 +112,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	bool ret = pNode != NULL;
 	EVE_ASSERT(ret);
 
-	// Stock mesh pointer.
-	m_pAiMesh = p_pMesh;
 	// Test mesh integrity.
 	if (!m_pAiMesh->HasFaces() || !m_pAiMesh->HasPositions())
 	{
@@ -129,11 +135,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	// If scene node found and mesh contains required data.
 	if (ret)
 	{
-		// In scene mesh name. 
-		m_name = std::string(m_pAiMesh->mName.C_Str());
-		std::wstring wname = eve::str::to_wstring(m_name);
-
-
 		/////////////////////////////////////////
 		//	MESH
 		/////////////////////////////////////////

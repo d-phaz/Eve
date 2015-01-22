@@ -22,6 +22,7 @@ eve::scene::Scene::Scene(void)
 	// Members init.
 	, m_mapImportParams()
 	, m_pVecCamera(nullptr)
+	, m_pCameraActive(nullptr)
 	, m_pVecMesh(nullptr)
 	, m_pShaderMesh(nullptr)
 {}
@@ -54,13 +55,16 @@ void eve::scene::Scene::init(void)
 //=================================================================================================
 void eve::scene::Scene::release(void)
 {
+	// Do not delete -> shared pointers.
+	m_pCameraActive = nullptr;
+
 	// Shader.
 	m_pShaderMesh->requestRelease();
 	m_pShaderMesh = nullptr;
 
 	// Meshes.
 	eve::scene::Mesh * mesh = nullptr;
-	while (m_pVecMesh->size() > 0)
+	while (!m_pVecMesh->empty())
 	{
 		mesh = m_pVecMesh->back();
 		m_pVecMesh->pop_back();
@@ -70,7 +74,7 @@ void eve::scene::Scene::release(void)
 
 	// Cameras.
 	eve::scene::Camera * cam = nullptr;
-	while (m_pVecCamera->size() > 0)
+	while (!m_pVecCamera->empty())
 	{
 		cam = m_pVecCamera->back();
 		m_pVecCamera->pop_back();
@@ -242,6 +246,7 @@ bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene
 	if (cam)
 	{
 		m_pVecCamera->push_back(cam);
+		if (!m_pCameraActive) { m_pCameraActive = cam; }
 		ret = true;
 	}
 
@@ -253,11 +258,20 @@ bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene
 //=================================================================================================
 void eve::scene::Scene::cb_display(void)
 {
+	glViewport(0
+			 , 0
+			 , static_cast<GLsizei>(m_pCameraActive->getDisplayWidth())
+			 , static_cast<GLsizei>(m_pCameraActive->getDisplayHeight()));
+
 	m_pShaderMesh->bind();
+	m_pCameraActive->oglBindMatrices();
+
 	for (auto && itr : (*m_pVecMesh))
 	{
 		itr->oglDraw();
 	}
+
+	m_pCameraActive->oglUnbindMatrices();
 	m_pShaderMesh->unbind();
 }
 

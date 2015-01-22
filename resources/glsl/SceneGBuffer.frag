@@ -38,8 +38,8 @@ void main()
 	vec4 color = (diffuse * opacity) + emissive;
 	
 	// Output fragment.
-	FragColour = vec4(clamp(color.r, 0.0, 1.0)
-					, clamp(color.g, 0.0, 1.0)
-					, clamp(color.b, 0.0, 1.0)
-					, clamp(color.a, 0.0, 1.0));
+	FragColor = vec4(clamp(color.r, 0.0, 1.0)
+				   , clamp(color.g, 0.0, 1.0)
+				   , clamp(color.b, 0.0, 1.0)
+				   , clamp(color.a, 0.0, 1.0));
 }

@@ -82,6 +82,7 @@ namespace eve
 
 			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
 			eve::ogl::Uniform *		m_pUniformMatrices;		//!< Specifies uniform buffer containing matrices.
+			mutable float *			m_pMatrices;			//!< Specifies matrices array pointer.
 
 
 			//////////////////////////////////////
@@ -115,6 +116,13 @@ namespace eve
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
+
+
+		protected:
+			/** \brief Compute model view matrix. */
+			virtual void calcModelView(void) const override;
+			/** \brief Compute projection matrix. */
+			virtual void calcProjection(void) const override;
 
 
 		public:

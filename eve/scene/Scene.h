@@ -104,6 +104,8 @@ namespace eve
 
 		protected:
 			std::vector<eve::scene::Camera*> *			m_pVecCamera;		//!< Specifies Camera objects vector.
+			eve::scene::Camera *						m_pCameraActive;	//!< Specifies active camera shared pointer.
+
 			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
 
 
@@ -135,7 +137,7 @@ namespace eve
 			virtual void cb_evtScene(eve::scene::EventArgsScene & p_args) override;
 
 
-		protected:
+		public:
 			/** \brief Load scene or mesh from file path. */
 			bool loadFromFilePath(const std::wstring & p_filePath);
 

@@ -8,6 +8,7 @@ include( AddProject.cmake )
 add_project( 01_Main )
 add_project( 02_Render )
 add_project( 03_GLParticule )
+add_project( 04_Scene )
 
 
 

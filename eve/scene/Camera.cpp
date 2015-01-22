@@ -78,6 +78,7 @@ eve::scene::Camera::Camera(eve::scene::Scene * p_pParentScene, eve::scene::Objec
 	, m_pAiCamera(nullptr)
 	, m_pVao(nullptr)
 	, m_pUniformMatrices(nullptr)
+	, m_pMatrices(nullptr)
 {}
 
 
@@ -87,6 +88,14 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 {
 	EVE_ASSERT(p_pCamera);
 	EVE_ASSERT(p_pScene);
+
+	// Stock shared pointer.
+	m_pAiCamera = p_pCamera;
+	EVE_ASSERT(m_pAiCamera);
+
+	// In scene mesh name. 
+	m_name = std::string(m_pAiCamera->mName.C_Str());
+	std::wstring wname = eve::str::to_wstring(m_name);
 
 	// Grab scene node. 
 	const aiNode * pRoot = p_pScene->mRootNode;
@@ -98,11 +107,7 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 
 	if (ret)
 	{
-		m_pAiCamera = p_pCamera;
-
 		// Loaded camera data copy.
-		m_name = std::string(m_pAiCamera->mName.data);
-
 		m_aspectRatio	= m_pAiCamera->mAspect;
 		m_nearClip		= m_pAiCamera->mClipPlaneNear;
 		m_farClip		= m_pAiCamera->mClipPlaneFar;
@@ -120,7 +125,6 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 		m_target.x		= m_pAiCamera->mLookAt.x;
 		m_target.y		= m_pAiCamera->mLookAt.y;
 		m_target.z		= m_pAiCamera->mLookAt.z;
-
 		
 		// Compute scene node matrix 
 		aiMatrix4x4 mat;
@@ -163,16 +167,19 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 //=================================================================================================
 void eve::scene::Camera::init(void)
 {
-	// Call parent class.
-	eve::scene::Object::init();
-	eve::math::TCamera<float>::init();
-
+	// Matrices array.
+	m_pMatrices = (float*)eve::mem::align_malloc(16, EVE_OGL_SIZEOF_MAT4 * 2);
+	
 	// Uniform buffer.
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4 * 2;
-	fmtUniform.dynamic	 = true;
-	fmtUniform.data		 = this->getMatrixModelView().data(); // //
+	fmtUniform.dynamic	 = false;
+	fmtUniform.data		 = m_pMatrices;
 	m_pUniformMatrices	 = m_pScene->create(fmtUniform);
+
+	// Call parent class.
+	eve::scene::Object::init();
+	eve::math::TCamera<float>::init();
 }
 
 //=================================================================================================
@@ -180,15 +187,39 @@ void eve::scene::Camera::release(void)
 {
 	m_pUniformMatrices->requestRelease();
 	m_pUniformMatrices = nullptr;
-	m_pVao->requestRelease();
-	m_pVao = nullptr;
+	//m_pVao->requestRelease();
+	//m_pVao = nullptr;
 
 	// Do not delete -> shared pointer.
 	m_pAiCamera = nullptr;
 
+	eve::mem::align_free(m_pMatrices);
+
 	// Call parent class.
 	eve::scene::Object::release();
 	eve::math::TCamera<float>::release();
+}
+
+
+
+//=================================================================================================
+void eve::scene::Camera::calcModelView(void) const
+{
+	// Call parent class.
+	eve::math::TCamera<float>::calcModelView();
+	// Update uniform buffer.
+	memcpy(m_pMatrices, this->getMatrixModelView().data(), EVE_OGL_SIZEOF_MAT4);
+	m_pUniformMatrices->setData(m_pMatrices);
+}
+
+//=================================================================================================
+void eve::scene::Camera::calcProjection(void) const
+{
+	// Call parent class.
+	eve::math::TCamera<float>::calcProjection();
+	// Update uniform buffer.
+	memcpy(m_pMatrices + 16, this->getMatrixProjection().data(), EVE_OGL_SIZEOF_MAT4);
+	m_pUniformMatrices->setData(m_pMatrices);
 }
 
 
@@ -216,7 +247,7 @@ void eve::scene::Camera::cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_
 	switch (p_args.type)
 	{
 	case SceneCameraEventType_Fov:				this->setFov(p_args.value);				break;
-	//case SceneCameraEventType_Zoom:				this->zoom(p_args.value);				break; // TODO !!!
+	//case SceneCameraEventType_Zoom:			this->zoom(p_args.value);				break; // TODO !!!
 
 	default: EVE_ASSERT_FAILURE; break;
 	}

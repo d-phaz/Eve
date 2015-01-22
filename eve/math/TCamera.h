@@ -165,9 +165,9 @@ namespace eve
 			/** \brief Compute matrices. */
 			void calcMatrices(void) const;
 			/** \brief Compute model view matrix. */
-			void calcModelView(void) const;
+			virtual void calcModelView(void) const;
 			/** \brief Compute projection matrix. */
-			void calcProjection(void) const;
+			virtual void calcProjection(void) const;
 			/** \brief Compute viewport matrix */
 			void calcViewportMatrix(void);
 
@@ -385,6 +385,11 @@ namespace eve
 
 
 		public:
+			/** \brief Get display width. */
+			const T getDisplayWidth(void) const;
+			/** \brief Get display height. */
+			const T getDisplayHeight(void) const;
+
 			/** \brief Set display size. */
 			void setDisplaySize(T p_width, T p_height, bool p_bUpdateAspectRatio = true);
 			/** \brief Set display size. */
@@ -1267,6 +1272,10 @@ void eve::math::TCamera<T>::setPerspective(T p_horizFovDegrees, T p_aspectRatio,
 }
 
 
+
+//=================================================================================================
+template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplayWidth(void) const  { return m_width;  }
+template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplayHeight(void) const { return m_height; }
 
 //=================================================================================================
 template <typename T>

@@ -40,11 +40,7 @@ eve::scene::Skeleton * eve::scene::Skeleton::create_ptr(const aiMesh * p_pMesh, 
 	EVE_ASSERT(p_pScene);
 
 	eve::scene::Skeleton * ptr = new eve::scene::Skeleton();
-	if (!ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis))
-	{
-		EVE_RELEASE_PTR(ptr);
-	}
-
+	ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis);
 	return ptr;
 }
 
