@@ -57,7 +57,7 @@ eve::scene::Camera * eve::scene::Camera::create_ptr(eve::scene::Scene *		p_pPare
 	EVE_ASSERT(p_pScene);
 
 	eve::scene::Camera * ptr = new eve::scene::Camera(p_pParentScene, p_pParent);
-	if (!ptr->initFromAssimpCamera(p_pCamera, p_pScene, p_upAxis))
+	if (!ptr->init(p_pCamera, p_pScene, p_upAxis))
 	{
 		EVE_RELEASE_PTR(ptr);
 	}
@@ -78,15 +78,24 @@ eve::scene::Camera::Camera(eve::scene::Scene * p_pParentScene, eve::scene::Objec
 	, m_pAiCamera(nullptr)
 	, m_pVao(nullptr)
 	, m_pUniformMatrices(nullptr)
+	, m_pMatrices(nullptr)
 {}
 
 
 
 //=================================================================================================
-bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis)
+bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis)
 {
 	EVE_ASSERT(p_pCamera);
 	EVE_ASSERT(p_pScene);
+
+	// Stock shared pointer.
+	m_pAiCamera = p_pCamera;
+	EVE_ASSERT(m_pAiCamera);
+
+	// In scene mesh name. 
+	m_name = std::string(m_pAiCamera->mName.C_Str());
+	std::wstring wname = eve::str::to_wstring(m_name);
 
 	// Grab scene node. 
 	const aiNode * pRoot = p_pScene->mRootNode;
@@ -98,37 +107,26 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 
 	if (ret)
 	{
-		m_pAiCamera = p_pCamera;
-
 		// Loaded camera data copy.
-		m_name = std::string(m_pAiCamera->mName.data);
-
 		m_aspectRatio	= m_pAiCamera->mAspect;
 		m_nearClip		= m_pAiCamera->mClipPlaneNear;
 		m_farClip		= m_pAiCamera->mClipPlaneFar;
 		m_frustumDepth	= m_farClip - m_nearClip;
 		m_fov			= eve::math::toDegrees(m_pAiCamera->mHorizontalFOV);
-
-		m_eyePoint.x	= m_pAiCamera->mPosition.x;
-		m_eyePoint.y	= m_pAiCamera->mPosition.y;
-		m_eyePoint.z	= m_pAiCamera->mPosition.z;
-
-		m_worldUp.x		= m_pAiCamera->mUp.x;
-		m_worldUp.y		= m_pAiCamera->mUp.y;
-		m_worldUp.z		= m_pAiCamera->mUp.z;
-
-		m_target.x		= m_pAiCamera->mLookAt.x;
-		m_target.y		= m_pAiCamera->mLookAt.y;
-		m_target.z		= m_pAiCamera->mLookAt.z;
-
 		
-		// Compute scene node matrix 
+		// Compute scene node matrix.
 		aiMatrix4x4 mat;
 		while (pNode != pRoot)
 		{
 			mat = pNode->mTransformation * mat;
 			pNode = pNode->mParent;
 		}
+		//if (p_upAxis.z > 0.0f)
+		//{
+		//	aiMatrix4x4 aim;
+		//	m_pAiCamera->GetCameraMatrix(aim);
+		//	mat = aim * mat;
+		//}
 		eve::math::TMatrix44<float> matrix(mat.a1, mat.b1, mat.c1, mat.d1
 										 , mat.a2, mat.b2, mat.c2, mat.d2
 										 , mat.a3, mat.b3, mat.c3, mat.d3
@@ -139,7 +137,7 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 		{
 			matrix.fromZupToYup();
 		}
-
+		
 		// Invert matrix to retrieve camera view coordinates.
 		matrix.invert();
 
@@ -163,16 +161,19 @@ bool eve::scene::Camera::initFromAssimpCamera(const aiCamera * p_pCamera, const 
 //=================================================================================================
 void eve::scene::Camera::init(void)
 {
-	// Call parent class.
-	eve::scene::Object::init();
-	eve::math::TCamera<float>::init();
-
+	// Matrices array.
+	m_pMatrices = (float*)eve::mem::align_malloc(16, EVE_OGL_SIZEOF_MAT4 * 2);
+	
 	// Uniform buffer.
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4 * 2;
-	fmtUniform.dynamic	 = true;
-	fmtUniform.data		 = this->getMatrixModelView().data(); // //
+	fmtUniform.dynamic	 = false;
+	fmtUniform.data		 = m_pMatrices;
 	m_pUniformMatrices	 = m_pScene->create(fmtUniform);
+
+	// Call parent class.
+	eve::scene::Object::init();
+	eve::math::TCamera<float>::init();
 }
 
 //=================================================================================================
@@ -180,15 +181,41 @@ void eve::scene::Camera::release(void)
 {
 	m_pUniformMatrices->requestRelease();
 	m_pUniformMatrices = nullptr;
-	m_pVao->requestRelease();
-	m_pVao = nullptr;
+	//m_pVao->requestRelease();
+	//m_pVao = nullptr;
 
 	// Do not delete -> shared pointer.
 	m_pAiCamera = nullptr;
 
+	eve::mem::align_free(m_pMatrices);
+
 	// Call parent class.
 	eve::scene::Object::release();
 	eve::math::TCamera<float>::release();
+}
+
+
+
+//=================================================================================================
+void eve::scene::Camera::calcModelView(void) const
+{
+	// Call parent class.
+	eve::math::TCamera<float>::calcModelView();
+	// Update uniform buffer.
+	memcpy(m_pMatrices, this->getMatrixModelView().data(), EVE_OGL_SIZEOF_MAT4);
+	m_pUniformMatrices->setData(m_pMatrices);
+	//m_pUniformMatrices->setData(this->getMatrixModelViewProjection().data());
+}
+
+//=================================================================================================
+void eve::scene::Camera::calcProjection(void) const
+{
+	// Call parent class.
+	eve::math::TCamera<float>::calcProjection();
+	// Update uniform buffer.
+	memcpy(m_pMatrices + 16, this->getMatrixProjection().data(), EVE_OGL_SIZEOF_MAT4);
+	m_pUniformMatrices->setData(m_pMatrices);
+	//m_pUniformMatrices->setData(this->getMatrixModelViewProjection().data());
 }
 
 
@@ -216,7 +243,7 @@ void eve::scene::Camera::cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_
 	switch (p_args.type)
 	{
 	case SceneCameraEventType_Fov:				this->setFov(p_args.value);				break;
-	//case SceneCameraEventType_Zoom:				this->zoom(p_args.value);				break; // TODO !!!
+	//case SceneCameraEventType_Zoom:			this->zoom(p_args.value);				break; // TODO !!!
 
 	default: EVE_ASSERT_FAILURE; break;
 	}
@@ -225,15 +252,15 @@ void eve::scene::Camera::cb_evtSceneCamera(eve::scene::EventArgsSceneCamera & p_
 
 
 //=================================================================================================
-void eve::scene::Camera::oglBindMatrices(void)
+void eve::scene::Camera::oglBind(void)
 {
-	m_pUniformMatrices->bind(EVE_OGL_TRANSFORM_CAMERA);
+	m_pUniformMatrices->bindCamera();
 }
 
 //=================================================================================================
-void eve::scene::Camera::oglUnbindMatrices(void)
+void eve::scene::Camera::oglUnbind(void)
 {
-	m_pUniformMatrices->unbind(EVE_OGL_TRANSFORM_CAMERA);
+	m_pUniformMatrices->unbind_camera();
 }
 
 

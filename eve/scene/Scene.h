@@ -100,10 +100,12 @@ namespace eve
 			//<!	SceneImportParam_Flip_UV				"Y" / "N"
 			//<!	SceneImportParam_Generate_Normals		"Y" / "N"
 			//<!	SceneImportParam_Normals_Max_Angle		"0.0... 175.0"		Used only when Generate_Normals is set to "Y"
-			std::map<SceneImportParam, std::string>		m_mapImportParams;
+			static std::map<SceneImportParam, std::string>	m_map_import_params;
 
 		protected:
 			std::vector<eve::scene::Camera*> *			m_pVecCamera;		//!< Specifies Camera objects vector.
+			eve::scene::Camera *						m_pCameraActive;	//!< Specifies active camera shared pointer.
+
 			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
 
 
@@ -135,9 +137,9 @@ namespace eve
 			virtual void cb_evtScene(eve::scene::EventArgsScene & p_args) override;
 
 
-		protected:
+		public:
 			/** \brief Load scene or mesh from file path. */
-			bool loadFromFilePath(const std::wstring & p_filePath);
+			bool load(const std::wstring & p_filePath);
 
 
 		public:
@@ -158,7 +160,7 @@ namespace eve
 
 		public:
 			/** \brief Assign value to target import parameter. */
-			void setImportParam(eve::scene::SceneImportParam p_param, const std::string & p_value);
+			static void set_import_param(eve::scene::SceneImportParam p_param, const std::string & p_value);
 
 		}; // class Scene
 

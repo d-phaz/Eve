@@ -66,9 +66,9 @@ namespace eve
 //=================================================================================================
 template <typename T> EVE_FORCE_INLINE static eve::math::TVec3<T> transform3x3(const eve::math::TMatrix44<T> & m, const eve::math::TVec3<T> & v)
 {
-	return eve::math::TVec3<T>( (m.m[0] * v.x + m.m[4] * v.y + m.m[8]  * v.z),
-								(m.m[1] * v.x + m.m[5] * v.y + m.m[9]  * v.z),
-								(m.m[2] * v.x + m.m[6] * v.y + m.m[10] * v.z));
+	return eve::math::TVec3<T>( (m.m[0] * v.x + m.m[1] * v.y + m.m[ 2] * v.z),
+								(m.m[4] * v.x + m.m[5] * v.y + m.m[ 6] * v.z),
+								(m.m[8] * v.x + m.m[9] * v.y + m.m[10] * v.z));
 }
 
 //=================================================================================================

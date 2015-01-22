@@ -82,6 +82,7 @@ namespace eve
 
 			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
 			eve::ogl::Uniform *		m_pUniformMatrices;		//!< Specifies uniform buffer containing matrices.
+			mutable float *			m_pMatrices;			//!< Specifies matrices array pointer.
 
 
 			//////////////////////////////////////
@@ -107,7 +108,7 @@ namespace eve
 
 		protected:
 			/** \brief Allocate and init class members based on ASSIMP aiCamera \a p_pCamera. */
-			bool initFromAssimpCamera(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
+			bool init(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
 		protected:
@@ -115,6 +116,13 @@ namespace eve
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
 			virtual void release(void) override;
+
+
+		protected:
+			/** \brief Compute model view matrix. */
+			virtual void calcModelView(void) const override;
+			/** \brief Compute projection matrix. */
+			virtual void calcProjection(void) const override;
 
 
 		public:
@@ -126,9 +134,9 @@ namespace eve
 
 		public:
 			/** \brief Bind matrices buffer. */
-			void oglBindMatrices(void);
+			void oglBind(void);
 			/** \brief Unbind matrices buffer. */
-			void oglUnbindMatrices(void);
+			void oglUnbind(void);
 
 			/** \brief OpenGL VAO draw. */
 			void oglDraw(void);

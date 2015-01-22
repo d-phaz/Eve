@@ -30,16 +30,17 @@ layout(location = FRAG_COLOR, index = 0) out vec4 FragColor;
 void main()
 {
 	// Textures.
-	vec4 diffuse	= texture(uni_diffuse, in_block.texcoord);
+	vec4 diffuse	= texture(uni_diffuse,  in_block.texcoord);
 	vec4 emissive 	= texture(uni_emissive, in_block.texcoord);
-	vec4 opacity 	= texture(uni_opacity, in_block.texcoord);
+	vec4 opacity 	= texture(uni_opacity,  in_block.texcoord);
 
 	// Compute color.
 	vec4 color = (diffuse * opacity) + emissive;
 	
 	// Output fragment.
-	FragColour = vec4(clamp(color.r, 0.0, 1.0)
-					, clamp(color.g, 0.0, 1.0)
-					, clamp(color.b, 0.0, 1.0)
-					, clamp(color.a, 0.0, 1.0));
+//	FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+	FragColor = vec4(clamp(color.r, 0.0, 1.0)
+				   , clamp(color.g, 0.0, 1.0)
+				   , clamp(color.b, 0.0, 1.0)
+				   , clamp(color.a, 0.0, 1.0));
 }

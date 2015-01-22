@@ -56,10 +56,6 @@ if(WIN32)
 							NAMES OpenCL
 							PATHS $ENV{INTELOCLSDKROOT}lib/x86 )
          endif()
-    else()
-		if(NOT INTEL_OPENCL_BASEDIR)
-			message( "INTEL-OpenCL-Implementation: NOT_FOUND" )
-		endif()
     endif()
 			
      # Setup for AMD/ATI Stream-SDK
@@ -77,11 +73,6 @@ if(WIN32)
 							NAMES OpenCL
 							PATHS $ENV{AMDAPPSDKROOT}lib/x86 )
          endif()
-		  
-     else()
-	 	if(NOT AMD_OPENCL_BASEDIR)
-			message( "AMD/ATI-Stream-OpenCL-Implementation: NOT_FOUND" )
-		endif()
      endif()
 	 
 	 
@@ -102,35 +93,30 @@ if(WIN32)
 							NAMES OpenCL
 							PATHS ${NVIDIA_OPENCL_BASEDIR}/lib/Win32 )
          endif()
-		  
-     else()
-	 	if(NOT NVIDIA_OPENCL_BASEDIR)
-			message( "NVIDIA-Cuda-OpenCL-Implementation: NOT_FOUND" )
-		endif()
      endif()
 	 
 	 if( INTEL_OPENCL_BASEDIR AND NOT AMD_OPENCL_BASEDIR AND NOT NVIDIA_OPENCL_BASEDIR  )
 		SET( OPENCL_INCLUDE_DIR ${INTEL_OPENCL_INCLUDE_DIR})
-		message( STATUS "INTEL-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
+		# message( STATUS "INTEL-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
 		SET( OPENCL_LIBRARY ${INTEL_OPENCL_LIBRARY})
-		message( STATUS "INTEL-OpenCL-Library path : " ${OPENCL_LIBRARY} )
+		# message( STATUS "INTEL-OpenCL-Library path : " ${OPENCL_LIBRARY} )
 	 else()
 		if( AMD_OPENCL_BASEDIR )
 		
 			if( AMD_OPENCL_LIBRARY )
 				SET( OPENCL_INCLUDE_DIR ${AMD_OPENCL_INCLUDE_DIR})
-				message( STATUS "AMD-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
+				# message( STATUS "AMD-OpenCL-Include path : " ${OPENCL_INCLUDE_DIR} )
 				SET( OPENCL_LIBRARY ${AMD_OPENCL_LIBRARY})
-				message( STATUS "AMD-OpenCL-Library path : " ${OPENCL_LIBRARY} )
+				# message( STATUS "AMD-OpenCL-Library path : " ${OPENCL_LIBRARY} )
 			endif()
 		
 		else()
 		
 			if( NVIDIA_OPENCL_LIBRARY )
 				SET( OPENCL_INCLUDE_DIR ${NVIDIA_OPENCL_INCLUDE_DIR})
-				message( STATUS "NVidia-CUDA-OpenCL-Includepath : " ${OPENCL_INCLUDE_DIR})
+				# message( STATUS "NVidia-CUDA-OpenCL-Includepath : " ${OPENCL_INCLUDE_DIR})
 				SET( OPENCL_LIBRARY ${NVIDIA_OPENCL_LIBRARY})
-				message( STATUS "NVidia-CUDA-OpenCL-Library path : " ${OPENCL_LIBRARY} )
+				# message( STATUS "NVidia-CUDA-OpenCL-Library path : " ${OPENCL_LIBRARY} )
 			endif()
 		
 		

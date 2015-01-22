@@ -66,7 +66,7 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentSc
 	EVE_ASSERT(p_pScene);
 
 	eve::scene::Mesh * ptr = new eve::scene::Mesh(p_pParentScene, p_pParent);
-	if (!ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis, p_fullPath))
+	if (!ptr->init(p_pMesh, p_pScene, p_upAxis, p_fullPath))
 	{
 		EVE_RELEASE_PTR(ptr);
 	}
@@ -94,8 +94,16 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 
 
 //=================================================================================================
-bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
+bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
 {
+	// Stock mesh pointer.
+	m_pAiMesh = p_pMesh;
+	EVE_ASSERT(m_pAiMesh);
+
+	// In scene mesh name. 
+	m_name = std::string(m_pAiMesh->mName.C_Str());
+	std::wstring wname = eve::str::to_wstring(m_name);
+
 	// Grab scene node. 
 	const aiNode * pRoot = p_pScene->mRootNode;
 	const aiNode * pNode = pRoot->FindNode(m_name.c_str());
@@ -104,8 +112,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	bool ret = pNode != NULL;
 	EVE_ASSERT(ret);
 
-	// Stock mesh pointer.
-	m_pAiMesh = p_pMesh;
 	// Test mesh integrity.
 	if (!m_pAiMesh->HasFaces() || !m_pAiMesh->HasPositions())
 	{
@@ -129,11 +135,6 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 	// If scene node found and mesh contains required data.
 	if (ret)
 	{
-		// In scene mesh name. 
-		m_name = std::string(m_pAiMesh->mName.C_Str());
-		std::wstring wname = eve::str::to_wstring(m_name);
-
-
 		/////////////////////////////////////////
 		//	MESH
 		/////////////////////////////////////////
@@ -230,13 +231,12 @@ bool eve::scene::Mesh::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene 
 			mat = pNode->mTransformation * mat;
 			pNode = pNode->mParent;
 		}
-		//aiMatrix4x4 mat	= pNode->mTransformation;
 		eve::math::TMatrix44<float> matrix(mat.a1, mat.b1, mat.c1, mat.d1
 										 , mat.a2, mat.b2, mat.c2, mat.d2
 										 , mat.a3, mat.b3, mat.c3, mat.d3
 										 , mat.a4, mat.b4, mat.c4, mat.d4);
 		// Correct Up Axis if needed.
-		if (p_upAxis == Axis_Z)
+		if (p_upAxis == eve::Axis_Z)
 		{
 			matrix.fromZupToYup();
 		}

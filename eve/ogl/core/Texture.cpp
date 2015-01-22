@@ -207,9 +207,75 @@ void eve::ogl::Texture::bind(GLenum p_index)
 }
 
 //=================================================================================================
+void eve::ogl::Texture::bindDiffuse(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_DIFFUSE);
+	glBindTexture(GL_TEXTURE_2D, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::bindNormal(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_NORMAL);
+	glBindTexture(GL_TEXTURE_2D, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::bindEmissive(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_EMISSIVE);
+	glBindTexture(GL_TEXTURE_2D, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::bindOpacity(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_OPACITY);
+	glBindTexture(GL_TEXTURE_2D, m_id);
+	EVE_OGL_CHECK_ERROR;
+}
+
+
+
+//=================================================================================================
 void eve::ogl::Texture::unbind(GLenum p_index)
 {
 	glActiveTexture(GL_TEXTURE0 + p_index);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::unbind_diffuse(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_DIFFUSE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::unbind_normal(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_NORMAL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::unbind_emissive(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_EMISSIVE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	EVE_OGL_CHECK_ERROR;
+}
+
+//=================================================================================================
+void eve::ogl::Texture::unbind_opacity(void)
+{
+	glActiveTexture(GL_TEXTURE0 + EVE_OGL_SAMPLER_OPACITY);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	EVE_OGL_CHECK_ERROR;
 }

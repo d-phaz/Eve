@@ -113,7 +113,7 @@ namespace eve
 
 		protected:
 			/** \brief Allocate and init class members based on ASSIMP aiMesh \a pMesh. */
-			bool initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
+			bool init(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
 
 
 		protected:
