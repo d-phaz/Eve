@@ -43,6 +43,7 @@
 #ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
 #include "eve/sys/win32/WindowRoot.h"
 #endif
+#include "eve/sys/win32/WindowChild.h"
 
 
 //=================================================================================================

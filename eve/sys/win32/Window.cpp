@@ -113,12 +113,12 @@ void eve::sys::Window::init(void)
 	{
 	case eve::sys::WindowType_App:
 		m_style		= WS_OVERLAPPEDWINDOW;
-		m_exStyle	= WS_EX_OVERLAPPEDWINDOW | WS_EX_NOINHERITLAYOUT;
+		m_exStyle	= WS_EX_OVERLAPPEDWINDOW | WS_EX_NOINHERITLAYOUT | WS_EX_ACCEPTFILES;
 		break;
 
 	case eve::sys::WindowType_Child:
 		m_style		= WS_CHILDWINDOW;
-		m_exStyle	= WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT;
+		m_exStyle = WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT | WS_EX_ACCEPTFILES;
 		break;
 
 	case eve::sys::WindowType_Output:
@@ -231,7 +231,7 @@ void eve::sys::Window::init(void)
 	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 
 	// Activate drag and drop.
-	this->setDragAcceptFiles(true);
+	//this->setDragAcceptFiles(true);
 }
 
 //=================================================================================================

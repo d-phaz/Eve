@@ -134,19 +134,19 @@ void eve::app::App::release(void)
 	// Unregister from application events.
 	eve::evt::unregister_events_application(this);
 
-		// View container.
-		eve::sys::View * view = nullptr;
-		while (!m_pVecViews->empty())
-		{
-			view = m_pVecViews->back();
-			m_pVecViews->pop_back();
+	// View container.
+	eve::sys::View * view = nullptr;
+	while (!m_pVecViews->empty())
+	{
+		view = m_pVecViews->back();
+		m_pVecViews->pop_back();
 
-			EVE_RELEASE_PTR(view);
-		}
-		EVE_RELEASE_PTR_CPP(m_pVecViews);
+		EVE_RELEASE_PTR(view);
+	}
+	EVE_RELEASE_PTR_CPP(m_pVecViews);
 
-		// Fence.
-		EVE_RELEASE_PTR(m_pFence);
+	// Fence.
+	EVE_RELEASE_PTR(m_pFence);
 
 	// FreeImage.
 #if defined(FREEIMAGE_LIB)
