@@ -30,32 +30,39 @@
 */
 
 // Main header
-#include "eve/sys/win32/Display.h"
+#include "eve/sys/win32/WindowChild.h"
 
-//=================================================================================================
-int32_t eve::sys::get_main_monitor_width(void)		{ return ::GetSystemMetrics(SM_CXFULLSCREEN); }
-int32_t eve::sys::get_main_monitor_height(void)		{ return ::GetSystemMetrics(SM_CYFULLSCREEN); }
-
-//=================================================================================================
-int32_t eve::sys::get_main_display_width(void)		{ return ::GetSystemMetrics(SM_CXSCREEN); }
-int32_t eve::sys::get_main_display_height(void)		{ return ::GetSystemMetrics(SM_CYSCREEN); }
-
+#ifndef __EVE_THREADING_INCLUDES_H__
+#include "eve/thr/Includes.h"
+#endif
 
 
 //=================================================================================================
-uint32_t eve::sys::get_work_area_width(void)
+eve::sys::WindowChild * eve::sys::WindowChild::create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
 {
-	RECT rect;
-	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-
-	return static_cast<uint32_t>(rect.right - rect.left);
+	eve::sys::WindowChild * ptr = new eve::sys::WindowChild(p_x, p_y, p_width, p_height, p_parent);
+	ptr->init();
+	return ptr;
 }
 
 //=================================================================================================
-uint32_t eve::sys::get_work_area_height(void)
-{
-	RECT rect;
-	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
+eve::sys::WindowChild::WindowChild(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
+	// Inheritance
+	: eve::sys::Window(p_x, p_y, p_width, p_height, p_parent)
+{}
 
-	return static_cast<uint32_t>(rect.bottom - rect.top);
+
+
+//=================================================================================================
+void eve::sys::WindowChild::init(void)
+{
+	// Call parent class.
+	eve::sys::Window::init();
+}
+
+//=================================================================================================
+void eve::sys::WindowChild::release(void)
+{
+	// Call parent class.
+	eve::sys::Window::release();
 }

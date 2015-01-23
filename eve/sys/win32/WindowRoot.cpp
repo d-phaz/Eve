@@ -30,32 +30,51 @@
 */
 
 // Main header
-#include "eve/sys/win32/Display.h"
+#include "eve/sys/win32/WindowRoot.h"
 
-//=================================================================================================
-int32_t eve::sys::get_main_monitor_width(void)		{ return ::GetSystemMetrics(SM_CXFULLSCREEN); }
-int32_t eve::sys::get_main_monitor_height(void)		{ return ::GetSystemMetrics(SM_CYFULLSCREEN); }
-
-//=================================================================================================
-int32_t eve::sys::get_main_display_width(void)		{ return ::GetSystemMetrics(SM_CXSCREEN); }
-int32_t eve::sys::get_main_display_height(void)		{ return ::GetSystemMetrics(SM_CYSCREEN); }
-
+#ifndef __EVE_THREADING_INCLUDES_H__
+#include "eve/thr/Includes.h"
+#endif
 
 
 //=================================================================================================
-uint32_t eve::sys::get_work_area_width(void)
+eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height)
 {
-	RECT rect;
-	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-
-	return static_cast<uint32_t>(rect.right - rect.left);
+	eve::sys::WindowRoot * ptr = new eve::sys::WindowRoot(p_x, p_y, p_width, p_height);
+	ptr->init();
+	return ptr;
 }
 
 //=================================================================================================
-uint32_t eve::sys::get_work_area_height(void)
+eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area(void)
 {
-	RECT rect;
-	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
+	uint32_t border		= eve::sys::Window::get_border_thickness();
+	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
+	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
+	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
+	return eve::sys::WindowRoot::create_ptr(border, titleBar + border, width, height);
+}
 
-	return static_cast<uint32_t>(rect.bottom - rect.top);
+
+
+//=================================================================================================
+eve::sys::WindowRoot::WindowRoot(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height)
+	// Inheritance
+	: eve::sys::Window(p_x, p_y, p_width, p_height)
+{}
+
+
+
+//=================================================================================================
+void eve::sys::WindowRoot::init(void)
+{
+	// Call parent class.
+	eve::sys::Window::init();
+}
+
+//=================================================================================================
+void eve::sys::WindowRoot::release(void)
+{
+	// Call parent class.
+	eve::sys::Window::release();
 }

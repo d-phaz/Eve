@@ -73,15 +73,7 @@ LONG eve::sys::Window::m_ex_style_fullscreen = WS_EX_APPWINDOW;
 
 
 //=================================================================================================
-eve::sys::Window * eve::sys::Window::create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height)
-{
-	eve::sys::Window * ptr = new eve::sys::Window(p_x, p_y, p_width, p_height);
-	ptr->init();
-	return ptr;
-}
-
-//=================================================================================================
-eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height)
+eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
 	// Inheritance
 	: eve::mem::Pointer()
 
@@ -90,6 +82,7 @@ eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_
 	, m_y(p_y)
 	, m_width(p_width)
 	, m_height(p_height)
+	, m_parent(p_parent)
 	, m_title()
 
 	, m_handle(0)
@@ -109,15 +102,23 @@ eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_
 //=================================================================================================
 void eve::sys::Window::init(void)
 {
-	// Window style
-	m_style		= WS_OVERLAPPEDWINDOW;
-	m_exStyle	= WS_EX_OVERLAPPEDWINDOW;
+	// Window style.
+	if (m_parent)
+	{
+		m_style	  = WS_CHILDWINDOW;
+		m_exStyle = WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT;
+	}
+	else
+	{
+		m_style   = WS_OVERLAPPEDWINDOW;
+		m_exStyle = WS_EX_OVERLAPPEDWINDOW | WS_EX_NOINHERITLAYOUT;
+	}
 
-	// Generate per-instance unique classname
+	// Generate per-instance unique classname.
 	wchar_t classname[sizeof(eve::sys::Window*) * 2 + 2]; // we add 2 chars to the window class name 
 	genClassNameStr(this, classname);
 
-	// Get system module handle
+	// Get system module handle.
 	m_hinstance = ::GetModuleHandleW(0);
 	if (!m_hinstance) 
 	{
@@ -180,7 +181,7 @@ void eve::sys::Window::init(void)
 	wchar_t t_title = 0;
 	m_handle = ::CreateWindowExW(m_exStyle, classname, &t_title, m_style,
 								 m_x, m_y, m_width, m_height,
-								 NULL, 0, m_hinstance, 0);
+								 m_parent, 0, m_hinstance, 0);
 	if (!m_handle)
 	{
 		EVE_LOG_ERROR("Can't create system Window: %s", eve::mess::get_error_msg().c_str());
@@ -826,4 +827,18 @@ void eve::sys::Window::setTitle(const std::wstring & p_title)
 			EVE_ASSERT_FAILURE;
 		}
 	}
+}
+
+
+
+//=================================================================================================
+uint32_t eve::sys::Window::get_title_bar_height(void)
+{
+	return static_cast<uint32_t>(::GetSystemMetrics(SM_CYCAPTION));
+}
+
+//=================================================================================================
+uint32_t eve::sys::Window::get_border_thickness(void)
+{
+	return static_cast<uint32_t>(::GetSystemMetrics(SM_CXSIZEFRAME));
 }

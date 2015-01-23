@@ -63,9 +63,9 @@ namespace eve
 
 
 		/** \brief Get the width of the portion of the screen that is not obscured by the system taskbar or by application desktop toolbars. */
-		int32_t get_work_area_width(void);
+		uint32_t get_work_area_width(void);
 		/** \brief Get the height of the portion of the screen that is not obscured by the system taskbar or by application desktop toolbars. */
-		int32_t get_work_area_height(void);
+		uint32_t get_work_area_height(void);
 
 	} // namespace sys
 
