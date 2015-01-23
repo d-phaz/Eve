@@ -48,7 +48,7 @@ eve::sys::WindowChild * eve::sys::WindowChild::create_ptr(int32_t p_x, int32_t p
 //=================================================================================================
 eve::sys::WindowChild::WindowChild(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
 	// Inheritance
-	: eve::sys::Window(p_x, p_y, p_width, p_height, p_parent)
+	: eve::sys::Window(p_x, p_y, p_width, p_height, eve::sys::WindowType_Child, p_parent)
 {}
 
 

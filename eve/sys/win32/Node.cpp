@@ -80,7 +80,9 @@ void eve::sys::Node::release(void)
 //=================================================================================================
 void eve::sys::Node::initThreadedData(void)
 {
-	m_pWindow = eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area();
+// 	// Window has to be created in view(s).
+// 	EVE_ASSERT(m_pWindow);
+	m_pWindow = eve::sys::WindowRoot::create_ptr(50, 50, 800, 600, eve::sys::WindowType_App);
 	m_pWindow->show();
 
 	m_pRender = EVE_CREATE_PTR(eve::sys::Render);

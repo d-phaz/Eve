@@ -73,7 +73,12 @@ LONG eve::sys::Window::m_ex_style_fullscreen = WS_EX_APPWINDOW;
 
 
 //=================================================================================================
-eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
+eve::sys::Window::Window(int32_t p_x 
+					   , int32_t p_y
+					   , uint32_t p_width
+					   , uint32_t p_height
+					   , eve::sys::WindowType p_type
+					   , HWND p_parent)
 	// Inheritance
 	: eve::mem::Pointer()
 
@@ -82,6 +87,7 @@ eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_
 	, m_y(p_y)
 	, m_width(p_width)
 	, m_height(p_height)
+	, m_type(p_type)
 	, m_parent(p_parent)
 	, m_title()
 
@@ -103,15 +109,26 @@ eve::sys::Window::Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_
 void eve::sys::Window::init(void)
 {
 	// Window style.
-	if (m_parent)
+	switch (m_type)
 	{
-		m_style	  = WS_CHILDWINDOW;
-		m_exStyle = WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT;
-	}
-	else
-	{
-		m_style   = WS_OVERLAPPEDWINDOW;
-		m_exStyle = WS_EX_OVERLAPPEDWINDOW | WS_EX_NOINHERITLAYOUT;
+	case eve::sys::WindowType_App:
+		m_style		= WS_OVERLAPPEDWINDOW;
+		m_exStyle	= WS_EX_OVERLAPPEDWINDOW | WS_EX_NOINHERITLAYOUT;
+		break;
+
+	case eve::sys::WindowType_Child:
+		m_style		= WS_CHILDWINDOW;
+		m_exStyle	= WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT;
+		break;
+
+	case eve::sys::WindowType_Output:
+		m_style		= m_style_fullscreen;
+		m_exStyle	= m_ex_style_fullscreen;
+		break;
+
+	default: 
+		EVE_ASSERT_FAILURE; 
+		break;
 	}
 
 	// Generate per-instance unique classname.

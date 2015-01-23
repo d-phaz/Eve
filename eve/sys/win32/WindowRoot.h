@@ -76,12 +76,17 @@ namespace eve
 			* \param p_y is the Window position on Y-axis.
 			* \param p_width is the Window width.
 			* \param p_height is the Window height.
+			* \param p_type window type, used to create window style.
 			*/
-			static eve::sys::WindowRoot * create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
+			static eve::sys::WindowRoot * create_ptr(int32_t p_x
+												   , int32_t p_y
+												   , uint32_t p_width
+												   , uint32_t p_height
+												   , eve::sys::WindowType p_type);
 			/**
 			* \brief Create and return new pointer, window is scaled on work area size.
 			*/
-			static eve::sys::WindowRoot * create_ptr_scaled_on_main_work_area(void);
+			static eve::sys::WindowRoot * create_ptr_scaled_on_main_work_area(eve::sys::WindowType p_type);
 
 
 		private:
@@ -91,8 +96,13 @@ namespace eve
 			* \param p_y is the Window position on Y-axis.
 			* \param p_width is the Window width.
 			* \param p_height is the Window height.
+			* \param p_type window type, used to create window style.
 			*/
-			explicit WindowRoot(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
+			explicit WindowRoot(int32_t p_x
+							  , int32_t p_y
+							  , uint32_t p_width
+							  , uint32_t p_height
+							  , eve::sys::WindowType p_type);
 
 
 		private:

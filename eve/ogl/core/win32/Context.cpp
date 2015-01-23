@@ -108,7 +108,7 @@ void eve::ogl::Context::init(void)
 	m_pixelFormat = eve::ogl::PixelFormat::default_format();
 
 	// Create dummy window.
-	eve::sys::Window * win = eve::sys::WindowRoot::create_ptr(0, 0, 1, 1);
+	eve::sys::Window * win = eve::sys::WindowRoot::create_ptr(0, 0, 1, 1, eve::sys::WindowType_Output);
 
 	// Initialize OpenGL drawing device.
 	m_hDC = ::GetDC(win->getHandle());

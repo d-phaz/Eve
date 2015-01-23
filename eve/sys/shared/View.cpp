@@ -32,6 +32,10 @@
 // Main class header
 #include "eve/sys/shared/View.h"
 
+#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
+#include "eve/sys/win32/WindowRoot.h"
+#endif
+
 
 //=================================================================================================
 eve::sys::View::View(void)
@@ -40,3 +44,25 @@ eve::sys::View::View(void)
 
 	// Members init
 {}
+
+
+
+//=================================================================================================
+void eve::sys::View::initThreadedData(void)
+{
+// 	// Window has to be created in view(s).
+// 	m_pWindow = eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area();
+// 	m_pWindow->show();
+
+	// Call parent class.
+	eve::sys::Node::initThreadedData();
+}
+
+//=================================================================================================
+void eve::sys::View::releaseThreadedData(void)
+{
+	// Call parent class.
+	eve::sys::Node::releaseThreadedData();
+
+//	EVE_RELEASE_PTR(m_pWindow);
+}

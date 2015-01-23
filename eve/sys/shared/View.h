@@ -78,6 +78,13 @@ namespace eve
 			explicit View(void);
 
 
+		protected:
+			/** \brief Alloc and init threaded data. (pure virtual) */
+			virtual void initThreadedData(void) override;
+			/** \brief Release and delete threaded data. (pure virtual) */
+			virtual void releaseThreadedData(void) override;
+
+
 		public:
 			/** \brief File drop event handler. (pure virtual) */
 			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args) override{}

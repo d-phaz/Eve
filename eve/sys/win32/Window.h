@@ -58,6 +58,24 @@ namespace eve
 	namespace sys
 	{
 		/** 
+		* \enum eve::sys::WindowType
+		* \brief enumerate supported window types.
+		*/
+		enum WindowType
+		{
+			WindowType_Unknown = 0,
+
+			WindowType_App,
+			WindowType_Child,
+			WindowType_Output,
+
+			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+			_WindowType_Force32Bit = INT_MAX
+
+		}; // enum WindowType
+
+
+		/** 
 		* \class eve::sys::Window
 		*
 		* \brief Creates and manage system window.
@@ -81,6 +99,7 @@ namespace eve
 			int32_t							m_y;					//!< Window position on Y-axis.
 			uint32_t						m_width;				//!< Window width, should never be negative.
 			uint32_t						m_height;				//!< Window height, should never be negative.
+			eve::sys::WindowType			m_type;					//!< Specifies window type used to create window style.
 			HWND							m_parent;				//!< Specifies parent window handle.
 			std::wstring					m_title;				//!< Window title.
 
@@ -113,9 +132,15 @@ namespace eve
 			* \param p_y is the Window position on Y-axis.
 			* \param p_width is the Window width.
 			* \param p_height is the Window height.
+			* \param p_type window type, used to create window style.
 			* \param p_parent parent window handle.
 			*/
-			explicit Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent = nullptr);
+			explicit Window(int32_t p_x
+						  , int32_t p_y
+						  , uint32_t p_width
+						  , uint32_t p_height
+						  , eve::sys::WindowType p_type
+						  , HWND p_parent = nullptr);
 
 
 		protected:

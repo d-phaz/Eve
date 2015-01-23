@@ -38,29 +38,37 @@
 
 
 //=================================================================================================
-eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height)
+eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr(int32_t p_x
+													  , int32_t p_y
+													  , uint32_t p_width
+													  , uint32_t p_height
+													  , eve::sys::WindowType p_type)
 {
-	eve::sys::WindowRoot * ptr = new eve::sys::WindowRoot(p_x, p_y, p_width, p_height);
+	eve::sys::WindowRoot * ptr = new eve::sys::WindowRoot(p_x, p_y, p_width, p_height, p_type);
 	ptr->init();
 	return ptr;
 }
 
 //=================================================================================================
-eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area(void)
+eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area(eve::sys::WindowType p_type)
 {
 	uint32_t border		= eve::sys::Window::get_border_thickness();
 	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
 	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
 	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
-	return eve::sys::WindowRoot::create_ptr(border, titleBar + border, width, height);
+	return eve::sys::WindowRoot::create_ptr(border, titleBar + border, width, height, p_type);
 }
 
 
 
 //=================================================================================================
-eve::sys::WindowRoot::WindowRoot(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height)
+eve::sys::WindowRoot::WindowRoot(int32_t p_x
+							   , int32_t p_y
+							   , uint32_t p_width
+							   , uint32_t p_height
+							   , eve::sys::WindowType p_type)
 	// Inheritance
-	: eve::sys::Window(p_x, p_y, p_width, p_height)
+	: eve::sys::Window(p_x, p_y, p_width, p_height, p_type)
 {}
 
 
