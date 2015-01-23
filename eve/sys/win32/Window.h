@@ -27,7 +27,7 @@
  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 #pragma once
 #ifndef __EVE_SYSTEM_WINDOW_H__
@@ -45,6 +45,10 @@
 #include "eve/mess/Includes.h"
 #endif
 
+#ifndef __EVE_SYSTEM_DISPLAY_H__
+#include "eve/sys/win32/Display.h"
+#endif
+
 
 namespace eve{ namespace thr{ class SpinLock;  } }
 
@@ -54,6 +58,24 @@ namespace eve
 	namespace sys
 	{
 		/** 
+		* \enum eve::sys::WindowType
+		* \brief enumerate supported window types.
+		*/
+		enum WindowType
+		{
+			WindowType_Unknown = 0,
+
+			WindowType_App,
+			WindowType_Child,
+			WindowType_Output,
+
+			//! This value is not used. It is just there to force the compiler to map this enum to a 32 Bit integer.
+			_WindowType_Force32Bit = INT_MAX
+
+		}; // enum WindowType
+
+
+		/** 
 		* \class eve::sys::Window
 		*
 		* \brief Creates and manage system window.
@@ -62,7 +84,7 @@ namespace eve
 		*
 		* \note extends eve::mem::Pointer
 		*/
-		class Window final
+		class Window
 			: public eve::mem::Pointer
 		{
 
@@ -72,11 +94,13 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 
-		private:
+		protected:
 			int32_t							m_x;					//!< Window position on X-axis.
 			int32_t							m_y;					//!< Window position on Y-axis.
 			uint32_t						m_width;				//!< Window width, should never be negative.
 			uint32_t						m_height;				//!< Window height, should never be negative.
+			eve::sys::WindowType			m_type;					//!< Specifies window type used to create window style.
+			HWND							m_parent;				//!< Specifies parent window handle.
 			std::wstring					m_title;				//!< Window title.
 
 			HWND							m_handle;				//!< System window handle.
@@ -100,29 +124,26 @@ namespace eve
 			EVE_DISABLE_COPY(Window);
 			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Window);
 
-		public:
-			/**
-			* \brief Create and return new pointer.
-			* \param p_x is the Window position on X-axis.
-			* \param p_y is the Window position on Y-axis.
-			* \param p_width is the Window width.
-			* \param p_height is the Window height.
-			*/
-			static Window * create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
 
-
-		private:
+		protected:
 			/** 
 			* \brief Class constructor. 
 			* \param p_x is the Window position on X-axis.
 			* \param p_y is the Window position on Y-axis.
 			* \param p_width is the Window width.
 			* \param p_height is the Window height.
+			* \param p_type window type, used to create window style.
+			* \param p_parent parent window handle.
 			*/
-			explicit Window(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height);
+			explicit Window(int32_t p_x
+						  , int32_t p_y
+						  , uint32_t p_width
+						  , uint32_t p_height
+						  , eve::sys::WindowType p_type
+						  , HWND p_parent = nullptr);
 
 
-		private:
+		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
@@ -221,6 +242,14 @@ namespace eve
 				
 			/** \brief Set window title (UTF-8). */
 			void setTitle( const std::wstring & p_title );
+
+
+		public:
+			/** \brief Get title bar height. */
+			static uint32_t get_title_bar_height(void);
+
+			/** \brief get window border thickness. */
+			static uint32_t get_border_thickness(void);
 
 		}; // class Window
 

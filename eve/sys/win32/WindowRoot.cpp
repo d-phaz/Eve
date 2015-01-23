@@ -29,40 +29,60 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main class header
-#include "eve/sys/shared/View.h"
-
-#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
+// Main header
 #include "eve/sys/win32/WindowRoot.h"
+
+#ifndef __EVE_THREADING_INCLUDES_H__
+#include "eve/thr/Includes.h"
 #endif
 
 
 //=================================================================================================
-eve::sys::View::View(void)
-	// Inheritance
-	: eve::sys::Node()
+eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr(int32_t p_x
+													  , int32_t p_y
+													  , uint32_t p_width
+													  , uint32_t p_height
+													  , eve::sys::WindowType p_type)
+{
+	eve::sys::WindowRoot * ptr = new eve::sys::WindowRoot(p_x, p_y, p_width, p_height, p_type);
+	ptr->init();
+	return ptr;
+}
 
-	// Members init
+//=================================================================================================
+eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area(eve::sys::WindowType p_type)
+{
+	uint32_t border		= eve::sys::Window::get_border_thickness();
+	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
+	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
+	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
+	return eve::sys::WindowRoot::create_ptr(border, titleBar + border, width, height, p_type);
+}
+
+
+
+//=================================================================================================
+eve::sys::WindowRoot::WindowRoot(int32_t p_x
+							   , int32_t p_y
+							   , uint32_t p_width
+							   , uint32_t p_height
+							   , eve::sys::WindowType p_type)
+	// Inheritance
+	: eve::sys::Window(p_x, p_y, p_width, p_height, p_type)
 {}
 
 
 
 //=================================================================================================
-void eve::sys::View::initThreadedData(void)
+void eve::sys::WindowRoot::init(void)
 {
-// 	// Window has to be created in view(s).
-// 	m_pWindow = eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area();
-// 	m_pWindow->show();
-
 	// Call parent class.
-	eve::sys::Node::initThreadedData();
+	eve::sys::Window::init();
 }
 
 //=================================================================================================
-void eve::sys::View::releaseThreadedData(void)
+void eve::sys::WindowRoot::release(void)
 {
 	// Call parent class.
-	eve::sys::Node::releaseThreadedData();
-
-//	EVE_RELEASE_PTR(m_pWindow);
+	eve::sys::Window::release();
 }

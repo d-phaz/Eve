@@ -40,9 +40,10 @@
 #include "eve/sys/shared/Render.h"
 #endif
 
-#ifndef __EVE_SYSTEM_WINDOW_H__
-#include "eve/sys/win32/Window.h"
+#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
+#include "eve/sys/win32/WindowRoot.h"
 #endif
+#include "eve/sys/win32/WindowChild.h"
 
 
 //=================================================================================================
@@ -80,7 +81,9 @@ void eve::sys::Node::release(void)
 //=================================================================================================
 void eve::sys::Node::initThreadedData(void)
 {
-	m_pWindow = eve::sys::Window::create_ptr(50, 50, 800, 600);
+// 	// Window has to be created in view(s).
+// 	EVE_ASSERT(m_pWindow);
+	m_pWindow = eve::sys::WindowRoot::create_ptr(50, 50, 800, 600, eve::sys::WindowType_App);
 	m_pWindow->show();
 
 	m_pRender = EVE_CREATE_PTR(eve::sys::Render);
@@ -143,7 +146,7 @@ void eve::sys::Node::run(void)
 //=================================================================================================
 bool eve::sys::Node::registerRenderer(eve::core::Renderer * p_pRenderer)
 {
-	return m_pRender->registerRenderer(p_pRenderer, m_pWindow->getHandle());;
+	return m_pRender->registerRenderer(p_pRenderer, m_pWindow->getHandle());
 }
 
 //=================================================================================================

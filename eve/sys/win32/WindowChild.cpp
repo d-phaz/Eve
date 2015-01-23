@@ -29,40 +29,40 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main class header
-#include "eve/sys/shared/View.h"
+// Main header
+#include "eve/sys/win32/WindowChild.h"
 
-#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
-#include "eve/sys/win32/WindowRoot.h"
+#ifndef __EVE_THREADING_INCLUDES_H__
+#include "eve/thr/Includes.h"
 #endif
 
 
 //=================================================================================================
-eve::sys::View::View(void)
-	// Inheritance
-	: eve::sys::Node()
+eve::sys::WindowChild * eve::sys::WindowChild::create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
+{
+	eve::sys::WindowChild * ptr = new eve::sys::WindowChild(p_x, p_y, p_width, p_height, p_parent);
+	ptr->init();
+	return ptr;
+}
 
-	// Members init
+//=================================================================================================
+eve::sys::WindowChild::WindowChild(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent)
+	// Inheritance
+	: eve::sys::Window(p_x, p_y, p_width, p_height, eve::sys::WindowType_Child, p_parent)
 {}
 
 
 
 //=================================================================================================
-void eve::sys::View::initThreadedData(void)
+void eve::sys::WindowChild::init(void)
 {
-// 	// Window has to be created in view(s).
-// 	m_pWindow = eve::sys::WindowRoot::create_ptr_scaled_on_main_work_area();
-// 	m_pWindow->show();
-
 	// Call parent class.
-	eve::sys::Node::initThreadedData();
+	eve::sys::Window::init();
 }
 
 //=================================================================================================
-void eve::sys::View::releaseThreadedData(void)
+void eve::sys::WindowChild::release(void)
 {
 	// Call parent class.
-	eve::sys::Node::releaseThreadedData();
-
-//	EVE_RELEASE_PTR(m_pWindow);
+	eve::sys::Window::release();
 }

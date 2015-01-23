@@ -43,19 +43,19 @@ int32_t eve::sys::get_main_display_height(void)		{ return ::GetSystemMetrics(SM_
 
 
 //=================================================================================================
-int32_t eve::sys::get_work_area_width(void)
+uint32_t eve::sys::get_work_area_width(void)
 {
 	RECT rect;
 	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
 
-	return static_cast<int32_t>(rect.right - rect.left);
+	return static_cast<uint32_t>(rect.right - rect.left);
 }
 
 //=================================================================================================
-int32_t eve::sys::get_work_area_height(void)
+uint32_t eve::sys::get_work_area_height(void)
 {
 	RECT rect;
 	::SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
 
-	return static_cast<int32_t>(rect.bottom - rect.top);
+	return static_cast<uint32_t>(rect.bottom - rect.top);
 }
