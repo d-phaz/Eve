@@ -36,14 +36,31 @@
 #include "eve/core/Renderer.h"
 #endif
 
+#ifndef __EVE_OPENGL_CORE_CONTEXT_H__
+#include "eve/ogl/core/win32/Context.h"
+#endif
+
 
 //=================================================================================================
-eve::sys::Render::Render(void)
+eve::sys::Render * eve::sys::Render::create_ptr(HWND p_handle)
+{
+	eve::sys::Render * ptr = new eve::sys::Render(p_handle);
+	ptr->init();
+	return ptr;
+}
+
+
+
+//=================================================================================================
+eve::sys::Render::Render(HWND p_handle)
 	// Inheritance
 	: eve::thr::Thread()
 
 	// Members init
+	, m_handle(p_handle)
+	, m_pContext(nullptr)
 	, m_pVecRenderers(nullptr)
+	, m_pTimerRender(nullptr)
 {}
 
 
@@ -53,6 +70,9 @@ void eve::sys::Render::init(void)
 {
 	// Call parent class
 	eve::thr::Thread::init();
+
+	// Create OpenGL context for target window handle.
+	m_pContext = eve::ogl::SubContext::create_ptr(m_handle);
 
 	// Render engines.
 	m_pVecRenderers = new std::vector<eve::core::Renderer*>();
@@ -64,6 +84,9 @@ void eve::sys::Render::init(void)
 //=================================================================================================
 void eve::sys::Render::release(void)
 {
+	// Timer.
+	EVE_RELEASE_PTR(m_pTimerRender)
+
 	// Render engines.
 	eve::core::Renderer * re = nullptr;
 	while (!m_pVecRenderers->empty())
@@ -74,6 +97,9 @@ void eve::sys::Render::release(void)
 		EVE_RELEASE_PTR(re);
 	}
 	EVE_RELEASE_PTR_CPP(m_pVecRenderers);
+
+	// Release context.
+	EVE_RELEASE_PTR_SAFE(m_pContext);
 
 	// Call parent class
 	eve::thr::Thread::release();
@@ -107,6 +133,7 @@ void eve::sys::Render::run(void)
 		{
 			// Launch render.
 			m_pFence->lock();
+			m_pContext->makeCurrent();
 
 			for (auto & itr : (*m_pVecRenderers))
 			{
@@ -115,6 +142,8 @@ void eve::sys::Render::run(void)
 				itr->cb_afterDisplay();
 			}
 
+			m_pContext->swapBuffers();
+			m_pContext->doneCurrent();
 			m_pFence->unlock();	
 
 			m_pTimerRender->updateFPS(true);
@@ -128,7 +157,7 @@ void eve::sys::Render::run(void)
 
 
 //=================================================================================================
-bool eve::sys::Render::registerRenderer(eve::core::Renderer * p_pRenderer, void * p_handle)
+bool eve::sys::Render::registerRenderer(eve::core::Renderer * p_pRenderer)
 {
 	m_pFence->lock();
 
@@ -137,7 +166,6 @@ bool eve::sys::Render::registerRenderer(eve::core::Renderer * p_pRenderer, void 
 	if (breturn)
 	{
 		m_pVecRenderers->push_back(p_pRenderer);
-		p_pRenderer->registerToHandle(p_handle);
 	}
 
 	m_pFence->unlock();
@@ -173,7 +201,15 @@ bool eve::sys::Render::releaseRenderer(eve::core::Renderer * p_pRenderer)
 	{
 		eve::core::Renderer * rder = (*itr);
 		m_pVecRenderers->erase(itr);
+
+
+		// Delete pointer in active OpenGL context.
+		m_pContext->makeCurrent();
+		
 		EVE_RELEASE_PTR(rder);
+
+		m_pContext->swapBuffers();
+		m_pContext->doneCurrent();
 	}
 
 	m_pFence->unlock();

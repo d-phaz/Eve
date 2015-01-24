@@ -128,16 +128,15 @@ namespace eve
 
 
 		private:
-			/** 
-			* \brief Choose available pixel format, as close to desired options as possible depending on hardware
-			* \param p_pPfd pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
-			* \return Chosen pixel format ID as int32_t.
-			*/
-			int32_t choosePixelFormat(void);
-
-
 			/** \brief DC attached pixel format may change selected options, grab and stock updated values. */
 			void updateFormatVersion(void);
+
+
+		public:
+			/** \brief Lock context guard fence. */
+			static void lock(void);
+			/** \brief Unlock context guard fence. */
+			static void unlock(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -177,8 +176,13 @@ namespace eve
 
 
 //=================================================================================================
+EVE_FORCE_INLINE void eve::ogl::Context::lock(void)		{ EVE_ASSERT(m_p_fence);	m_p_fence->lock(); }
+EVE_FORCE_INLINE void eve::ogl::Context::unlock(void)	{ EVE_ASSERT(m_p_fence);	m_p_fence->unlock(); }
+
+
+//=================================================================================================
 EVE_FORCE_INLINE eve::ogl::Context *	eve::ogl::Context::get_instance(void)	{ EVE_ASSERT(m_p_instance);		return m_p_instance; }
-EVE_FORCE_INLINE eve::thr::SpinLock * eve::ogl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence; }
+EVE_FORCE_INLINE eve::thr::SpinLock *	eve::ogl::Context::get_fence(void)		{ EVE_ASSERT(m_p_fence);		return m_p_fence; }
 
 //=================================================================================================
 EVE_FORCE_INLINE const HGLRC			eve::ogl::Context::get_handle(void)		{ EVE_ASSERT(m_p_instance);		return m_p_instance->m_hGLRC; }
@@ -215,7 +219,6 @@ namespace eve
 			static eve::ogl::SubContext *		m_p_context_current;		//<! Current OpenGL context.
 
 		private:
-			HGLRC								m_hGLRC;					//!< OpenGL rendering context handle.
 			HDC									m_hDC;						//!< Draw context (linked to window) handle.
 			HWND								m_hWnd;						//!< Window handle.
 

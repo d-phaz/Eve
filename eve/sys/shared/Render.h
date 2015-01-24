@@ -42,6 +42,7 @@
 #endif
 
 namespace eve { namespace core	{ class Renderer; } }
+namespace eve { namespace ogl	{ class SubContext; } }
 
 
 namespace eve
@@ -55,7 +56,7 @@ namespace eve
 		*
 		* \note extends eve::thr::Thread
 		*/
-		class Render
+		class Render final
 			: public eve::thr::Thread
 		{
 
@@ -65,9 +66,12 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 
-		protected:
-			std::vector<eve::core::Renderer*> *		m_pVecRenderers;	//!< Render Engine(s) container.
+		private:
+			HWND									m_handle;			//!< Specifies system window handle.
+			eve::ogl::SubContext *					m_pContext;			//!< Specifies OpenGL context pointer.
 
+			std::vector<eve::core::Renderer*> *		m_pVecRenderers;	//!< Specifies render Engine(s) container.
+			
 			eve::time::Timer *						m_pTimerRender;		//!< Specifies timer used to compute FPS.
 
 
@@ -78,12 +82,20 @@ namespace eve
 			EVE_DISABLE_COPY(Render);
 			EVE_PROTECT_DESTRUCTOR(Render);
 
-		protected:
+		public:
+			/**
+			* \brief Create and return new pointer.
+			* \param p_handle linked system window handle.
+			*/
+			static eve::sys::Render * create_ptr(HWND p_handle);
+
+
+		private:
 			/** \brief Class constructor. */
-			explicit Render(void);
+			explicit Render(HWND p_handle);
 
 
-		protected:
+		private:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/**
@@ -93,7 +105,7 @@ namespace eve
 			virtual void release(void) override;
 
 
-		protected:
+		private:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
@@ -109,7 +121,7 @@ namespace eve
 			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
 			* Return false if renderer is already registered.
 			*/
-			bool registerRenderer(eve::core::Renderer * p_pRenderer, void * p_handle );
+			bool registerRenderer(eve::core::Renderer * p_pRenderer);
 			/**
 			* \brief Unregister a renderer pointer.
 			* Return false if renderer is not registered.
@@ -120,7 +132,6 @@ namespace eve
 			* Return false if renderer is not registered.
 			*/
 			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
-
 
 		}; // class Node
 

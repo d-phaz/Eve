@@ -161,12 +161,14 @@ namespace eve
 			PixelFormat &operator=(const PixelFormat & p_parent);
 
 
+		public:
 			/** \brief Comparison operator '==' (are format the same?). */
 			friend bool operator==(const PixelFormat& p_formatFirst, const PixelFormat& p_formatSecond);
 			/** \brief Comparison operator '!=' (are format different?). */
 			friend bool operator!=(const PixelFormat& p_formatFirst, const PixelFormat& p_formatSecond);
 
 
+		public:
 			/**
 			* \brief Creates a PixelFormat object that is a copy of the current defaultFormat.
 			*
@@ -179,6 +181,7 @@ namespace eve
 			void init(FormatOptions p_options, int32_t p_plane = 0);
 
 
+		public:
 			/**
 			* \brief Convert system PIXELFORMATDESCRIPTOR to eve::ogl::PixelFormat.
 			* \param p_pfd Win32 pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
@@ -199,7 +202,19 @@ namespace eve
 			*/
 			static PixelFormat pfiToSystemPixelFormat(HDC p_hdc, int32_t p_pfi);
 
+			
+		public:
+			/**
+			* \brief Choose available pixel format, as close to desired options as possible depending on hardware
+			* \param p_hdc draw context as HDC.
+			* \param p_pPfd pixel format descriptor as PIXELFORMATDESCRIPTOR pointer.
+			* \param p_in_out_PixelFormat desired pixel format as eve::ogl::PixelFormat, updated if not all options are available.
+			* \return Chosen pixel format ID as int32_t.
+			*/
+			static int32_t choose_pixel_format(HDC p_hdc, PIXELFORMATDESCRIPTOR p_pPfd, eve::ogl::PixelFormat * p_in_out_PixelFormat);
 
+
+		public:
 			/** \brief Test if current OpenGL implementations supports overlay/underlay rendering planes. */
 			static bool hasOverlays(void);
 
@@ -208,36 +223,42 @@ namespace eve
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
+		public:
 			/** \brief Get default pixel format as eve::ogl::PixelFormat. */
 			static const eve::ogl::PixelFormat & default_format(void);
 			/** \brief Set default pixel format to \a p_format. */
 			static void set_default_format(const PixelFormat & p_format);
 
 
+		public:
 			/** \brief Set minimum depth buffer size to \a p_size. */
 			void setDepthBufferSize(int32_t p_size);
 			/** \brief Get depth buffer size. */
 			const int32_t  depthBufferSize(void) const;
 
 
+		public:
 			/** \brief Set red buffer size to \a p_size. */
 			void setRedBufferSize(int32_t p_size);
 			/** \brief Get red buffer size. */
 			const int32_t  redBufferSize(void) const;
 
 
+		public:
 			/** \brief Set green buffer size to \a p_size. */
 			void setGreenBufferSize(int32_t p_size);
 			/** \brief Get green buffer size. */
 			const int32_t  greenBufferSize(void) const;
 
 
+		public:
 			/** \brief Set blue buffer size to \a p_size. */
 			void setBlueBufferSize(int32_t p_size);
 			/** \brief Get blue buffer size. */
 			const int32_t  blueBufferSize(void) const;
 
 
+		public:
 			/**
 			* \brief Set alpha buffer size to \a p_size.
 			* This function implicitly enables the alpha channel.
@@ -247,18 +268,21 @@ namespace eve
 			const int32_t  alphaBufferSize(void) const;
 
 
+		public:
 			/** \brief Set accumulation buffer size, where \a p_size is the bit depth for each RGBA component. */
 			void setAccumBufferSize(int32_t p_size);
 			/** \brief Get accumulation buffer size. */
 			const int32_t  accumBufferSize(void) const;
 
 
+		public:
 			/** \brief Set stencil buffer size to \a p_size. */
 			void setStencilBufferSize(int32_t p_size);
 			/** \brief Get stencil buffer size.	*/
 			const int32_t  stencilBufferSize(void) const;
 
 
+		public:
 			/**
 			* \brief Returns true if double buffering is enabled; otherwise returns false.
 			* Double buffering is enabled by default.
@@ -278,6 +302,7 @@ namespace eve
 			void setDoubleBuffer(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if the depth buffer is enabled; otherwise returns false.
 			* The depth buffer is enabled by default.
@@ -296,6 +321,7 @@ namespace eve
 			void setDepth(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if RGBA color mode is set. Returns false if color index mode is set.
 			* The default color mode is RGBA.
@@ -314,6 +340,7 @@ namespace eve
 			void setRgba(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if alpha buffer is set, false otherwise.
 			* Alpha is set by default.
@@ -330,6 +357,7 @@ namespace eve
 			void setAlpha(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if the accumulation buffer is enabled; otherwise returns false.
 			* The accumulation buffer is disabled by default.
@@ -345,6 +373,7 @@ namespace eve
 			void setAccum(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if the stencil buffer is enabled; otherwise returns false.
 			* The stencil buffer is enabled by default.
@@ -360,6 +389,7 @@ namespace eve
 			void setStencil(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if stereo buffering is enabled; otherwise returns false.
 			* Stereo buffering is disabled by default.
@@ -375,6 +405,7 @@ namespace eve
 			void setStereo(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns true if direct rendering is enabled; otherwise returns false.
 			* Direct rendering is enabled by default.
@@ -391,6 +422,7 @@ namespace eve
 			void setDirectRendering(bool p_enable);
 
 
+		public:
 			/**
 			* \brief If \a p_enable is true, a GL context with multisample buffer support is picked; otherwise ignored.
 			*/
@@ -402,6 +434,7 @@ namespace eve
 			void setSampleBuffers(bool p_enable);
 
 
+		public:
 			/**
 			* \brief  Returns true if overlay plane is enabled; otherwise returns false.
 			* Overlay is disabled by default.
@@ -415,6 +448,7 @@ namespace eve
 			void setOverlay(bool p_enable);
 
 
+		public:
 			/**
 			* \brief Returns the number of samples per pixel when multi-sampling is enabled. 
 			* By default, the highest number of samples that is available is used.
@@ -427,6 +461,7 @@ namespace eve
 			void setSamples(int32_t p_numSamples);
 
 
+		public:
 			/**
 			* \brief Returns the currently set swap interval. -1 is returned if setting
 			* the swap interval isn't supported in the system GL implementation.
@@ -451,6 +486,7 @@ namespace eve
 			void setSwapInterval(int32_t p_interval);
 
 
+		public:
 			/**
 			* \brief Returns the plane of this format. The default for normal formats is 0, which means the normal plane. 
 			* The default for overlay formats is 1, which is the first overlay plane.
@@ -466,12 +502,14 @@ namespace eve
 			void setPlane(int32_t p_plane);
 
 
+		public:
 			/** \brief Sets the format option to \a p_opt. (convenience method) */
 			void setOption(eve::ogl::FormatOptions p_opt);
 			/** \brief Returns true if format option \a p_opt is set, false otherwise. */
 			bool testOption(eve::ogl::FormatOptions p_opt) const;
 			
 
+		public:
 			/**
 			* \brief Set the OpenGL version to the \a p_major and \a p_minor numbers. 
 			* If a context compatible with the requested OpenGL version cannot be created, 
@@ -480,6 +518,7 @@ namespace eve
 			void setVersion(int32_t p_major, int32_t p_minor);
 
 
+		public:
 			/** \brief Set the OpenGL context profile to \a p_profile. */
 			void setProfile(eve::ogl::PixelFormatProfile p_profile);
 			/** \brief Get the OpenGL context profile as eve::ogl::PixelFormatProfile. */

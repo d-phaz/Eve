@@ -30,12 +30,46 @@
 */
 
 #include "eve/app/App.h"
-#include "eve/math/Includes.h"
-#include "eve/io/Image.h"
-#include "eve/ogl/core/Renderer.h"
 #include "eve/sys/win32/Window.h"
 
 #include "eve/scene/Scene.h"
+
+static eve::scene::Scene * m_pScene = nullptr;
+
+class ExampleTest final
+	: public eve::sys::View
+{
+	friend class eve::mem::Pointer;
+
+
+	EVE_DISABLE_COPY(ExampleTest);
+	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(ExampleTest);
+
+private:
+	/** \brief Alloc and init threaded data. (pure virtual) */
+	virtual void initThreadedData(void) override;
+	/** \brief Release and delete threaded data. (pure virtual) */
+	virtual void releaseThreadedData(void) override;
+
+};
+
+void ExampleTest::initThreadedData(void)
+{
+	// Call parent class.
+	eve::sys::View::initThreadedData();
+
+	this->registerRenderer(m_pScene);
+}
+
+void ExampleTest::releaseThreadedData(void)
+{
+	this->unregisterRenderer(m_pScene);
+	
+	// Call parent class.
+	eve::sys::View::releaseThreadedData();
+}
+
+
 
 
 class Example final
@@ -44,7 +78,9 @@ class Example final
 	friend class eve::mem::Pointer;
 
 private:
-	eve::scene::Scene * m_pScene;
+	//eve::scene::Scene * m_pScene;
+
+	ExampleTest *		m_pViewTest;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -74,10 +110,15 @@ void Example::initThreadedData(void)
 	std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
 	m_pScene->load(path);
 	this->registerRenderer(m_pScene);
+
+	m_pViewTest = EveApp->addView<ExampleTest>();
+
 }
 
 void Example::releaseThreadedData(void)
 {
+	this->releaseRenderer(m_pScene);
+
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
 }

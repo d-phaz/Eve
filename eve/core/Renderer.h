@@ -45,6 +45,10 @@
 #include "eve/mess/Includes.h"
 #endif
 
+#ifndef __EVE_THREADING_INCLUDES_H__
+#include "eve/thr/Includes.h"
+#endif
+
 
 namespace eve
 {
@@ -68,8 +72,9 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			uint32_t		m_width;				//!< Render width.
-			uint32_t		m_height;				//!< Render height.
+			uint32_t				m_width;		//!< Render width.
+			uint32_t				m_height;		//!< Render height.
+			eve::thr::Fence *		m_pFence;		// Specifies rendering and associated operation(s) memory fence.
 
 
 			//////////////////////////////////////
@@ -86,21 +91,16 @@ namespace eve
 			
 		protected:
 			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) = 0;
+			virtual void init(void);
 			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) = 0;
+			virtual void release(void);
 
 
 		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) = 0;
-
-
-		public:
-			/** \brief Before display callback. (pure virtual) */
-			virtual void cb_beforeDisplay(void) = 0;
-			/** \brief After display callback. (pure virtual) */
-			virtual void cb_afterDisplay(void) = 0;
+			/** \brief Before display callback. */
+			virtual void cb_beforeDisplay(void);
+			/** \brief After display callback. */
+			virtual void cb_afterDisplay(void);
 
 			/** \brief Draw on screen callback. (pure virtual) */
 			virtual void cb_display(void) = 0;

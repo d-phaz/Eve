@@ -232,6 +232,7 @@ bool eve::scene::Scene::load(const std::wstring & p_filePath)
 bool eve::scene::Scene::add(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath)
 {
 	bool ret = false;
+	m_pFence->lock();
 
 	eve::scene::Mesh * mesh = eve::scene::Mesh::create_ptr(this, nullptr, p_pMesh, p_pScene, p_upAxis, p_fullPath);
 	if (mesh) 
@@ -240,6 +241,7 @@ bool eve::scene::Scene::add(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 		ret = true;
 	}
 
+	m_pFence->unlock();
 	return ret;
 }
 
@@ -247,6 +249,7 @@ bool eve::scene::Scene::add(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis)
 {
 	bool ret = false;
+	m_pFence->lock();
 
 	eve::scene::Camera * cam = eve::scene::Camera::create_ptr(this, nullptr, p_pCamera, p_pScene, p_upAxis);
 	if (cam)
@@ -256,6 +259,7 @@ bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene
 		ret = true;
 	}
 
+	m_pFence->unlock();
 	return ret;
 }
 
