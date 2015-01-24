@@ -55,6 +55,9 @@ eve::ogl::Renderer::Renderer(void)
 //=================================================================================================
 void eve::ogl::Renderer::init(void)
 {
+	// Call parent class.
+	eve::core::Renderer::init();
+
 	m_pQueueInit		= new std::deque<eve::ogl::Object *>();
 	m_pQueueUpdate		= new std::deque<eve::ogl::Object *>();
 	m_pQueueRelease		= new std::deque<eve::ogl::Object *>();
@@ -64,6 +67,9 @@ void eve::ogl::Renderer::init(void)
 //=================================================================================================
 void eve::ogl::Renderer::release(void)
 {
+	// Process pending asynchronous operations.
+	this->processQueues();
+
 	// Empty and release queues
 	m_pQueueInit->clear();
 	EVE_RELEASE_PTR_CPP(m_pQueueInit);
@@ -74,6 +80,9 @@ void eve::ogl::Renderer::release(void)
 
 	// Release fence.
 	EVE_RELEASE_PTR(m_pQueueFence);
+
+	// Call parent class.
+	eve::core::Renderer::release();
 }
 
 
@@ -111,7 +120,7 @@ void eve::ogl::Renderer::putInQueueRelease(eve::ogl::Object * p_pObject)
 
 
 //=================================================================================================
-void eve::ogl::Renderer::process(void)
+void eve::ogl::Renderer::processQueues(void)
 {
 	m_pQueueFence->lock();
 
@@ -141,13 +150,17 @@ void eve::ogl::Renderer::process(void)
 //=================================================================================================
 void eve::ogl::Renderer::cb_beforeDisplay(void)
 {
-	this->process();
+	// Call parent class.
+	eve::core::Renderer::cb_beforeDisplay();
+
+	this->processQueues();
 }
 
 //=================================================================================================
 void eve::ogl::Renderer::cb_afterDisplay(void)
 {
-	// Nothing to do for now.
+	// Call parent class.
+	eve::core::Renderer::cb_afterDisplay();
 }
 
 

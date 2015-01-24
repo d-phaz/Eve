@@ -40,7 +40,36 @@ eve::core::Renderer::Renderer(void)
 	// Members init
 	, m_width(0)
 	, m_height(0)
+	, m_pFence(nullptr)
 {}
+
+
+
+//=================================================================================================
+void eve::core::Renderer::init(void)
+{
+	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
+}
+
+//=================================================================================================
+void eve::core::Renderer::release(void)
+{
+	EVE_RELEASE_PTR(m_pFence);
+}
+
+
+
+//=================================================================================================
+void eve::core::Renderer::cb_beforeDisplay(void)
+{
+	m_pFence->lock();
+}
+
+//=================================================================================================
+void eve::core::Renderer::cb_afterDisplay(void)
+{
+	m_pFence->unlock();
+}
 
 
 

@@ -135,14 +135,14 @@ namespace eve
 
 
 		public:
-			/** \brief Process stocked operations. (pure virtual) */
-			virtual void process(void) override;
+			/** \brief Process queued operations. */
+			void processQueues(void);
 
 
 		public:
-			/** \brief Before display callback. (pure virtual) */
+			/** \brief Before display callback. */
 			virtual void cb_beforeDisplay(void) override;
-			/** \brief After display callback. (pure virtual) */
+			/** \brief After display callback. */
 			virtual void cb_afterDisplay(void) override;
 
 			/** \brief Draw on screen callback. (pure virtual) */

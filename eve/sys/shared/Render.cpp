@@ -84,6 +84,9 @@ void eve::sys::Render::init(void)
 //=================================================================================================
 void eve::sys::Render::release(void)
 {
+	// Timer.
+	EVE_RELEASE_PTR(m_pTimerRender)
+
 	// Render engines.
 	eve::core::Renderer * re = nullptr;
 	while (!m_pVecRenderers->empty())
@@ -199,12 +202,14 @@ bool eve::sys::Render::releaseRenderer(eve::core::Renderer * p_pRenderer)
 		eve::core::Renderer * rder = (*itr);
 		m_pVecRenderers->erase(itr);
 
-		// Force queues process.
+
+		// Delete pointer in active OpenGL context.
 		m_pContext->makeCurrent();
-		rder->process();
+		
+		EVE_RELEASE_PTR(rder);
+
 		m_pContext->swapBuffers();
 		m_pContext->doneCurrent();
-		EVE_RELEASE_PTR(rder);
 	}
 
 	m_pFence->unlock();
