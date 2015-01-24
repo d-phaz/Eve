@@ -56,11 +56,6 @@
 
 
 
-//=================================================================================================
-bool logEq(bool a, bool b) { return (((!a) && (!b)) || (a && b)); }
-
-
-
 eve::ogl::Context * eve::ogl::Context::m_p_instance	= nullptr;
 eve::thr::SpinLock * eve::ogl::Context::m_p_fence	= nullptr;
 
@@ -117,9 +112,10 @@ void eve::ogl::Context::init(void)
 		EVE_LOG_ERROR("Paint device cannot be null. GetDC() failed: %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
-
+	// Pixel format descriptor
+	m_pixelFormatDecriptor = eve::ogl::PixelFormat::pixelFormatToPfd(&m_pixelFormat);
 	// Initialize and choose best fitting Pixel Format.
-	m_pixelFormatId = this->choosePixelFormat();
+	m_pixelFormatId = eve::ogl::PixelFormat::choose_pixel_format(m_hDC, m_pixelFormatDecriptor, &m_pixelFormat);
 	if (m_pixelFormatId == 0)
 	{
 		EVE_LOG_ERROR("Unable to get pixel format for device.");
@@ -133,7 +129,6 @@ void eve::ogl::Context::init(void)
 		EVE_LOG_ERROR("Unable to link pixel format to DC, SetPixelFormat() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
-
 
 	// Create context (GLRC).
 	m_hGLRC = ::wglCreateContext(m_hDC);
@@ -247,101 +242,6 @@ void eve::ogl::Context::init_OpenGL(void)
 
 
 //=================================================================================================
-int32_t eve::ogl::Context::choosePixelFormat(void)
-{
-	BYTE pmDepth = 0;
-
-	// Pixel format descriptor
-	m_pixelFormatDecriptor = eve::ogl::PixelFormat::pixelFormatToPfd(&m_pixelFormat);
-	// Choose pixel format
-	int32_t chosenPfi = ::ChoosePixelFormat(m_hDC, &m_pixelFormatDecriptor);
-	if (chosenPfi == 0) 
-	{
-		EVE_LOG_ERROR("Unable to retrieve pixel format, ChoosePixelFormat() failed %s", eve::mess::get_error_msg().c_str());
-		EVE_ASSERT_FAILURE;
-	}
-
-	// GDI function ChoosePixelFormat() does not handle overlay and direct-rendering requests
-	bool doSearch = (chosenPfi <= 0);
-	PIXELFORMATDESCRIPTOR pfd;
-	eve::ogl::PixelFormat fmt;
-	if (!doSearch)
-	{
-		::DescribePixelFormat(m_hDC, chosenPfi, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
-		fmt = eve::ogl::PixelFormat::pfdToPixelFormat(&pfd);
-
-		if (m_pixelFormat.hasOverlay() && !fmt.hasOverlay())
-			doSearch = true;
-		else if (!logEq(m_pixelFormat.directRendering(), fmt.directRendering()))
-			doSearch = true;
-		else if ((!(pfd.dwFlags & PFD_DRAW_TO_BITMAP) || pfd.cColorBits != pmDepth))
-			doSearch = true;
-		else if (!(pfd.dwFlags & PFD_DRAW_TO_WINDOW))
-			doSearch = true;
-		else if (!logEq(m_pixelFormat.rgba(), fmt.rgba()))
-			doSearch = true;
-	}
-
-
-	if (doSearch)
-	{
-		int32_t pfiMax		= ::DescribePixelFormat(m_hDC, 0, 0, NULL);
-		int32_t bestScore	= -1;
-		int32_t bestPfi		= -1;
-
-		for (int32_t pfi = 1; pfi <= pfiMax; pfi++)
-		{
-			::DescribePixelFormat(m_hDC, pfi, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
-			if (!(pfd.dwFlags & PFD_SUPPORT_OPENGL))
-				continue;
-			if ((!(pfd.dwFlags & PFD_DRAW_TO_BITMAP) || pfd.cColorBits != pmDepth))
-				continue;
-			if (!(pfd.dwFlags & PFD_DRAW_TO_WINDOW))
-				continue;
-
-			fmt = eve::ogl::PixelFormat::pfdToPixelFormat(&pfd);
-			if (m_pixelFormat.hasOverlay() && !fmt.hasOverlay())
-				continue;
-
-			int32_t score = pfd.cColorBits;
-			if (logEq(m_pixelFormat.depth(), fmt.depth()))
-				score += pfd.cDepthBits;
-			if (logEq(m_pixelFormat.alpha(), fmt.alpha()))
-				score += pfd.cAlphaBits;
-			if (logEq(m_pixelFormat.accum(), fmt.accum()))
-				score += pfd.cAccumBits;
-			if (logEq(m_pixelFormat.stencil(), fmt.stencil()))
-				score += pfd.cStencilBits;
-			if (logEq(m_pixelFormat.doubleBuffer(), fmt.doubleBuffer()))
-				score += 1000;
-			if (logEq(m_pixelFormat.stereo(), fmt.stereo()))
-				score += 2000;
-			if (logEq(m_pixelFormat.directRendering(), fmt.directRendering()))
-				score += 4000;
-			if (logEq(m_pixelFormat.rgba(), fmt.rgba()))
-				score += 8000;
-			if (score > bestScore)
-			{
-				bestScore = score;
-				bestPfi = pfi;
-			}
-		}
-
-		if (bestPfi > 0)
-		{
-			// Stock chosen pfi ID
-			chosenPfi = bestPfi;
-			// Stock selected pixel format
-			m_pixelFormat = fmt;
-		}
-	}
-
-	return chosenPfi;
-}
-
-
-
-//=================================================================================================
 void eve::ogl::Context::updateFormatVersion(void)
 {
 	const GLubyte *s = glGetString(GL_VERSION);
@@ -426,6 +326,8 @@ eve::ogl::SubContext::SubContext(HWND p_hWnd)
 //=================================================================================================
 void eve::ogl::SubContext::init(void)
 {
+	eve::ogl::Context::lock();
+
 	// Get DC from window handle.
 	m_hDC = ::GetDC(m_hWnd);
 	if (m_hDC == 0)
@@ -433,8 +335,6 @@ void eve::ogl::SubContext::init(void)
 		EVE_LOG_ERROR("Paint device cannot be null. GetDC() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
-
-
 	// Apply pixel format to DC.
 	if (::SetPixelFormat(m_hDC, eve::ogl::Context::get_pixel_format_ID(), &eve::ogl::Context::get_pixel_format_descriptor()) == 0)
 	{
@@ -443,41 +343,45 @@ void eve::ogl::SubContext::init(void)
 	}
 
 
-#ifndef NDEBUG
-	static const int contextAttribs[] = { WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB, 0 };
-#else
-	static const int contextAttribs[] = { 0 };
-#endif
-
-	// Create context (GLRC).
-	m_hGLRC = wglCreateContextAttribsARB(m_hDC, eve::ogl::Context::get_handle(), contextAttribs);
-	if (m_hGLRC == 0)
-	{
-		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContextAttribsARB() failed %s", eve::mess::get_error_msg().c_str());
-		EVE_ASSERT_FAILURE;
-	}
+// #ifndef NDEBUG
+// 	static const int contextAttribs[] = { WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB, 0 };
+// #else
+// 	static const int contextAttribs[] = { 0 };
+// #endif
+// 
+// 	// Create context (GLRC).
+// 	m_hGLRC = wglCreateContextAttribsARB(m_hDC, eve::ogl::Context::get_handle(), contextAttribs);
+// 	if (m_hGLRC == 0)
+// 	{
+// 		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContextAttribsARB() failed %s", eve::mess::get_error_msg().c_str());
+// 		EVE_ASSERT_FAILURE;
+// 	}
 
 	// Make context current (has to be activated here to enforce DC bound).
-	if (::wglMakeCurrent(m_hDC, m_hGLRC) == 0)
+	if (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()/*m_hGLRC*/) == FALSE)
 	{
 		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
 
 	// Init OpenGL extensions for this context.
-	eve::ogl::Context::init_OpenGL();
+	//eve::ogl::Context::init_OpenGL();
 
 	// Release context.
-	if (::wglMakeCurrent(0, 0) == 0)
+	if (::wglMakeCurrent(0, 0) == FALSE)
 	{
 		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
+
+	eve::ogl::Context::unlock();
 }
 
 //=================================================================================================
 void eve::ogl::SubContext::release(void)
 {
+	eve::ogl::Context::lock();
+
 	// Rendering context handle.
 	if (m_hGLRC)
 	{
@@ -491,6 +395,8 @@ void eve::ogl::SubContext::release(void)
 		m_hDC	= 0;
 		m_hWnd	= 0;
 	}
+
+	eve::ogl::Context::unlock();
 }
 
 
@@ -505,23 +411,25 @@ void eve::ogl::SubContext::set_current_context(eve::ogl::SubContext * p_pContext
 //=================================================================================================
 bool eve::ogl::SubContext::makeCurrent(void)
 {
-	eve::ogl::Context::get_fence()->lock();
+	eve::ogl::Context::lock();
 
 	bool ret = true;
 
-	if (eve::ogl::Context::get_handle() /*m_hGLRC*/  == ::wglGetCurrentContext())
+	if (eve::ogl::Context::get_handle()  == ::wglGetCurrentContext())
 	{
 		EVE_LOG_ERROR("Context already current.");
+		EVE_ASSERT_FAILURE;
 		ret = false;
 	}
 
-	if (ret && (::wglMakeCurrent(m_hDC, /*m_hGLRC*/ eve::ogl::Context::get_handle()) == TRUE))
+	if (ret && (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()) == TRUE))
 	{
 		eve::ogl::SubContext::set_current_context(this);
 	}
 	else
 	{
 		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
 		ret = false;
 	}
 
@@ -540,10 +448,11 @@ bool eve::ogl::SubContext::doneCurrent(void)
 	else
 	{
 		EVE_LOG_ERROR("Unable to detach context, wglMakeCurrent(0, 0) failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
 		ret = false;
 	}
 
-	eve::ogl::Context::get_fence()->unlock();
+	eve::ogl::Context::unlock();
 
 	return ret;
 }

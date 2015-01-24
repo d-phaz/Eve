@@ -41,6 +41,11 @@
 #endif
 
 
+
+//=================================================================================================
+bool logEq(bool a, bool b) { return (((!a) && (!b)) || (a && b)); }
+
+
 eve::ogl::PixelFormat eve::ogl::PixelFormat::m_default_format = eve::ogl::PixelFormat();
 
 //=================================================================================================
@@ -343,6 +348,99 @@ eve::ogl::PixelFormat eve::ogl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, in
 	free( iValues );
 
     return fmt;
+}
+
+
+
+//=================================================================================================
+int32_t eve::ogl::PixelFormat::choose_pixel_format(HDC p_hdc, PIXELFORMATDESCRIPTOR p_pPfd, eve::ogl::PixelFormat * p_in_out_PixelFormat)
+{
+	BYTE pmDepth = 0;
+
+	// Choose pixel format
+	int32_t chosenPfi = ::ChoosePixelFormat(p_hdc, &p_pPfd);
+	if (chosenPfi == 0)
+	{
+		EVE_LOG_ERROR("Unable to retrieve pixel format, ChoosePixelFormat() failed %s", eve::mess::get_error_msg().c_str());
+		EVE_ASSERT_FAILURE;
+	}
+
+	// GDI function ChoosePixelFormat() does not handle overlay and direct-rendering requests
+	bool doSearch = (chosenPfi <= 0);
+	PIXELFORMATDESCRIPTOR pfd;
+	eve::ogl::PixelFormat fmt;
+	if (!doSearch)
+	{
+		::DescribePixelFormat(p_hdc, chosenPfi, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
+		fmt = eve::ogl::PixelFormat::pfdToPixelFormat(&pfd);
+
+		if (p_in_out_PixelFormat->hasOverlay() && !fmt.hasOverlay())
+			doSearch = true;
+		else if (!logEq(p_in_out_PixelFormat->directRendering(), fmt.directRendering()))
+			doSearch = true;
+		else if ((!(pfd.dwFlags & PFD_DRAW_TO_BITMAP) || pfd.cColorBits != pmDepth))
+			doSearch = true;
+		else if (!(pfd.dwFlags & PFD_DRAW_TO_WINDOW))
+			doSearch = true;
+		else if (!logEq(p_in_out_PixelFormat->rgba(), fmt.rgba()))
+			doSearch = true;
+	}
+
+
+	if (doSearch)
+	{
+		int32_t pfiMax = ::DescribePixelFormat(p_hdc, 0, 0, NULL);
+		int32_t bestScore = -1;
+		int32_t bestPfi = -1;
+
+		for (int32_t pfi = 1; pfi <= pfiMax; pfi++)
+		{
+			::DescribePixelFormat(p_hdc, pfi, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
+			if (!(pfd.dwFlags & PFD_SUPPORT_OPENGL))
+				continue;
+			if ((!(pfd.dwFlags & PFD_DRAW_TO_BITMAP) || pfd.cColorBits != pmDepth))
+				continue;
+			if (!(pfd.dwFlags & PFD_DRAW_TO_WINDOW))
+				continue;
+
+			fmt = eve::ogl::PixelFormat::pfdToPixelFormat(&pfd);
+			if (p_in_out_PixelFormat->hasOverlay() && !fmt.hasOverlay())
+				continue;
+
+			int32_t score = pfd.cColorBits;
+			if (logEq(p_in_out_PixelFormat->depth(), fmt.depth()))
+				score += pfd.cDepthBits;
+			if (logEq(p_in_out_PixelFormat->alpha(), fmt.alpha()))
+				score += pfd.cAlphaBits;
+			if (logEq(p_in_out_PixelFormat->accum(), fmt.accum()))
+				score += pfd.cAccumBits;
+			if (logEq(p_in_out_PixelFormat->stencil(), fmt.stencil()))
+				score += pfd.cStencilBits;
+			if (logEq(p_in_out_PixelFormat->doubleBuffer(), fmt.doubleBuffer()))
+				score += 1000;
+			if (logEq(p_in_out_PixelFormat->stereo(), fmt.stereo()))
+				score += 2000;
+			if (logEq(p_in_out_PixelFormat->directRendering(), fmt.directRendering()))
+				score += 4000;
+			if (logEq(p_in_out_PixelFormat->rgba(), fmt.rgba()))
+				score += 8000;
+			if (score > bestScore)
+			{
+				bestScore = score;
+				bestPfi = pfi;
+			}
+		}
+
+		if (bestPfi > 0)
+		{
+			// Stock chosen pfi ID
+			chosenPfi = bestPfi;
+			// Stock selected pixel format
+			*p_in_out_PixelFormat = fmt;
+		}
+	}
+
+	return chosenPfi;
 }
 
 
