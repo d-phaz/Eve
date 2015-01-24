@@ -33,7 +33,6 @@
 #include "eve/math/Includes.h"
 #include "eve/io/Image.h"
 #include "eve/ogl/core/Renderer.h"
-#include "eve/sys/win32/Window.h"
 
 
 class RenderGL final
@@ -180,7 +179,7 @@ void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 
 
 class Example final
-	: public eve::sys::View
+	: public eve::ui::View
 {
 	friend class eve::mem::Pointer;
 
@@ -190,6 +189,10 @@ private:
 
 	EVE_DISABLE_COPY(Example);
 	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+
+public:
+	/** \brief Setup format properties. (pure virtual) */
+	virtual void setup(void);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -205,10 +208,19 @@ public:
 
 };
 
+void Example::setup(void)
+{
+	m_format.x			= 50;
+	m_format.y			= 50;
+	m_format.width		= 800;
+	m_format.height		= 600;
+	m_format.windowType = eve::sys::WindowType_App;
+}
+
 void Example::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::initThreadedData();
+	eve::ui::View::initThreadedData();
 
 	// Register new RenderGL.
 	m_pRender = EVE_CREATE_PTR(RenderGL);
@@ -218,7 +230,7 @@ void Example::initThreadedData(void)
 void Example::releaseThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::releaseThreadedData();
+	eve::ui::View::releaseThreadedData();
 }
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)

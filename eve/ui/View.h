@@ -29,30 +29,63 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main class header
+#pragma once
+#ifndef __EVE_UI_VIEW_H__
+#define __EVE_UI_VIEW_H__
+
+#ifndef __EVE_SYSTEM_VIEW_H__
 #include "eve/sys/shared/View.h"
+#endif
 
 
-//=================================================================================================
-eve::sys::View::View(void)
-	// Inheritance
-	: eve::sys::Node()
-
-	// Members init
-{}
-
-
-
-//=================================================================================================
-void eve::sys::View::initThreadedData(void)
+namespace eve
 {
-	// Call parent class.
-	eve::sys::Node::initThreadedData();
-}
+	namespace ui
+	{
+		/** 
+		* \class eve::ui::View
+		*
+		* \brief Base application view class.
+		* Create user interface window, stock and manages linked frames and outputs.
+		*
+		* \note extends eve::sys::View
+		*/
+		class View
+			: public eve::sys::View
+		{
 
-//=================================================================================================
-void eve::sys::View::releaseThreadedData(void)
-{
-	// Call parent class.
-	eve::sys::Node::releaseThreadedData();
-}
+			friend class eve::mem::Pointer;
+
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
+
+		protected:
+			
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(View);
+			EVE_PROTECT_DESTRUCTOR(View);
+
+		protected:
+			/** \brief Class constructor. */
+			explicit View(void);
+
+
+		protected:
+			/** \brief Alloc and init threaded data. (pure virtual) */
+			virtual void initThreadedData(void) override;
+			/** \brief Release and delete threaded data. (pure virtual) */
+			virtual void releaseThreadedData(void) override;
+
+		}; // class View
+
+	} // namespace ui
+
+} // namespace eve
+
+#endif // __EVE_UI_VIEW_H__

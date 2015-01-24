@@ -117,7 +117,7 @@ void eve::app::App::init(void)
 #endif
 
 	// View container.
-	m_pVecViews = new std::vector<eve::sys::View*>();
+	m_pVecViews = new std::vector<eve::ui::View*>();
 	// Fence.
 	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 
@@ -185,11 +185,11 @@ void eve::app::App::runApp(void)
 
 
 //=================================================================================================
-bool eve::app::App::removeView(eve::sys::View * p_pView)
+bool eve::app::App::removeView(eve::ui::View * p_pView)
 {
 	m_pFence->lock();
 
-	std::vector<eve::sys::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
+	std::vector<eve::ui::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
 	bool breturn = (itr != m_pVecViews->end());
 	if (breturn)
 	{
@@ -203,11 +203,11 @@ bool eve::app::App::removeView(eve::sys::View * p_pView)
 }
 
 //=================================================================================================
-bool eve::app::App::releaseView(eve::sys::View * p_pView)
+bool eve::app::App::releaseView(eve::ui::View * p_pView)
 {
 	m_pFence->lock();
 
-	std::vector<eve::sys::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
+	std::vector<eve::ui::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
 	bool breturn = (itr != m_pVecViews->end());
 	if (breturn)
 	{
@@ -220,7 +220,6 @@ bool eve::app::App::releaseView(eve::sys::View * p_pView)
 
 	return breturn;
 }
-
 
 
 

@@ -40,10 +40,48 @@
 #include "eve/sys/shared/Render.h"
 #endif
 
-#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
-#include "eve/sys/win32/WindowRoot.h"
-#endif
-#include "eve/sys/win32/WindowChild.h"
+
+//=================================================================================================
+eve::sys::NodeFormat::NodeFormat(void)
+	// Members init
+	: x(0)
+	, y(0)
+	, width(0)
+	, height(0)
+	, windowType(eve::sys::WindowType_Unknown)
+	, pParentNode(nullptr)
+{}
+
+//=================================================================================================
+eve::sys::NodeFormat::~NodeFormat(void)
+{}
+
+//=================================================================================================
+eve::sys::NodeFormat::NodeFormat(const eve::sys::NodeFormat & p_other)
+	// Members init
+	: x(p_other.x)
+	, y(p_other.y)
+	, width(p_other.width)
+	, height(p_other.height)
+	, windowType(p_other.windowType)
+	, pParentNode(p_other.pParentNode)
+{}
+
+//=================================================================================================
+const eve::sys::NodeFormat & eve::sys::NodeFormat::operator = (const eve::sys::NodeFormat & p_other)
+{
+	if (this != &p_other)
+	{
+		this->x				= p_other.x;
+		this->y				= p_other.y;
+		this->width			= p_other.width;
+		this->height		= p_other.height;
+		this->windowType	= p_other.windowType;
+		this->pParentNode	= p_other.pParentNode;
+	}
+	return *this;
+}
+
 
 
 //=================================================================================================
@@ -81,9 +119,23 @@ void eve::sys::Node::release(void)
 //=================================================================================================
 void eve::sys::Node::initThreadedData(void)
 {
-// 	// Window has to be created in view(s).
-// 	EVE_ASSERT(m_pWindow);
-	m_pWindow = eve::sys::WindowRoot::create_ptr(50, 50, 800, 600, eve::sys::WindowType_App);
+	// Create window.
+	switch (m_format.windowType)
+	{
+	case eve::sys::WindowType_App:
+	case eve::sys::WindowType_Output:
+		m_pWindow = eve::sys::WindowRoot::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.windowType);
+		break;
+
+	//case eve::sys::WindowType_Child:
+	//	m_pWindow = eve::sys::WindowChild::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.pParentNode->get)
+	//	break;
+
+	case eve::sys::WindowType_Unknown:
+	default:
+		EVE_ASSERT_FAILURE;
+		break;
+	}
 	m_pWindow->show();
 
 	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());

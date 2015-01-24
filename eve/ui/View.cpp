@@ -30,13 +30,13 @@
 */
 
 // Main class header
-#include "eve/sys/shared/View.h"
+#include "eve/ui/View.h"
 
 
 //=================================================================================================
-eve::sys::View::View(void)
+eve::ui::View::View(void)
 	// Inheritance
-	: eve::sys::Node()
+	: eve::sys::View()
 
 	// Members init
 {}
@@ -44,15 +44,19 @@ eve::sys::View::View(void)
 
 
 //=================================================================================================
-void eve::sys::View::initThreadedData(void)
+void eve::ui::View::initThreadedData(void)
 {
 	// Call parent class.
 	eve::sys::Node::initThreadedData();
+
+
 }
 
 //=================================================================================================
-void eve::sys::View::releaseThreadedData(void)
+void eve::ui::View::releaseThreadedData(void)
 {
+
+
 	// Call parent class.
-	eve::sys::Node::releaseThreadedData();
+	eve::sys::View::releaseThreadedData();
 }

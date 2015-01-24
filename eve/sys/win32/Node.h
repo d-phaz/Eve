@@ -41,11 +41,19 @@
 #include "eve/thr/Thread.h"
 #endif 
 
+#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
+#include "eve/sys/win32/WindowRoot.h"
+#endif
 
-namespace eve { namespace core	{ class Renderer; } }
+#ifndef __EVE_SYSTEM_WINDOW_CHILD_H__
+#include "eve/sys/win32/WindowChild.h"
+#endif
+
+
 namespace eve { namespace sys	{ class MessagePump; } }
+namespace eve { namespace core	{ class Renderer; } }
 namespace eve { namespace sys	{ class Render; } }
-namespace eve { namespace sys	{ class Window; } }
+namespace eve { namespace sys	{ class Node; } }
 
 
 namespace eve
@@ -53,10 +61,37 @@ namespace eve
 	namespace sys
 	{
 		/** 
+		* \class eve::sys::NodeFormat
+		* \brief Contains node properties used at creation time.
+		*/
+		class NodeFormat
+		{
+		public:
+			int32_t							x;					//!< Specifies window position on X-axis.
+			int32_t							y;					//!< Specifies window position on Y-axis.
+			uint32_t						width;				//!< Specifies window width, should never be negative.
+			uint32_t						height;				//!< Specifies window height, should never be negative.
+			eve::sys::WindowType			windowType;			//!< Specifies window type used to create window style.
+			eve::sys::Node *				pParentNode;		//!< Specifies parent node shared pointer.
+
+		public:
+			/** \brief Class constructor. */
+			NodeFormat(void);
+			/** \brief Class destructor. */
+			virtual ~NodeFormat(void);
+
+			/** \brief Copy constructor. */
+			NodeFormat(const eve::sys::NodeFormat & p_other);
+			/** \brief Assignment operator. */
+			const eve::sys::NodeFormat & operator = (const eve::sys::NodeFormat & p_other);
+
+		}; // class NodeFormat
+
+		/** 
 		* \class eve::sys::Node
 		*
 		* \brief Abstract base threaded system node class.
-		* Stock and manage render engines.
+		* Stock and manage window, render manager, message pump.
 		*
 		* \note extends eve::thr::Thread
 		*/
@@ -71,9 +106,11 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::sys::Window *						m_pWindow;			//<! System window.
-			eve::sys::Render *						m_pRender;			//!< Render manager.
-			eve::sys::MessagePump *					m_pMessagePump;		//!< System message pump.
+			eve::sys::NodeFormat					m_format;			//!< Specifies format containing node properties used at creation time.
+
+			eve::sys::Window *						m_pWindow;			//!< Specifies system window.
+			eve::sys::Render *						m_pRender;			//!< Specifies render manager.
+			eve::sys::MessagePump *					m_pMessagePump;		//!< Specifies system message pump.
 
 
 			//////////////////////////////////////
@@ -86,6 +123,11 @@ namespace eve
 		protected:
 			/** \brief Class constructor. */
 			explicit Node(void);
+
+
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void) = 0;
 
 
 		protected:

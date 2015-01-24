@@ -37,13 +37,17 @@
 static eve::scene::Scene * m_pScene = nullptr;
 
 class ExampleTest final
-	: public eve::sys::View
+	: public eve::ui::View
 {
 	friend class eve::mem::Pointer;
 
 
 	EVE_DISABLE_COPY(ExampleTest);
 	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(ExampleTest);
+
+public:
+	/** \brief Setup format properties. (pure virtual) */
+	virtual void setup(void);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -53,10 +57,19 @@ private:
 
 };
 
+void ExampleTest::setup(void)
+{
+	m_format.x			= 50;
+	m_format.y			= 50;
+	m_format.width		= 800;
+	m_format.height		= 600;
+	m_format.windowType = eve::sys::WindowType_App;
+}
+
 void ExampleTest::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::initThreadedData();
+	eve::ui::View::initThreadedData();
 
 	this->registerRenderer(m_pScene);
 }
@@ -66,25 +79,27 @@ void ExampleTest::releaseThreadedData(void)
 	this->unregisterRenderer(m_pScene);
 	
 	// Call parent class.
-	eve::sys::View::releaseThreadedData();
+	eve::ui::View::releaseThreadedData();
 }
 
 
 
 
 class Example final
-	: public eve::sys::View
+	: public eve::ui::View
 {
 	friend class eve::mem::Pointer;
 
 private:
 	//eve::scene::Scene * m_pScene;
 
-	ExampleTest *		m_pViewTest;
-
 
 	EVE_DISABLE_COPY(Example);
 	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+
+public:
+	/** \brief Setup format properties. (pure virtual) */
+	virtual void setup(void);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -100,19 +115,28 @@ public:
 
 };
 
+void Example::setup(void)
+{
+	m_format.x			= 50;
+	m_format.y			= 50;
+	m_format.width		= 800;
+	m_format.height		= 600;
+	m_format.windowType = eve::sys::WindowType_App;
+}
+
 void Example::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::initThreadedData();
+	eve::ui::View::initThreadedData();
 
 	// Register new RenderGL.
 	m_pScene = EVE_CREATE_PTR(eve::scene::Scene);
-	std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
-	m_pScene->load(path);
 	this->registerRenderer(m_pScene);
 
-	m_pViewTest = EveApp->addView<ExampleTest>();
-
+	//for (size_t i = 0; i < 6; i++)
+	{
+		EveApp->addView<ExampleTest>();
+	}
 }
 
 void Example::releaseThreadedData(void)
@@ -120,7 +144,7 @@ void Example::releaseThreadedData(void)
 	this->releaseRenderer(m_pScene);
 
 	// Call parent class.
-	eve::sys::View::releaseThreadedData();
+	eve::ui::View::releaseThreadedData();
 }
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
@@ -142,6 +166,12 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 	{
 		eve::evt::notify_application_exit();
 	}
+	else if (p_args.key == eve::sys::key_Return)
+	{
+		std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
+		m_pScene->load(path);
+	}
+
 }
 
 void Example::cb_evtTextInput(eve::evt::TextEventArgs & p_args)
