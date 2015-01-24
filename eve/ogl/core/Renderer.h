@@ -74,7 +74,6 @@
 #endif
 
 
-namespace eve { namespace ogl { class SubContext; } }
 namespace eve { namespace thr { class SpinLock;  } }
 
 
@@ -100,9 +99,7 @@ namespace eve
 			//				DATA				//
 			//////////////////////////////////////
 
-		protected:
-			eve::ogl::SubContext *						m_pContext;				//!< OpenGL context.
-				
+		protected:				
 			std::deque<eve::ogl::Object *> *            m_pQueueInit;			//<! OpenGL objects initialization queue.
 			std::deque<eve::ogl::Object *> *            m_pQueueUpdate;			//<! OpenGL objects update queue.
 			std::deque<eve::ogl::Object *> *            m_pQueueRelease;		//<! OpenGL objects release queue.
@@ -128,11 +125,6 @@ namespace eve
 			virtual void release(void) override;
 
 
-		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) override;
-
-
 		protected:
 			/** \brief Put target object in initialization queue. */
 			void putInQueueInit(eve::ogl::Object * p_pObject);
@@ -141,10 +133,10 @@ namespace eve
 			/** \brief Put target object in release queue. */
 			void putInQueueRelease(eve::ogl::Object * p_pObject);
 
-			/** \brief Iterates queues and call associated OpenGL commands. */
-			void processQueues(void);
-			/** \brief Clear queues. */
-			void clearQueues(void);
+
+		public:
+			/** \brief Process stocked operations. (pure virtual) */
+			virtual void process(void) override;
 
 
 		public:

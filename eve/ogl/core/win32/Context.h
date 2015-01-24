@@ -219,7 +219,6 @@ namespace eve
 			static eve::ogl::SubContext *		m_p_context_current;		//<! Current OpenGL context.
 
 		private:
-			HGLRC								m_hGLRC;					//!< OpenGL rendering context handle.
 			HDC									m_hDC;						//!< Draw context (linked to window) handle.
 			HWND								m_hWnd;						//!< Window handle.
 

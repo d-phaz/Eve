@@ -316,8 +316,7 @@ eve::ogl::SubContext * eve::ogl::SubContext::create_ptr(HWND p_hWnd)
 //=================================================================================================
 eve::ogl::SubContext::SubContext(HWND p_hWnd)
 	// Members init
-	: m_hGLRC(0)
-	, m_hDC(0)
+	: m_hDC(0)
 	, m_hWnd(p_hWnd)
 {}
 
@@ -342,31 +341,15 @@ void eve::ogl::SubContext::init(void)
 		EVE_ASSERT_FAILURE;
 	}
 
-
-// #ifndef NDEBUG
-// 	static const int contextAttribs[] = { WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB, 0 };
-// #else
-// 	static const int contextAttribs[] = { 0 };
-// #endif
-// 
-// 	// Create context (GLRC).
-// 	m_hGLRC = wglCreateContextAttribsARB(m_hDC, eve::ogl::Context::get_handle(), contextAttribs);
-// 	if (m_hGLRC == 0)
-// 	{
-// 		EVE_LOG_ERROR("Unable to create rendering context, wglCreateContextAttribsARB() failed %s", eve::mess::get_error_msg().c_str());
-// 		EVE_ASSERT_FAILURE;
-// 	}
-
+	
 	// Make context current (has to be activated here to enforce DC bound).
-	if (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()/*m_hGLRC*/) == FALSE)
+	if (::wglMakeCurrent(m_hDC, eve::ogl::Context::get_handle()) == FALSE)
 	{
 		EVE_LOG_ERROR("Unable to attach context, wglMakeCurrent() failed %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
 	}
-
 	// Init OpenGL extensions for this context.
-	//eve::ogl::Context::init_OpenGL();
-
+	eve::ogl::Context::init_OpenGL();
 	// Release context.
 	if (::wglMakeCurrent(0, 0) == FALSE)
 	{
@@ -382,12 +365,6 @@ void eve::ogl::SubContext::release(void)
 {
 	eve::ogl::Context::lock();
 
-	// Rendering context handle.
-	if (m_hGLRC)
-	{
-		::wglDeleteContext(m_hGLRC);
-		m_hGLRC = 0;
-	}
 	// Draw context.
 	if (m_hWnd && m_hDC)
 	{
@@ -479,7 +456,6 @@ void eve::ogl::SubContext::swapBuffers(void)
 			::wglSwapLayerBuffers(m_hDC, WGL_SWAP_OVERLAY1);
 		}
 	}
-
 	// Single rendering buffer.
 	else
 	{

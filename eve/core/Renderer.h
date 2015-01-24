@@ -92,8 +92,8 @@ namespace eve
 
 
 		public:
-			/** \brief Register renderer to window handle. (pure virtual) */
-			virtual void registerToHandle(void * p_handle) = 0;
+			/** \brief Process stocked operations. (pure virtual) */
+			virtual void process(void) = 0;
 
 
 		public:

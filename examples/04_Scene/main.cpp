@@ -117,8 +117,7 @@ void Example::initThreadedData(void)
 
 void Example::releaseThreadedData(void)
 {
-	this->unregisterRenderer(m_pScene);
-	EVE_RELEASE_PTR(m_pScene);
+	this->releaseRenderer(m_pScene);
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();

@@ -86,7 +86,7 @@ void eve::sys::Node::initThreadedData(void)
 	m_pWindow = eve::sys::WindowRoot::create_ptr(50, 50, 800, 600, eve::sys::WindowType_App);
 	m_pWindow->show();
 
-	m_pRender = EVE_CREATE_PTR(eve::sys::Render);
+	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
 	m_pRender->start();
 
 	m_pMessagePump = eve::sys::MessagePump::create_ptr(m_pWindow->getHandle());
@@ -146,7 +146,7 @@ void eve::sys::Node::run(void)
 //=================================================================================================
 bool eve::sys::Node::registerRenderer(eve::core::Renderer * p_pRenderer)
 {
-	return m_pRender->registerRenderer(p_pRenderer, m_pWindow->getHandle());
+	return m_pRender->registerRenderer(p_pRenderer);
 }
 
 //=================================================================================================

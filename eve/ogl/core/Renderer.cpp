@@ -44,8 +44,6 @@ eve::ogl::Renderer::Renderer(void)
 	: eve::core::Renderer()
 
 	// Members init
-	, m_pContext(nullptr)
-
 	, m_pQueueInit(nullptr)
 	, m_pQueueUpdate(nullptr)
 	, m_pQueueRelease(nullptr)
@@ -66,12 +64,6 @@ void eve::ogl::Renderer::init(void)
 //=================================================================================================
 void eve::ogl::Renderer::release(void)
 {
-	// Force queues process.
-	m_pContext->makeCurrent();
-	this->processQueues();
-	m_pContext->swapBuffers();
-	m_pContext->doneCurrent();
-
 	// Empty and release queues
 	m_pQueueInit->clear();
 	EVE_RELEASE_PTR_CPP(m_pQueueInit);
@@ -82,18 +74,6 @@ void eve::ogl::Renderer::release(void)
 
 	// Release fence.
 	EVE_RELEASE_PTR(m_pQueueFence);
-
-	// Release context.
-	EVE_RELEASE_PTR_SAFE(m_pContext);
-}
-
-
-
-//=================================================================================================
-void eve::ogl::Renderer::registerToHandle(void * p_handle)
-{
-	// Create OpenGL context for target window handle.
-	m_pContext = eve::ogl::SubContext::create_ptr(reinterpret_cast<HWND>(p_handle));
 }
 
 
@@ -131,7 +111,7 @@ void eve::ogl::Renderer::putInQueueRelease(eve::ogl::Object * p_pObject)
 
 
 //=================================================================================================
-void eve::ogl::Renderer::processQueues(void)
+void eve::ogl::Renderer::process(void)
 {
 	m_pQueueFence->lock();
 
@@ -156,32 +136,18 @@ void eve::ogl::Renderer::processQueues(void)
 	m_pQueueFence->unlock();
 }
 
-//=================================================================================================
-void eve::ogl::Renderer::clearQueues(void)
-{
-	m_pQueueFence->lock();
-
-	m_pQueueInit->clear();
-	m_pQueueUpdate->clear();
-	m_pQueueRelease->clear();
-
-	m_pQueueFence->unlock();
-}
-
 
 
 //=================================================================================================
 void eve::ogl::Renderer::cb_beforeDisplay(void)
 {
-	m_pContext->makeCurrent();
-	this->processQueues();
+	this->process();
 }
 
 //=================================================================================================
 void eve::ogl::Renderer::cb_afterDisplay(void)
 {
-	m_pContext->swapBuffers();
-	m_pContext->doneCurrent();
+	// Nothing to do for now.
 }
 
 
