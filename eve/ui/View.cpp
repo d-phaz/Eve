@@ -39,7 +39,68 @@ eve::ui::View::View(void)
 	: eve::sys::View()
 
 	// Members init
+	, m_pVecFrame(nullptr)
+	, m_pVecDisplay(nullptr)
 {}
+
+
+
+//=================================================================================================
+void eve::ui::View::setup(void)
+{
+	uint32_t border		= eve::sys::Window::get_border_thickness();
+	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
+	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
+	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
+
+	m_format.x			= border;
+	m_format.y			= titleBar + border;
+	m_format.width		= width;
+	m_format.height		= height;
+	m_format.windowType = eve::sys::WindowType_App;
+}
+
+
+
+//=================================================================================================
+void eve::ui::View::init(void)
+{
+	// Containers.
+	m_pVecFrame		= new std::vector<eve::ui::Frame*>();
+	m_pVecDisplay	= new std::vector<eve::ui::Display*>();
+
+	// Call parent class
+	eve::sys::Node::init();
+}
+
+//=================================================================================================
+void eve::ui::View::release(void)
+{
+	// Display container.
+	eve::ui::Display * dis = nullptr;
+	while (!m_pVecDisplay->empty())
+	{
+		dis = m_pVecDisplay->back();
+		m_pVecDisplay->pop_back();
+
+		EVE_RELEASE_PTR(dis);
+	}
+	EVE_RELEASE_PTR_CPP(m_pVecDisplay);
+
+	// Frame container.
+	eve::ui::Frame * frame = nullptr;
+	while (!m_pVecFrame->empty())
+	{
+		frame = m_pVecFrame->back();
+		m_pVecFrame->pop_back();
+
+		EVE_RELEASE_PTR(frame);
+	}
+	EVE_RELEASE_PTR_CPP(m_pVecFrame);
+
+	// Call parent class
+	eve::sys::Node::release();
+}
 
 
 
@@ -47,8 +108,7 @@ eve::ui::View::View(void)
 void eve::ui::View::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::Node::initThreadedData();
-
+	eve::sys::View::initThreadedData();
 
 }
 
@@ -56,7 +116,82 @@ void eve::ui::View::initThreadedData(void)
 void eve::ui::View::releaseThreadedData(void)
 {
 
-
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
+}
+
+
+
+//=================================================================================================
+bool eve::ui::View::removeFrame(eve::ui::Frame * p_pFrame)
+{
+	m_pFence->lock();
+
+	std::vector<eve::ui::Frame*>::iterator itr = std::find(m_pVecFrame->begin(), m_pVecFrame->end(), p_pFrame);
+	bool breturn = (itr != m_pVecFrame->end());
+	if (breturn)
+	{
+		m_pVecFrame->erase(itr);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
+}
+
+//=================================================================================================
+bool eve::ui::View::releaseFrame(eve::ui::Frame * p_pFrame)
+{
+	m_pFence->lock();
+
+	std::vector<eve::ui::Frame*>::iterator itr = std::find(m_pVecFrame->begin(), m_pVecFrame->end(), p_pFrame);
+	bool breturn = (itr != m_pVecFrame->end());
+	if (breturn)
+	{
+		eve::ui::Frame * ptr = (*itr);
+		m_pVecFrame->erase(itr);
+		EVE_RELEASE_PTR(ptr);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
+}
+
+
+
+//=================================================================================================
+bool eve::ui::View::removeDiaplay(eve::ui::Display * p_pDisplay)
+{
+	m_pFence->lock();
+
+	std::vector<eve::ui::Display*>::iterator itr = std::find(m_pVecDisplay->begin(), m_pVecDisplay->end(), p_pDisplay);
+	bool breturn = (itr != m_pVecDisplay->end());
+	if (breturn)
+	{
+		m_pVecDisplay->erase(itr);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
+}
+
+//=================================================================================================
+bool eve::ui::View::releaseDisplay(eve::ui::Display * p_pDisplay)
+{
+	m_pFence->lock();
+
+	std::vector<eve::ui::Display*>::iterator itr = std::find(m_pVecDisplay->begin(), m_pVecDisplay->end(), p_pDisplay);
+	bool breturn = (itr != m_pVecDisplay->end());
+	if (breturn)
+	{
+		eve::ui::Display * ptr = (*itr);
+		m_pVecDisplay->erase(itr);
+		EVE_RELEASE_PTR(ptr);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
 }

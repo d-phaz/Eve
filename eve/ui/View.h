@@ -37,6 +37,14 @@
 #include "eve/sys/shared/View.h"
 #endif
 
+#ifndef __EVE_UI_DISPLAY_H__
+#include "eve/ui/Display.h"
+#endif
+
+#ifndef __EVE_UI_FRAME_H__
+#include "eve/ui/Frame.h"
+#endif
+
 
 namespace eve
 {
@@ -61,7 +69,8 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			
+			std::vector<eve::ui::Frame*> *		m_pVecFrame;		//!< Specifies frame containing vector.
+			std::vector<eve::ui::Display*> *	m_pVecDisplay;		//!< Specifies display containing vector.
 
 
 			//////////////////////////////////////
@@ -76,16 +85,108 @@ namespace eve
 			explicit View(void);
 
 
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void);
+
+
+		protected:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/**
+			* \brief Release and delete class members. (pure virtual)
+			* Stop this object's thread execution (if any) immediately.
+			*/
+			virtual void release(void) override;
+
+
 		protected:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
 
+
+		public:
+			/**
+			* \brief Add frame to view.
+			* Frame is created and returned as a TFrame pointer.
+			* View takes ownership of newly created frame.
+			* Template class TFrame must inherit eve::ui::Frame.
+			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
+			*/
+			template<class TFrame> 
+			TFrame * addFrame(void);
+			/**
+			* \brief Unregister a frame pointer.
+			* Return false if frame is not registered.
+			*/
+			bool removeFrame(eve::ui::Frame * p_pFrame);
+			/**
+			* \brief Unregister and release a frame pointer.
+			* Return false if frame is not registered.
+			*/
+			bool releaseFrame(eve::ui::Frame * p_pFrame);
+
+
+		public:
+			/**
+			* \brief Add display to view.
+			* Display is created and returned as a TDisplay pointer.
+			* View takes ownership of newly created display.
+			* Template class TDisplay must inherit eve::ui::Display.
+			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
+			*/
+			template<class TDisplay>
+			TDisplay * addDisplay(void);
+			/**
+			* \brief Unregister a display pointer.
+			* Return false if display is not registered.
+			*/
+			bool removeDiaplay(eve::ui::Display * p_pDisplay);
+			/**
+			* \brief Unregister and release a display pointer.
+			* Return false if display is not registered.
+			*/
+			bool releaseDisplay(eve::ui::Display * p_pDisplay);
+
 		}; // class View
 
 	} // namespace ui
 
 } // namespace eve
+
+//=================================================================================================
+template<class TFrame>
+TFrame * eve::ui::View::addFrame(void)
+{
+	EVE_ASSERT((std::is_base_of<eve::ui::Frame, TFrame>::value));
+
+	m_pFence->lock();
+
+	TFrame * ptr = EVE_CREATE_PTR(TFrame);
+	ptr->setParent(this);
+	ptr->setup();
+	m_pVecFrame->push_back(ptr);
+
+	m_pFence->unlock();
+}
+
+
+
+//=================================================================================================
+template<class TDisplay>
+TDisplay * eve::ui::View::addDisplay(void)
+{
+	EVE_ASSERT((std::is_base_of<eve::ui::Display, TDisplay>::value));
+
+	m_pFence->lock();
+
+	TDisplay * ptr = EVE_CREATE_PTR(TDisplay);
+	ptr->setup();
+	m_pVecDisplay->push_back(ptr);
+
+	m_pFence->unlock();
+}
 
 #endif // __EVE_UI_VIEW_H__

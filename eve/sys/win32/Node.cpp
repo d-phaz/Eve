@@ -49,7 +49,6 @@ eve::sys::NodeFormat::NodeFormat(void)
 	, width(0)
 	, height(0)
 	, windowType(eve::sys::WindowType_Unknown)
-	, pParentNode(nullptr)
 {}
 
 //=================================================================================================
@@ -64,7 +63,6 @@ eve::sys::NodeFormat::NodeFormat(const eve::sys::NodeFormat & p_other)
 	, width(p_other.width)
 	, height(p_other.height)
 	, windowType(p_other.windowType)
-	, pParentNode(p_other.pParentNode)
 {}
 
 //=================================================================================================
@@ -77,7 +75,6 @@ const eve::sys::NodeFormat & eve::sys::NodeFormat::operator = (const eve::sys::N
 		this->width			= p_other.width;
 		this->height		= p_other.height;
 		this->windowType	= p_other.windowType;
-		this->pParentNode	= p_other.pParentNode;
 	}
 	return *this;
 }
@@ -90,6 +87,8 @@ eve::sys::Node::Node(void)
 	: eve::thr::Thread()
 
 	// Members init
+	, m_format()
+	, m_pParent(nullptr)
 	, m_pWindow(nullptr)
 	, m_pRender(nullptr)
 	, m_pMessagePump(nullptr)
@@ -110,6 +109,9 @@ void eve::sys::Node::init(void)
 //=================================================================================================
 void eve::sys::Node::release(void)
 {
+	// Do not delete -> shared pointer.
+	m_pParent = nullptr;
+
 	// Call parent class
 	eve::thr::Thread::release();
 }
@@ -127,9 +129,10 @@ void eve::sys::Node::initThreadedData(void)
 		m_pWindow = eve::sys::WindowRoot::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.windowType);
 		break;
 
-	//case eve::sys::WindowType_Child:
-	//	m_pWindow = eve::sys::WindowChild::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.pParentNode->get)
-	//	break;
+	case eve::sys::WindowType_Child:
+		EVE_ASSERT(m_pParent);
+		m_pWindow = eve::sys::WindowChild::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_pParent->m_pWindow->getHandle());
+		break;
 
 	case eve::sys::WindowType_Unknown:
 	default:

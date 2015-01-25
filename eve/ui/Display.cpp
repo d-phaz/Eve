@@ -29,50 +29,34 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main header
-#include "eve/sys/win32/WindowRoot.h"
-
-#ifndef __EVE_THREADING_INCLUDES_H__
-#include "eve/thr/Includes.h"
-#endif
+// Main class header
+#include "eve/ui/Display.h"
 
 
 //=================================================================================================
-eve::sys::WindowRoot * eve::sys::WindowRoot::create_ptr(int32_t p_x
-													  , int32_t p_y
-													  , uint32_t p_width
-													  , uint32_t p_height
-													  , eve::sys::WindowType p_type)
-{
-	eve::sys::WindowRoot * ptr = new eve::sys::WindowRoot(p_x, p_y, p_width, p_height, p_type);
-	ptr->init();
-	return ptr;
-}
-
-
-
-//=================================================================================================
-eve::sys::WindowRoot::WindowRoot(int32_t p_x
-							   , int32_t p_y
-							   , uint32_t p_width
-							   , uint32_t p_height
-							   , eve::sys::WindowType p_type)
+eve::ui::Display::Display(void)
 	// Inheritance
-	: eve::sys::Window(p_x, p_y, p_width, p_height, p_type)
+	: eve::sys::View()
+
+	// Members init
 {}
 
 
 
 //=================================================================================================
-void eve::sys::WindowRoot::init(void)
+void eve::ui::Display::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::Window::init();
+	eve::sys::View::initThreadedData();
+
+
 }
 
 //=================================================================================================
-void eve::sys::WindowRoot::release(void)
+void eve::ui::Display::releaseThreadedData(void)
 {
+
+
 	// Call parent class.
-	eve::sys::Window::release();
+	eve::sys::View::releaseThreadedData();
 }

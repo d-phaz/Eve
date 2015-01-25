@@ -72,7 +72,6 @@ namespace eve
 			uint32_t						width;				//!< Specifies window width, should never be negative.
 			uint32_t						height;				//!< Specifies window height, should never be negative.
 			eve::sys::WindowType			windowType;			//!< Specifies window type used to create window style.
-			eve::sys::Node *				pParentNode;		//!< Specifies parent node shared pointer.
 
 		public:
 			/** \brief Class constructor. */
@@ -107,6 +106,7 @@ namespace eve
 
 		protected:
 			eve::sys::NodeFormat					m_format;			//!< Specifies format containing node properties used at creation time.
+			eve::sys::Node *						m_pParent;			//!< Specifies parent node shared pointer.
 
 			eve::sys::Window *						m_pWindow;			//!< Specifies system window.
 			eve::sys::Render *						m_pRender;			//!< Specifies render manager.
@@ -205,10 +205,27 @@ namespace eve
 			/** \brief Window close event handler. (pure virtual) */
 			virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) = 0;
 
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set parent, must be called before class init(). */
+			void setParent(eve::sys::Node * p_pParent);
+
 		}; // class Node
 
 	} // namespace sys
 
 } // namespace eve
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+EVE_FORCE_INLINE void eve::sys::Node::setParent(eve::sys::Node * p_pParent) { EVE_ASSERT(p_pParent);	m_pParent = p_pParent; }
 
 #endif // __EVE_SYSTEM_NODE_H__
