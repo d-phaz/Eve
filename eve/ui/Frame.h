@@ -30,27 +30,30 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
-#define __EVE_SYSTEM_WINDOW_ROOT_H__
+#ifndef __EVE_UI_FRAME_H__
+#define __EVE_UI_FRAME_H__
 
-#ifndef __EVE_SYSTEM_WINDOW_H__
-#include "eve/sys/win32/Window.h"
+#ifndef __EVE_SYSTEM_VIEW_H__
+#include "eve/sys/shared/View.h"
 #endif
+
+
+//namespace eve { namespace ui { class View; } }
 
 
 namespace eve
 {
-	namespace sys
+	namespace ui
 	{
 		/** 
-		* \class eve::sys::WindowRoot
+		* \class eve::ui::Frame
 		*
-		* \brief Creates and manage system main window, as opposed to child window.
+		* \brief UI view frame. Create user interface child window.
 		*
-		* \note extends eve::sys::Window
+		* \note extends eve::sys::View
 		*/
-		class WindowRoot final
-			: public eve::sys::Window
+		class Frame
+			: public eve::sys::View
 		{
 
 			friend class eve::mem::Pointer;
@@ -59,58 +62,32 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 
-		private:
+		protected:
+			
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(WindowRoot);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(WindowRoot);
+			EVE_DISABLE_COPY(Frame);
+			EVE_PROTECT_DESTRUCTOR(Frame);
 
-		public:
-			/**
-			* \brief Create and return new pointer.
-			* \param p_x is the Window position on X-axis.
-			* \param p_y is the Window position on Y-axis.
-			* \param p_width is the Window width.
-			* \param p_height is the Window height.
-			* \param p_type window type, used to create window style.
-			*/
-			static eve::sys::WindowRoot * create_ptr(int32_t p_x
-												   , int32_t p_y
-												   , uint32_t p_width
-												   , uint32_t p_height
-												   , eve::sys::WindowType p_type);
+		protected:
+			/** \brief Class constructor. */
+			explicit Frame(void);
 
 
-		private:
-			/** 
-			* \brief Class constructor.
-			* \param p_x is the Window position on X-axis.
-			* \param p_y is the Window position on Y-axis.
-			* \param p_width is the Window width.
-			* \param p_height is the Window height.
-			* \param p_type window type, used to create window style.
-			*/
-			explicit WindowRoot(int32_t p_x
-							  , int32_t p_y
-							  , uint32_t p_width
-							  , uint32_t p_height
-							  , eve::sys::WindowType p_type);
+		protected:
+			/** \brief Alloc and init threaded data. (pure virtual) */
+			virtual void initThreadedData(void) override;
+			/** \brief Release and delete threaded data. (pure virtual) */
+			virtual void releaseThreadedData(void) override;
 
+		}; // class Frame
 
-		private:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) override;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) override;
-
-		}; // class WindowChild
-
-	} // namespace sys
+	} // namespace ui
 
 } // namespace eve
 
-#endif // __EVE_SYSTEM_WINDOW_ROOT_H__
+#endif // __EVE_UI_FRAME_H__

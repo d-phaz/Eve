@@ -268,36 +268,39 @@ bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene
 //=================================================================================================
 void eve::scene::Scene::cb_display(void)
 {
-	glViewport(0
-			 , 0
-			 , static_cast<GLsizei>(m_pCameraActive->getDisplayWidth())
-			 , static_cast<GLsizei>(m_pCameraActive->getDisplayHeight()));
-
-	// Enable depth read/write.
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	// Cull triangles which normal is not towards the camera.
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	m_pShaderMesh->bind();
-	m_pCameraActive->oglBind();
-
-	for (auto && itr : (*m_pVecMesh))
+	if (m_pCameraActive)
 	{
-		itr->oglDraw();
+		glViewport(0
+				 , 0
+				 , static_cast<GLsizei>(m_pCameraActive->getDisplayWidth())
+				 , static_cast<GLsizei>(m_pCameraActive->getDisplayHeight()));
+
+		// Enable depth read/write.
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+		// Cull triangles which normal is not towards the camera.
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		m_pShaderMesh->bind();
+		m_pCameraActive->oglBind();
+
+		for (auto && itr : (*m_pVecMesh))
+		{
+			itr->oglDraw();
+		}
+
+		m_pCameraActive->oglUnbind();
+		m_pShaderMesh->unbind();
+
+		// Disable culling
+		glDisable(GL_CULL_FACE);
+		// Disable depth read/write
+		glDepthMask(GL_FALSE);
+		glDisable(GL_DEPTH_TEST);
 	}
-
-	m_pCameraActive->oglUnbind();
-	m_pShaderMesh->unbind();
-
-	// Disable culling
-	glDisable(GL_CULL_FACE);
-	// Disable depth read/write
-	glDepthMask(GL_FALSE);
-	glDisable(GL_DEPTH_TEST);
 }
 
 

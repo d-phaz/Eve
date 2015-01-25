@@ -367,7 +367,7 @@ void RenderGL::cb_display(void)
 
 
 class Example final
-	: public eve::sys::View
+	: public eve::ui::View
 {
 	friend class eve::mem::Pointer;
 
@@ -377,6 +377,10 @@ private:
 
 	EVE_DISABLE_COPY(Example);
 	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+
+public:
+	/** \brief Setup format properties. (pure virtual) */
+	virtual void setup(void);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -393,10 +397,19 @@ public:
 
 };
 
+void Example::setup(void)
+{
+	m_format.x			= 50;
+	m_format.y			= 50;
+	m_format.width		= 800;
+	m_format.height		= 600;
+	m_format.windowType = eve::sys::WindowType_App;
+}
+
 void Example::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::initThreadedData();
+	eve::ui::View::initThreadedData();
 
 	m_velocityTranslate = 100.0f;
 	m_dataSwapper = dataSwapper::get_instance();
@@ -415,7 +428,7 @@ void Example::initThreadedData(void)
 void Example::releaseThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::releaseThreadedData();
+	eve::ui::View::releaseThreadedData();
 }
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)

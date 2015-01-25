@@ -85,6 +85,7 @@ include( ${CMAKE_CURRENT_SOURCE_DIR}/str/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/sys/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/thr/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/time/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/ui/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/xml/CMakeLists.txt )
 
 	

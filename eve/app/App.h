@@ -53,8 +53,8 @@
 #include "eve/sys/win32/Notification.h"
 #endif
 
-#ifndef __EVE_SYSTEM_VIEW_H__
-#include "eve/sys/shared/View.h"
+#ifndef __EVE_UI_VIEW_H__
+#include "eve/ui/View.h"
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
@@ -99,7 +99,7 @@ namespace eve
 			bool								m_bRunning;			//!< Application main loop running state.
 		
 		protected:
-			std::vector<eve::sys::View*> *		m_pVecViews;		//!< Application view(s) container.
+			std::vector<eve::ui::View*> *		m_pVecViews;		//!< Application view(s) container.
 			eve::thr::SpinLock *				m_pFence;			//!< Application view(s) container protection fence.
 
 
@@ -146,7 +146,7 @@ namespace eve
 			* \brief Add view to application.
 			* View is created and returned as a TView pointer.
 			* App takes ownership of newly created view.
-			* Template class TView must inherit eve::sys::View.
+			* Template class TView must inherit eve::ui::View.
 			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
 			*/
 			template<class TView>
@@ -155,12 +155,12 @@ namespace eve
 			* \brief Release ownership of target view.
 			* Return true if target view was contained.
 			*/
-			bool removeView(eve::sys::View * p_pView);
+			bool removeView(eve::ui::View * p_pView);
 			/**
 			* \brief Remove and release target view.
 			* Return true if target view was contained.
 			*/
-			bool releaseView(eve::sys::View * p_pView);
+			bool releaseView(eve::ui::View * p_pView);
 
 
 		public:
@@ -211,9 +211,10 @@ eve::app::App * eve::app::create_class(void)
 template<class TView>
 TView * eve::app::App::addView(void)
 {
-	EVE_ASSERT( (std::is_base_of<eve::sys::View, TView>::value) );
+	EVE_ASSERT( (std::is_base_of<eve::ui::View, TView>::value) );
 
 	TView * view = EVE_CREATE_PTR(TView);
+	view->setup();
 
 	m_pFence->lock();
 	m_pVecViews->push_back(view);
@@ -249,10 +250,10 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION_CUSTOM
 * \brief Convenience macro to create application entry point and launch application from taget class.
 */
-#define EVE_APPLICATION_CUSTOM( VIEW , APP )																	\
+#define EVE_APPLICATION_CUSTOM( VIEW , APP )															\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
-		eve::app::App *	pApp = eve::app::create_class<APP>(); \
+		eve::app::App *	pApp = eve::app::create_class<APP>();											\
 		pApp->addView<VIEW>();																			\
 		pApp->runApp();																					\
 		eve::app::App::release_instance();																\

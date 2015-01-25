@@ -38,17 +38,14 @@
 #endif
 
 
-
-
 namespace eve
 {
 	namespace sys
 	{
 		/** 
-		* \class eve::sys::Node
+		* \class eve::sys::View
 		*
-		* \brief Base application view class.
-		* Stock and manage render engines.
+		* \brief Base system view class.
 		*
 		* \note extends eve::sys::Node
 		*/
@@ -62,8 +59,7 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 
-		protected:
-			
+		protected:			
 
 
 			//////////////////////////////////////
@@ -121,7 +117,7 @@ namespace eve
 			/** \brief Window close event handler. (pure virtual) */
 			virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) override{}
 
-		}; // class Node
+		}; // class View
 
 	} // namespace sys
 

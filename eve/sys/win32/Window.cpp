@@ -126,6 +126,7 @@ void eve::sys::Window::init(void)
 		m_exStyle	= m_ex_style_fullscreen;
 		break;
 
+	case eve::sys::WindowType_Unknown:
 	default: 
 		EVE_ASSERT_FAILURE; 
 		break;
