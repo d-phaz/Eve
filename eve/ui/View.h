@@ -170,6 +170,8 @@ TFrame * eve::ui::View::addFrame(void)
 	m_pVecFrame->push_back(ptr);
 
 	m_pFence->unlock();
+
+	return ptr;
 }
 
 
@@ -187,6 +189,8 @@ TDisplay * eve::ui::View::addDisplay(void)
 	m_pVecDisplay->push_back(ptr);
 
 	m_pFence->unlock();
+
+	return ptr;
 }
 
 #endif // __EVE_UI_VIEW_H__

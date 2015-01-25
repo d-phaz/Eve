@@ -78,6 +78,11 @@ namespace eve
 			explicit Frame(void);
 
 
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void);
+
+
 		protected:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;

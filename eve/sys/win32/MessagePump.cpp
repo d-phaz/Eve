@@ -191,9 +191,10 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 		case WM_LBUTTONDOWN:	
 		case WM_MBUTTONDOWN:	
 		case WM_RBUTTONDOWN:	
-		case WM_XBUTTONDOWN:
+		case WM_XBUTTONDOWN:	res = this->handleMouseDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+
         case WM_MOUSEWHEEL:		
-		case WM_MOUSEHWHEEL:	res = this->handleMouseDown(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
+		case WM_MOUSEHWHEEL:	res = this->handleMouseWheel(p_hWnd, p_uMsg, p_wParam, p_lParam); break;
 
 		case WM_LBUTTONUP:	
 		case WM_MBUTTONUP:	
@@ -327,12 +328,32 @@ LRESULT eve::sys::MessagePump::handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM 
 	case WM_MBUTTONDOWN:		btn = eve::sys::btn_Middle;		break;
 	case WM_RBUTTONDOWN:		btn = eve::sys::btn_Right;		break;
 	case WM_XBUTTONDOWN:		btn = eve::sys::btn_X;			break;
-	case WM_MOUSEWHEEL:			btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_WheelDown  : eve::sys::btn_WheelUp;		break;
-	case WM_MOUSEHWHEEL:		btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_ScrollLeft : eve::sys::btn_ScrollRight;	break;
 	default:					btn = eve::sys::btn_Unused;		break;
 	}
 
 	m_pEvent->notifyMouseDown(btn, x, y);
+
+	return 0;
+}
+
+//=================================================================================================
+LRESULT eve::sys::MessagePump::handleMouseWheel(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
+{
+	// Keep mouse tracking even if out of the window.
+	::SetCapture(p_hWnd);
+
+	int32_t x = LOWORD(p_lParam);
+	int32_t y = HIWORD(p_lParam);
+
+	eve::sys::MouseButton btn;
+	switch (p_uMsg)
+	{
+	case WM_MOUSEWHEEL:			btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_WheelDown : eve::sys::btn_WheelUp;		break;
+	case WM_MOUSEHWHEEL:		btn = GET_WHEEL_DELTA_WPARAM(p_wParam) < 0 ? eve::sys::btn_ScrollLeft : eve::sys::btn_ScrollRight;	break;
+	default:					btn = eve::sys::btn_Unused;		break;
+	}
+
+	m_pEvent->notifyMouseWheel(btn, x, y);
 
 	return 0;
 }

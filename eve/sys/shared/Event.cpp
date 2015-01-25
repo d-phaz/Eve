@@ -48,6 +48,7 @@ eve::sys::Event::Event(void)
 	, m_mousePassiveMotion()
 	, m_mouseMotion()
 	, m_mouseDown()
+	, m_mouseWheel()
 	, m_mouseDoubleClick()
 	, m_mouseUp()
 	
@@ -89,8 +90,8 @@ void eve::sys::Event::disableEventsFile(void)
 void eve::sys::Event::notifyFileDropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files)
 {
 	eve::evt::FileEventArgs fileEventArgs;
-	fileEventArgs.x = p_x;
-	fileEventArgs.y = p_y;
+	fileEventArgs.x		= p_x;
+	fileEventArgs.y		= p_y;
 	fileEventArgs.count = p_count;
 	fileEventArgs.files = p_files;
 
@@ -167,6 +168,7 @@ void eve::sys::Event::enableEventsMouse(void)
 	m_mousePassiveMotion.enable();
 	m_mouseMotion.enable();
 	m_mouseDown.enable();
+	m_mouseWheel.enable();
 	m_mouseDoubleClick.enable();
 	m_mouseUp.enable();
 }
@@ -177,6 +179,7 @@ void eve::sys::Event::disableEventsMouse(void)
 	m_mousePassiveMotion.disable();
 	m_mouseMotion.disable();
 	m_mouseDown.disable();
+	m_mouseWheel.disable();
 	m_mouseDoubleClick.disable();
 	m_mouseUp.disable();
 }
@@ -190,6 +193,17 @@ void eve::sys::Event::notifyMouseDown(int32_t p_button, int32_t x, int32_t y)
 	mouseEventArgs.y = y;
 
 	eve::evt::notify_event(m_mouseDown, mouseEventArgs);
+}
+
+//=================================================================================================
+void eve::sys::Event::notifyMouseWheel(int32_t p_button, int32_t x, int32_t y)
+{
+	eve::evt::MouseEventArgs mouseEventArgs;
+	mouseEventArgs.button = p_button;
+	mouseEventArgs.x = x;
+	mouseEventArgs.y = y;
+
+	eve::evt::notify_event(m_mouseWheel, mouseEventArgs);
 }
 
 //=================================================================================================

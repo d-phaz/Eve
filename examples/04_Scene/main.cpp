@@ -37,7 +37,7 @@
 static eve::scene::Scene * m_pScene = nullptr;
 
 class ExampleTest final
-	: public eve::ui::View
+	: public eve::ui::Display
 {
 	friend class eve::mem::Pointer;
 
@@ -59,17 +59,19 @@ private:
 
 void ExampleTest::setup(void)
 {
+	// Call parent class.
+	eve::ui::Display::setup();
+
 	m_format.x			= 50;
 	m_format.y			= 50;
 	m_format.width		= 800;
 	m_format.height		= 600;
-	m_format.windowType = eve::sys::WindowType_App;
 }
 
 void ExampleTest::initThreadedData(void)
 {
 	// Call parent class.
-	eve::ui::View::initThreadedData();
+	eve::ui::Display::initThreadedData();
 
 	this->registerRenderer(m_pScene);
 }
@@ -79,7 +81,7 @@ void ExampleTest::releaseThreadedData(void)
 	this->unregisterRenderer(m_pScene);
 	
 	// Call parent class.
-	eve::ui::View::releaseThreadedData();
+	eve::ui::Display::releaseThreadedData();
 }
 
 
@@ -117,11 +119,13 @@ public:
 
 void Example::setup(void)
 {
+	// Call parent class.
+	eve::ui::View::setup();
+
 	m_format.x			= 50;
 	m_format.y			= 50;
 	m_format.width		= 800;
 	m_format.height		= 600;
-	m_format.windowType = eve::sys::WindowType_App;
 }
 
 void Example::initThreadedData(void)
@@ -135,7 +139,7 @@ void Example::initThreadedData(void)
 
 	//for (size_t i = 0; i < 6; i++)
 	{
-		EveApp->addView<ExampleTest>();
+		ExampleTest * test = this->addDisplay<ExampleTest>();
 	}
 }
 

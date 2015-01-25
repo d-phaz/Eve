@@ -44,6 +44,14 @@ eve::ui::Frame::Frame(void)
 
 
 //=================================================================================================
+void eve::ui::Frame::setup(void)
+{
+	m_format.windowType = eve::sys::WindowType_Child;
+}
+
+
+
+//=================================================================================================
 void eve::ui::Frame::initThreadedData(void)
 {
 	// Call parent class.

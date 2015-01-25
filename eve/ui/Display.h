@@ -75,11 +75,27 @@ namespace eve
 			explicit Display(void);
 
 
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void);
+
+
 		protected:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
+
+
+		public:
+			/** \brief Mouse down event handler. (pure virtual) */
+			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
+			/** \brief Mouse up event handler. (pure virtual) */
+			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) override;
+			/** \brief Mouse double click event handler. (pure virtual) */
+			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args) override;
+			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
+			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) override;
 
 		}; // class Display
 

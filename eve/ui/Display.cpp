@@ -44,6 +44,14 @@ eve::ui::Display::Display(void)
 
 
 //=================================================================================================
+void eve::ui::Display::setup(void)
+{
+	m_format.windowType = eve::sys::WindowType_Output;
+}
+
+
+
+//=================================================================================================
 void eve::ui::Display::initThreadedData(void)
 {
 	// Call parent class.
@@ -59,4 +67,33 @@ void eve::ui::Display::releaseThreadedData(void)
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
+}
+
+
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+{
+
+}
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+{
+
+}
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+{
+	if (p_args.button == eve::sys::btn_Left)
+	{
+		m_pWindow->toggleFullScreen();
+	}
+}
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+{
+
 }

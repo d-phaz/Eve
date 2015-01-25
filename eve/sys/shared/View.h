@@ -37,6 +37,10 @@
 #include "eve/sys/win32/Node.h"
 #endif
 
+#ifndef __EVE_SYSTEM_MOUSE_H__
+#include "eve/sys/shared/Mouse.h"
+#endif
+
 
 namespace eve
 {
@@ -96,6 +100,8 @@ namespace eve
 
 			/** \brief Mouse down event handler. (pure virtual) */
 			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override{}
+			/** \brief Mouse wheel event handler. (pure virtual) */
+			virtual void cb_evtMouseWheel(eve::evt::MouseEventArgs & p_args) override{};
 			/** \brief Mouse up event handler. (pure virtual) */
 			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) override{}
 			/** \brief Mouse double click event handler. (pure virtual) */
