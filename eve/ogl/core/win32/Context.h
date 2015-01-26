@@ -71,8 +71,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -97,7 +95,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Context);
-			EVE_PROTECT_DESTRUCTOR(Context);
+			EVE_PUBLIC_DESTRUCTOR(Context);
 
 
 		public:
@@ -107,12 +105,12 @@ namespace eve
 			static void release_instance(void);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Context(void);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/**
@@ -209,8 +207,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -228,7 +224,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(SubContext);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(SubContext);
+			EVE_PUBLIC_DESTRUCTOR(SubContext);
 
 		public:
 			/**
@@ -238,7 +234,7 @@ namespace eve
 			static eve::ogl::SubContext * create_ptr(HWND p_hWnd);
 
 
-		private:
+		public:
 			/** 
 			* \brief Class constructor.
 			* \param p_hWnd linked window handle.
@@ -246,7 +242,7 @@ namespace eve
 			SubContext(HWND p_hWnd);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/**

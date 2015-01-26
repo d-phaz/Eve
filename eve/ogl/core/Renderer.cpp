@@ -209,36 +209,3 @@ eve::ogl::Vao * eve::ogl::Renderer::create(eve::ogl::FormatVao & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Vao, p_format, this);
 }
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-void eve::ogl::Renderer::setSize(uint32_t p_width, uint32_t p_height)
-{
-	// Call parent class
-	eve::core::Renderer::setSize(p_width, p_height);
-
-	// Propagate to FBOs
-}
-
-//=================================================================================================
-void eve::ogl::Renderer::setWidth(uint32_t p_width)
-{
-	// Call parent class
-	eve::core::Renderer::setWidth(p_width);
-
-	// Propagate to FBOs
-}
-
-//=================================================================================================
-void eve::ogl::Renderer::setHeight(uint32_t p_height)
-{
-	// Call parent class
-	eve::core::Renderer::setHeight(p_height);
-
-	// Propagate to FBOs
-}

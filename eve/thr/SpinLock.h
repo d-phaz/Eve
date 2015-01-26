@@ -61,8 +61,6 @@ namespace eve
 			: public eve::thr::Fence
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -81,15 +79,15 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(SpinLock)
-			EVE_PROTECT_DESTRUCTOR(SpinLock)
+			EVE_DISABLE_COPY(SpinLock);
+			EVE_PUBLIC_DESTRUCTOR(SpinLock);
 			
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit SpinLock(void);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

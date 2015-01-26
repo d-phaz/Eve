@@ -88,15 +88,18 @@ void eve::sys::Render::release(void)
 	EVE_RELEASE_PTR(m_pTimerRender)
 
 	// Render engines.
-	eve::core::Renderer * re = nullptr;
+	m_pContext->makeCurrent();
+	eve::core::Renderer * rdr = nullptr;
 	while (!m_pVecRenderers->empty())
 	{
-		re = m_pVecRenderers->back();
+		rdr = m_pVecRenderers->back();
 		m_pVecRenderers->pop_back();
 
-		EVE_RELEASE_PTR(re);
+		EVE_RELEASE_PTR(rdr);
 	}
 	EVE_RELEASE_PTR_CPP(m_pVecRenderers);
+	m_pContext->swapBuffers();
+	m_pContext->doneCurrent();
 
 	// Release context.
 	EVE_RELEASE_PTR_SAFE(m_pContext);

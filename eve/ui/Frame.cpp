@@ -32,14 +32,18 @@
 // Main class header
 #include "eve/ui/Frame.h"
 
+#ifndef __EVE_UI_RENDERER_H__
+#include "eve/ui/Renderer.h"
+#endif
+
 
 //=================================================================================================
 eve::ui::Frame::Frame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
 	// Inheritance
 	: eve::sys::View()
 	, eve::ui::Widget(p_x, p_y, p_width, p_height)
-
 	// Members init
+	, m_pRenderer(nullptr)
 {}
 
 //=================================================================================================
@@ -47,8 +51,8 @@ eve::ui::Frame::Frame(const eve::vec2i & p_position, const eve::vec2i & p_size)
 	// Inheritance
 	: eve::sys::View()
 	, eve::ui::Widget(p_position, p_size)
-
 	// Members init
+	, m_pRenderer(nullptr)
 {}
 
 
@@ -56,10 +60,10 @@ eve::ui::Frame::Frame(const eve::vec2i & p_position, const eve::vec2i & p_size)
 //=================================================================================================
 void eve::ui::Frame::setup(void)
 {
-	m_format.x			= m_position.x;
-	m_format.y			= m_position.y;
-	m_format.width		= m_size.x;
-	m_format.height		= m_size.y;
+	m_format.x			= m_x;
+	m_format.y			= m_y;
+	m_format.width		= m_width;
+	m_format.height		= m_height;
 	m_format.windowType = eve::sys::WindowType_Child;
 }
 
@@ -71,15 +75,11 @@ void eve::ui::Frame::init(void)
 	// Call parent class
 	eve::sys::View::init();
 	eve::ui::Widget::init();
-
-
 }
 
 //=================================================================================================
 void eve::ui::Frame::release(void)
-{
-
-
+{	
 	// Call parent class
 	eve::sys::View::release();
 	eve::ui::Widget::release();
@@ -93,13 +93,16 @@ void eve::ui::Frame::initThreadedData(void)
 	// Call parent class.
 	eve::sys::View::initThreadedData();
 
-
+	// Render engine.
+	m_pRenderer = eve::ui::Renderer::create_ptr(this, m_width, m_height);
+	this->registerRenderer(m_pRenderer);
 }
 
 //=================================================================================================
 void eve::ui::Frame::releaseThreadedData(void)
 {
-
+	// Render engine.
+	//this->releaseRenderer(m_pRenderer);
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();

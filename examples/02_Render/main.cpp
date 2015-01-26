@@ -38,7 +38,6 @@
 class RenderGL final
 	: public eve::ogl::Renderer
 {
-	friend class eve::mem::Pointer;
 
 	//////////////////////////////////////
 	//				DATA				//
@@ -58,13 +57,13 @@ private:
 	//////////////////////////////////////
 
 	EVE_DISABLE_COPY(RenderGL);
-	EVE_PROTECT_DESTRUCTOR(RenderGL);
+	EVE_PUBLIC_DESTRUCTOR(RenderGL);
 
-private:
+public:
 	explicit RenderGL(void);
 
 
-protected:
+public:
 	/** \brief Alloc and init class members. (pure virtual) */
 	virtual void init(void) override;
 	/** \brief Release and delete class members. (pure virtual) */
@@ -98,9 +97,7 @@ void RenderGL::init(void)
 	// Call parent class.
 	eve::ogl::Renderer::init();
 
-	m_width   = 800;
-	m_height  = 600;
-	m_pCamera = eve::math::Cameraf::create_ptr(m_width, m_height);
+	m_pCamera = eve::math::Cameraf::create_ptr(800, 600);
 
 	eve::ogl::FormatShader fmtShader;
 	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Textured3D.vert"));
@@ -148,7 +145,7 @@ void RenderGL::cb_display(void)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glViewport(0, 0, m_width, m_height);
+	glViewport(0, 0, m_pCamera->getDisplayWidth(), m_pCamera->getDisplayHeight());
 
 	m_pShader->bind();
 	m_pUniform->bind(1);
@@ -169,9 +166,6 @@ void RenderGL::cb_display(void)
 //=================================================================================================
 void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 {
-	// Call parent class.
-	eve::ogl::Renderer::setSize(p_width, p_height);
-
 	m_pCamera->setDisplaySize(p_width, p_height);
 }
 
@@ -181,14 +175,13 @@ void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 private:
 	RenderGL * m_pRender;
 
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */
@@ -214,11 +207,13 @@ public:
 
 void Example::setup(void)
 {
+	// Call parent class.
+	eve::ui::View::setup();
+
 	m_format.x			= 50;
 	m_format.y			= 50;
 	m_format.width		= 800;
 	m_format.height		= 600;
-	m_format.windowType = eve::sys::WindowType_App;
 }
 
 void Example::initThreadedData(void)

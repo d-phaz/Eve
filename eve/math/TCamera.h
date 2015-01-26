@@ -75,8 +75,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -128,7 +126,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_ASSIGNATION(TCamera);
-			EVE_PROTECT_DESTRUCTOR(TCamera);
+			EVE_PUBLIC_DESTRUCTOR(TCamera);
 
 		public:
 			/** \brief Create new pointer. */
@@ -140,7 +138,7 @@ namespace eve
 			static eve::math::TCamera<T> * create_ptr(const TCamera<T> & p_parent);
 
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit TCamera(void);
 			/** \brief Class constructor. */
@@ -154,7 +152,7 @@ namespace eve
 			virtual void initDefault(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

@@ -98,8 +98,6 @@ namespace eve
 			: public eve::thr::Thread
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -118,9 +116,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Node);
-			EVE_PROTECT_DESTRUCTOR(Node);
+			EVE_PUBLIC_DESTRUCTOR(Node);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Node(void);
 
@@ -130,7 +128,7 @@ namespace eve
 			virtual void setup(void) = 0;
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/**
@@ -214,7 +212,7 @@ namespace eve
 
 		public:
 			/** \brief Set parent, must be called before class init(). */
-			void setParent(eve::sys::Node * p_pParent);
+			void setParentNode(eve::sys::Node * p_pParent);
 
 		}; // class Node
 
@@ -228,6 +226,6 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE void eve::sys::Node::setParent(eve::sys::Node * p_pParent) { EVE_ASSERT(p_pParent);	m_pParent = p_pParent; }
+EVE_FORCE_INLINE void eve::sys::Node::setParentNode(eve::sys::Node * p_pParent) { EVE_ASSERT(p_pParent);	m_pParent = p_pParent; }
 
 #endif // __EVE_SYSTEM_NODE_H__

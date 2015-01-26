@@ -63,7 +63,7 @@ namespace eve
 		};
 
 		/**
-		* \class eve::sys::Renderer
+		* \class eve::dx11::Renderer
 		*
 		* \brief DirectX11 render engine.
 		*

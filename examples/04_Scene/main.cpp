@@ -36,18 +36,15 @@
 
 static eve::scene::Scene * m_pScene = nullptr;
 
-class ExampleTest final
+class ExampleDisplay final
 	: public eve::ui::Display
 {
-	friend class eve::mem::Pointer;
-
-
-	EVE_DISABLE_COPY(ExampleTest);
-	EVE_PROTECT_DESTRUCTOR(ExampleTest);
+	EVE_DISABLE_COPY(ExampleDisplay);
+	EVE_PUBLIC_DESTRUCTOR(ExampleDisplay);
 
 public:
 	/** \brief class constructor. */
-	explicit ExampleTest(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+	explicit ExampleDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -57,11 +54,11 @@ private:
 
 };
 
-ExampleTest::ExampleTest(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+ExampleDisplay::ExampleDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
 	: eve::ui::Display(p_x, p_y, p_width, p_height)
 {}
 
-void ExampleTest::initThreadedData(void)
+void ExampleDisplay::initThreadedData(void)
 {
 	// Call parent class.
 	eve::ui::Display::initThreadedData();
@@ -69,7 +66,7 @@ void ExampleTest::initThreadedData(void)
 	this->registerRenderer(m_pScene);
 }
 
-void ExampleTest::releaseThreadedData(void)
+void ExampleDisplay::releaseThreadedData(void)
 {
 	this->unregisterRenderer(m_pScene);
 	
@@ -79,22 +76,65 @@ void ExampleTest::releaseThreadedData(void)
 
 
 
+class ExampleFrame final
+	: public eve::ui::Frame
+{
+	EVE_DISABLE_COPY(ExampleFrame);
+	EVE_PUBLIC_DESTRUCTOR(ExampleFrame);
+
+public:
+	/** \brief class constructor. */
+	explicit ExampleFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+
+private:
+	/** \brief Alloc and init threaded data. (pure virtual) */
+	virtual void initThreadedData(void) override;
+	/** \brief Release and delete threaded data. (pure virtual) */
+	virtual void releaseThreadedData(void) override;
+
+};
+
+ExampleFrame::ExampleFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	: eve::ui::Frame(p_x, p_y, p_width, p_height)
+{}
+
+void ExampleFrame::initThreadedData(void)
+{
+	// Call parent class.
+	eve::ui::Frame::initThreadedData();
+
+	this->registerRenderer(m_pScene);
+}
+
+void ExampleFrame::releaseThreadedData(void)
+{
+	this->unregisterRenderer(m_pScene);
+
+	// Call parent class.
+	eve::ui::Frame::releaseThreadedData();
+}
+
+
+
 
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 private:
 	//eve::scene::Scene * m_pScene;
 
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */
-	explicit Example(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+	explicit Example(void);
+	
+public:
+	/** \brief Setup format properties. (pure virtual) */
+	virtual void setup(void) override;
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -110,9 +150,20 @@ public:
 
 };
 
-Example::Example(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-	: eve::ui::View(p_x, p_y, p_width, p_height)
+Example::Example(void)
+	: eve::ui::View()
 {}
+
+void Example::setup(void)
+{
+	// Call parent class.
+	eve::ui::View::setup();
+
+	m_format.x		= 50;
+	m_format.y		= 50;
+	m_format.width  = 800;
+	m_format.height = 600;
+}
 
 void Example::initThreadedData(void)
 {
@@ -125,13 +176,15 @@ void Example::initThreadedData(void)
 
 	//for (size_t i = 0; i < 6; i++)
 	{
-		ExampleTest * test = this->addDisplay<ExampleTest>(50, 50, 800, 600);
+		ExampleDisplay * test = this->addDisplay<ExampleDisplay>(50, 50, 800, 600);
 	}
+	
+	ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
 }
 
 void Example::releaseThreadedData(void)
 {
-	this->releaseRenderer(m_pScene);
+	//this->releaseRenderer(m_pScene);
 
 	// Call parent class.
 	eve::ui::View::releaseThreadedData();
@@ -179,4 +232,4 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 
 
 // Launch application for view "Example".
-EVE_APPLICATION(Example, 50, 50, 800, 600);
+EVE_APPLICATION(Example);

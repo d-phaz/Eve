@@ -42,6 +42,9 @@
 #endif
 
 
+namespace eve { namespace ui { class Renderer; } }
+
+
 namespace eve
 {
 	namespace ui
@@ -50,6 +53,7 @@ namespace eve
 		* \class eve::ui::Frame
 		*
 		* \brief UI view frame. Create user interface child window.
+		* Handles interactive drawable widgets.
 		*
 		* \note extends eve::sys::View, eve::ui::Widget.
 		*/
@@ -58,13 +62,12 @@ namespace eve
 			, public eve::ui::Widget
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
 
 		protected:
+			eve::ui::Renderer *			m_pRenderer;		//!< Specifies render engine.
 			
 
 
@@ -73,9 +76,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Frame);
-			EVE_PROTECT_DESTRUCTOR(Frame);
+			EVE_PUBLIC_DESTRUCTOR(Frame);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Frame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 			/** \brief Class constructor. */

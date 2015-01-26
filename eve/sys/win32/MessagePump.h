@@ -58,8 +58,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -82,7 +80,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(MessagePump);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(MessagePump);
+			EVE_PUBLIC_DESTRUCTOR(MessagePump);
 
 		public:
 			/**
@@ -92,7 +90,7 @@ namespace eve
 			static MessagePump * create_ptr(HWND p_handle);
 
 
-		private:
+		public:
 			/** 
 			* \brief Class constructor.
 			* \param p_handle linked system window handle.
@@ -100,7 +98,7 @@ namespace eve
 			explicit MessagePump(HWND p_handle);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

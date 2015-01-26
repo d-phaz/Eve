@@ -67,8 +67,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -86,14 +84,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Skeleton);
-			EVE_PROTECT_DESTRUCTOR(Skeleton);
+			EVE_PUBLIC_DESTRUCTOR(Skeleton);
 
 		public:
 			/** \brief Create, init and return new pointer based on ASSIMP aiMesh \a pMesh. */
 			static eve::scene::Skeleton * create_ptr(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Skeleton(void);
 
@@ -103,7 +101,7 @@ namespace eve
 			bool initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

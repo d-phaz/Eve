@@ -74,8 +74,6 @@ namespace eve
 			: public eve::thr::Thread
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -95,15 +93,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Clock);
-			EVE_PROTECT_DESTRUCTOR(Clock);
+			EVE_PUBLIC_DESTRUCTOR(Clock);
 
-
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Clock(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/**

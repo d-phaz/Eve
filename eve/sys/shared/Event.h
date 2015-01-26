@@ -65,8 +65,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -97,14 +95,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Event);
-			EVE_PROTECT_DESTRUCTOR(Event);
+			EVE_PUBLIC_DESTRUCTOR(Event);
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Event(void);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

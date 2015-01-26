@@ -34,10 +34,9 @@
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */
@@ -62,11 +61,13 @@ public:
 
 void Example::setup(void)
 {
+	// Call parent class.
+	eve::ui::View::setup();
+
 	m_format.x			= 50;
 	m_format.y			= 50;
 	m_format.width		= 800;
 	m_format.height		= 600;
-	m_format.windowType = eve::sys::WindowType_App;
 }
 
 void Example::initThreadedData(void)

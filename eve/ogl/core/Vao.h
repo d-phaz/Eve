@@ -89,7 +89,6 @@ namespace eve
 			: public eve::ogl::Object
 		{
 
-			friend class eve::mem::Pointer;
 			friend class eve::ogl::Renderer;
 			friend class eve::ogl::Object;
 
@@ -135,9 +134,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Vao);
-			EVE_PROTECT_DESTRUCTOR(Vao);
+			EVE_PUBLIC_DESTRUCTOR(Vao);
 			
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Vao(void);
 
@@ -150,7 +149,7 @@ namespace eve
 			virtual void setAttributes(eve::ogl::Format * p_format);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init non OpenGL class members. (pure virtual) */
 			virtual void init(void);
 			/** \brief Release and delete non OpenGL class members. (pure virtual) */

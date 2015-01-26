@@ -82,7 +82,7 @@ namespace eve
 	namespace ogl
 	{
 		/**
-		* \class eve::sys::Renderer
+		* \class eve::ogl::Renderer
 		*
 		* \brief OpenGL render engine.
 		*
@@ -92,7 +92,6 @@ namespace eve
 			: public eve::core::Renderer
 		{
 
-			friend class eve::mem::Pointer;
 			friend class eve::ogl::Object;
 
 			//////////////////////////////////////
@@ -111,14 +110,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_DESTRUCTOR(Renderer);
+			EVE_PUBLIC_DESTRUCTOR(Renderer);
 
-		protected:
+		public:
 			/** \class constructor. */
 			explicit Renderer(void);
 
 			
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
@@ -168,19 +167,6 @@ namespace eve
 			eve::ogl::Uniform * create(eve::ogl::FormatUniform & p_format);
 			/** \brief Create and return new eve::ogl::Vao pointer based on eve::ogl::FormatVao. */
 			eve::ogl::Vao *		create(eve::ogl::FormatVao & p_format);
-
-
-			///////////////////////////////////////////////////////////////////////////////////////////////
-			//		GET / SET
-			///////////////////////////////////////////////////////////////////////////////////////////////
-
-		public:
-			/** \brief Set render size. */
-			virtual void setSize(uint32_t p_width, uint32_t p_height);
-			/** \brief Set render width. */
-			virtual void setWidth(uint32_t p_width);
-			/** \brief Set render height. */
-			virtual void setHeight(uint32_t p_height);
 
 		}; // class Renderer
 

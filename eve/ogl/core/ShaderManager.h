@@ -112,8 +112,6 @@ namespace eve
 		class ShaderManager
 			: public eve::ogl::Object
 		{
-
-			friend class eve::mem::Pointer;
 			friend class eve::ogl::Renderer;
 			friend class eve::ogl::Object;
 
@@ -122,10 +120,12 @@ namespace eve
 
 			GLuint 	m_VertexArrayID;
 
+		public:
 			ShaderManager();
 
 			~ShaderManager();
 
+		private:
 			std::map<std::string, std::pair<std::string, GLenum >> m_shaderMap;
 			std::vector<std::string> m_program;
 			std::map<std::string, std::string> m_linkedMap;

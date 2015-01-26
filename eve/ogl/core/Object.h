@@ -86,7 +86,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
 			friend class eve::ogl::Renderer;
 
 			//////////////////////////////////////
@@ -102,9 +101,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Object);
-			EVE_PROTECT_DESTRUCTOR(Object);
+			EVE_PUBLIC_DESTRUCTOR(Object);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Object(void);
 
@@ -122,7 +121,7 @@ namespace eve
 			void linkToRenderer(eve::ogl::Renderer * p_pRenderer);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init non OpenGL class members. (pure virtual) */
 			virtual void init(void) = 0;
 			/** \brief Release and delete non OpenGL class members. (pure virtual) */

@@ -71,8 +71,6 @@ namespace eve
 			, public eve::math::TCamera<float>
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -90,7 +88,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Camera);
-			EVE_PROTECT_DESTRUCTOR(Camera);
+			EVE_PUBLIC_DESTRUCTOR(Camera);
 
 		public:
 			/** \brief Create, init and return new pointer based on ASSIMP aiCamera \a p_pCamera. */
@@ -101,7 +99,7 @@ namespace eve
 											     , eve::Axis			p_upAxis);
 
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Camera(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent);
 
@@ -111,7 +109,7 @@ namespace eve
 			bool init(const aiCamera * p_pCamera, const aiScene * p_pScene, eve::Axis p_upAxis);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

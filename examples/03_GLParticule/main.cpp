@@ -122,7 +122,6 @@ dataSwapper::dataSwapper()
 class RenderGL final
 	: public eve::ogl::Renderer
 {
-	friend class eve::mem::Pointer;
 
 	//////////////////////////////////////
 	//				DATA				//
@@ -149,17 +148,18 @@ private:
 	//////////////////////////////////////
 
 	EVE_DISABLE_COPY(RenderGL);
-	EVE_PROTECT_DESTRUCTOR(RenderGL);
+	EVE_PUBLIC_DESTRUCTOR(RenderGL);
 
-private:
+public:
 	explicit RenderGL(void);
 
 
-protected:
+public:
 	/** \brief Alloc and init class members. (pure virtual) */
 	virtual void init(void) override;
 	/** \brief Release and delete class members. (pure virtual) */
 	virtual void release(void) override;
+
 
 public:
 	/** \brief Draw on screen callback. (pure virtual) */
@@ -262,9 +262,6 @@ void RenderGL::release(void)
 
 void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 {
-	// Call parent class.
-	eve::ogl::Renderer::setSize(p_width, p_height);
-
 	m_dataSwapper->m_pCamera->setDisplaySize(p_width, p_height);
 }
 
@@ -369,14 +366,13 @@ void RenderGL::cb_display(void)
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 private:
 	RenderGL * m_pRender;
 	dataSwapper * m_dataSwapper;
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */
@@ -403,11 +399,13 @@ public:
 
 void Example::setup(void)
 {
+	// Call parent class.
+	eve::ui::View::setup();
+
 	m_format.x			= 50;
 	m_format.y			= 50;
 	m_format.width		= 800;
 	m_format.height		= 600;
-	m_format.windowType = eve::sys::WindowType_App;
 }
 
 void Example::initThreadedData(void)

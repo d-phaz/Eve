@@ -65,8 +65,6 @@ namespace eve
 			, public eve::scene::EventListenerSceneMaterial
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -90,7 +88,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Material);
-			EVE_PROTECT_DESTRUCTOR(Material);
+			EVE_PUBLIC_DESTRUCTOR(Material);
 
 		public:
 			/** \brief Create, init and return new pointer based on ASSIMP aiMaterial \a p_pMaterial. */
@@ -100,7 +98,7 @@ namespace eve
 												   , const std::string &	p_fullPath);
 
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Material(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent);
 
@@ -110,7 +108,7 @@ namespace eve
 			void initFromAssimpMaterial(const aiMaterial * p_pMaterial, const std::string & p_fullPath);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

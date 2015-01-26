@@ -93,7 +93,7 @@ namespace eve
 			*/
 			virtual void setAttributes(eve::ogl::Format * p_format);
 
-		protected:
+		public:
 			/** \brief Alloc and init non OpenGL class members. (pure virtual) */
 			virtual void init(void){};
 			/** \brief Release and delete non OpenGL class members. (pure virtual) */

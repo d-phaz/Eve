@@ -137,6 +137,13 @@ protected:											\
 #define EVE_PROTECT_DESTRUCTOR( targetClass )		\
 protected:											\
 	virtual ~targetClass(void){};
+/**
+* \def EVE_PUBLIC_DESTRUCTOR
+* \brief Make destructor public.
+*/
+#define EVE_PUBLIC_DESTRUCTOR( targetClass )		\
+public:											\
+	virtual ~targetClass(void){};
 
 
 #endif // __EVE_CORE_MACRO_H__

@@ -61,8 +61,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -93,7 +91,7 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_PROTECT_DESTRUCTOR(Timer);
+			EVE_PUBLIC_DESTRUCTOR(Timer);
 
 		public:
 			/**
@@ -103,7 +101,7 @@ namespace eve
 			static Timer * create_ptr(bool p_start = false);
 
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Timer(void);
 
@@ -115,7 +113,7 @@ namespace eve
 			Timer & operator = (const Timer & p_other);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

@@ -68,8 +68,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				TYPE				//
 			//////////////////////////////////////
@@ -119,16 +117,15 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Thread)
-			EVE_PROTECT_DESTRUCTOR(Thread)
+			EVE_DISABLE_COPY(Thread);
+			EVE_PUBLIC_DESTRUCTOR(Thread);
 
-
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Thread(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** 

@@ -62,8 +62,6 @@ namespace eve
 			: public eve::thr::Fence
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -82,14 +80,15 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Semaphore)
-			EVE_PROTECT_DESTRUCTOR(Semaphore)
+			EVE_DISABLE_COPY(Semaphore);
+			EVE_PUBLIC_DESTRUCTOR(Semaphore);
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Semaphore(void);
 
-		private:
+
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

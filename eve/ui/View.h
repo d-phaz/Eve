@@ -45,10 +45,6 @@
 #include "eve/ui/Frame.h"
 #endif
 
-#ifndef __EVE_UI_WIDGET_H__
-#include "eve/ui/Widget.h"
-#endif
-
 
 namespace eve
 {
@@ -62,15 +58,14 @@ namespace eve
 		*
 		* \brief Base application view class.
 		* Create user interface window, stock and manages linked frames and outputs.
+		* View can not create widgets except frames.
+		* Frames handle interactive drawable widgets.
 		*
-		* \note extends eve::sys::View, eve::ui::Widget.
+		* \note extends eve::sys::View.
 		*/
 		class View
 			: public eve::sys::View
-			, public eve::ui::Widget
 		{
-
-			friend class eve::mem::Pointer;
 
 			//////////////////////////////////////
 			//				DATAS				//
@@ -86,13 +81,11 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(View);
-			EVE_PROTECT_DESTRUCTOR(View);
+			EVE_PUBLIC_DESTRUCTOR(View);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
-			explicit View(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
-			/** \brief Class constructor. */
-			explicit View(const eve::vec2i & p_position, const eve::vec2i & p_size);
+			explicit View(void);
 
 
 		public:
@@ -193,7 +186,7 @@ TFrame * eve::ui::View::addFrame(int32_t p_x, int32_t p_y, int32_t p_width, int3
 	m_pFence->lock();
 
 	TFrame * ptr = new TFrame(p_x, p_y, p_width, p_height);
-	ptr->setParent(this);
+	ptr->setParentNode(this);
 	ptr->setup();
 	ptr->init();
 	m_pVecFrame->push_back(ptr);
@@ -212,7 +205,7 @@ TFrame * eve::ui::View::addFrame(const eve::vec2i & p_position, const eve::vec2i
 	m_pFence->lock();
 
 	TFrame * ptr = new TFrame(p_position, p_size);
-	ptr->setParent(this);
+	ptr->setParentNode(this);
 	ptr->setup();
 	ptr->init();
 	m_pVecFrame->push_back(ptr);
