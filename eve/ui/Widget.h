@@ -73,8 +73,10 @@ namespace eve
 			std::list<eve::ui::Widget*> *	m_pChildren;			//!< Specifies children list.
 
 		protected:
-			eve::vec2i						m_position;				//!< Specifies widget position.
-			eve::vec2i						m_size;					//!< Specifies widget size.
+			int32_t							m_x;					//!< Specifies widget position on X axis.
+			int32_t							m_y;					//!< Specifies widget position on Y axis.
+			int32_t							m_width;				//!< Specifies widget width.
+			int32_t							m_height;				//!< Specifies widget height.
 
 		protected:
 			bool							m_bEnabled;				//!< Specifies enabled state (default to false).
@@ -162,6 +164,27 @@ namespace eve
 			bool inside(const eve::vec2i & p_position);
 
 
+		protected:
+			/** \brief Translate object on both axis and propagate to children. */
+			void translate(int32_t p_x, int32_t p_y);
+			/** \brief Translate object on both axis and propagate to children. */
+			void translate(const eve::vec2i & p_value);
+			/** \brief Translate object on X axis and propagate to children. */
+			void translateX(int32_t p_value);
+			/** \brief Translate object on Y axis and propagate to children. */
+			void translateY(int32_t p_value);
+
+
+			/** \brief Inflate object on both axis (rise its size) and propagate to children. */
+			void inflate(int32_t p_width, int32_t p_height);
+			/** \brief Inflate object on both axis (rise its size) and propagate to children. */
+			void inflate(const eve::vec2i & p_value);
+			/** \brief Inflate object on X axis (rise its width) and propagate to children. */
+			void inflateX(int32_t p_value);
+			/** \brief Inflate object on Y axis (rise its height) and propagate to children. */
+			void inflateY(int32_t p_value);
+
+
 			///////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -185,7 +208,7 @@ namespace eve
 
 		public:
 			/** \brief Get position. */
-			const eve::vec2i & getPosition(void) const;
+			const eve::vec2i getPosition(void) const;
 			/** \brief Get position on X axis. */
 			int32_t getPositionX(void) const;
 			/** \brief Get position on Y axis. */
@@ -203,7 +226,7 @@ namespace eve
 
 		public:
 			/** \brief Get size. */
-			const eve::vec2i & getSize(void) const;
+			const eve::vec2i getSize(void) const;
 			/** \brief Get width. */
 			int32_t getWidth(void);
 			/** \brief Get height. */
@@ -247,15 +270,15 @@ EVE_FORCE_INLINE std::list<eve::ui::Widget*> *	eve::ui::Widget::getChildren(void
 
 
 //=================================================================================================
-EVE_FORCE_INLINE const eve::vec2i & eve::ui::Widget::getPosition(void) const	{ return m_position;	}
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getPositionX(void) const	{ return m_position.x;	}
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getPositionY(void) const	{ return m_position.y;	}
+EVE_FORCE_INLINE const eve::vec2i	eve::ui::Widget::getPosition(void) const	{ return eve::vec2i(m_x, m_y);	}
+EVE_FORCE_INLINE int32_t			eve::ui::Widget::getPositionX(void) const	{ return m_x; }
+EVE_FORCE_INLINE int32_t			eve::ui::Widget::getPositionY(void) const	{ return m_y; }
 
 
 //=================================================================================================
-EVE_FORCE_INLINE const eve::vec2i & eve::ui::Widget::getSize(void) const		{ return m_size;		}
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getWidth(void)				{ return m_size.x;		}
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getHeight(void)			{ return m_size.y;		}
+EVE_FORCE_INLINE const eve::vec2i   eve::ui::Widget::getSize(void) const		{ return eve::vec2i(m_width, m_height);	}
+EVE_FORCE_INLINE int32_t			eve::ui::Widget::getWidth(void)				{ return m_width; }
+EVE_FORCE_INLINE int32_t			eve::ui::Widget::getHeight(void)			{ return m_height; }
 
 
 //=================================================================================================

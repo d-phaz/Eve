@@ -56,10 +56,10 @@ eve::ui::Frame::Frame(const eve::vec2i & p_position, const eve::vec2i & p_size)
 //=================================================================================================
 void eve::ui::Frame::setup(void)
 {
-	m_format.x			= m_position.x;
-	m_format.y			= m_position.y;
-	m_format.width		= m_size.x;
-	m_format.height		= m_size.y;
+	m_format.x			= m_x;
+	m_format.y			= m_y;
+	m_format.width		= m_width;
+	m_format.height		= m_height;
 	m_format.windowType = eve::sys::WindowType_Child;
 }
 

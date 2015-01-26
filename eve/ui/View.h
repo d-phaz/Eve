@@ -45,10 +45,6 @@
 #include "eve/ui/Frame.h"
 #endif
 
-#ifndef __EVE_UI_WIDGET_H__
-#include "eve/ui/Widget.h"
-#endif
-
 
 namespace eve
 {
@@ -63,11 +59,10 @@ namespace eve
 		* \brief Base application view class.
 		* Create user interface window, stock and manages linked frames and outputs.
 		*
-		* \note extends eve::sys::View, eve::ui::Widget.
+		* \note extends eve::sys::View.
 		*/
 		class View
 			: public eve::sys::View
-			, public eve::ui::Widget
 		{
 
 			friend class eve::mem::Pointer;
@@ -90,9 +85,7 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			explicit View(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
-			/** \brief Class constructor. */
-			explicit View(const eve::vec2i & p_position, const eve::vec2i & p_size);
+			explicit View(void);
 
 
 		public:

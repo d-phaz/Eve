@@ -94,7 +94,11 @@ private:
 
 public:
 	/** \brief class constructor. */
-	explicit Example(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+	explicit Example(void);
+	
+public:
+	/** \brief Setup format properties. (pure virtual) */
+	virtual void setup(void) override;
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -110,9 +114,20 @@ public:
 
 };
 
-Example::Example(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-	: eve::ui::View(p_x, p_y, p_width, p_height)
+Example::Example(void)
+	: eve::ui::View()
 {}
+
+void Example::setup(void)
+{
+	// Call parent class.
+	eve::ui::View::setup();
+
+	m_format.x		= 50;
+	m_format.y		= 50;
+	m_format.width  = 800;
+	m_format.height = 600;
+}
 
 void Example::initThreadedData(void)
 {
@@ -179,4 +194,4 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 
 
 // Launch application for view "Example".
-EVE_APPLICATION(Example, 50, 50, 800, 600);
+EVE_APPLICATION(Example);

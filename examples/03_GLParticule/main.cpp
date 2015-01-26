@@ -403,11 +403,13 @@ public:
 
 void Example::setup(void)
 {
+	// Call parent class.
+	eve::ui::View::setup();
+
 	m_format.x			= 50;
 	m_format.y			= 50;
 	m_format.width		= 800;
 	m_format.height		= 600;
-	m_format.windowType = eve::sys::WindowType_App;
 }
 
 void Example::initThreadedData(void)

@@ -150,16 +150,7 @@ namespace eve
 			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
 			*/
 			template<class TView>
-			TView * addView(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
-			/**
-			* \brief Add view to application.
-			* View is created and returned as a TView pointer.
-			* App takes ownership of newly created view.
-			* Template class TView must inherit eve::ui::View.
-			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
-			*/
-			template<class TView>
-			TView * addView(const eve::vec2i & p_position, const eve::vec2i & p_size);
+			TView * addView(void);
 			/** 
 			* \brief Release ownership of target view.
 			* Return true if target view was contained.
@@ -219,30 +210,11 @@ eve::app::App * eve::app::create_class(void)
 
 //=================================================================================================
 template<class TView>
-TView * eve::app::App::addView(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+TView * eve::app::App::addView(void)
 {
 	EVE_ASSERT( (std::is_base_of<eve::ui::View, TView>::value) );
 
-	TView * view = new TView(p_x, p_y, p_width, p_height);
-	view->setup();
-	view->init();
-
-	m_pFence->lock();
-	m_pVecViews->push_back(view);
-	m_pFence->unlock();
-
-	view->start();
-
-	return view;
-}
-
-//=================================================================================================
-template<class TView>
-TView * eve::app::App::addView(const eve::vec2i & p_position, const eve::vec2i & p_size)
-{
-	EVE_ASSERT((std::is_base_of<eve::ui::View, TView>::value));
-
-	TView * view = new TView(p_position, p_size);
+	TView * view = new TView();
 	view->setup();
 	view->init();
 
@@ -271,8 +243,8 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION
 * \brief Convenience macro to create application entry point and launch application.
 */
-#define EVE_APPLICATION( VIEW, X, Y, WIDTH, HEIGHT ) \
-	EVE_APPLICATION_CUSTOM(VIEW, eve::app::App, X, Y, WIDTH, HEIGHT)
+#define EVE_APPLICATION(VIEW) \
+	EVE_APPLICATION_CUSTOM(VIEW, eve::app::App)
 
 
 #if defined(EVE_OS_WIN)
@@ -280,11 +252,11 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION_CUSTOM
 * \brief Convenience macro to create application entry point and launch application from taget class.
 */
-#define EVE_APPLICATION_CUSTOM( VIEW, APP, X, Y, WIDTH, HEIGHT )										\
+#define EVE_APPLICATION_CUSTOM(VIEW, APP)																\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
 		eve::app::App *	pApp = eve::app::create_class<APP>();											\
-		pApp->addView<VIEW>(X, Y, WIDTH, HEIGHT);														\
+		pApp->addView<VIEW>();																			\
 		pApp->runApp();																					\
 		eve::app::App::release_instance();																\
 		return 0;																						\
@@ -295,11 +267,11 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION_CUSTOM
 * \brief Convenience macro to create application entry point and launch application from taget class.
 */
-#define EVE_APPLICATION_CUSTOM( VIEW , APP, X, Y, WIDTH, HEIGHT )			\
+#define EVE_APPLICATION_CUSTOM(VIEW)										\
 	int main(int argc, char * const argv[]) 								\
 	{																		\
 		eve::app::App *	pApp = eve::app::create_class<APP>(); \				\
-		pApp->addView<VIEW>(X, Y, WIDTH, HEIGHT);							\
+		pApp->addView<VIEW>();												\
 		pApp->runApp();														\
 		eve::app::App::release_instance();									\
 		return 0;															\

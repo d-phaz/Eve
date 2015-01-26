@@ -43,8 +43,10 @@ eve::ui::Widget::Widget(void)
 	// Members init
 	, m_pParent(nullptr)
 	, m_pChildren(nullptr)
-	, m_position(eve::vec2i::zero())
-	, m_size(eve::vec2i::zero())
+	, m_x(0)
+	, m_y(0)
+	, m_width(0)
+	, m_height(0)
 	, m_bEnabled(false)
 	, m_bVisible(false)
 	, m_bSelected(false)
@@ -57,8 +59,10 @@ eve::ui::Widget::Widget(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_hei
 	// Members init
 	, m_pParent(nullptr)
 	, m_pChildren(nullptr)
-	, m_position(p_x, p_y)
-	, m_size(p_width, p_height)
+	, m_x(p_x)
+	, m_y(p_y)
+	, m_width(p_width)
+	, m_height(p_height)
 	, m_bEnabled(false)
 	, m_bVisible(false)
 	, m_bSelected(false)
@@ -71,8 +75,10 @@ eve::ui::Widget::Widget(const eve::vec2i & p_position, const eve::vec2i & p_size
 	// Members init
 	, m_pParent(nullptr)
 	, m_pChildren(nullptr)
-	, m_position(p_position)
-	, m_size(p_size)
+	, m_x(p_position.x)
+	, m_y(p_position.y)
+	, m_width(p_size.x)
+	, m_height(p_size.y)
 	, m_bEnabled(false)
 	, m_bVisible(false)
 	, m_bSelected(false)
@@ -180,26 +186,26 @@ void eve::ui::Widget::childUpdateSize(void)
 	int32_t temp_width   = 0;
 	int32_t temp_height	 = 0;
 
-	int32_t total_width  = m_size.x;
-	int32_t total_height = m_size.y;
+	int32_t total_width  = m_width;
+	int32_t total_height = m_height;
 
 	// Iterate threw items to accumulate size.
 	for (auto && itr : (*m_pChildren))
 	{
 		// Width
-		temp_width = itr->getPositionX() - m_position.x + itr->getWidth();
+		temp_width = itr->getPositionX() - m_x + itr->getWidth();
 		if (temp_width > total_width) {
 			total_width = temp_width;
 		}
 		// Height
-		temp_height = itr->getPositionY() - m_position.y + itr->getHeight();
+		temp_height = itr->getPositionY() - m_y + itr->getHeight();
 		if (temp_height > total_height) {
 			total_height = temp_height;
 		}
 	}
 
-	m_size.x = total_width;
-	m_size.y = total_height;
+	m_width  = total_width;
+	m_height = total_height;
 }
 
 //=================================================================================================
@@ -279,8 +285,8 @@ void eve::ui::Widget::unselect(void)
 //=================================================================================================
 bool eve::ui::Widget::inside(int32_t p_x, int32_t p_y)
 {
-	bool bret = (p_x >= m_position.x) && (p_x <= m_position.x + m_size.x) &&
-				(p_y >= m_position.y) && (p_y <= m_position.y + m_size.y);
+	bool bret = (p_x >= m_x) && (p_x <= m_x + m_width) &&
+				(p_y >= m_y) && (p_y <= m_y + m_height);
 	return bret;
 }
 
@@ -288,6 +294,100 @@ bool eve::ui::Widget::inside(int32_t p_x, int32_t p_y)
 bool eve::ui::Widget::inside(const eve::vec2i & p_position)
 {
 	return this->inside(p_position.x, p_position.y);
+}
+
+
+
+//=================================================================================================
+void eve::ui::Widget::translate(int32_t p_x, int32_t p_y)
+{
+	m_x += p_x;
+	m_y += p_y;
+	for (auto && itr : (*m_pChildren))
+	{
+		itr->translate(p_x, p_y);
+	}
+}
+
+//=================================================================================================
+void eve::ui::Widget::translate(const eve::vec2i & p_value)
+{
+	this->translate(p_value.x, p_value.y);
+}
+
+//=================================================================================================
+void eve::ui::Widget::translateX(int32_t p_value)
+{
+	m_x += p_value;
+	for (auto && itr : (*m_pChildren))
+	{
+		itr->translateX(p_value);
+	}
+}
+
+//=================================================================================================
+void eve::ui::Widget::translateY(int32_t p_value)
+{
+	m_y += p_value;
+	for (auto && itr : (*m_pChildren))
+	{
+		itr->translateX(p_value);
+	}
+}
+
+
+
+//=================================================================================================
+void eve::ui::Widget::inflate(int32_t p_width, int32_t p_height)
+{
+	float ratioX = 0.0f;
+	float ratioY = 0.0f;
+
+	for (auto && itr : (*m_pChildren))
+	{
+		ratioX = static_cast<float>(itr->getWidth())  / static_cast<float>(m_width);
+		ratioY = static_cast<float>(itr->getHeight()) / static_cast<float>(m_height);
+
+		itr->inflate(static_cast<int32_t>(static_cast<float>(p_width) * ratioX)
+			       , static_cast<int32_t>(static_cast<float>(p_height) * ratioY));
+	}
+
+	m_width  += p_width;
+	m_height += p_height;
+}
+
+//=================================================================================================
+void eve::ui::Widget::inflate(const eve::vec2i & p_value)
+{
+	this->inflate(p_value.x, p_value.y);
+}
+
+//=================================================================================================
+void eve::ui::Widget::inflateX(int32_t p_value)
+{
+	float ratio = 0.0f;
+
+	for (auto && itr : (*m_pChildren))
+	{
+		ratio = static_cast<float>(itr->getWidth()) / static_cast<float>(m_width);
+		itr->inflateX(static_cast<int32_t>(static_cast<float>(p_value) * ratio));
+	}
+
+	m_width += p_value;
+}
+
+//=================================================================================================
+void eve::ui::Widget::inflateY(int32_t p_value)
+{
+	float ratio = 0.0f;
+
+	for (auto && itr : (*m_pChildren))
+	{
+		ratio = static_cast<float>(itr->getHeight()) / static_cast<float>(m_height);
+		itr->inflateY(static_cast<int32_t>(static_cast<float>(p_value) * ratio));
+	}
+
+	m_height += p_value;
 }
 
 
@@ -318,46 +418,29 @@ void eve::ui::Widget::setParent(eve::ui::Widget * p_pParent)
 //=================================================================================================
 void eve::ui::Widget::setPosition(int32_t p_x, int32_t p_y)
 {
-	eve::vec2i deport(p_x - m_position.x, p_y - m_position.y);
-	m_position.x = p_x;
-	m_position.y = p_y;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setPosition(itr->getPosition() + deport);
-	}
+	int32_t deportX(p_x - m_x);
+	int32_t deportY(p_y - m_y);
+	this->translate(deportX, deportY);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setPosition(const eve::vec2i & p_value)
 {
-	eve::vec2i deport = p_value - m_position;
-	m_position = p_value;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setPosition(itr->getPosition() + deport);
-	}
+	this->setPosition(p_value.x, p_value.y);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setPositionX(int32_t p_value)
 {
-	int32_t deport = p_value - m_position.x;
-	m_position.x = p_value;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setPositionX(itr->getPositionX() + deport);
-	}
+	int32_t deport = p_value - m_x;
+	this->translateX(deport);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setPositionY(int32_t p_value)
 {
-	int32_t deport = p_value - m_position.y;
-	m_position.y = p_value;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setPositionY(itr->getPositionY() + deport);
-	}
+	int32_t deport = p_value - m_y;
+	this->translateY(deport);
 }
 
 
@@ -365,44 +448,27 @@ void eve::ui::Widget::setPositionY(int32_t p_value)
 //=================================================================================================
 void eve::ui::Widget::setSize(int32_t p_width, int32_t p_height)
 {
-	eve::vec2i deport(p_width - m_size.x, p_height - m_size.y);
-	m_size.x = p_width;
-	m_size.y = p_height;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setSize(itr->getSize() + deport);
-	}
+	int32_t deportX(p_width - m_width);
+	int32_t deportY(p_height - m_height);
+	this->inflate(deportX, deportY);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setSize(const eve::vec2i & p_value)
 {
-	eve::vec2i deport = p_value - m_size;
-	m_size = p_value;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setSize(itr->getSize() + deport);
-	}
+	this->setSize(p_value.x, p_value.y);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setWidth(int32_t p_value)
 {
-	int32_t deport = p_value - m_size.x;
-	m_size.x = p_value;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setWidth(itr->getWidth() + deport);
-	}
+	int32_t deport = p_value - m_width;
+	this->inflateX(deport);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setHeight(int32_t p_value)
 {
-	int32_t deport = p_value - m_size.y;
-	m_size.y = p_value;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->setHeight(itr->getHeight() + deport);
-	}
+	int32_t deport = p_value - m_height;
+	this->inflateY(deport);
 }
