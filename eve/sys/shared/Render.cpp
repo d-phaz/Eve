@@ -135,7 +135,7 @@ void eve::sys::Render::run(void)
 			m_pFence->lock();
 			m_pContext->makeCurrent();
 
-			for (auto & itr : (*m_pVecRenderers))
+			for (auto && itr : (*m_pVecRenderers))
 			{
 				itr->cb_beforeDisplay();
 				itr->cb_display();

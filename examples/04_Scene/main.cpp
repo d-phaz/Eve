@@ -43,11 +43,11 @@ class ExampleTest final
 
 
 	EVE_DISABLE_COPY(ExampleTest);
-	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(ExampleTest);
+	EVE_PROTECT_DESTRUCTOR(ExampleTest);
 
 public:
-	/** \brief Setup format properties. (pure virtual) */
-	virtual void setup(void);
+	/** \brief class constructor. */
+	explicit ExampleTest(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -57,16 +57,9 @@ private:
 
 };
 
-void ExampleTest::setup(void)
-{
-	// Call parent class.
-	eve::ui::Display::setup();
-
-	m_format.x			= 50;
-	m_format.y			= 50;
-	m_format.width		= 800;
-	m_format.height		= 600;
-}
+ExampleTest::ExampleTest(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	: eve::ui::Display(p_x, p_y, p_width, p_height)
+{}
 
 void ExampleTest::initThreadedData(void)
 {
@@ -97,11 +90,11 @@ private:
 
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+	EVE_PROTECT_DESTRUCTOR(Example);
 
 public:
-	/** \brief Setup format properties. (pure virtual) */
-	virtual void setup(void);
+	/** \brief class constructor. */
+	explicit Example(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -117,16 +110,9 @@ public:
 
 };
 
-void Example::setup(void)
-{
-	// Call parent class.
-	eve::ui::View::setup();
-
-	m_format.x			= 50;
-	m_format.y			= 50;
-	m_format.width		= 800;
-	m_format.height		= 600;
-}
+Example::Example(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	: eve::ui::View(p_x, p_y, p_width, p_height)
+{}
 
 void Example::initThreadedData(void)
 {
@@ -139,7 +125,7 @@ void Example::initThreadedData(void)
 
 	//for (size_t i = 0; i < 6; i++)
 	{
-		ExampleTest * test = this->addDisplay<ExampleTest>();
+		ExampleTest * test = this->addDisplay<ExampleTest>(50, 50, 800, 600);
 	}
 }
 
@@ -193,4 +179,4 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 
 
 // Launch application for view "Example".
-EVE_APPLICATION(Example);
+EVE_APPLICATION(Example, 50, 50, 800, 600);

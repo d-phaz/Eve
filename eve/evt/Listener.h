@@ -48,7 +48,10 @@ namespace eve
 		*/
 		class Listener
 		{
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Listener);
+			EVE_PROTECT_DESTRUCTOR(Listener);
+
+		protected:
+			Listener(void){};
 		};		
 
 	} // namespace evt

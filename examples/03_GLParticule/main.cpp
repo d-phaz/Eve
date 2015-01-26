@@ -376,7 +376,11 @@ private:
 	dataSwapper * m_dataSwapper;
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Example);
+	EVE_PROTECT_DESTRUCTOR(Example);
+
+public:
+	/** \brief class constructor. */
+	explicit Example(void){};
 
 public:
 	/** \brief Setup format properties. (pure virtual) */
