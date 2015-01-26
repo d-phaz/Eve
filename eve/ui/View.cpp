@@ -34,9 +34,21 @@
 
 
 //=================================================================================================
-eve::ui::View::View(void)
+eve::ui::View::View(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
 	// Inheritance
 	: eve::sys::View()
+	, eve::ui::Widget(p_x, p_y, p_width, p_height)
+
+	// Members init
+	, m_pVecFrame(nullptr)
+	, m_pVecDisplay(nullptr)
+{}
+
+//=================================================================================================
+eve::ui::View::View(const eve::vec2i & p_position, const eve::vec2i & p_size)
+	// Inheritance
+	: eve::sys::View()
+	, eve::ui::Widget(p_position, p_size)
 
 	// Members init
 	, m_pVecFrame(nullptr)
@@ -48,15 +60,20 @@ eve::ui::View::View(void)
 //=================================================================================================
 void eve::ui::View::setup(void)
 {
-	uint32_t border		= eve::sys::Window::get_border_thickness();
-	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
-	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
-	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
-
-	m_format.x			= border;
-	m_format.y			= titleBar + border;
-	m_format.width		= width;
-	m_format.height		= height;
+// 	uint32_t border		= eve::sys::Window::get_border_thickness();
+// 	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
+// 	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
+// 	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
+// 
+// 	m_format.x			= border;
+// 	m_format.y			= titleBar + border;
+// 	m_format.width		= width;
+// 	m_format.height		= height;
+	
+	m_format.x			= m_position.x;
+	m_format.y			= m_position.y;
+	m_format.width		= m_size.x;
+	m_format.height		= m_size.y;
 	m_format.windowType = eve::sys::WindowType_App;
 }
 

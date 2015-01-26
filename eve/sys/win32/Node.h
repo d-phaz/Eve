@@ -184,6 +184,8 @@ namespace eve
 
 			/** \brief Mouse down event handler. (pure virtual) */
 			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) = 0;
+			/** \brief Mouse wheel event handler. (pure virtual) */
+			virtual void cb_evtMouseWheel(eve::evt::MouseEventArgs & p_args) = 0;
 			/** \brief Mouse up event handler. (pure virtual) */
 			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) = 0;
 			/** \brief Mouse double click event handler. (pure virtual) */

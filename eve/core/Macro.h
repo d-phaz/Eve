@@ -106,22 +106,22 @@
 */
 #define EVE_DISABLE_ASSIGNATION( targetClass )	\
 private:										\
-	void operator=(const targetClass& arg){};
+	void operator=(const targetClass& arg);
 /**
 * \def EVE_DISABLE_COPY
 * \brief Disable copy constructor and assignation operator for target class making them private.
 */
 #define EVE_DISABLE_COPY( targetClass )			\
 private:										\
-	targetClass(targetClass& arg){};			\
-	void operator=(const targetClass& arg){};
+	targetClass(targetClass& arg);				\
+	void operator=(const targetClass& arg);
 /**
 * \def EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR
 * \brief Make default constructor and destructor protected.
 */
 #define EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR( targetClass )		\
 protected:														\
-	explicit targetClass(void){};								\
+	explicit targetClass(void);									\
 	virtual ~targetClass(void){};
 /**
 * \def EVE_PROTECT_CONSTRUCTOR
@@ -129,7 +129,7 @@ protected:														\
 */
 #define EVE_PROTECT_CONSTRUCTOR( targetClass )		\
 protected:											\
-	explicit targetClass(void){};
+	explicit targetClass(void);
 /**
 * \def EVE_PROTECT_DESTRUCTOR
 * \brief Make destructor protected.

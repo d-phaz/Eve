@@ -287,7 +287,7 @@ eve::evt::MouseEventArgs & eve::evt::MouseEventArgs::operator = (const eve::evt:
 	this->time		= p_other.time;
 	this->x			= p_other.x;
 	this->y			= p_other.y;
-	this->button		= p_other.button;
+	this->button	= p_other.button;
 	return *this;
 }
 
@@ -297,6 +297,7 @@ eve::evt::MouseEventArgs & eve::evt::MouseEventArgs::operator = (const eve::evt:
 eve::evt::MouseEvent 		eve::evt::EvtMouse::mousePassiveMotion;
 eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseMotion;
 eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseDown;
+eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseWheel;
 eve::evt::MouseEvent		eve::evt::EvtMouse::mouseDoubleClick;
 eve::evt::MouseEvent 		eve::evt::EvtMouse::mouseUp;
 
@@ -306,6 +307,7 @@ void eve::evt::enable_events_mouse(void)
 	eve::evt::EvtMouse::mousePassiveMotion.enable();
 	eve::evt::EvtMouse::mouseMotion.enable();
 	eve::evt::EvtMouse::mouseDown.enable();
+	eve::evt::EvtMouse::mouseWheel.enable();
 	eve::evt::EvtMouse::mouseDoubleClick.enable();
 	eve::evt::EvtMouse::mouseUp.enable();
 }
@@ -316,6 +318,7 @@ void eve::evt::disable_events_mouse(void)
 	eve::evt::EvtMouse::mousePassiveMotion.disable();
 	eve::evt::EvtMouse::mouseMotion.disable();
 	eve::evt::EvtMouse::mouseDown.disable();
+	eve::evt::EvtMouse::mouseWheel.disable();
 	eve::evt::EvtMouse::mouseDoubleClick.disable();
 	eve::evt::EvtMouse::mouseUp.disable();
 }
@@ -331,6 +334,17 @@ void eve::evt::notify_mouse_down( int32_t p_button, int32_t x, int32_t y )
 	mouseEventArgs.y		= y;
 
 	eve::evt::notify_event(eve::evt::EvtMouse::mouseDown, mouseEventArgs);
+}
+
+//=================================================================================================
+void eve::evt::notify_mouse_wheel( int32_t p_button, int32_t x, int32_t y )
+{
+	eve::evt::MouseEventArgs mouseEventArgs;
+	mouseEventArgs.button	= p_button;
+	mouseEventArgs.x		= x;
+	mouseEventArgs.y		= y;
+
+	eve::evt::notify_event(eve::evt::EvtMouse::mouseWheel, mouseEventArgs);
 }
 
 //=================================================================================================

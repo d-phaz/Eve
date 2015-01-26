@@ -37,6 +37,10 @@
 #include "eve/sys/shared/View.h"
 #endif
 
+#ifndef __EVE_UI_WIDGET_H__
+#include "eve/ui/Widget.h"
+#endif
+
 
 namespace eve
 {
@@ -47,10 +51,11 @@ namespace eve
 		*
 		* \brief UI display. Usually used as an output window.
 		*
-		* \note extends eve::sys::View
+		* \note extends eve::sys::View, eve::ui::Widget.
 		*/
 		class Display
 			: public eve::sys::View
+			, public eve::ui::Widget
 		{
 
 			friend class eve::mem::Pointer;
@@ -72,7 +77,21 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			explicit Display(void);
+			explicit Display(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+			/** \brief Class constructor. */
+			explicit Display(const eve::vec2i & p_position, const eve::vec2i & p_size);
+
+
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void);
+
+
+		public:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members, propagates to children. (pure virtual) */
+			virtual void release(void) override;
 
 
 		protected:
@@ -80,6 +99,17 @@ namespace eve
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
+
+
+		public:
+			/** \brief Mouse down event handler. (pure virtual) */
+			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
+			/** \brief Mouse up event handler. (pure virtual) */
+			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) override;
+			/** \brief Mouse double click event handler. (pure virtual) */
+			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args) override;
+			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
+			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) override;
 
 		}; // class Display
 

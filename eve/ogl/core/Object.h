@@ -66,7 +66,10 @@ namespace eve
 		class Format
 		{
 			EVE_DISABLE_COPY(Format);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Format);
+			EVE_PROTECT_DESTRUCTOR(Format);
+
+		protected:
+			Format(void){};
 
 		}; // class Format
 

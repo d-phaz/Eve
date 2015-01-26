@@ -37,8 +37,9 @@
 #include "eve/sys/shared/View.h"
 #endif
 
-
-//namespace eve { namespace ui { class View; } }
+#ifndef __EVE_UI_WIDGET_H__
+#include "eve/ui/Widget.h"
+#endif
 
 
 namespace eve
@@ -50,10 +51,11 @@ namespace eve
 		*
 		* \brief UI view frame. Create user interface child window.
 		*
-		* \note extends eve::sys::View
+		* \note extends eve::sys::View, eve::ui::Widget.
 		*/
 		class Frame
 			: public eve::sys::View
+			, public eve::ui::Widget
 		{
 
 			friend class eve::mem::Pointer;
@@ -75,7 +77,21 @@ namespace eve
 
 		protected:
 			/** \brief Class constructor. */
-			explicit Frame(void);
+			explicit Frame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+			/** \brief Class constructor. */
+			explicit Frame(const eve::vec2i & p_position, const eve::vec2i & p_size);
+
+
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void);
+
+
+		public:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members, propagates to children. (pure virtual) */
+			virtual void release(void) override;
 
 
 		protected:

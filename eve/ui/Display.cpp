@@ -34,12 +34,56 @@
 
 
 //=================================================================================================
-eve::ui::Display::Display(void)
+eve::ui::Display::Display(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
 	// Inheritance
 	: eve::sys::View()
+	, eve::ui::Widget(p_x, p_y, p_width, p_height)
 
 	// Members init
 {}
+
+//=================================================================================================
+eve::ui::Display::Display(const eve::vec2i & p_position, const eve::vec2i & p_size)
+	// Inheritance
+	: eve::sys::View()
+	, eve::ui::Widget(p_position, p_size)
+
+	// Members init
+{}
+
+
+
+//=================================================================================================
+void eve::ui::Display::setup(void)
+{
+	m_format.x			= m_position.x;
+	m_format.y			= m_position.y;
+	m_format.width		= m_size.x;
+	m_format.height		= m_size.y;
+	m_format.windowType = eve::sys::WindowType_Output;
+}
+
+
+
+//=================================================================================================
+void eve::ui::Display::init(void)
+{
+	// Call parent class
+	eve::sys::View::init();
+	eve::ui::Widget::init();
+
+
+}
+
+//=================================================================================================
+void eve::ui::Display::release(void)
+{
+
+
+	// Call parent class
+	eve::sys::View::release();
+	eve::ui::Widget::release();
+}
 
 
 
@@ -59,4 +103,33 @@ void eve::ui::Display::releaseThreadedData(void)
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
+}
+
+
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+{
+
+}
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+{
+
+}
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+{
+	if (p_args.button == eve::sys::btn_Left)
+	{
+		m_pWindow->toggleFullScreen();
+	}
+}
+
+//=================================================================================================
+void eve::ui::Display::cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+{
+
 }

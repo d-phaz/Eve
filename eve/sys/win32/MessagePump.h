@@ -150,6 +150,8 @@ namespace eve
 			
 			/** \brief Mouse down event handler. */
 			LRESULT handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
+			/** \brief Mouse wheel event handler. */
+			LRESULT handleMouseWheel(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 			/** \brief Mouse up event handler. */
 			LRESULT handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 			/** \brief Mouse double click event handler. */

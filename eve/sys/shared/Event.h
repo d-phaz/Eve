@@ -81,6 +81,7 @@ namespace eve
 			eve::evt::MouseEvent 								m_mousePassiveMotion;	//!< Mouse passive motion (no mouse button pressed) event.
 			eve::evt::MouseEvent 								m_mouseMotion;			//!< Mouse motion (mouse button pressed) event.
 			eve::evt::MouseEvent 								m_mouseDown;			//!< Mouse button pressed event.
+			eve::evt::MouseEvent 								m_mouseWheel;			//!< Mouse wheel event.
 			eve::evt::MouseEvent								m_mouseDoubleClick;		//!< Mouse double click event.
 			eve::evt::MouseEvent 								m_mouseUp;				//!< Mouse button released event.
 
@@ -213,6 +214,8 @@ namespace eve
 
 			/** \brief Notify mouse down event to all listeners. */
 			void notifyMouseDown(int32_t p_button, int32_t x, int32_t y);
+			/** \brief Notify mouse wheel event to all listeners. */
+			void notifyMouseWheel(int32_t p_button, int32_t x, int32_t y);
 			/** \brief Notify mouse up event to all listeners. */
 			void notifyMouseUp(int32_t p_button, int32_t x, int32_t y);
 			/** \brief Notify mouse double click event to all listeners. */
@@ -226,6 +229,7 @@ namespace eve
 			* \brief Register listener class to mouse events.
 			* Listener class must provide mouse event handler methods using the following signatures:
 			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseWheel(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
@@ -237,6 +241,7 @@ namespace eve
 			* \brief Unregister listener class from mouse events.
 			* Listener class must provide mouse event handler methods using the following signatures:
 			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+			*		void cb_evtMouseWheel(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
 			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
@@ -420,6 +425,7 @@ template<class ListenerClass>
 void eve::sys::Event::registerEventsMouse(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(m_mouseDown,				p_pListener, &ListenerClass::cb_evtMouseDown,			p_prio);
+	eve::evt::add_listener(m_mouseWheel,			p_pListener, &ListenerClass::cb_evtMouseWheel,			p_prio);
 	eve::evt::add_listener(m_mouseUp,				p_pListener, &ListenerClass::cb_evtMouseUp,				p_prio);
 	eve::evt::add_listener(m_mouseDoubleClick,		p_pListener, &ListenerClass::cb_evtMouseDoubleClick,	p_prio);
 	eve::evt::add_listener(m_mouseMotion,			p_pListener, &ListenerClass::cb_evtMotion,				p_prio);
@@ -431,6 +437,7 @@ template<class ListenerClass>
 void eve::sys::Event::unregisterEventsMouse(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(m_mouseDown,				p_pListener, &ListenerClass::cb_evtMouseDown,			p_prio);
+	eve::evt::remove_listener(m_mouseWheel,				p_pListener, &ListenerClass::cb_evtMouseWheel,			p_prio);
 	eve::evt::remove_listener(m_mouseUp,				p_pListener, &ListenerClass::cb_evtMouseUp,				p_prio);
 	eve::evt::remove_listener(m_mouseDoubleClick,		p_pListener, &ListenerClass::cb_evtMouseDoubleClick,	p_prio);
 	eve::evt::remove_listener(m_mouseMotion,			p_pListener, &ListenerClass::cb_evtMotion,				p_prio);
