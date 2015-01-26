@@ -184,7 +184,7 @@ void Example::initThreadedData(void)
 
 void Example::releaseThreadedData(void)
 {
-	this->releaseRenderer(m_pScene);
+	//this->releaseRenderer(m_pScene);
 
 	// Call parent class.
 	eve::ui::View::releaseThreadedData();

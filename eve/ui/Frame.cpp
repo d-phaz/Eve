@@ -102,7 +102,7 @@ void eve::ui::Frame::initThreadedData(void)
 void eve::ui::Frame::releaseThreadedData(void)
 {
 	// Render engine.
-	this->releaseRenderer(m_pRenderer);
+	//this->releaseRenderer(m_pRenderer);
 
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
