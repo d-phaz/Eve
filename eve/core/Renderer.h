@@ -65,8 +65,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -82,14 +80,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_DESTRUCTOR(Renderer);
+			EVE_PUBLIC_DESTRUCTOR(Renderer);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Renderer(void);
 
 			
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void);
 			/** \brief Release and delete class members. (pure virtual) */

@@ -60,8 +60,9 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
+			//////////////////////////////////////
+			//				DATAS				//
+			//////////////////////////////////////
 
 		protected:
 			std::deque<TEvt> *	            m_pQueueBack;			//!< Back event queue.
@@ -76,14 +77,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(TQueue);
-			EVE_PROTECT_DESTRUCTOR(TQueue);
+			EVE_PUBLIC_DESTRUCTOR(TQueue);
 
 		public:
 			/** \brief Class constructor. */
 			TQueue(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

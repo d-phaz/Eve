@@ -52,16 +52,14 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Fence);
-			EVE_PROTECT_DESTRUCTOR(Fence);
+			EVE_PUBLIC_DESTRUCTOR(Fence);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Fence(void);
 

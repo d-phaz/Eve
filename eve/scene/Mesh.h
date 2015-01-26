@@ -74,8 +74,6 @@ namespace eve
 			, public eve::math::TMesh<float>
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -94,7 +92,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Mesh);
-			EVE_PROTECT_DESTRUCTOR(Mesh);
+			EVE_PUBLIC_DESTRUCTOR(Mesh);
 
 		public:
 			/** \brief Create, init and return new pointer based on ASSIMP aiMesh \a p_pMesh. */
@@ -106,7 +104,7 @@ namespace eve
 											   , const std::string &	p_fullPath);
 
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent);
 
@@ -116,7 +114,7 @@ namespace eve
 			bool init(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis, const std::string & p_fullPath);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

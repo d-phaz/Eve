@@ -67,8 +67,6 @@ namespace eve
 		class Server final
 			: public eve::mem::Pointer
 		{
-
-			friend class eve::mem::Pointer;
 			friend class eve::app::App;
 
 			//////////////////////////////////////
@@ -105,7 +103,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Server)
-			EVE_PROTECT_DESTRUCTOR(Server)
+			EVE_PUBLIC_DESTRUCTOR(Server)
 
 		private:
 			/** \brief Create unique instance. */
@@ -118,12 +116,12 @@ namespace eve
 			static void release_instance(void);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Server(void);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

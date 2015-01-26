@@ -58,8 +58,6 @@ namespace eve
 			, public eve::ui::Widget
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -73,9 +71,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Display);
-			EVE_PROTECT_DESTRUCTOR(Display);
+			EVE_PUBLIC_DESTRUCTOR(Display);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Display(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 			/** \brief Class constructor. */

@@ -56,8 +56,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -76,19 +74,19 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Kernel);
-			EVE_PROTECT_DESTRUCTOR(Kernel);
+			EVE_PUBLIC_DESTRUCTOR(Kernel);
 
 		public:
 			/** \brief Create new pointer. */
 			static eve::ocl::Kernel * create_ptr(cl_program p_program, const std::string & p_name);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Kernel(cl_program p_program, const std::string & p_name);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void);
 			/** \brief Release and delete class members. (pure virtual) */

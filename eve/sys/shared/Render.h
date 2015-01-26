@@ -60,8 +60,6 @@ namespace eve
 			: public eve::thr::Thread
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -80,7 +78,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Render);
-			EVE_PROTECT_DESTRUCTOR(Render);
+			EVE_PUBLIC_DESTRUCTOR(Render);
 
 		public:
 			/**
@@ -90,12 +88,12 @@ namespace eve
 			static eve::sys::Render * create_ptr(HWND p_handle);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Render(HWND p_handle);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/**

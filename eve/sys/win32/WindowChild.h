@@ -54,8 +54,6 @@ namespace eve
 			: public eve::sys::Window
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -68,7 +66,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(WindowChild);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(WindowChild);
+			EVE_PUBLIC_DESTRUCTOR(WindowChild);
 
 		public:
 			/**
@@ -82,7 +80,7 @@ namespace eve
 			static eve::sys::WindowChild * create_ptr(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent);
 
 
-		private:
+		public:
 			/** 
 			* \brief Class constructor.
 			* \param p_x is the Window position on X-axis.
@@ -94,7 +92,7 @@ namespace eve
 			explicit WindowChild(int32_t p_x, int32_t p_y, uint32_t p_width, uint32_t p_height, HWND p_parent);
 
 
-		private:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

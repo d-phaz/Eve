@@ -56,8 +56,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -78,19 +76,19 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(CommandQueue);
-			EVE_PROTECT_DESTRUCTOR(CommandQueue);
+			EVE_PUBLIC_DESTRUCTOR(CommandQueue);
 
 		public:
 			/** \brief Create new pointer. */
 			static eve::ocl::CommandQueue * create_ptr(cl_context p_context, cl_device_id p_device);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit CommandQueue(cl_context p_context, cl_device_id p_device);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void);
 			/** \brief Release and delete class members. (pure virtual) */

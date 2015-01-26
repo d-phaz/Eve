@@ -122,7 +122,6 @@ dataSwapper::dataSwapper()
 class RenderGL final
 	: public eve::ogl::Renderer
 {
-	friend class eve::mem::Pointer;
 
 	//////////////////////////////////////
 	//				DATA				//
@@ -149,17 +148,18 @@ private:
 	//////////////////////////////////////
 
 	EVE_DISABLE_COPY(RenderGL);
-	EVE_PROTECT_DESTRUCTOR(RenderGL);
+	EVE_PUBLIC_DESTRUCTOR(RenderGL);
 
-private:
+public:
 	explicit RenderGL(void);
 
 
-protected:
+public:
 	/** \brief Alloc and init class members. (pure virtual) */
 	virtual void init(void) override;
 	/** \brief Release and delete class members. (pure virtual) */
 	virtual void release(void) override;
+
 
 public:
 	/** \brief Draw on screen callback. (pure virtual) */
@@ -369,14 +369,13 @@ void RenderGL::cb_display(void)
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 private:
 	RenderGL * m_pRender;
 	dataSwapper * m_dataSwapper;
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */

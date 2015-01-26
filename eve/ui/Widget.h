@@ -59,8 +59,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -89,9 +87,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Widget);
-			EVE_PROTECT_DESTRUCTOR(Widget);
+			EVE_PUBLIC_DESTRUCTOR(Widget);
 
-		protected:
+		public:
 			/** \brief Class default constructor. */
 			explicit Widget(void);
 			/** \brief Class constructor. */
@@ -100,7 +98,7 @@ namespace eve
 			explicit Widget(const eve::vec2i & p_position, const eve::vec2i & p_size);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members, propagates to children. (pure virtual) */

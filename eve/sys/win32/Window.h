@@ -88,8 +88,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -122,10 +120,10 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Window);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Window);
+			EVE_PUBLIC_DESTRUCTOR(Window);
 
 
-		protected:
+		public:
 			/** 
 			* \brief Class constructor. 
 			* \param p_x is the Window position on X-axis.
@@ -143,7 +141,7 @@ namespace eve
 						  , HWND p_parent = nullptr);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

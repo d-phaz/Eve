@@ -67,8 +67,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -89,21 +87,21 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_ASSIGNATION(TMesh);
-			EVE_PROTECT_DESTRUCTOR(TMesh);
+			EVE_PUBLIC_DESTRUCTOR(TMesh);
 
 		public:
 			/** \brief Create new pointer, copy of \p_parent. */
 			static eve::math::TMesh<T> * create_ptr(const TMesh<T> & p_parent);
 
 			
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit TMesh(void);
 			/** \brief Copy constructor. */
 			explicit TMesh(const TMesh<T> & p_parent);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

@@ -65,8 +65,6 @@ namespace eve
 			: public eve::sys::View
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -81,9 +79,9 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(View);
-			EVE_PROTECT_DESTRUCTOR(View);
+			EVE_PUBLIC_DESTRUCTOR(View);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit View(void);
 

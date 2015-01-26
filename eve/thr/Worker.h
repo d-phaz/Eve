@@ -59,8 +59,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
@@ -68,7 +66,7 @@ namespace eve
 			EVE_DISABLE_COPY(Worker);
 			EVE_PROTECT_DESTRUCTOR(Worker);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Worker(void);
 

@@ -61,8 +61,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -102,7 +100,7 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Engine);
-			EVE_PROTECT_DESTRUCTOR(Engine);
+			EVE_PUBLIC_DESTRUCTOR(Engine);
 
 		public:
 			/** \brief Create unique instance. */
@@ -111,12 +109,12 @@ namespace eve
 			static void release_instance(void);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Engine(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

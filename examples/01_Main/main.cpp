@@ -34,10 +34,9 @@
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */

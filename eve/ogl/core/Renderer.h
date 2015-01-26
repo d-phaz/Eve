@@ -92,7 +92,6 @@ namespace eve
 			: public eve::core::Renderer
 		{
 
-			friend class eve::mem::Pointer;
 			friend class eve::ogl::Object;
 
 			//////////////////////////////////////
@@ -111,14 +110,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Renderer);
-			EVE_PROTECT_DESTRUCTOR(Renderer);
+			EVE_PUBLIC_DESTRUCTOR(Renderer);
 
-		protected:
+		public:
 			/** \class constructor. */
 			explicit Renderer(void);
 
 			
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

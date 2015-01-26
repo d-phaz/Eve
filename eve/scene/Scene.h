@@ -87,8 +87,6 @@ namespace eve
 			, public eve::scene::EventListenerScene
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -118,14 +116,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Scene);
-			EVE_PROTECT_DESTRUCTOR(Scene);
+			EVE_PUBLIC_DESTRUCTOR(Scene);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Scene(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

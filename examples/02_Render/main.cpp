@@ -38,7 +38,6 @@
 class RenderGL final
 	: public eve::ogl::Renderer
 {
-	friend class eve::mem::Pointer;
 
 	//////////////////////////////////////
 	//				DATA				//
@@ -58,13 +57,13 @@ private:
 	//////////////////////////////////////
 
 	EVE_DISABLE_COPY(RenderGL);
-	EVE_PROTECT_DESTRUCTOR(RenderGL);
+	EVE_PUBLIC_DESTRUCTOR(RenderGL);
 
-private:
+public:
 	explicit RenderGL(void);
 
 
-protected:
+public:
 	/** \brief Alloc and init class members. (pure virtual) */
 	virtual void init(void) override;
 	/** \brief Release and delete class members. (pure virtual) */
@@ -181,14 +180,13 @@ void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 private:
 	RenderGL * m_pRender;
 
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */

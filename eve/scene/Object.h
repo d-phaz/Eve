@@ -91,8 +91,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
@@ -134,14 +132,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Object);
-			EVE_PROTECT_CONSTRUCTOR_DESTRUCTOR(Object);
+			EVE_PUBLIC_DESTRUCTOR(Object);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit Object(eve::scene::Scene * p_pScene, eve::scene::Object * p_pParent, eve::scene::SceneObjectType p_type);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */

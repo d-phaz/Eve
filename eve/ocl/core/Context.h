@@ -66,8 +66,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -90,19 +88,19 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(Context);
-			EVE_PROTECT_DESTRUCTOR(Context);
+			EVE_PUBLIC_DESTRUCTOR(Context);
 
 		public:
 			/** \brief Create new pointer. */
 			static eve::ocl::Context * create_ptr(cl_context p_context, cl_device_id p_device);
 
 
-		private:
+		public:
 			/** \brief Class constructor. */
 			explicit Context(cl_context p_context, cl_device_id p_device);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void);
 			/** \brief Release and delete class members. (pure virtual) */

@@ -39,11 +39,8 @@ static eve::scene::Scene * m_pScene = nullptr;
 class ExampleTest final
 	: public eve::ui::Display
 {
-	friend class eve::mem::Pointer;
-
-
 	EVE_DISABLE_COPY(ExampleTest);
-	EVE_PROTECT_DESTRUCTOR(ExampleTest);
+	EVE_PUBLIC_DESTRUCTOR(ExampleTest);
 
 public:
 	/** \brief class constructor. */
@@ -83,14 +80,13 @@ void ExampleTest::releaseThreadedData(void)
 class Example final
 	: public eve::ui::View
 {
-	friend class eve::mem::Pointer;
 
 private:
 	//eve::scene::Scene * m_pScene;
 
 
 	EVE_DISABLE_COPY(Example);
-	EVE_PROTECT_DESTRUCTOR(Example);
+	EVE_PUBLIC_DESTRUCTOR(Example);
 
 public:
 	/** \brief class constructor. */

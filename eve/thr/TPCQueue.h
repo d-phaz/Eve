@@ -71,8 +71,6 @@ namespace eve
 			: public eve::mem::Pointer
 		{
 
-			friend class eve::mem::Pointer;
-
 			//////////////////////////////////////
 			//				DATA				//
 			//////////////////////////////////////
@@ -88,15 +86,14 @@ namespace eve
 			//////////////////////////////////////
 
 			EVE_DISABLE_COPY(TPCQueue);
-			EVE_PROTECT_DESTRUCTOR(TPCQueue);
+			EVE_PUBLIC_DESTRUCTOR(TPCQueue);
 
-
-		protected:
+		public:
 			/** \brief Class constructor. */
 			explicit TPCQueue(void);
 
 
-		protected:
+		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
 			/** \brief Release and delete class members. (pure virtual) */
