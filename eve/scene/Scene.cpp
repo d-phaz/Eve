@@ -284,8 +284,8 @@ void eve::scene::Scene::cb_display(void)
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_pShaderMesh->bind();
 		m_pCameraActive->oglBind();
+		m_pShaderMesh->bind();
 
 		for (auto && itr : (*m_pVecMesh))
 		{

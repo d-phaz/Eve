@@ -168,19 +168,6 @@ namespace eve
 			/** \brief Create and return new eve::ogl::Vao pointer based on eve::ogl::FormatVao. */
 			eve::ogl::Vao *		create(eve::ogl::FormatVao & p_format);
 
-
-			///////////////////////////////////////////////////////////////////////////////////////////////
-			//		GET / SET
-			///////////////////////////////////////////////////////////////////////////////////////////////
-
-		public:
-			/** \brief Set render size. */
-			virtual void setSize(uint32_t p_width, uint32_t p_height);
-			/** \brief Set render width. */
-			virtual void setWidth(uint32_t p_width);
-			/** \brief Set render height. */
-			virtual void setHeight(uint32_t p_height);
-
 		}; // class Renderer
 
 	} // namespace core

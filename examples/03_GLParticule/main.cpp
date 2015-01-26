@@ -262,9 +262,6 @@ void RenderGL::release(void)
 
 void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 {
-	// Call parent class.
-	eve::ogl::Renderer::setSize(p_width, p_height);
-
 	m_dataSwapper->m_pCamera->setDisplaySize(p_width, p_height);
 }
 

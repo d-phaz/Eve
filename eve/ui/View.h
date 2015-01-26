@@ -58,6 +58,8 @@ namespace eve
 		*
 		* \brief Base application view class.
 		* Create user interface window, stock and manages linked frames and outputs.
+		* View can not create widgets except frames.
+		* Frames handle interactive drawable widgets.
 		*
 		* \note extends eve::sys::View.
 		*/

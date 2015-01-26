@@ -97,9 +97,7 @@ void RenderGL::init(void)
 	// Call parent class.
 	eve::ogl::Renderer::init();
 
-	m_width   = 800;
-	m_height  = 600;
-	m_pCamera = eve::math::Cameraf::create_ptr(m_width, m_height);
+	m_pCamera = eve::math::Cameraf::create_ptr(800, 600);
 
 	eve::ogl::FormatShader fmtShader;
 	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Textured3D.vert"));
@@ -147,7 +145,7 @@ void RenderGL::cb_display(void)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glViewport(0, 0, m_width, m_height);
+	glViewport(0, 0, m_pCamera->getDisplayWidth(), m_pCamera->getDisplayHeight());
 
 	m_pShader->bind();
 	m_pUniform->bind(1);
@@ -168,9 +166,6 @@ void RenderGL::cb_display(void)
 //=================================================================================================
 void RenderGL::setSize(uint32_t p_width, uint32_t p_height)
 {
-	// Call parent class.
-	eve::ogl::Renderer::setSize(p_width, p_height);
-
 	m_pCamera->setDisplaySize(p_width, p_height);
 }
 

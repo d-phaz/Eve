@@ -42,6 +42,9 @@
 #endif
 
 
+namespace eve { namespace ui { class Renderer; } }
+
+
 namespace eve
 {
 	namespace ui
@@ -50,6 +53,7 @@ namespace eve
 		* \class eve::ui::Frame
 		*
 		* \brief UI view frame. Create user interface child window.
+		* Handles interactive drawable widgets.
 		*
 		* \note extends eve::sys::View, eve::ui::Widget.
 		*/
@@ -63,6 +67,7 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
+			eve::ui::Renderer *			m_pRenderer;		//!< Specifies render engine.
 			
 
 

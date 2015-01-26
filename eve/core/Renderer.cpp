@@ -38,8 +38,6 @@ eve::core::Renderer::Renderer(void)
 	// Inheritance
 	: eve::mem::Pointer()
 	// Members init
-	, m_width(0)
-	, m_height(0)
 	, m_pFence(nullptr)
 {}
 
@@ -69,30 +67,5 @@ void eve::core::Renderer::cb_beforeDisplay(void)
 void eve::core::Renderer::cb_afterDisplay(void)
 {
 	m_pFence->unlock();
-}
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-void eve::core::Renderer::setSize(uint32_t p_width, uint32_t p_height)
-{
-	m_width  = p_width;
-	m_height = p_height;
-}
-
-//=================================================================================================
-void eve::core::Renderer::setWidth(uint32_t p_width)
-{
-	m_width = p_width;
-}
-
-//=================================================================================================
-void eve::core::Renderer::setHeight(uint32_t p_height)
-{
-	m_height = p_height;
 }
 

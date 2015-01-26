@@ -48,8 +48,9 @@ eve::ui::Widget::Widget(void)
 	, m_width(0)
 	, m_height(0)
 	, m_bEnabled(false)
-	, m_bVisible(false)
 	, m_bSelected(false)
+	, m_bVisible(false)
+	, m_bPaint(false)
 {}
 
 //=================================================================================================
@@ -64,8 +65,9 @@ eve::ui::Widget::Widget(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_hei
 	, m_width(p_width)
 	, m_height(p_height)
 	, m_bEnabled(false)
-	, m_bVisible(false)
 	, m_bSelected(false)
+	, m_bVisible(false)
+	, m_bPaint(false)
 {}
 
 //=================================================================================================
@@ -80,8 +82,9 @@ eve::ui::Widget::Widget(const eve::vec2i & p_position, const eve::vec2i & p_size
 	, m_width(p_size.x)
 	, m_height(p_size.y)
 	, m_bEnabled(false)
-	, m_bVisible(false)
 	, m_bSelected(false)
+	, m_bVisible(false)
+	, m_bPaint(false)
 {}
 
 
@@ -239,28 +242,6 @@ void eve::ui::Widget::disnable(void)
 
 
 //=================================================================================================
-void eve::ui::Widget::show(void)
-{
-	m_bVisible = true;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->show();
-	}
-}
-
-//=================================================================================================
-void eve::ui::Widget::hide(void)
-{
-	m_bVisible = false;
-	for (auto && itr : (*m_pChildren))
-	{
-		itr->hide();
-	}
-}
-
-
-
-//=================================================================================================
 void eve::ui::Widget::select(void)
 {
 	m_bSelected = true;
@@ -277,6 +258,75 @@ void eve::ui::Widget::unselect(void)
 	for (auto && itr : (*m_pChildren))
 	{
 		itr->unselect();
+	}
+}
+
+
+
+//=================================================================================================
+void eve::ui::Widget::show(void)
+{
+	m_bVisible = true;
+	for (auto && itr : (*m_pChildren))
+	{
+		itr->show();
+	}
+	this->requestPaint();
+}
+
+//=================================================================================================
+void eve::ui::Widget::hide(void)
+{
+	m_bVisible = false;
+	for (auto && itr : (*m_pChildren))
+	{
+		itr->hide();
+	}
+}
+
+
+
+//=================================================================================================
+void eve::ui::Widget::requestPaint(void)
+{
+	m_bPaint = true;
+	for (auto && itr : (*m_pChildren))
+	{
+		itr->requestPaint();
+	}
+}
+
+//=================================================================================================
+bool eve::ui::Widget::needPaint(void)
+{
+	return (m_bPaint && m_bVisible);
+}
+
+
+
+//=================================================================================================
+void eve::ui::Widget::oglDrawColored(void)
+{
+	m_bPaint = false;
+	for (auto && itr : (*m_pChildren))
+	{
+		if (itr->needPaint())
+		{
+			itr->oglDrawColored();
+		}
+	}
+}
+
+//=================================================================================================
+void eve::ui::Widget::oglDrawTextured(void)
+{
+	m_bPaint = false;
+	for (auto && itr : (*m_pChildren))
+	{
+		if (itr->needPaint())
+		{
+			itr->oglDrawTextured();
+		}
 	}
 }
 

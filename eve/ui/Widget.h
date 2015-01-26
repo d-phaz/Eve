@@ -78,8 +78,9 @@ namespace eve
 
 		protected:
 			bool							m_bEnabled;				//!< Specifies enabled state (default to false).
-			bool							m_bVisible;				//!< SPecifies visible state (default to false).
 			bool							m_bSelected;			//!< Specifies selected state (default to false).
+			bool							m_bVisible;				//!< SPecifies visible state (default to false).
+			bool							m_bPaint;				//!< Specifies paint requested state (drawing) (default to false).
 
 
 			//////////////////////////////////////
@@ -142,6 +143,13 @@ namespace eve
 
 
 		public:
+			/** \brief Select widget and propagate to children. */
+			virtual void select(void);
+			/** \brief Unselect widget and propagate to children. */
+			virtual void unselect(void);
+
+
+		public:
 			/** \brief Show widget and propagate to children. */
 			virtual void show(void);
 			/** \brief Hide widget and propagate to children. */
@@ -149,10 +157,17 @@ namespace eve
 
 
 		public:
-			/** \brief Select widget and propagate to children. */
-			virtual void select(void);
-			/** \brief Unselect widget and propagate to children. */
-			virtual void unselect(void);
+			/** \brief Request paint and propagate to children. */
+			void requestPaint(void);
+			/** \brief Return paint request based on object states. */
+			bool needPaint(void);
+
+
+		public:
+			/** \brief Draw colored OpenGL objects and propagate to children. */
+			virtual void oglDrawColored(void);
+			/** \brief Draw textured OpenGL objects and propagate to children. */
+			virtual void oglDrawTextured(void);
 
 
 		protected:
