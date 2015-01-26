@@ -184,7 +184,7 @@ TFrame * eve::ui::View::addFrame(int32_t p_x, int32_t p_y, int32_t p_width, int3
 	m_pFence->lock();
 
 	TFrame * ptr = new TFrame(p_x, p_y, p_width, p_height);
-	ptr->setParent(this);
+	ptr->setParentNode(this);
 	ptr->setup();
 	ptr->init();
 	m_pVecFrame->push_back(ptr);
@@ -203,7 +203,7 @@ TFrame * eve::ui::View::addFrame(const eve::vec2i & p_position, const eve::vec2i
 	m_pFence->lock();
 
 	TFrame * ptr = new TFrame(p_position, p_size);
-	ptr->setParent(this);
+	ptr->setParentNode(this);
 	ptr->setup();
 	ptr->init();
 	m_pVecFrame->push_back(ptr);

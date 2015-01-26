@@ -212,7 +212,7 @@ namespace eve
 
 		public:
 			/** \brief Set parent, must be called before class init(). */
-			void setParent(eve::sys::Node * p_pParent);
+			void setParentNode(eve::sys::Node * p_pParent);
 
 		}; // class Node
 
@@ -226,6 +226,6 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE void eve::sys::Node::setParent(eve::sys::Node * p_pParent) { EVE_ASSERT(p_pParent);	m_pParent = p_pParent; }
+EVE_FORCE_INLINE void eve::sys::Node::setParentNode(eve::sys::Node * p_pParent) { EVE_ASSERT(p_pParent);	m_pParent = p_pParent; }
 
 #endif // __EVE_SYSTEM_NODE_H__

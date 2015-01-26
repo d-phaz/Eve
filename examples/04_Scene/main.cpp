@@ -36,15 +36,15 @@
 
 static eve::scene::Scene * m_pScene = nullptr;
 
-class ExampleTest final
+class ExampleDisplay final
 	: public eve::ui::Display
 {
-	EVE_DISABLE_COPY(ExampleTest);
-	EVE_PUBLIC_DESTRUCTOR(ExampleTest);
+	EVE_DISABLE_COPY(ExampleDisplay);
+	EVE_PUBLIC_DESTRUCTOR(ExampleDisplay);
 
 public:
 	/** \brief class constructor. */
-	explicit ExampleTest(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+	explicit ExampleDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -54,11 +54,11 @@ private:
 
 };
 
-ExampleTest::ExampleTest(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+ExampleDisplay::ExampleDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
 	: eve::ui::Display(p_x, p_y, p_width, p_height)
 {}
 
-void ExampleTest::initThreadedData(void)
+void ExampleDisplay::initThreadedData(void)
 {
 	// Call parent class.
 	eve::ui::Display::initThreadedData();
@@ -66,12 +66,52 @@ void ExampleTest::initThreadedData(void)
 	this->registerRenderer(m_pScene);
 }
 
-void ExampleTest::releaseThreadedData(void)
+void ExampleDisplay::releaseThreadedData(void)
 {
 	this->unregisterRenderer(m_pScene);
 	
 	// Call parent class.
 	eve::ui::Display::releaseThreadedData();
+}
+
+
+
+class ExampleFrame final
+	: public eve::ui::Frame
+{
+	EVE_DISABLE_COPY(ExampleFrame);
+	EVE_PUBLIC_DESTRUCTOR(ExampleFrame);
+
+public:
+	/** \brief class constructor. */
+	explicit ExampleFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+
+private:
+	/** \brief Alloc and init threaded data. (pure virtual) */
+	virtual void initThreadedData(void) override;
+	/** \brief Release and delete threaded data. (pure virtual) */
+	virtual void releaseThreadedData(void) override;
+
+};
+
+ExampleFrame::ExampleFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	: eve::ui::Frame(p_x, p_y, p_width, p_height)
+{}
+
+void ExampleFrame::initThreadedData(void)
+{
+	// Call parent class.
+	eve::ui::Frame::initThreadedData();
+
+	this->registerRenderer(m_pScene);
+}
+
+void ExampleFrame::releaseThreadedData(void)
+{
+	this->unregisterRenderer(m_pScene);
+
+	// Call parent class.
+	eve::ui::Frame::releaseThreadedData();
 }
 
 
@@ -136,8 +176,10 @@ void Example::initThreadedData(void)
 
 	//for (size_t i = 0; i < 6; i++)
 	{
-		ExampleTest * test = this->addDisplay<ExampleTest>(50, 50, 800, 600);
+		ExampleDisplay * test = this->addDisplay<ExampleDisplay>(50, 50, 800, 600);
 	}
+	
+	ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
 }
 
 void Example::releaseThreadedData(void)

@@ -194,9 +194,9 @@ namespace eve
 
 		public:
 			/** \brief Get parent widget. */
-			eve::ui::Widget * getParent(void) const;
+			eve::ui::Widget * getParentWidget(void) const;
 			/** \brief Set parent. */
-			void setParent(eve::ui::Widget * p_pParent);
+			virtual void setParentWidget(eve::ui::Widget * p_pParent);
 
 
 		public:
@@ -263,8 +263,8 @@ EVE_FORCE_INLINE eve::ui::Widget * eve::ui::Widget::get_widget_active(void) { re
 
 
 //=================================================================================================
-EVE_FORCE_INLINE eve::ui::Widget *				eve::ui::Widget::getParent(void) const		{ return m_pParent; }
-EVE_FORCE_INLINE std::list<eve::ui::Widget*> *	eve::ui::Widget::getChildren(void) const	{ return m_pChildren; }
+EVE_FORCE_INLINE eve::ui::Widget *				eve::ui::Widget::getParentWidget(void) const	{ return m_pParent; }
+EVE_FORCE_INLINE std::list<eve::ui::Widget*> *	eve::ui::Widget::getChildren(void) const		{ return m_pChildren; }
 
 
 //=================================================================================================

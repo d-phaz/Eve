@@ -118,7 +118,7 @@ bool eve::ui::Widget::addChild(eve::ui::Widget * p_pWidget)
 	if (breturn)
 	{
 		m_pChildren->push_back(p_pWidget);
-		p_pWidget->setParent(this);
+		p_pWidget->setParentWidget(this);
 
 		this->childUpdate();
 	}
@@ -397,7 +397,7 @@ void eve::ui::Widget::inflateY(int32_t p_value)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-void eve::ui::Widget::setParent(eve::ui::Widget * p_pParent)
+void eve::ui::Widget::setParentWidget(eve::ui::Widget * p_pParent)
 {
 	// STock parent.
 	m_pParent = p_pParent;
