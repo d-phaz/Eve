@@ -82,7 +82,7 @@ namespace eve
 	namespace ogl
 	{
 		/**
-		* \class eve::sys::Renderer
+		* \class eve::ogl::Renderer
 		*
 		* \brief OpenGL render engine.
 		*
