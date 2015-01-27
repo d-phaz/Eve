@@ -32,13 +32,21 @@
 // Main class header
 #include "eve/sys/shared/View.h"
 
+#ifndef __EVE_SYSTEM_RENDER_H__
+#include "eve/sys/shared/Render.h"
+#endif
+
+#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
+#include "eve/sys/win32/MessagePump.h"
+#endif
+
 
 //=================================================================================================
 eve::sys::View::View(void)
-	// Inheritance
+	// Inheritance.
 	: eve::sys::Node()
-
-	// Members init
+	// Members init.
+	, m_pRender(nullptr)
 {}
 
 
@@ -48,11 +56,41 @@ void eve::sys::View::initThreadedData(void)
 {
 	// Call parent class.
 	eve::sys::Node::initThreadedData();
+
+	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
+	m_pRender->start();
+
+	m_pMessagePump->registerListener(this);
 }
 
 //=================================================================================================
 void eve::sys::View::releaseThreadedData(void)
 {
+	m_pMessagePump->unregisterListener(this);
+
+	m_pRender->stop();
+	EVE_RELEASE_PTR(m_pRender);
+
 	// Call parent class.
 	eve::sys::Node::releaseThreadedData();
+}
+
+
+
+//=================================================================================================
+bool eve::sys::View::registerRenderer(eve::core::Renderer * p_pRenderer)
+{
+	return m_pRender->registerRenderer(p_pRenderer);
+}
+
+//=================================================================================================
+bool eve::sys::View::unregisterRenderer(eve::core::Renderer * p_pRenderer)
+{
+	return m_pRender->unregisterRenderer(p_pRenderer);
+}
+
+//=================================================================================================
+bool eve::sys::View::releaseRenderer(eve::core::Renderer * p_pRenderer)
+{
+	return m_pRender->releaseRenderer(p_pRenderer);
 }

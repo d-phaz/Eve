@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_EVENT_H__ 
-#define __EVE_SYSTEM_EVENT_H__
+#ifndef __EVE_SYSTEM_EVENT_SENDER_H__ 
+#define __EVE_SYSTEM_EVENT_SENDER_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
@@ -55,13 +55,13 @@ namespace eve
 	namespace sys
 	{
 		/** 
-		* \class eve::sys::Event
+		* \class eve::sys::EventSender
 		*
 		* \brief User interaction and other system message pump event types, server, notifications.
 		*
 		* \note extends eve::mem::Pointer
 		*/
-		class Event final
+		class EventSender
 			: public eve::mem::Pointer
 		{
 
@@ -94,12 +94,12 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Event);
-			EVE_PUBLIC_DESTRUCTOR(Event);
+			EVE_DISABLE_COPY(EventSender);
+			EVE_PUBLIC_DESTRUCTOR(EventSender);
 
 		public:
 			/** \brief Class constructor. */
-			explicit Event(void);
+			explicit EventSender(void);
 
 
 		public:
@@ -324,7 +324,7 @@ namespace eve
 			*		void cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 			*/
 			template<class ListenerClass>
-			void registerEvents(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
+			void registerListener(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 			/**
 			* \brief Unregister listener class to events.
 			* Listener class must provide event handler methods using the following signatures:
@@ -344,9 +344,9 @@ namespace eve
 			*		void cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 			*/
 			template<class ListenerClass>
-			void unregisterEvents(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
+			void unregisterListener(ListenerClass * p_pListener, int32_t p_prio = eve::evt::orderApp);
 
-		}; // class Event 
+		}; // class EventSender 
 
 	} // namespace evt
 
@@ -359,14 +359,14 @@ namespace eve
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::registerEventsFile(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::registerEventsFile(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(m_fileDropped, p_pListener, &ListenerClass::cb_evtFileDrop, p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::unregisterEventsFile(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::unregisterEventsFile(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(m_fileDropped, p_pListener, &ListenerClass::cb_evtFileDrop, p_prio);
 }
@@ -378,7 +378,7 @@ void eve::sys::Event::unregisterEventsFile(ListenerClass * p_pListener, int32_t 
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::registerEventsKey(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::registerEventsKey(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(m_keyPressed,	p_pListener, &ListenerClass::cb_evtKeyDown,		p_prio);
 	eve::evt::add_listener(m_keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
@@ -386,7 +386,7 @@ void eve::sys::Event::registerEventsKey(ListenerClass * p_pListener, int32_t p_p
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::unregisterEventsKey(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::unregisterEventsKey(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(m_keyPressed,		p_pListener, &ListenerClass::cb_evtKeyDown,		p_prio);
 	eve::evt::remove_listener(m_keyReleased,	p_pListener, &ListenerClass::cb_evtKeyUp,		p_prio);
@@ -400,14 +400,14 @@ void eve::sys::Event::unregisterEventsKey(ListenerClass * p_pListener, int32_t p
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::registerEventsText(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::registerEventsText(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(m_textInput, p_pListener, &ListenerClass::cb_evtTextInput, p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::unregisterEventsText(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::unregisterEventsText(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(m_textInput, p_pListener, &ListenerClass::cb_evtTextInput, p_prio);
 }
@@ -420,7 +420,7 @@ void eve::sys::Event::unregisterEventsText(ListenerClass * p_pListener, int32_t 
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::registerEventsMouse(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::registerEventsMouse(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(m_mouseDown,				p_pListener, &ListenerClass::cb_evtMouseDown,			p_prio);
 	eve::evt::add_listener(m_mouseWheel,			p_pListener, &ListenerClass::cb_evtMouseWheel,			p_prio);
@@ -432,7 +432,7 @@ void eve::sys::Event::registerEventsMouse(ListenerClass * p_pListener, int32_t p
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::unregisterEventsMouse(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::unregisterEventsMouse(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(m_mouseDown,				p_pListener, &ListenerClass::cb_evtMouseDown,			p_prio);
 	eve::evt::remove_listener(m_mouseWheel,				p_pListener, &ListenerClass::cb_evtMouseWheel,			p_prio);
@@ -450,7 +450,7 @@ void eve::sys::Event::unregisterEventsMouse(ListenerClass * p_pListener, int32_t
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::registerEventsWindow(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::registerEventsWindow(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::add_listener(m_windowResized,		p_pListener, &ListenerClass::cb_evtWindowResize,		p_prio);
 	eve::evt::add_listener(m_windowMoved,		p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
@@ -461,7 +461,7 @@ void eve::sys::Event::registerEventsWindow(ListenerClass * p_pListener, int32_t 
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::unregisterEventsWindow(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::unregisterEventsWindow(ListenerClass * p_pListener, int32_t p_prio)
 {
 	eve::evt::remove_listener(m_windowResized,		p_pListener, &ListenerClass::cb_evtWindowResize,		p_prio);
 	eve::evt::remove_listener(m_windowMoved,		p_pListener, &ListenerClass::cb_evtWindowMove,			p_prio);
@@ -478,7 +478,7 @@ void eve::sys::Event::unregisterEventsWindow(ListenerClass * p_pListener, int32_
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::registerEvents(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::registerListener(ListenerClass * p_pListener, int32_t p_prio)
 {
 	this->registerEventsFile(p_pListener, p_prio);
 	this->registerEventsKey(p_pListener, p_prio);
@@ -489,7 +489,7 @@ void eve::sys::Event::registerEvents(ListenerClass * p_pListener, int32_t p_prio
 
 //=================================================================================================
 template<class ListenerClass>
-void eve::sys::Event::unregisterEvents(ListenerClass * p_pListener, int32_t p_prio)
+void eve::sys::EventSender::unregisterListener(ListenerClass * p_pListener, int32_t p_prio)
 {
 	this->unregisterEventsFile(p_pListener, p_prio);
 	this->unregisterEventsKey(p_pListener, p_prio);
@@ -498,4 +498,4 @@ void eve::sys::Event::unregisterEvents(ListenerClass * p_pListener, int32_t p_pr
 	this->unregisterEventsWindow(p_pListener, p_prio);
 }
 
-#endif // __EVE_EVT_EVENT_H__
+#endif // __EVE_SYSTEM_EVENT_SENDER_H__

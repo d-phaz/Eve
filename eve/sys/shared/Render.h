@@ -53,6 +53,7 @@ namespace eve
 		* \class eve::sys::Render
 		*
 		* \brief Render engines threaded manager.
+		* Stock and manage threaded render manager.
 		*
 		* \note extends eve::thr::Thread
 		*/

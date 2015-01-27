@@ -78,54 +78,6 @@ namespace eve
 		}; // enum SceneImportParam
 
 
-		/** 
-		* \class eve::scene::SceneData
-		* \brief Container class used by eve::scene::Scene class.
-		* \note extends eve::mem::Pointer.
-		*/
-		class SceneData
-			: public eve::mem::Pointer
-		{
-
-			//////////////////////////////////////
-			//				DATAS				//
-			//////////////////////////////////////
-
-		private:
-			eve::scene::Scene *							m_pScene;			//!< Specifies scene containing data class (shared pointer).
-
-		public:
-			std::vector<eve::scene::Camera*> *			m_pVecCamera;		//!< Specifies Camera objects vector.
-			eve::scene::Camera *						m_pCameraActive;	//!< Specifies active camera (shared pointer).
-
-			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
-
-		public:
-			eve::ogl::Shader *							m_pShaderMesh;		//!< Specifies mesh render shader.
-
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(SceneData);
-			EVE_PUBLIC_DESTRUCTOR(SceneData);
-
-		public:
-			/** \brief Create and return new pointer. */
-			static eve::scene::SceneData * create_ptr(eve::scene::Scene * p_pScene);
-			/** \brief Class constructor. */
-			explicit SceneData(eve::scene::Scene * p_pScene);
-
-		public:
-			/** \brief Alloc and init class members. (pure virtual) */
-			virtual void init(void) override;
-			/** \brief Release and delete class members. (pure virtual) */
-			virtual void release(void) override;
-
-		}; // class SceneData
-
-
 		/**
 		* \class eve::scene::Scene
 		* \brief Create, manage, render scene objects (mesh/light/camera...)..
@@ -150,7 +102,13 @@ namespace eve
 			static std::map<SceneImportParam, std::string>	m_map_import_params;
 
 		protected:
-			eve::scene::SceneData *							_data;		//!< Specifies scene data.
+			std::vector<eve::scene::Camera*> *				m_pVecCamera;		//!< Specifies Camera objects vector.
+			eve::scene::Camera *							m_pCameraActive;	//!< Specifies active camera (shared pointer).
+
+			std::vector<eve::scene::Mesh*> *				m_pVecMesh;			//!< Specifies Mesh objects vector.
+
+		protected:
+			eve::ogl::Shader *								m_pShaderMesh;		//!< Specifies mesh render shader.
 
 
 			//////////////////////////////////////
@@ -202,17 +160,10 @@ namespace eve
 			/** \brief Assign value to target import parameter. */
 			static void set_import_param(eve::scene::SceneImportParam p_param, const std::string & p_value);
 
-		public:
-			/** \brief Get scene data. */
-			eve::scene::SceneData * data(void) const;
-
 		}; // class Scene
 
 	} // namespace scene
 
 } // namespace eve
-
-//=================================================================================================
-EVE_FORCE_INLINE eve::scene::SceneData * eve::scene::Scene::data(void) const { EVE_ASSERT(_data); return _data; }
 
 #endif // __EVE_SCENE_SCENE_H__
