@@ -41,9 +41,12 @@
 #include "eve/sys/shared/Mouse.h"
 #endif
 
+#ifndef __EVE_SYSTEM_RENDER_H__
+#include "eve/sys/shared/Render.h"
+#endif
+
 
 namespace eve { namespace core	{ class Renderer; } }
-namespace eve { namespace sys	{ class Render; } }
 
 
 namespace eve
@@ -90,11 +93,11 @@ namespace eve
 
 		public:
 			/**
-			* \brief Register a renderer pointer.
+			* \brief Register a renderer pointer at the back of the container.
 			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
 			* Return false if renderer is already registered.
 			*/
-			bool registerRenderer(eve::core::Renderer * p_pRenderer);
+			virtual bool registerRenderer(eve::core::Renderer * p_pRenderer);
 			/**
 			* \brief Unregister a renderer pointer.
 			* Return false if renderer is not registered.

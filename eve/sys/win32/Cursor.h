@@ -37,6 +37,10 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_MATH_INCLUDES_H__
+#include "eve/math/Includes.h"
+#endif
+
 
 namespace eve
 {
@@ -68,8 +72,13 @@ namespace eve
 
 		/** \brief Get cursor position in screen coordinates. */
 		void get_cursor_position(int32_t * p_x, int32_t * p_y);
+		/** \brief Get cursor position in screen coordinates. */
+		eve::vec2i get_cursor_position(void);
+
 		/** \brief Set cursor position. */
 		void setCursorPosition(int32_t p_x, int32_t p_y);
+		/** \brief Set cursor position. */
+		void setCursorPosition(const eve::vec2i & p_position);
 
 	} // namespace sys
 

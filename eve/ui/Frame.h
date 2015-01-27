@@ -33,16 +33,9 @@
 #ifndef __EVE_UI_FRAME_H__
 #define __EVE_UI_FRAME_H__
 
-#ifndef __EVE_SYSTEM_VIEW_H__
-#include "eve/sys/shared/View.h"
+#ifndef __EVE_UI_LAYER_H__
+#include "eve/ui/Layer.h"
 #endif
-
-#ifndef __EVE_UI_WIDGET_H__
-#include "eve/ui/Widget.h"
-#endif
-
-
-namespace eve { namespace ui { class Renderer; } }
 
 
 namespace eve
@@ -55,20 +48,17 @@ namespace eve
 		* \brief UI view frame. Create user interface child window.
 		* Handles interactive drawable widgets.
 		*
-		* \note extends eve::sys::View, eve::ui::Widget.
+		* \note extends eve::ui::Layer.
 		*/
 		class Frame
-			: public eve::sys::View
-			, public eve::ui::Widget
+			: public eve::ui::Layer
 		{
 
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
 
-		protected:
-			eve::ui::Renderer *			m_pRenderer;		//!< Specifies render engine.
-			
+		protected:			
 
 
 			//////////////////////////////////////

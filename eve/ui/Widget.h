@@ -68,7 +68,7 @@ namespace eve
 
 		protected:
 			eve::ui::Widget *				m_pParent;				//!< Specifies parent widget (shared pointer).
-			std::list<eve::ui::Widget*> *	m_pChildren;			//!< Specifies children list.
+			std::vector<eve::ui::Widget*> *	m_pChildren;			//!< Specifies children list.
 
 		protected:
 			int32_t							m_x;					//!< Specifies widget position on X axis.
@@ -216,7 +216,7 @@ namespace eve
 
 		public:
 			/** \brief Get children list. */
-			std::list<eve::ui::Widget*> * getChildren(void) const;
+			std::vector<eve::ui::Widget*> * getChildren(void) const;
 
 
 		public:
@@ -278,8 +278,8 @@ EVE_FORCE_INLINE eve::ui::Widget * eve::ui::Widget::get_widget_active(void) { re
 
 
 //=================================================================================================
-EVE_FORCE_INLINE eve::ui::Widget *				eve::ui::Widget::getParentWidget(void) const	{ return m_pParent; }
-EVE_FORCE_INLINE std::list<eve::ui::Widget*> *	eve::ui::Widget::getChildren(void) const		{ return m_pChildren; }
+EVE_FORCE_INLINE eve::ui::Widget *				 eve::ui::Widget::getParentWidget(void) const	{ return m_pParent; }
+EVE_FORCE_INLINE std::vector<eve::ui::Widget*> * eve::ui::Widget::getChildren(void) const		{ return m_pChildren; }
 
 
 //=================================================================================================

@@ -82,13 +82,28 @@ void eve::sys::get_cursor_position(int32_t * p_x, int32_t * p_y)
 {
 	POINT pt;
 	::GetCursorPos(&pt);
-
 	*p_x = pt.x;
 	*p_y = pt.y;
 }
 
 //=============================================================================================
+eve::vec2i eve::sys::get_cursor_position(void)
+{
+	POINT pt;
+	::GetCursorPos(&pt);
+	return eve::vec2i(pt.x, pt.y);
+}
+
+
+
+//=============================================================================================
 void eve::sys::setCursorPosition(int32_t p_x, int32_t p_y)
 {
 	::SetCursorPos(p_x, p_y);
+}
+
+//=============================================================================================
+void eve::sys::setCursorPosition(const eve::vec2i & p_position)
+{
+	eve::sys::setCursorPosition(p_position.x, p_position.y);
 }

@@ -35,20 +35,16 @@
 
 //=================================================================================================
 eve::ui::Display::Display(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-	// Inheritance
-	: eve::sys::View()
-	, eve::ui::Widget(p_x, p_y, p_width, p_height)
-
-	// Members init
+	// Inheritance.
+	: eve::ui::Layer(p_x, p_y, p_width, p_height)
+	// Members init.
 {}
 
 //=================================================================================================
 eve::ui::Display::Display(const eve::vec2i & p_position, const eve::vec2i & p_size)
-	// Inheritance
-	: eve::sys::View()
-	, eve::ui::Widget(p_position, p_size)
-
-	// Members init
+	// Inheritance.
+	: eve::ui::Layer(p_position, p_size)
+	// Members init.
 {}
 
 
@@ -56,10 +52,9 @@ eve::ui::Display::Display(const eve::vec2i & p_position, const eve::vec2i & p_si
 //=================================================================================================
 void eve::ui::Display::setup(void)
 {
-	m_format.x			= m_x;
-	m_format.y			= m_y;
-	m_format.width		= m_width;
-	m_format.height		= m_height;
+	// Call parent class.
+	eve::ui::Layer::setup();
+
 	m_format.windowType = eve::sys::WindowType_Output;
 }
 
@@ -68,10 +63,8 @@ void eve::ui::Display::setup(void)
 //=================================================================================================
 void eve::ui::Display::init(void)
 {
-	// Call parent class
-	eve::sys::View::init();
-	eve::ui::Widget::init();
-
+	// Call parent class.
+	eve::ui::Layer::init();
 
 }
 
@@ -79,10 +72,8 @@ void eve::ui::Display::init(void)
 void eve::ui::Display::release(void)
 {
 
-
-	// Call parent class
-	eve::sys::View::release();
-	eve::ui::Widget::release();
+	// Call parent class.
+	eve::ui::Layer::release();
 }
 
 
@@ -91,8 +82,7 @@ void eve::ui::Display::release(void)
 void eve::ui::Display::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::initThreadedData();
-
+	eve::ui::Layer::initThreadedData();
 
 }
 
@@ -100,9 +90,8 @@ void eve::ui::Display::initThreadedData(void)
 void eve::ui::Display::releaseThreadedData(void)
 {
 
-
 	// Call parent class.
-	eve::sys::View::releaseThreadedData();
+	eve::ui::Layer::releaseThreadedData();
 }
 
 
@@ -110,7 +99,16 @@ void eve::ui::Display::releaseThreadedData(void)
 //=================================================================================================
 void eve::ui::Display::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
+	switch (p_args.button)
+	{
+	case eve::sys::btn_Right:
+		// Display position + size parameters.
+		break;
 
+	case eve::sys::btn_Left:
+	default:
+		break;
+	}
 }
 
 //=================================================================================================

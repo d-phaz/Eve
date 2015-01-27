@@ -140,12 +140,9 @@ namespace eve
 
 		public:
 			/** \brief Before display callback. */
-			virtual void cb_beforeDisplay(void) override;
+			virtual void cb_beforeDisplay(void) override final;
 			/** \brief After display callback. */
-			virtual void cb_afterDisplay(void) override;
-
-			/** \brief Draw on screen callback. (pure virtual) */
-			virtual void cb_display(void) override = 0;
+			virtual void cb_afterDisplay(void) override final;
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////

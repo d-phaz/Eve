@@ -33,12 +33,8 @@
 #ifndef __EVE_UI_DISPLAY_H__
 #define __EVE_UI_DISPLAY_H__
 
-#ifndef __EVE_SYSTEM_VIEW_H__
-#include "eve/sys/shared/View.h"
-#endif
-
-#ifndef __EVE_UI_WIDGET_H__
-#include "eve/ui/Widget.h"
+#ifndef __EVE_UI_LAYER_H__
+#include "eve/ui/Layer.h"
 #endif
 
 
@@ -51,19 +47,17 @@ namespace eve
 		*
 		* \brief UI display. Usually used as an output window.
 		*
-		* \note extends eve::sys::View, eve::ui::Widget.
+		* \note extends eve::ui::Layer.
 		*/
 		class Display
-			: public eve::sys::View
-			, public eve::ui::Widget
+			: public eve::ui::Layer
 		{
 
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
 
-		protected:
-			
+		protected:			
 
 
 			//////////////////////////////////////

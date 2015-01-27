@@ -43,7 +43,7 @@
 #endif
 
 
-namespace eve { namespace ui { class Frame; } }
+namespace eve { namespace ui { class Layer; } }
 
 
 namespace eve
@@ -72,7 +72,7 @@ namespace eve
 			eve::math::TMatrix44<float>			m_matrixProjection;				//!< Specifies projection matrix.
 
 		protected:
-			eve::ui::Frame *					m_pFrame;						//!< Specifies linked frame shared pointer.
+			eve::ui::Layer *					m_pLayer;						//!< Specifies linked layer shared pointer.
 
 		protected:
 			eve::ogl::Shader *					m_pShaderColored;				//!< Specifies colored object shader.
@@ -90,15 +90,15 @@ namespace eve
 
 		public:
 			/** \brief Create and return new pointer. */
-			static eve::ui::Renderer * create_ptr(eve::ui::Frame * p_pFrame, int32_t p_width, int32_t p_height);
+			static eve::ui::Renderer * create_ptr(eve::ui::Layer * p_pLayer, int32_t p_width, int32_t p_height);
 			/** \brief Create and return new pointer. */
-			static eve::ui::Renderer * create_ptr(eve::ui::Frame * p_pFrame, const eve::vec2i & p_size);
+			static eve::ui::Renderer * create_ptr(eve::ui::Layer * p_pLayer, const eve::vec2i & p_size);
 
 		public:
 			/** \brief Class constructor. */
-			explicit Renderer(eve::ui::Frame * p_pFrame, int32_t p_width, int32_t p_height);
+			explicit Renderer(eve::ui::Layer * p_pLayer, int32_t p_width, int32_t p_height);
 			/** \brief Class constructor. */
-			explicit Renderer(eve::ui::Frame * p_pFrame, const eve::vec2i & p_size);
+			explicit Renderer(eve::ui::Layer * p_pLayer, const eve::vec2i & p_size);
 
 
 		public:

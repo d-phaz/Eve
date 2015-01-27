@@ -75,7 +75,7 @@ void eve::sys::Render::init(void)
 	m_pContext = eve::ogl::SubContext::create_ptr(m_handle);
 
 	// Render engines.
-	m_pVecRenderers = new std::vector<eve::core::Renderer*>();
+	m_pVecRenderers = new std::list<eve::core::Renderer*>();
 
 	// Timer.
 	m_pTimerRender = eve::time::Timer::create_ptr(false);
@@ -160,11 +160,11 @@ void eve::sys::Render::run(void)
 
 
 //=================================================================================================
-bool eve::sys::Render::registerRenderer(eve::core::Renderer * p_pRenderer)
+bool eve::sys::Render::registerRendererBack(eve::core::Renderer * p_pRenderer)
 {
 	m_pFence->lock();
 
-	std::vector<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	std::list<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
 	bool breturn = (itr == m_pVecRenderers->end());
 	if (breturn)
 	{
@@ -177,11 +177,28 @@ bool eve::sys::Render::registerRenderer(eve::core::Renderer * p_pRenderer)
 }
 
 //=================================================================================================
+bool eve::sys::Render::registerRendererFront(eve::core::Renderer * p_pRenderer)
+{
+	m_pFence->lock();
+
+	std::list<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	bool breturn = (itr == m_pVecRenderers->end());
+	if (breturn)
+	{
+		m_pVecRenderers->push_front(p_pRenderer);
+	}
+
+	m_pFence->unlock();
+
+	return breturn;
+}
+
+//=================================================================================================
 bool eve::sys::Render::unregisterRenderer(eve::core::Renderer * p_pRenderer)
 {
 	m_pFence->lock();
 
-	std::vector<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	std::list<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
 	bool breturn = (itr != m_pVecRenderers->end());
 	if (breturn)
 	{
@@ -198,7 +215,7 @@ bool eve::sys::Render::releaseRenderer(eve::core::Renderer * p_pRenderer)
 {
 	m_pFence->lock();
 
-	std::vector<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
+	std::list<eve::core::Renderer*>::iterator itr = std::find(m_pVecRenderers->begin(), m_pVecRenderers->end(), p_pRenderer);
 	bool breturn = (itr != m_pVecRenderers->end());
 	if (breturn)
 	{
