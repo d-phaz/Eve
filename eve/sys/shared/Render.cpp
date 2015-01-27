@@ -128,11 +128,12 @@ void eve::sys::Render::releaseThreadedData(void)
 void eve::sys::Render::run(void)
 {
 	m_pTimerRender->start();
+	bool needPaint = false;
 
 	do
 	{
-		
-		if (m_pTimerRender->getTimeNextFrame() < 10)
+		needPaint = (m_pTimerRender->getTimeNextFrame() < 10);
+		if (needPaint)
 		{
 			// Launch render.
 			m_pFence->lock();
@@ -148,11 +149,11 @@ void eve::sys::Render::run(void)
 			m_pContext->swapBuffers();
 			m_pContext->doneCurrent();
 			m_pFence->unlock();	
-
-			m_pTimerRender->updateFPS(true);
 		}
-		m_pTimerRender->updateFPS(false);
+		m_pTimerRender->updateFPS(needPaint);
 		this->setRunWait(static_cast<uint32_t>(m_pTimerRender->getTimeNextFrame()));
+
+		EVE_LOG_INFO("FPS: %f", m_pTimerRender->getFPS());
 
 	} while (this->running());
 }
