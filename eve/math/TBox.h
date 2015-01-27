@@ -131,12 +131,12 @@ namespace eve
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE eve::math::TBox<T>::TBox(void)
+eve::math::TBox<T>::TBox(void)
 {}
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE eve::math::TBox<T>::TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
+eve::math::TBox<T>::TBox(const eve::math::TVec3<T> & p_min, const eve::math::TVec3<T> & p_max)
 {
 	this->set(p_min, p_max);
 }

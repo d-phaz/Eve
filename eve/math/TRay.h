@@ -100,7 +100,7 @@ namespace eve
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE eve::math::TRay<T>::TRay(const TVec3<T>  &aOrigin, const TVec3<T>  &aDirection)
+eve::math::TRay<T>::TRay(const TVec3<T>  &aOrigin, const TVec3<T>  &aDirection)
 	: m_origin			( aOrigin )
 	, m_direction		( TVec3<T>::zero() )
 	, m_invDirection	( TVec3<T>::zero() )
@@ -114,23 +114,19 @@ EVE_FORCE_INLINE eve::math::TRay<T>::TRay(const TVec3<T>  &aOrigin, const TVec3<
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE eve::math::TRay<T>::~TRay(void)
+eve::math::TRay<T>::~TRay(void)
 {}	
 
 
 
 //=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TRay<T>::calcPosition(T t) const
-{ 
-	return m_origin + m_direction * t; 
-}
+template< typename T > EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TRay<T>::calcPosition(T t) const { return m_origin + m_direction * t; }
 
 
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & vert0, const eve::math::TVec3<T> & vert1, const eve::math::TVec3<T> & vert2, eve::math::TVec3<T> * intersectionPoint) const
+bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & vert0, const eve::math::TVec3<T> & vert1, const eve::math::TVec3<T> & vert2, eve::math::TVec3<T> * intersectionPoint) const
 {
 	// Triangle vectors
 	Vec3f	I, u, v, n;  
@@ -192,7 +188,7 @@ EVE_FORCE_INLINE bool eve::math::TRay<T>::calcTriangleIntersection(const eve::ma
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & vert0, const eve::math::TVec3<T> & vert1, const eve::math::TVec3<T> & vert2, T * result) const
+bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & vert0, const eve::math::TVec3<T> & vert1, const eve::math::TVec3<T> & vert2, T * result) const
 {
 	Vec3f edge1, edge2, tvec, pvec, qvec;
 	T det;
@@ -244,7 +240,7 @@ EVE_FORCE_INLINE bool eve::math::TRay<T>::calcTriangleIntersection(const eve::ma
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE bool eve::math::TRay<T>::calcPlaneIntersection(const eve::math::TVec3<T> & origin, const eve::math::TVec3<T> & normal, T * result) const
+bool eve::math::TRay<T>::calcPlaneIntersection(const eve::math::TVec3<T> & origin, const eve::math::TVec3<T> & normal, T * result) const
 {
 	bool breturn = false;
 
@@ -262,24 +258,14 @@ EVE_FORCE_INLINE bool eve::math::TRay<T>::calcPlaneIntersection(const eve::math:
 
 
 //=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE void eve::math::TRay<T>::setOrigin(const eve::math::TVec3<T> & aOrigin)
-{ 
-	m_origin = aOrigin; 
-}
-
-//=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getOrigin(void) const
-{ 
-	return m_origin; 
-}
+template< typename T > EVE_FORCE_INLINE void eve::math::TRay<T>::setOrigin(const eve::math::TVec3<T> & p_origin) { m_origin = p_origin; }
+template< typename T > EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getOrigin(void) const	{ return m_origin; }
 
 
 
 //=================================================================================================
 template< typename T >
-EVE_FORCE_INLINE void eve::math::TRay<T>::setDirection(const eve::math::TVec3<T> & aDirection)
+void eve::math::TRay<T>::setDirection(const eve::math::TVec3<T> & aDirection)
 {
 	m_direction = aDirection;
 	m_invDirection = eve::math::TVec3<T>(static_cast<T>(1) / m_direction.x, static_cast<T>(1) / m_direction.y, static_cast<T>(1) / m_direction.z);
@@ -289,45 +275,16 @@ EVE_FORCE_INLINE void eve::math::TRay<T>::setDirection(const eve::math::TVec3<T>
 }
 
 //=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getDirection(void) const
-{ 
-	return m_direction; 
-}
+template< typename T > EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getDirection(void) const { return m_direction; }
 
 //=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getInverseDirection(void) const
-{ 
-	return m_invDirection; 
-}
+template< typename T > EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TRay<T>::getInverseDirection(void) const { return m_invDirection; }
 
 
 
 //=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignX(void) const
-{ 
-	return m_signX; 
-}
-
-//=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignY(void) const
-{ 
-	return m_signY; 
-}
-
-//=================================================================================================
-template< typename T >
-EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignZ(void) const
-{ 
-	return m_signZ; 
-}	
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// Typedefs
-typedef eve::math::TRay<float>	Rayf;
-typedef eve::math::TRay<double>	Rayd;
+template< typename T > EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignX(void) const { return m_signX; }
+template< typename T > EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignY(void) const { return m_signY; }
+template< typename T > EVE_FORCE_INLINE const char eve::math::TRay<T>::getSignZ(void) const { return m_signZ; }
 
 #endif // __EVE_MATH_TRAY_H__

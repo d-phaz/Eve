@@ -55,7 +55,7 @@ eve::scene::Material * eve::scene::Material::create_ptr(eve::scene::Scene *		p_p
 	EVE_ASSERT(p_pParent);
 
 	eve::scene::Material * ptr = new eve::scene::Material(p_pParentScene, p_pParent);
-	ptr->initFromAssimpMaterial(p_pMaterial, p_fullPath);
+	ptr->init(p_pMaterial, p_fullPath);
 	return ptr;
 }
 
@@ -82,7 +82,7 @@ eve::scene::Material::Material(eve::scene::Scene * p_pParentScene, eve::scene::O
 
 
 //=================================================================================================
-void eve::scene::Material::initFromAssimpMaterial(const aiMaterial * p_pMaterial, const std::string & p_fullPath)
+void eve::scene::Material::init(const aiMaterial * p_pMaterial, const std::string & p_fullPath)
 {
 	if (p_pMaterial)
 	{

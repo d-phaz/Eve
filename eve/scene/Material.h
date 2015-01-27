@@ -105,7 +105,7 @@ namespace eve
 
 		protected:
 			/** \brief Allocate and init class members based on ASSIMP aiMaterial \a p_pMaterial. */
-			void initFromAssimpMaterial(const aiMaterial * p_pMaterial, const std::string & p_fullPath);
+			void init(const aiMaterial * p_pMaterial, const std::string & p_fullPath);
 
 
 		public:

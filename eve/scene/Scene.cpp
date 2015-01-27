@@ -14,39 +14,30 @@
 #include <assimp/postprocess.h>
 
 
-std::map<eve::scene::SceneImportParam, std::string>	eve::scene::Scene::m_map_import_params;
+//=================================================================================================
+eve::scene::SceneData * eve::scene::SceneData::create_ptr(eve::scene::Scene * p_pScene)
+{
+	EVE_ASSERT(p_pScene);
+	eve::scene::SceneData * ptr = new eve::scene::SceneData(p_pScene);
+	ptr->init();
+	return ptr;
+}
 
 //=================================================================================================
-eve::scene::Scene::Scene(void)
-	// Inheritance.
-	: eve::ogl::Renderer()
-	, eve::scene::EventListenerScene()
-	// Members init.
+eve::scene::SceneData::SceneData(eve::scene::Scene * p_pScene)
+	// Inheritance
+	: eve::mem::Pointer()
+	// Members init
+	, m_pScene(p_pScene)
 	, m_pVecCamera(nullptr)
 	, m_pCameraActive(nullptr)
 	, m_pVecMesh(nullptr)
 	, m_pShaderMesh(nullptr)
 {}
 
-
-
 //=================================================================================================
-void eve::scene::Scene::init(void)
+void eve::scene::SceneData::init(void)
 {
-	// Call parent class.
-	eve::ogl::Renderer::init();
-
-	// Default import parameters.
-	static bool bImportParamsInitialized = false;
-	if (!bImportParamsInitialized)
-	{
-		m_map_import_params[SceneImportParam_Up_Axis]			= "Z";
-		m_map_import_params[SceneImportParam_Flip_UV]			= "N";
-		m_map_import_params[SceneImportParam_Generate_Normals]	= "Y";
-		m_map_import_params[SceneImportParam_Normals_Max_Angle]	= "80.0";
-		bImportParamsInitialized = true;
-	}
-
 	// Vectors.
 	m_pVecCamera = new std::vector<eve::scene::Camera*>();
 	m_pVecMesh	 = new std::vector<eve::scene::Mesh*>();
@@ -55,13 +46,14 @@ void eve::scene::Scene::init(void)
 	eve::ogl::FormatShader fmtShader;
 	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("SceneGBuffer.vert"));
 	fmtShader.frag = eve::io::load_program(eve::io::resource_path_glsl("SceneGBuffer.frag"));
-	m_pShaderMesh = this->create(fmtShader);
+	m_pShaderMesh  = m_pScene->create(fmtShader);
 }
 
 //=================================================================================================
-void eve::scene::Scene::release(void)
+void eve::scene::SceneData::release(void)
 {
 	// Do not delete -> shared pointers.
+	m_pScene		= nullptr;
 	m_pCameraActive = nullptr;
 
 	// Shader.
@@ -87,6 +79,49 @@ void eve::scene::Scene::release(void)
 		EVE_RELEASE_PTR(cam);
 	}
 	EVE_RELEASE_PTR_CPP(m_pVecCamera);
+}
+
+
+
+std::map<eve::scene::SceneImportParam, std::string>	eve::scene::Scene::m_map_import_params;
+
+//=================================================================================================
+eve::scene::Scene::Scene(void)
+	// Inheritance.
+	: eve::ogl::Renderer()
+	, eve::scene::EventListenerScene()
+	// Members init.
+	, _data(nullptr)
+{}
+
+
+
+//=================================================================================================
+void eve::scene::Scene::init(void)
+{
+	// Call parent class.
+	eve::ogl::Renderer::init();
+
+	// Default import parameters.
+	static bool bImportParamsInitialized = false;
+	if (!bImportParamsInitialized)
+	{
+		m_map_import_params[SceneImportParam_Up_Axis]			= "Z";
+		m_map_import_params[SceneImportParam_Flip_UV]			= "N";
+		m_map_import_params[SceneImportParam_Generate_Normals]	= "Y";
+		m_map_import_params[SceneImportParam_Normals_Max_Angle]	= "80.0";
+		bImportParamsInitialized = true;
+	}
+
+	// Data.
+	_data = eve::scene::SceneData::create_ptr(this);
+}
+
+//=================================================================================================
+void eve::scene::Scene::release(void)
+{
+	// Data.
+	EVE_RELEASE_PTR(_data);
 
 	// Call parent class.
 	eve::ogl::Renderer::release();
@@ -237,7 +272,7 @@ bool eve::scene::Scene::add(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 	eve::scene::Mesh * mesh = eve::scene::Mesh::create_ptr(this, nullptr, p_pMesh, p_pScene, p_upAxis, p_fullPath);
 	if (mesh) 
 	{
-		m_pVecMesh->push_back(mesh);
+		this->data()->m_pVecMesh->push_back(mesh);
 		ret = true;
 	}
 
@@ -254,8 +289,8 @@ bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene
 	eve::scene::Camera * cam = eve::scene::Camera::create_ptr(this, nullptr, p_pCamera, p_pScene, p_upAxis);
 	if (cam)
 	{
-		m_pVecCamera->push_back(cam);
-		if (!m_pCameraActive) { m_pCameraActive = cam; }
+		this->data()->m_pVecCamera->push_back(cam);
+		if (!this->data()->m_pCameraActive) { this->data()->m_pCameraActive = cam; }
 		ret = true;
 	}
 
@@ -268,12 +303,12 @@ bool eve::scene::Scene::add(const aiCamera * p_pCamera, const aiScene * p_pScene
 //=================================================================================================
 void eve::scene::Scene::cb_display(void)
 {
-	if (m_pCameraActive)
+	if (this->data()->m_pCameraActive)
 	{
 		glViewport(0
 				 , 0
-				 , static_cast<GLsizei>(m_pCameraActive->getDisplayWidth())
-				 , static_cast<GLsizei>(m_pCameraActive->getDisplayHeight()));
+				 , static_cast<GLsizei>(this->data()->m_pCameraActive->getDisplayWidth())
+				 , static_cast<GLsizei>(this->data()->m_pCameraActive->getDisplayHeight()));
 
 		// Enable depth read/write.
 		glEnable(GL_DEPTH_TEST);
@@ -284,16 +319,16 @@ void eve::scene::Scene::cb_display(void)
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_pCameraActive->oglBind();
-		m_pShaderMesh->bind();
+		this->data()->m_pCameraActive->oglBind();
+		this->data()->m_pShaderMesh->bind();
 
-		for (auto && itr : (*m_pVecMesh))
+		for (auto && itr : (*(this->data()->m_pVecMesh)))
 		{
 			itr->oglDraw();
 		}
 
-		m_pCameraActive->oglUnbind();
-		m_pShaderMesh->unbind();
+		this->data()->m_pCameraActive->oglUnbind();
+		this->data()->m_pShaderMesh->unbind();
 
 		// Disable culling
 		glDisable(GL_CULL_FACE);

@@ -40,7 +40,7 @@ eve::scene::Skeleton * eve::scene::Skeleton::create_ptr(const aiMesh * p_pMesh, 
 	EVE_ASSERT(p_pScene);
 
 	eve::scene::Skeleton * ptr = new eve::scene::Skeleton();
-	ptr->initFromAssimpMesh(p_pMesh, p_pScene, p_upAxis);
+	ptr->init(p_pMesh, p_pScene, p_upAxis);
 	return ptr;
 }
 
@@ -62,7 +62,7 @@ eve::scene::Skeleton::Skeleton(void)
 
 
 //=================================================================================================
-bool eve::scene::Skeleton::initFromAssimpMesh(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis)
+bool eve::scene::Skeleton::init(const aiMesh * p_pMesh, const aiScene * p_pScene, eve::Axis p_upAxis)
 {
 // 	// Grab scene node. 
 // 	const aiNode * pRoot = p_pScene->mRootNode;
