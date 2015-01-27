@@ -55,15 +55,11 @@ void eve::sys::View::initThreadedData(void)
 
 	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
 	m_pRender->start();
-
-	m_pMessagePump->registerListener(this);
 }
 
 //=================================================================================================
 void eve::sys::View::releaseThreadedData(void)
 {
-	m_pMessagePump->unregisterListener(this);
-
 	m_pRender->stop();
 	EVE_RELEASE_PTR(m_pRender);
 

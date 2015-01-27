@@ -44,18 +44,15 @@
 
 
 //=================================================================================================
-eve::thr::Thread::Thread( void )
-
-	// Inheritance
+eve::thr::Thread::Thread(void)
+	// Inheritance.
 	: eve::mem::Pointer()
-
-	// Members init
-	, m_hThread( nullptr )
-	, m_hShutdownEvent( 0 )
-	, m_StartEvent( 0 )
-	, m_runWait( 10 )
-	, m_threadID( eve::thr::zero_ID() )
-
+	// Members init.
+	, m_hThread(nullptr)
+	, m_hShutdownEvent(0)
+	, m_StartEvent(0)
+	, m_runWait(10)
+	, m_threadID(eve::thr::zero_ID())
 	, m_pFence(nullptr)
 {}
 

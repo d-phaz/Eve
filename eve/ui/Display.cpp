@@ -89,7 +89,7 @@ void eve::ui::Display::initThreadedData(void)
 //=================================================================================================
 void eve::ui::Display::releaseThreadedData(void)
 {
-
+	
 	// Call parent class.
 	eve::ui::Layer::releaseThreadedData();
 }

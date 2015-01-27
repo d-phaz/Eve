@@ -32,6 +32,10 @@
 // Main class header
 #include "eve/ui/View.h"
 
+#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
+#include "eve/sys/win32/MessagePump.h"
+#endif
+
 
 //=================================================================================================
 eve::ui::View::View(void)
@@ -71,7 +75,7 @@ void eve::ui::View::init(void)
 	m_pVecDisplay	= new std::vector<eve::ui::Display*>();
 
 	// Call parent class
-	eve::sys::Node::init();
+	eve::sys::View::init();
 }
 
 //=================================================================================================
@@ -100,7 +104,7 @@ void eve::ui::View::release(void)
 	EVE_RELEASE_PTR_CPP(m_pVecFrame);
 
 	// Call parent class
-	eve::sys::Node::release();
+	eve::sys::View::release();
 }
 
 
@@ -110,13 +114,11 @@ void eve::ui::View::initThreadedData(void)
 {
 	// Call parent class.
 	eve::sys::View::initThreadedData();
-
 }
 
 //=================================================================================================
 void eve::ui::View::releaseThreadedData(void)
 {
-
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
 }

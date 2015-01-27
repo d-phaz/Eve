@@ -134,7 +134,7 @@ namespace eve
 			void start(void);
 			/** \brief Stop timer. */
 			void stop(void);
-			/** \brief Stop and restart timer immediately. Returns elapsed time. */
+			/** \brief Stop and restart timer immediately. Returns elapsed time in milliseconds. */
 			int64_t restart(void);
 
 			/** \brief Update FPS. */

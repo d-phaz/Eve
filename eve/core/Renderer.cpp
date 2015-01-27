@@ -35,9 +35,9 @@
 
 //=================================================================================================
 eve::core::Renderer::Renderer(void)
-	// Inheritance
+	// Inheritance.
 	: eve::mem::Pointer()
-	// Members init
+	// Members init.
 	, m_pFence(nullptr)
 {}
 
