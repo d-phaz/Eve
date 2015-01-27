@@ -179,13 +179,13 @@ namespace eve
 } // namespace eve
 
 //=================================================================================================
-inline const bool eve::time::Timer::isRunning(void) const			{ return  m_bRunning;		}
-inline const bool eve::time::Timer::isStopped(void) const			{ return !m_bRunning;		}
+EVE_FORCE_INLINE const bool eve::time::Timer::isRunning(void) const				{ return  m_bRunning; }
+EVE_FORCE_INLINE const bool eve::time::Timer::isStopped(void) const				{ return !m_bRunning; }
 
 //=================================================================================================
-inline const int64_t eve::time::Timer::getStartTime(void) const		{ return m_startTime;		}
-inline const int64_t eve::time::Timer::getEndTime(void) const		{ return m_endTime;			}
-inline const float eve::time::Timer::getFPS(void) const				{ return m_fFPS; }
-inline const int64_t eve::time::Timer::getTimeNextFrame(void) const	{ return m_fDiffTimeNextFrame; }
+EVE_FORCE_INLINE const int64_t	eve::time::Timer::getStartTime(void) const		{ return m_startTime; }
+EVE_FORCE_INLINE const int64_t	eve::time::Timer::getEndTime(void) const		{ return m_endTime; }
+EVE_FORCE_INLINE const float	eve::time::Timer::getFPS(void) const			{ return m_fFPS; }
+EVE_FORCE_INLINE const int64_t	eve::time::Timer::getTimeNextFrame(void) const	{ return m_fDiffTimeNextFrame; }
 
 #endif // __EVE_TIME_TIMER_H__
