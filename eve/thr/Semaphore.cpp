@@ -57,10 +57,10 @@ eve::thr::Semaphore::Semaphore(void)
 //=================================================================================================
 void eve::thr::Semaphore::init(void)
 {
-	m_hSemaphore = ::CreateSemaphore(NULL,			// No security attributes 
-									1L,				// Initial count
-									1L,				// Maximum count
-									NULL);			// Unnamed semaphore	
+	m_hSemaphore = ::CreateSemaphore(NULL,		// No security attributes 
+									1L,			// Initial count
+									1L,			// Maximum count
+									NULL);		// Unnamed semaphore	
 }
 
 //=================================================================================================
@@ -74,10 +74,8 @@ void eve::thr::Semaphore::release(void)
 //=================================================================================================
 void eve::thr::Semaphore::lock(void)
 {
-	DWORD dwWaitResult;
-
 	// Try to enter the semaphore gate.
-	dwWaitResult = ::WaitForSingleObject(m_hSemaphore, INFINITE);
+	 DWORD dwWaitResult = ::WaitForSingleObject(m_hSemaphore, INFINITE);
 
 	switch (dwWaitResult)
 	{
@@ -98,9 +96,9 @@ void eve::thr::Semaphore::lock(void)
 //=================================================================================================
 void eve::thr::Semaphore::unlock(void)
 {
-	if (!::ReleaseSemaphore(m_hSemaphore,  // handle to semaphore
-							1,            // increase count by one
-							NULL))       // not interested in previous count
+	if (::ReleaseSemaphore(m_hSemaphore,		// handle to semaphore
+							1,					// increase count by one
+							NULL) == 0)			// not interested in previous count
 	{
 		EVE_LOG_ERROR("ReleaseSemaphore() failed with error: %s", eve::mess::get_error_msg());
 		EVE_ASSERT_FAILURE;

@@ -116,15 +116,15 @@ void eve::time::Timer::init(void)
 #if defined(EVE_OS_WIN)
 	// The frequency of the performance counter is fixed at system boot and is consistent across all processors. 
 	// Therefore, the frequency need only be queried upon application initialization, and the result can be cached.
-	int64_t nativeFreq;
-	 if (::QueryPerformanceFrequency(reinterpret_cast<::LARGE_INTEGER*>(&nativeFreq)) == 0) {
+	::LARGE_INTEGER nativeFreq;
+	if (::QueryPerformanceFrequency(&nativeFreq) == 0)
+	{
 		EVE_LOG_ERROR("Unable to retrieve time, QueryPerformanceFrequency() failed, %s", eve::mess::get_error_msg().c_str());
 		EVE_ASSERT_FAILURE;
-
-		m_invFrequency = (1.0 / static_cast<double>(nativeFreq));
-
-		::QueryPerformanceCounter(reinterpret_cast<::LARGE_INTEGER*>(&m_i64PerformanceTimerStart));
-	 }
+	}
+	m_invFrequency = (1.0 / static_cast<double>(nativeFreq.QuadPart));
+	m_i64PerformanceTimerStart = eve::time::Timer::query_absolute_time();
+	 
 
 #elif defined(EVE_OS_DARWIN)
 	uint64_t numerator;
