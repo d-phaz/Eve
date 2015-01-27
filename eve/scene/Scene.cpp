@@ -55,7 +55,7 @@ void eve::scene::Scene::init(void)
 	eve::ogl::FormatShader fmtShader;
 	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("SceneGBuffer.vert"));
 	fmtShader.frag = eve::io::load_program(eve::io::resource_path_glsl("SceneGBuffer.frag"));
-	m_pShaderMesh = this->create(fmtShader);
+	m_pShaderMesh  = this->create(fmtShader);
 }
 
 //=================================================================================================
@@ -287,7 +287,7 @@ void eve::scene::Scene::cb_display(void)
 		m_pCameraActive->oglBind();
 		m_pShaderMesh->bind();
 
-		for (auto && itr : (*m_pVecMesh))
+		for (auto && itr : (*(m_pVecMesh)))
 		{
 			itr->oglDraw();
 		}

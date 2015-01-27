@@ -980,14 +980,10 @@ void eve::math::TCamera<T>::rotateZ(T p_rotationZ)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getEyePoint(void) const	{ return m_eyePoint;   }
-template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointX(void) const { return m_eyePoint.x; }
-template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointY(void) const { return m_eyePoint.y; }
-template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointZ(void) const { return m_eyePoint.z; }
+template<typename T> EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getEyePoint(void) const	{ return m_eyePoint;   }
+template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointX(void) const { return m_eyePoint.x; }
+template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointY(void) const { return m_eyePoint.y; }
+template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointZ(void) const { return m_eyePoint.z; }
 
 //=================================================================================================
 template <typename T>
@@ -1024,29 +1020,16 @@ void eve::math::TCamera<T>::setEyePointZ(T p_eyePointZ)
 
 
 //=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getTranslation(void) const	{ return m_eyePoint;   }
-template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationX(void) const	{ return m_eyePoint.x; }
-template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationY(void) const	{ return m_eyePoint.y; }
-template<typename T>
-EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationZ(void) const	{ return m_eyePoint.z; }
-
-
+template<typename T> EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getTranslation(void) const	{ return m_eyePoint;   }
+template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationX(void) const	{ return m_eyePoint.x; }
+template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationY(void) const	{ return m_eyePoint.y; }
+template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationZ(void) const	{ return m_eyePoint.z; }
 
 
 
 //=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const T eve::math::TCamera<T>::getCenterOfInterest(void) const	{ return m_centerOfInterest; }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setCenterOfInterest(T p_centerOfInterest)
-{
-	m_centerOfInterest = p_centerOfInterest;
-}
+template<typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getCenterOfInterest(void) const		{ return m_centerOfInterest; }
+template<typename T> EVE_FORCE_INLINE void eve::math::TCamera<T>::setCenterOfInterest(T p_centerOfInterest) { m_centerOfInterest = p_centerOfInterest; }
 
 
 

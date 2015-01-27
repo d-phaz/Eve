@@ -33,8 +33,8 @@
 #ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
 #define __EVE_SYSTEM_MESSAGE_PUMP_H__
 
-#ifndef __EVE_SYSTEM_EVENT_H__ 
-#include "eve/sys/shared/Event.h"
+#ifndef __EVE_SYSTEM_EVENT_SENDER_H__ 
+#include "eve/sys/shared/EventSender.h"
 #endif
 
 #ifndef __EVE_MEMORY_POINTER_H__
@@ -52,10 +52,10 @@ namespace eve
 		* \brief Manage event translation and dispatch.
 		* Message pump events are linked to window handle (aka HWND).
 		*
-		* \note extends eve::mem::Pointer
+		* \note extends eve::mem::Pointer, eve::sys::EventSender.
 		*/
 		class MessagePump final
-			: public eve::mem::Pointer
+			: public eve::sys::EventSender
 		{
 
 			//////////////////////////////////////
@@ -70,9 +70,6 @@ namespace eve
 		private:
 			WNDPROC							m_prevWndProc;			//!< Previous window procedure called by message pump.
 			HWND							m_handle;				//!< System window handle.
-
-		private:
-			eve::sys::Event *				m_pEvent;				//!< Manage listeners and dispatch message pump events.
 
 
 			//////////////////////////////////////
@@ -191,66 +188,10 @@ namespace eve
 			/** \brief Window close event handler. */
 			LRESULT handleClose(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam);
 
-
-		public:
-			/**
-			* \brief Register listener class to events.
-			* Listener class must provide event handler methods using the following signatures:
-			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
-			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
-			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
-			*		void cb_evtTextInput(eve::evt::TextEventArgs & p_args)
-			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
-			*		void cb_evtWindowFocusGot(void)
-			*		void cb_evtWindowFocusLost(void)
-			*		void cb_evtWindowClose(void)
-			*/
-			template<class ListenerClass>
-			void registerListener(ListenerClass * p_pListener);
-			/**
-			* \brief Unregister listener class to events.
-			* Listener class must provide event handler methods using the following signatures:
-			*		void cb_evtFileDrop(eve::evt::FileEventArgs & p_args)
-			*		void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
-			*		void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args)
-			*		void cb_evtTextInput(eve::evt::TextEventArgs & p_args)
-			*		void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtMotion(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args)
-			*		void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
-			*		void cb_evtWindowFocusGot(void)
-			*		void cb_evtWindowFocusLost(void)
-			*		void cb_evtWindowClose(void)
-			*/
-			template<class ListenerClass>
-			void unregisterListener(ListenerClass * p_pListener);
-
 		}; // class MessagePump
 
 	} // namespace sys
 
 } // namespace eve
-
-
-//=================================================================================================
-template<class ListenerClass>
-void eve::sys::MessagePump::registerListener(ListenerClass * p_pListener)
-{
-	m_pEvent->registerEvents(p_pListener);
-}
-
-//=================================================================================================
-template<class ListenerClass>
-void eve::sys::MessagePump::unregisterListener(ListenerClass * p_pListener)
-{
-	m_pEvent->unregisterEvents(p_pListener);
-}
 
 #endif // __EVE_SYSTEM_MESSAGE_PUMP_H__

@@ -50,6 +50,7 @@ struct aiScene;
 
 namespace eve { namespace scene { class Camera; } }
 namespace eve { namespace scene { class Mesh; } }
+namespace eve { namespace scene { class Scene; } }
 
 
 namespace eve
@@ -101,14 +102,13 @@ namespace eve
 			static std::map<SceneImportParam, std::string>	m_map_import_params;
 
 		protected:
-			std::vector<eve::scene::Camera*> *			m_pVecCamera;		//!< Specifies Camera objects vector.
-			eve::scene::Camera *						m_pCameraActive;	//!< Specifies active camera shared pointer.
+			std::vector<eve::scene::Camera*> *				m_pVecCamera;		//!< Specifies Camera objects vector.
+			eve::scene::Camera *							m_pCameraActive;	//!< Specifies active camera (shared pointer).
 
-			std::vector<eve::scene::Mesh*> *			m_pVecMesh;			//!< Specifies Mesh objects vector.
-
+			std::vector<eve::scene::Mesh*> *				m_pVecMesh;			//!< Specifies Mesh objects vector.
 
 		protected:
-			eve::ogl::Shader *							m_pShaderMesh;		//!< Specifies mesh render shader.
+			eve::ogl::Shader *								m_pShaderMesh;		//!< Specifies mesh render shader.
 
 
 			//////////////////////////////////////

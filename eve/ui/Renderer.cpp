@@ -2,27 +2,27 @@
 // Main header
 #include "eve/ui/Renderer.h"
 
-#ifndef __EVE_UI_FRAME_H__
-#include "eve/ui/Frame.h"
+#ifndef __EVE_UI_LAYER_H__
+#include "eve/ui/Layer.h"
 #endif
 
 
 //=================================================================================================
-eve::ui::Renderer * eve::ui::Renderer::create_ptr(eve::ui::Frame * p_pFrame, int32_t p_width, int32_t p_height)
+eve::ui::Renderer * eve::ui::Renderer::create_ptr(eve::ui::Layer * p_pLayer, int32_t p_width, int32_t p_height)
 {
-	EVE_ASSERT(p_pFrame);
+	EVE_ASSERT(p_pLayer);
 
-	eve::ui::Renderer * ptr = new eve::ui::Renderer(p_pFrame, p_width, p_height);
+	eve::ui::Renderer * ptr = new eve::ui::Renderer(p_pLayer, p_width, p_height);
 	ptr->init();
 	return ptr;
 }
 
 //=================================================================================================
-eve::ui::Renderer * eve::ui::Renderer::create_ptr(eve::ui::Frame * p_pFrame, const eve::vec2i & p_size)
+eve::ui::Renderer * eve::ui::Renderer::create_ptr(eve::ui::Layer * p_pLayer, const eve::vec2i & p_size)
 {
-	EVE_ASSERT(p_pFrame);
+	EVE_ASSERT(p_pLayer);
 
-	eve::ui::Renderer * ptr = new eve::ui::Renderer(p_pFrame, p_size);
+	eve::ui::Renderer * ptr = new eve::ui::Renderer(p_pLayer, p_size);
 	ptr->init();
 	return ptr;
 }
@@ -30,7 +30,7 @@ eve::ui::Renderer * eve::ui::Renderer::create_ptr(eve::ui::Frame * p_pFrame, con
 
 
 //=================================================================================================
-eve::ui::Renderer::Renderer(eve::ui::Frame * p_pFrame, int32_t p_width, int32_t p_height)
+eve::ui::Renderer::Renderer(eve::ui::Layer * p_pLayer, int32_t p_width, int32_t p_height)
 	// Inheritance.
 	: eve::ogl::Renderer()
 	// Members init
@@ -39,14 +39,14 @@ eve::ui::Renderer::Renderer(eve::ui::Frame * p_pFrame, int32_t p_width, int32_t 
 	, m_viewWidth(p_width)
 	, m_viewHeight(p_height)
 	, m_matrixProjection()
-	, m_pFrame(p_pFrame)
+	, m_pLayer(p_pLayer)
 	, m_pShaderColored(nullptr)
 	, m_pShaderTextured(nullptr)
 	, m_pUniformMatrices(nullptr)
 {}
 
 //=================================================================================================
-eve::ui::Renderer::Renderer(eve::ui::Frame * p_pFrame, const eve::vec2i & p_size)
+eve::ui::Renderer::Renderer(eve::ui::Layer * p_pLayer, const eve::vec2i & p_size)
 	// Inheritance.
 	: eve::ogl::Renderer()
 	// Members init
@@ -55,7 +55,7 @@ eve::ui::Renderer::Renderer(eve::ui::Frame * p_pFrame, const eve::vec2i & p_size
 	, m_viewWidth(p_size.x)
 	, m_viewHeight(p_size.y)
 	, m_matrixProjection()
-	, m_pFrame(p_pFrame)
+	, m_pLayer(p_pLayer)
 	, m_pShaderColored(nullptr)
 	, m_pShaderTextured(nullptr)
 	, m_pUniformMatrices(nullptr)
@@ -159,10 +159,10 @@ void eve::ui::Renderer::cb_display(void)
 	m_pUniformMatrices->bindCamera();
 
 	m_pShaderColored->bind();
-	m_pFrame->oglDrawColored();
+	m_pLayer->oglDrawColored();
 
 	m_pShaderTextured->bind();
-	m_pFrame->oglDrawTextured();
+	m_pLayer->oglDrawTextured();
 
 	eve::ogl::Shader::unbind();
 }

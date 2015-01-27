@@ -162,7 +162,7 @@ bool eve::ui::View::releaseFrame(eve::ui::Frame * p_pFrame)
 
 
 //=================================================================================================
-bool eve::ui::View::removeDiaplay(eve::ui::Display * p_pDisplay)
+bool eve::ui::View::removeDisplay(eve::ui::Display * p_pDisplay)
 {
 	m_pFence->lock();
 

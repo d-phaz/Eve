@@ -51,8 +51,6 @@
 
 
 namespace eve { namespace sys	{ class MessagePump; } }
-namespace eve { namespace core	{ class Renderer; } }
-namespace eve { namespace sys	{ class Render; } }
 namespace eve { namespace sys	{ class Node; } }
 
 
@@ -91,6 +89,7 @@ namespace eve
 		*
 		* \brief Abstract base threaded system node class.
 		* Stock and manage window, render manager, message pump.
+		* Translate and dispatch system events in run loop.
 		*
 		* \note extends eve::thr::Thread
 		*/
@@ -106,8 +105,8 @@ namespace eve
 			eve::sys::NodeFormat					m_format;			//!< Specifies format containing node properties used at creation time.
 			eve::sys::Node *						m_pParent;			//!< Specifies parent node shared pointer.
 
+		protected:
 			eve::sys::Window *						m_pWindow;			//!< Specifies system window.
-			eve::sys::Render *						m_pRender;			//!< Specifies render manager.
 			eve::sys::MessagePump *					m_pMessagePump;		//!< Specifies system message pump.
 
 
@@ -146,25 +145,6 @@ namespace eve
 
 			/** \brief Run is the main loop for this thread (\sa start()). (pure virtual) */
 			virtual void run(void) override;
-
-
-		public:
-			/** 
-			* \brief Register a renderer pointer.
-			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
-			* Return false if renderer is already registered. 
-			*/
-			bool registerRenderer(eve::core::Renderer * p_pRenderer);
-			/** 
-			* \brief Unregister a renderer pointer.
-			* Return false if renderer is not registered. 
-			*/
-			bool unregisterRenderer(eve::core::Renderer * p_pRenderer);
-			/** 
-			* \brief Unregister and release a renderer pointer.
-			* Return false if renderer is not registered. 
-			*/
-			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
 
 
 		public:

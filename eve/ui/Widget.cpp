@@ -92,7 +92,7 @@ eve::ui::Widget::Widget(const eve::vec2i & p_position, const eve::vec2i & p_size
 //=================================================================================================
 void eve::ui::Widget::init(void)
 {
-	m_pChildren = new std::list<eve::ui::Widget*>();
+	m_pChildren = new std::vector<eve::ui::Widget*>();
 }
 
 //=================================================================================================
@@ -116,7 +116,7 @@ void eve::ui::Widget::release(void)
 //=================================================================================================
 bool eve::ui::Widget::addChild(eve::ui::Widget * p_pWidget)
 {
-	std::list<eve::ui::Widget*>::iterator itr = std::find(m_pChildren->begin(), m_pChildren->end(), p_pWidget);
+	std::vector<eve::ui::Widget*>::iterator itr = std::find(m_pChildren->begin(), m_pChildren->end(), p_pWidget);
 	bool breturn = (itr == m_pChildren->end());
 	if (breturn)
 	{
@@ -131,7 +131,7 @@ bool eve::ui::Widget::addChild(eve::ui::Widget * p_pWidget)
 //=================================================================================================
 bool eve::ui::Widget::removeChild(eve::ui::Widget * p_pWidget)
 {
-	std::list<eve::ui::Widget*>::iterator itr = std::find(m_pChildren->begin(), m_pChildren->end(), p_pWidget);
+	std::vector<eve::ui::Widget*>::iterator itr = std::find(m_pChildren->begin(), m_pChildren->end(), p_pWidget);
 	bool breturn = (itr != m_pChildren->end());
 	if (breturn)
 	{
@@ -145,7 +145,7 @@ bool eve::ui::Widget::removeChild(eve::ui::Widget * p_pWidget)
 //=================================================================================================
 bool eve::ui::Widget::releaseChild(eve::ui::Widget * p_pWidget)
 {
-	std::list<eve::ui::Widget*>::iterator itr = std::find(m_pChildren->begin(), m_pChildren->end(), p_pWidget);
+	std::vector<eve::ui::Widget*>::iterator itr = std::find(m_pChildren->begin(), m_pChildren->end(), p_pWidget);
 	bool breturn = (itr != m_pChildren->end());
 	if (breturn)
 	{

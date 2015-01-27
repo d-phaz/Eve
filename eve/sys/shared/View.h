@@ -41,6 +41,13 @@
 #include "eve/sys/shared/Mouse.h"
 #endif
 
+#ifndef __EVE_SYSTEM_RENDER_H__
+#include "eve/sys/shared/Render.h"
+#endif
+
+
+namespace eve { namespace core	{ class Renderer; } }
+
 
 namespace eve
 {
@@ -61,7 +68,8 @@ namespace eve
 			//				DATAS				//
 			//////////////////////////////////////
 
-		protected:			
+		protected:
+			eve::sys::Render *						m_pRender;			//!< Specifies render manager.			
 
 
 			//////////////////////////////////////
@@ -81,6 +89,25 @@ namespace eve
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
+
+
+		public:
+			/**
+			* \brief Register a renderer pointer at the back of the container.
+			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
+			* Return false if renderer is already registered.
+			*/
+			virtual bool registerRenderer(eve::core::Renderer * p_pRenderer);
+			/**
+			* \brief Unregister a renderer pointer.
+			* Return false if renderer is not registered.
+			*/
+			bool unregisterRenderer(eve::core::Renderer * p_pRenderer);
+			/**
+			* \brief Unregister and release a renderer pointer.
+			* Return false if renderer is not registered.
+			*/
+			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
 
 
 		public:

@@ -176,10 +176,10 @@ void Example::initThreadedData(void)
 
 	//for (size_t i = 0; i < 6; i++)
 	{
-		ExampleDisplay * test = this->addDisplay<ExampleDisplay>(50, 50, 800, 600);
+		//ExampleDisplay * test = this->addDisplay<ExampleDisplay>(50, 50, 800, 600);
 	}
 	
-	ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
+	//ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
 }
 
 void Example::releaseThreadedData(void)

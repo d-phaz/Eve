@@ -30,118 +30,92 @@
 */
 
 #pragma once
-#ifndef __EVE_SYSTEM_RENDER_H__
-#define __EVE_SYSTEM_RENDER_H__
+#ifndef __EVE_UI_LAYER_H__
+#define __EVE_UI_LAYER_H__
 
-#ifndef __EVE_THREADING_THREAD_H__
-#include "eve/thr/Thread.h"
-#endif 
-
-#ifndef __EVE_TIME_TIMER_H__
-#include "eve/time/Timer.h"
+#ifndef __EVE_SYSTEM_VIEW_H__
+#include "eve/sys/shared/View.h"
 #endif
 
-namespace eve { namespace core	{ class Renderer; } }
-namespace eve { namespace ogl	{ class SubContext; } }
+#ifndef __EVE_UI_WIDGET_H__
+#include "eve/ui/Widget.h"
+#endif
+
+
+namespace eve { namespace ui { class Renderer; } }
 
 
 namespace eve
 {
-	namespace sys
+	namespace ui
 	{
 		/** 
-		* \class eve::sys::Render
+		* \class eve::ui::Layer
 		*
-		* \brief Render engines threaded manager.
-		* Stock and manage threaded render manager.
+		* \brief UI view layer.
+		* Handles interactive drawable widgets.
 		*
-		* \note extends eve::thr::Thread
+		* \note extends eve::sys::View, eve::ui::Widget.
 		*/
-		class Render final
-			: public eve::thr::Thread
+		class Layer
+			: public eve::sys::View
+			, public eve::ui::Widget
 		{
 
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
 
-		private:
-			HWND									m_handle;			//!< Specifies system window handle.
-			eve::ogl::SubContext *					m_pContext;			//!< Specifies OpenGL context pointer.
-
-			std::list<eve::core::Renderer*> *		m_pVecRenderers;	//!< Specifies render Engine(s) container.
+		protected:
+			eve::ui::Renderer *			m_pRenderer;		//!< Specifies render engine.
 			
-			eve::time::Timer *						m_pTimerRender;		//!< Specifies timer used to compute FPS.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Render);
-			EVE_PUBLIC_DESTRUCTOR(Render);
-
-		public:
-			/**
-			* \brief Create and return new pointer.
-			* \param p_handle linked system window handle.
-			*/
-			static eve::sys::Render * create_ptr(HWND p_handle);
-
+			EVE_DISABLE_COPY(Layer);
+			EVE_PUBLIC_DESTRUCTOR(Layer);
 
 		public:
 			/** \brief Class constructor. */
-			explicit Render(HWND p_handle);
+			explicit Layer(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+			/** \brief Class constructor. */
+			explicit Layer(const eve::vec2i & p_position, const eve::vec2i & p_size);
+
+
+		public:
+			/** \brief Setup format properties. (pure virtual) */
+			virtual void setup(void);
 
 
 		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
-			/**
-			* \brief Release and delete class members. (pure virtual)
-			* Stop this object's thread execution (if any) immediately.
-			*/
+			/** \brief Release and delete class members, propagates to children. (pure virtual) */
 			virtual void release(void) override;
 
 
-		private:
+		protected:
 			/** \brief Alloc and init threaded data. (pure virtual) */
 			virtual void initThreadedData(void) override;
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
 
-			/** \brief Run is the main loop for this thread (\sa start()). (pure virtual) */
-			virtual void run(void) override;
-
 
 		public:
-			/**
-			* \brief Register a renderer pointer at the back of the container.
-			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
-			* Return false if renderer is already registered.
-			*/
-			bool registerRendererBack(eve::core::Renderer * p_pRenderer);
 			/**
 			* \brief Register a renderer pointer at the front of the container.
 			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
 			* Return false if renderer is already registered.
 			*/
-			bool registerRendererFront(eve::core::Renderer * p_pRenderer);
-			/**
-			* \brief Unregister a renderer pointer.
-			* Return false if renderer is not registered.
-			*/
-			bool unregisterRenderer(eve::core::Renderer * p_pRenderer);
-			/**
-			* \brief Unregister and release a renderer pointer.
-			* Return false if renderer is not registered.
-			*/
-			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
+			virtual bool registerRenderer(eve::core::Renderer * p_pRenderer) override final;
 
-		}; // class Node
+		}; // class Layer
 
-	} // namespace sys
+	} // namespace ui
 
 } // namespace eve
 
-#endif // __EVE_SYSTEM_RENDER_H__
+#endif // __EVE_UI_Layer_H__

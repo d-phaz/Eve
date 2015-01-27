@@ -30,63 +30,84 @@
 */
 
 // Main class header
-#include "eve/sys/shared/View.h"
+#include "eve/ui/Layer.h"
 
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
+#ifndef __EVE_UI_RENDERER_H__
+#include "eve/ui/Renderer.h"
 #endif
 
 
 //=================================================================================================
-eve::sys::View::View(void)
-	// Inheritance.
-	: eve::sys::Node()
-	// Members init.
-	, m_pRender(nullptr)
+eve::ui::Layer::Layer(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	// Inheritance
+	: eve::sys::View()
+	, eve::ui::Widget(p_x, p_y, p_width, p_height)
+	// Members init
+	, m_pRenderer(nullptr)
+{}
+
+//=================================================================================================
+eve::ui::Layer::Layer(const eve::vec2i & p_position, const eve::vec2i & p_size)
+	// Inheritance
+	: eve::sys::View()
+	, eve::ui::Widget(p_position, p_size)
+	// Members init
+	, m_pRenderer(nullptr)
 {}
 
 
 
 //=================================================================================================
-void eve::sys::View::initThreadedData(void)
+void eve::ui::Layer::setup(void)
+{
+	m_format.x			= m_x;
+	m_format.y			= m_y;
+	m_format.width		= m_width;
+	m_format.height		= m_height;
+}
+
+
+
+//=================================================================================================
+void eve::ui::Layer::init(void)
+{
+	// Call parent class
+	eve::sys::View::init();
+	eve::ui::Widget::init();
+}
+
+//=================================================================================================
+void eve::ui::Layer::release(void)
+{	
+	// Call parent class
+	eve::sys::View::release();
+	eve::ui::Widget::release();
+}
+
+
+
+//=================================================================================================
+void eve::ui::Layer::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::Node::initThreadedData();
+	eve::sys::View::initThreadedData();
 
-	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
-	m_pRender->start();
-
-	m_pMessagePump->registerListener(this);
+	// Render engine.
+	m_pRenderer = eve::ui::Renderer::create_ptr(this, m_width, m_height);
+	this->registerRenderer(m_pRenderer);
 }
 
 //=================================================================================================
-void eve::sys::View::releaseThreadedData(void)
+void eve::ui::Layer::releaseThreadedData(void)
 {
-	m_pMessagePump->unregisterListener(this);
-
-	m_pRender->stop();
-	EVE_RELEASE_PTR(m_pRender);
-
 	// Call parent class.
-	eve::sys::Node::releaseThreadedData();
+	eve::sys::View::releaseThreadedData();
 }
 
 
 
 //=================================================================================================
-bool eve::sys::View::registerRenderer(eve::core::Renderer * p_pRenderer)
+bool eve::ui::Layer::registerRenderer(eve::core::Renderer * p_pRenderer)
 {
-	return m_pRender->registerRendererBack(p_pRenderer);
-}
-
-//=================================================================================================
-bool eve::sys::View::unregisterRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->unregisterRenderer(p_pRenderer);
-}
-
-//=================================================================================================
-bool eve::sys::View::releaseRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->releaseRenderer(p_pRenderer);
+	return m_pRender->registerRendererFront(p_pRenderer);
 }

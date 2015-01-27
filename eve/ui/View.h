@@ -51,8 +51,6 @@ namespace eve
 	namespace ui
 	{
 
-		// Note: View has no children. -> maybe should not inherit from Widget !!!! and stock position and size in Node ?
-
 		/** 
 		* \class eve::ui::View
 		*
@@ -164,7 +162,7 @@ namespace eve
 			* \brief Unregister a display pointer.
 			* Return false if display is not registered.
 			*/
-			bool removeDiaplay(eve::ui::Display * p_pDisplay);
+			bool removeDisplay(eve::ui::Display * p_pDisplay);
 			/**
 			* \brief Unregister and release a display pointer.
 			* Return false if display is not registered.

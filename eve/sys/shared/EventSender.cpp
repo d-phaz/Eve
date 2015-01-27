@@ -30,11 +30,11 @@
 */
 
 // Main header
-#include "eve/sys/shared/Event.h"
+#include "eve/sys/shared/EventSender.h"
 
 
 //=================================================================================================
-eve::sys::Event::Event(void)
+eve::sys::EventSender::EventSender(void)
 	// Inheritance
 	: eve::mem::Pointer()
 
@@ -61,13 +61,13 @@ eve::sys::Event::Event(void)
 
 
 //=================================================================================================
-void eve::sys::Event::init(void)
+void eve::sys::EventSender::init(void)
 {
 	this->enableEvents();
 }
 
 //=================================================================================================
-void eve::sys::Event::release(void)
+void eve::sys::EventSender::release(void)
 {
 	this->disableEvents();
 }
@@ -75,19 +75,19 @@ void eve::sys::Event::release(void)
 
 
 //=================================================================================================
-void eve::sys::Event::enableEventsFile(void)
+void eve::sys::EventSender::enableEventsFile(void)
 {
 	m_fileDropped.enable();
 }
 
 //=================================================================================================
-void eve::sys::Event::disableEventsFile(void)
+void eve::sys::EventSender::disableEventsFile(void)
 {
 	m_fileDropped.disable();
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyFileDropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files)
+void eve::sys::EventSender::notifyFileDropped(int32_t p_x, int32_t p_y, uint32_t p_count, std::vector<std::wstring> & p_files)
 {
 	eve::evt::FileEventArgs fileEventArgs;
 	fileEventArgs.x		= p_x;
@@ -101,21 +101,21 @@ void eve::sys::Event::notifyFileDropped(int32_t p_x, int32_t p_y, uint32_t p_cou
 
 
 //=================================================================================================
-void eve::sys::Event::enableEventsKey(void)
+void eve::sys::EventSender::enableEventsKey(void)
 {
 	m_keyPressed.enable();
 	m_keyReleased.enable();
 }
 
 //=================================================================================================
-void eve::sys::Event::disableEventsKey(void)
+void eve::sys::EventSender::disableEventsKey(void)
 {
 	m_keyPressed.disable();
 	m_keyReleased.disable();
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyKeyPressed(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
+void eve::sys::EventSender::notifyKeyPressed(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
 {
 	eve::evt::KeyEventArgs keyEventArgs;
 	keyEventArgs.key	  = p_key;
@@ -126,7 +126,7 @@ void eve::sys::Event::notifyKeyPressed(eve::sys::Key p_key, eve::sys::KeyModifie
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier)
+void eve::sys::EventSender::notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifier p_modifier)
 {
 	eve::evt::KeyEventArgs keyEventArgs;
 	keyEventArgs.key	  = p_key;
@@ -138,19 +138,19 @@ void eve::sys::Event::notifyKeyReleased(eve::sys::Key p_key, eve::sys::KeyModifi
 
 
 //=================================================================================================
-void eve::sys::Event::enableEventsText(void)
+void eve::sys::EventSender::enableEventsText(void)
 {
 	m_textInput.enable();
 }
 
 //=================================================================================================
-void eve::sys::Event::disableEventsText(void)
+void eve::sys::EventSender::disableEventsText(void)
 {
 	m_textInput.disable();
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyTextInput(wchar_t p_text, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
+void eve::sys::EventSender::notifyTextInput(wchar_t p_text, eve::sys::KeyModifier p_modifier, bool p_bRepeat)
 {
 	eve::evt::TextEventArgs args;
 	args.text	  = p_text;
@@ -163,7 +163,7 @@ void eve::sys::Event::notifyTextInput(wchar_t p_text, eve::sys::KeyModifier p_mo
 
 
 //=================================================================================================
-void eve::sys::Event::enableEventsMouse(void)
+void eve::sys::EventSender::enableEventsMouse(void)
 {
 	m_mousePassiveMotion.enable();
 	m_mouseMotion.enable();
@@ -174,7 +174,7 @@ void eve::sys::Event::enableEventsMouse(void)
 }
 
 //=================================================================================================
-void eve::sys::Event::disableEventsMouse(void)
+void eve::sys::EventSender::disableEventsMouse(void)
 {
 	m_mousePassiveMotion.disable();
 	m_mouseMotion.disable();
@@ -185,7 +185,7 @@ void eve::sys::Event::disableEventsMouse(void)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMouseDown(int32_t p_button, int32_t x, int32_t y)
+void eve::sys::EventSender::notifyMouseDown(int32_t p_button, int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button = p_button;
@@ -196,7 +196,7 @@ void eve::sys::Event::notifyMouseDown(int32_t p_button, int32_t x, int32_t y)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMouseWheel(int32_t p_button, int32_t x, int32_t y)
+void eve::sys::EventSender::notifyMouseWheel(int32_t p_button, int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button = p_button;
@@ -207,7 +207,7 @@ void eve::sys::Event::notifyMouseWheel(int32_t p_button, int32_t x, int32_t y)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMouseUp(int32_t p_button, int32_t x, int32_t y)
+void eve::sys::EventSender::notifyMouseUp(int32_t p_button, int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button = p_button;
@@ -218,7 +218,7 @@ void eve::sys::Event::notifyMouseUp(int32_t p_button, int32_t x, int32_t y)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMouseDoubleClick(int32_t p_button, int32_t x, int32_t y)
+void eve::sys::EventSender::notifyMouseDoubleClick(int32_t p_button, int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button = p_button;
@@ -229,7 +229,7 @@ void eve::sys::Event::notifyMouseDoubleClick(int32_t p_button, int32_t x, int32_
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMouseMotion(int32_t p_button, int32_t x, int32_t y)
+void eve::sys::EventSender::notifyMouseMotion(int32_t p_button, int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.button = p_button;
@@ -240,7 +240,7 @@ void eve::sys::Event::notifyMouseMotion(int32_t p_button, int32_t x, int32_t y)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyMousePassiveMotion(int32_t x, int32_t y)
+void eve::sys::EventSender::notifyMousePassiveMotion(int32_t x, int32_t y)
 {
 	eve::evt::MouseEventArgs mouseEventArgs;
 	mouseEventArgs.x = x;
@@ -252,7 +252,7 @@ void eve::sys::Event::notifyMousePassiveMotion(int32_t x, int32_t y)
 
 
 //=================================================================================================
-void eve::sys::Event::enableEventsWindow(void)
+void eve::sys::EventSender::enableEventsWindow(void)
 {
 	m_windowResized.enable();
 	m_windowMoved.enable();
@@ -262,7 +262,7 @@ void eve::sys::Event::enableEventsWindow(void)
 }
 
 //=================================================================================================
-void eve::sys::Event::disableEventsWindow(void)
+void eve::sys::EventSender::disableEventsWindow(void)
 {
 	m_windowResized.disable();
 	m_windowMoved.disable();
@@ -272,7 +272,7 @@ void eve::sys::Event::disableEventsWindow(void)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyWindowResize(uint32_t p_width, uint32_t p_height)
+void eve::sys::EventSender::notifyWindowResize(uint32_t p_width, uint32_t p_height)
 {
 	eve::evt::ResizeEventArgs resizeEventArgs;
 	resizeEventArgs.width = p_width;
@@ -282,7 +282,7 @@ void eve::sys::Event::notifyWindowResize(uint32_t p_width, uint32_t p_height)
 }
 
 //=================================================================================================
-void  eve::sys::Event::notifyWindowMove(int32_t p_x, int32_t p_y)
+void  eve::sys::EventSender::notifyWindowMove(int32_t p_x, int32_t p_y)
 {
 	eve::evt::MoveEventArgs moveEventArgs;
 	moveEventArgs.x = p_x;
@@ -292,21 +292,21 @@ void  eve::sys::Event::notifyWindowMove(int32_t p_x, int32_t p_y)
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyWindowFocusGot(void)
+void eve::sys::EventSender::notifyWindowFocusGot(void)
 {
 	eve::evt::EventArgs args;
 	eve::evt::notify_event(m_windowFocusGot, args);
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyWindowFocusLost(void)
+void eve::sys::EventSender::notifyWindowFocusLost(void)
 {
 	eve::evt::EventArgs args;
 	eve::evt::notify_event(m_windowFocusLost, args);
 }
 
 //=================================================================================================
-void eve::sys::Event::notifyWindowClose(void)
+void eve::sys::EventSender::notifyWindowClose(void)
 {
 	eve::evt::EventArgs args;
 	eve::evt::notify_event(m_windowClose, args);
@@ -315,7 +315,7 @@ void eve::sys::Event::notifyWindowClose(void)
 
 
 //=================================================================================================
-void eve::sys::Event::enableEvents(void)
+void eve::sys::EventSender::enableEvents(void)
 {
 	this->enableEventsFile();
 	this->enableEventsKey();
@@ -324,7 +324,7 @@ void eve::sys::Event::enableEvents(void)
 }
 
 //=================================================================================================
-void eve::sys::Event::disableEvents(void)
+void eve::sys::EventSender::disableEvents(void)
 {
 	this->disableEventsFile();
 	this->disableEventsKey();

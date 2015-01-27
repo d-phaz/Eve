@@ -32,12 +32,8 @@
 // Main header
 #include "eve/sys/win32/MessagePump.h"
 
-#ifndef __EVE_SYSTEM_EVENT_H__ 
-#include "eve/sys/shared/Event.h"
-#endif
-
 #ifndef __EVE_SYSTEM_KEYBOARD_H__
-#include "eve/sys/win32//Keyboard.h"
+#include "eve/sys/win32/Keyboard.h"
 #endif
 
 #ifndef __EVE_SYSTEM_MOUSE_H__
@@ -59,11 +55,10 @@ eve::sys::MessagePump * eve::sys::MessagePump::create_ptr(HWND p_handle)
 //=================================================================================================
 eve::sys::MessagePump::MessagePump(HWND p_handle)
 	// Inheritance
-	: eve::mem::Pointer()
+	: eve::sys::EventSender()
 
 	// Members init
 	, m_handle(p_handle)
-	, m_pEvent(nullptr)
 {}
 
 
@@ -71,8 +66,8 @@ eve::sys::MessagePump::MessagePump(HWND p_handle)
 //=================================================================================================
 void eve::sys::MessagePump::init(void)
 {
-	// Event manager.
-	m_pEvent = EVE_CREATE_PTR(eve::sys::Event);
+	// Call parent class.
+	eve::sys::EventSender::init();
 
 	// Register as event handler.
 	eve::sys::MessagePump::register_handler(m_handle, this);
@@ -87,8 +82,8 @@ void eve::sys::MessagePump::init(void)
 //=================================================================================================
 void eve::sys::MessagePump::release(void)
 {
-	// Event manager.
-	EVE_RELEASE_PTR(m_pEvent);
+	// Call parent class.
+	eve::sys::EventSender::release();
 
 	// Set default window procedure back.
 	::SetWindowLongPtr(m_handle, GWLP_WNDPROC, (LONG_PTR)m_prevWndProc);
@@ -277,7 +272,7 @@ LRESULT eve::sys::MessagePump::handleKeyDown(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 		int32_t	repeats	= HIWORD(p_lParam);
 		bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
 
-		m_pEvent->notifyKeyPressed(translated, modifier, repeat);
+		this->notifyKeyPressed(translated, modifier, repeat);
 	}
 
 	return 0;
@@ -291,7 +286,7 @@ LRESULT eve::sys::MessagePump::handleKeyUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_wP
  	if (!filter) 
 	{
 		eve::sys::KeyModifier modifier = eve::sys::get_key_modifier_state();
-		m_pEvent->notifyKeyReleased(translated, modifier);
+		this->notifyKeyReleased(translated, modifier);
  	}
 
 	return 0;
@@ -305,7 +300,7 @@ LRESULT eve::sys::MessagePump::handleChar(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 	int32_t	repeats	= HIWORD(p_lParam);
 	bool	repeat	= ((repeats & KF_REPEAT) ? true : false);
 
-	m_pEvent->notifyTextInput(ch, modifier, repeat);
+	this->notifyTextInput(ch, modifier, repeat);
 
 	return 0;
 }
@@ -331,7 +326,7 @@ LRESULT eve::sys::MessagePump::handleMouseDown(HWND p_hWnd, UINT p_uMsg, WPARAM 
 	default:					btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseDown(btn, x, y);
+	this->notifyMouseDown(btn, x, y);
 
 	return 0;
 }
@@ -353,7 +348,7 @@ LRESULT eve::sys::MessagePump::handleMouseWheel(HWND p_hWnd, UINT p_uMsg, WPARAM
 	default:					btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseWheel(btn, x, y);
+	this->notifyMouseWheel(btn, x, y);
 
 	return 0;
 }
@@ -377,7 +372,7 @@ LRESULT eve::sys::MessagePump::handleMouseUp(HWND p_hWnd, UINT p_uMsg, WPARAM p_
 	default:				btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseUp(btn, x, y);
+	this->notifyMouseUp(btn, x, y);
 
 	return 0;
 }
@@ -398,7 +393,7 @@ LRESULT eve::sys::MessagePump::handleMouseDoubleClick(HWND p_hWnd, UINT p_uMsg, 
 	default:					btn = eve::sys::btn_Unused;		break;
 	}
 
-	m_pEvent->notifyMouseDoubleClick(btn, x, y);
+	this->notifyMouseDoubleClick(btn, x, y);
 
 	return 0;
 }
@@ -420,11 +415,11 @@ LRESULT eve::sys::MessagePump::handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARA
 
 	if (btn == eve::sys::btn_Unused)
 	{
-		m_pEvent->notifyMousePassiveMotion(x, y);
+		this->notifyMousePassiveMotion(x, y);
 	}
 	else
 	{
-		m_pEvent->notifyMouseMotion(btn, x, y);
+		this->notifyMouseMotion(btn, x, y);
 	}
 
 	return 0;
@@ -435,14 +430,14 @@ LRESULT eve::sys::MessagePump::handleMouseMotion(HWND p_hWnd, UINT p_uMsg, WPARA
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleFocusGot(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	m_pEvent->notifyWindowFocusGot();
+	this->notifyWindowFocusGot();
 	return 0;
 }
 
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleFocusLost(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	m_pEvent->notifyWindowFocusLost();
+	this->notifyWindowFocusLost();
 	return 0;
 }
 
@@ -475,7 +470,7 @@ LRESULT eve::sys::MessagePump::handleSize(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 {
 	int32_t width  = (int32_t)LOWORD(p_lParam); 
 	int32_t height = (int32_t)HIWORD(p_lParam);
-	m_pEvent->notifyWindowResize(width, height);
+	this->notifyWindowResize(width, height);
 
 	return 0;
 }
@@ -495,7 +490,7 @@ LRESULT eve::sys::MessagePump::handleMove(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 {
 	int32_t xPos = (int32_t)LOWORD(p_lParam);
 	int32_t yPos = (int32_t)HIWORD(p_lParam);
-	m_pEvent->notifyWindowMove(xPos, yPos);
+	this->notifyWindowMove(xPos, yPos);
 
 	return 0;
 }
@@ -535,7 +530,7 @@ LRESULT eve::sys::MessagePump::handleDrop(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 	
 	::DragFinish( query );
 	
-	m_pEvent->notifyFileDropped(pt.x, pt.y, count, vecFiles);
+	this->notifyFileDropped(pt.x, pt.y, count, vecFiles);
 
 	return 0;
 }
@@ -554,6 +549,6 @@ LRESULT eve::sys::MessagePump::handleCompacting(HWND p_hWnd, UINT p_uMsg, WPARAM
 //=================================================================================================
 LRESULT eve::sys::MessagePump::handleClose(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
-	m_pEvent->notifyWindowClose();
+	this->notifyWindowClose();
 	return 0;
 }

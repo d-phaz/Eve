@@ -36,10 +36,6 @@
 #include "eve/sys/win32/MessagePump.h"
 #endif
 
-#ifndef __EVE_SYSTEM_RENDER_H__
-#include "eve/sys/shared/Render.h"
-#endif
-
 
 //=================================================================================================
 eve::sys::NodeFormat::NodeFormat(void)
@@ -85,12 +81,10 @@ const eve::sys::NodeFormat & eve::sys::NodeFormat::operator = (const eve::sys::N
 eve::sys::Node::Node(void)
 	// Inheritance
 	: eve::thr::Thread()
-
 	// Members init
 	, m_format()
 	, m_pParent(nullptr)
 	, m_pWindow(nullptr)
-	, m_pRender(nullptr)
 	, m_pMessagePump(nullptr)
 {}
 
@@ -141,22 +135,13 @@ void eve::sys::Node::initThreadedData(void)
 	}
 	m_pWindow->show();
 
-	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
-	m_pRender->start();
-
 	m_pMessagePump = eve::sys::MessagePump::create_ptr(m_pWindow->getHandle());
-	m_pMessagePump->registerListener(this);
 }
 
 //=================================================================================================
 void eve::sys::Node::releaseThreadedData(void)
 {
-	m_pMessagePump->unregisterListener(this);
 	EVE_RELEASE_PTR(m_pMessagePump);
-
-	m_pRender->stop();
-	EVE_RELEASE_PTR(m_pRender);
-
 	EVE_RELEASE_PTR(m_pWindow);
 }
 
@@ -194,24 +179,4 @@ void eve::sys::Node::run(void)
 		::Sleep(5);
 
 	} while (this->running());
-}
-
-
-
-//=================================================================================================
-bool eve::sys::Node::registerRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->registerRenderer(p_pRenderer);
-}
-
-//=================================================================================================
-bool eve::sys::Node::unregisterRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->unregisterRenderer(p_pRenderer);
-}
-
-//=================================================================================================
-bool eve::sys::Node::releaseRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->releaseRenderer(p_pRenderer);
 }
