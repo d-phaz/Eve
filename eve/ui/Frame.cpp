@@ -97,3 +97,84 @@ void eve::ui::Frame::releaseThreadedData(void)
 	// Call parent class.
 	eve::ui::Layer::releaseThreadedData();
 }
+
+
+
+//=================================================================================================
+void eve::ui::Frame::inflate(int32_t p_width, int32_t p_height)
+{
+	m_pWindow->setSize(m_pWindow->getWidth() + p_width, m_pWindow->getHeight() + p_height);
+	m_width  += p_width;
+	m_height += p_height;
+}
+
+//=================================================================================================
+void eve::ui::Frame::inflateX(int32_t p_value)
+{
+	m_pWindow->setWidth(m_pWindow->getWidth() + p_value);
+	m_width += p_value;
+}
+
+//=================================================================================================
+void eve::ui::Frame::inflateY(int32_t p_value)
+{
+	m_pWindow->setHeight(m_pWindow->getHeight() + p_value);
+	m_height += p_value;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::ui::Frame::setPosition(int32_t p_x, int32_t p_y)
+{
+	m_pWindow->setPosition(p_x, p_y);
+	m_x = p_x;
+	m_y = p_y;
+}
+
+//=================================================================================================
+void eve::ui::Frame::setPositionX(int32_t p_value)
+{
+	m_pWindow->setPositionX(p_value);
+	m_x = p_value;
+}
+
+//=================================================================================================
+void eve::ui::Frame::setPositionY(int32_t p_value)
+{
+	m_pWindow->setPositionY(p_value);
+	m_y = p_value;
+}
+
+
+
+//=================================================================================================
+void eve::ui::Frame::setSize(int32_t p_width, int32_t p_height)
+{
+	m_pWindow->setSize(p_width, p_height);
+
+	// Call parent class.
+	eve::ui::Widget::setSize(p_width, p_height);
+}
+
+//=================================================================================================
+void eve::ui::Frame::setWidth(int32_t p_value)
+{
+	m_pWindow->setWidth(p_value);
+
+	// Call parent class.
+	eve::ui::Widget::setWidth(p_value);
+}
+
+//=================================================================================================
+void eve::ui::Frame::setHeight(int32_t p_value)
+{
+	m_pWindow->setHeight(p_value);
+
+	// Call parent class.
+	eve::ui::Widget::setHeight(p_value);
+}

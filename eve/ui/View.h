@@ -169,6 +169,11 @@ namespace eve
 			*/
 			bool releaseDisplay(eve::ui::Display * p_pDisplay);
 
+
+		public:
+			/** \brief Window resize event handler. */
+			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg);
+
 		}; // class View
 
 	} // namespace ui

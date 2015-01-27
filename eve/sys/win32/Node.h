@@ -148,41 +148,41 @@ namespace eve
 
 
 		public:
-			/** \brief File drop event handler. (pure virtual) */
+			/** \brief File drop event handler. */
 			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args) {}
 
 
-			/** \brief Key down event handler. (pure virtual) */
+			/** \brief Key down event handler. */
 			virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) {}
-			/** \brief Key up event handler. (pure virtual) */
+			/** \brief Key up event handler. */
 			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args) {}
-			/** \brief Text input event handler. (pure virtual) */
+			/** \brief Text input event handler. */
 			virtual void cb_evtTextInput(eve::evt::TextEventArgs & p_args) {}
 
 
-			/** \brief Mouse down event handler. (pure virtual) */
+			/** \brief Mouse down event handler. */
 			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) {}
-			/** \brief Mouse wheel event handler. (pure virtual) */
+			/** \brief Mouse wheel event handler. */
 			virtual void cb_evtMouseWheel(eve::evt::MouseEventArgs & p_args) {};
-			/** \brief Mouse up event handler. (pure virtual) */
+			/** \brief Mouse up event handler. */
 			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) {}
-			/** \brief Mouse double click event handler. (pure virtual) */
+			/** \brief Mouse double click event handler. */
 			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args) {}
-			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
+			/** \brief Mouse motion (button pressed) event handler. */
 			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) {}
-			/** \brief Mouse passive motion (no button pressed) event handler. (pure virtual) */
+			/** \brief Mouse passive motion (no button pressed) event handler. */
 			virtual void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args) {}
 
 
-			/** \brief Window resize event handler. (pure virtual) */
+			/** \brief Window resize event handler. */
 			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg) {}
-			/** \brief Window move event handler. (pure virtual) */
+			/** \brief Window move event handler. */
 			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg) {}
-			/** \brief Window gain focus event handler. (pure virtual) */
+			/** \brief Window gain focus event handler. */
 			virtual void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg) {}
-			/** \brief Window loose focus event handler. (pure virtual) */
+			/** \brief Window loose focus event handler. */
 			virtual void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg) {}
-			/** \brief Window close event handler. (pure virtual) */
+			/** \brief Window close event handler. */
 			virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) {}
 
 
