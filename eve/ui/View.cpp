@@ -32,6 +32,10 @@
 // Main class header
 #include "eve/ui/View.h"
 
+#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
+#include "eve/sys/win32/MessagePump.h"
+#endif
+
 
 //=================================================================================================
 eve::ui::View::View(void)
@@ -71,7 +75,7 @@ void eve::ui::View::init(void)
 	m_pVecDisplay	= new std::vector<eve::ui::Display*>();
 
 	// Call parent class
-	eve::sys::Node::init();
+	eve::sys::View::init();
 }
 
 //=================================================================================================
@@ -100,7 +104,7 @@ void eve::ui::View::release(void)
 	EVE_RELEASE_PTR_CPP(m_pVecFrame);
 
 	// Call parent class
-	eve::sys::Node::release();
+	eve::sys::View::release();
 }
 
 
@@ -110,13 +114,11 @@ void eve::ui::View::initThreadedData(void)
 {
 	// Call parent class.
 	eve::sys::View::initThreadedData();
-
 }
 
 //=================================================================================================
 void eve::ui::View::releaseThreadedData(void)
 {
-
 	// Call parent class.
 	eve::sys::View::releaseThreadedData();
 }
@@ -195,4 +197,31 @@ bool eve::ui::View::releaseDisplay(eve::ui::Display * p_pDisplay)
 	m_pFence->unlock();
 
 	return breturn;
+}
+
+
+
+//=================================================================================================
+void eve::ui::View::cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
+{
+	int32_t w(m_format.width);
+	int32_t h(m_format.height);
+
+	int32_t deportX(p_arg.width - w);
+	int32_t deportY(p_arg.height - h);
+
+	float ratioX = 0.0f;
+	float ratioY = 0.0f;
+
+	for (auto && itr : (*m_pVecFrame))
+	{
+		ratioX = static_cast<float>(itr->getWidth())  / static_cast<float>(w);
+		ratioY = static_cast<float>(itr->getHeight()) / static_cast<float>(h);
+
+		itr->inflate(static_cast<int32_t>(static_cast<float>(deportX)* ratioX)
+			       , static_cast<int32_t>(static_cast<float>(deportY) * ratioY));
+	}
+
+	m_format.width  = p_arg.width;
+	m_format.height = p_arg.height;
 }

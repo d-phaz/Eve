@@ -60,6 +60,11 @@ eve::sys::Render::Render(HWND p_handle)
 	, m_handle(p_handle)
 	, m_pContext(nullptr)
 	, m_pVecRenderers(nullptr)
+
+	, m_baseWait(0)
+	, m_bufWait(0)
+	, m_fps(30)
+	, m_elapsed(0)
 	, m_pTimerRender(nullptr)
 {}
 
@@ -78,14 +83,17 @@ void eve::sys::Render::init(void)
 	m_pVecRenderers = new std::list<eve::core::Renderer*>();
 
 	// Timer.
-	m_pTimerRender = eve::time::Timer::create_ptr(false);
+	m_pTimerRender  = eve::time::Timer::create_ptr(false);
+
+	// Compute run wait based on target FPS.
+	m_baseWait = 1000 / m_fps;
 }
 
 //=================================================================================================
 void eve::sys::Render::release(void)
 {
 	// Timer.
-	EVE_RELEASE_PTR(m_pTimerRender)
+	EVE_RELEASE_PTR(m_pTimerRender);
 
 	// Render engines.
 	m_pContext->makeCurrent();
@@ -128,32 +136,37 @@ void eve::sys::Render::releaseThreadedData(void)
 void eve::sys::Render::run(void)
 {
 	m_pTimerRender->start();
-	bool needPaint = false;
+	int64_t targetWait	= 0;
 
 	do
 	{
-		needPaint = (m_pTimerRender->getTimeNextFrame() < 10);
-		if (needPaint)
+		m_pFence->lock();
+
+
+		// Render engines display.
+		m_pContext->makeCurrent();
+
+		for (auto && itr : (*m_pVecRenderers))
 		{
-			// Launch render.
-			m_pFence->lock();
-			m_pContext->makeCurrent();
-
-			for (auto && itr : (*m_pVecRenderers))
-			{
-				itr->cb_beforeDisplay();
-				itr->cb_display();
-				itr->cb_afterDisplay();
-			}
-
-			m_pContext->swapBuffers();
-			m_pContext->doneCurrent();
-			m_pFence->unlock();	
+			itr->cb_beforeDisplay();
+			itr->cb_display();
+			itr->cb_afterDisplay();
 		}
-		m_pTimerRender->updateFPS(needPaint);
-		this->setRunWait(static_cast<uint32_t>(m_pTimerRender->getTimeNextFrame()));
 
-		EVE_LOG_INFO("FPS: %f", m_pTimerRender->getFPS());
+		m_pContext->swapBuffers();
+		m_pContext->doneCurrent();
+
+		// Update wait time.
+		m_elapsed	= m_pTimerRender->getElapsedTime();
+		targetWait	= (m_baseWait + m_bufWait) - m_elapsed;
+		m_bufWait	= targetWait;
+		
+		m_pTimerRender->restart();
+		//EVE_LOG_INFO("FPS: %f", 1000.0f / static_cast<float>(m_elapsed > 1 ? m_elapsed : 1));
+		eve::thr::sleep_micro(static_cast<uint32_t>(targetWait > 0 ? targetWait : 0) * 1000);
+
+
+		m_pFence->unlock();
 
 	} while (this->running());
 }
@@ -236,4 +249,18 @@ bool eve::sys::Render::releaseRenderer(eve::core::Renderer * p_pRenderer)
 	m_pFence->unlock();
 
 	return breturn;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::sys::Render::setFPS(int64_t p_fps)
+{
+	m_pFence->lock();
+	m_fps		= p_fps;
+	m_baseWait	= 1000 / m_fps;
+	m_pFence->unlock();
 }

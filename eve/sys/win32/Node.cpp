@@ -136,11 +136,13 @@ void eve::sys::Node::initThreadedData(void)
 	m_pWindow->show();
 
 	m_pMessagePump = eve::sys::MessagePump::create_ptr(m_pWindow->getHandle());
+	m_pMessagePump->registerListener(this);
 }
 
 //=================================================================================================
 void eve::sys::Node::releaseThreadedData(void)
 {
+	m_pMessagePump->unregisterListener(this);
 	EVE_RELEASE_PTR(m_pMessagePump);
 	EVE_RELEASE_PTR(m_pWindow);
 }

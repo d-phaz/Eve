@@ -177,25 +177,26 @@ namespace eve
 			bool inside(const eve::vec2i & p_position);
 
 
-		protected:
+		public:
 			/** \brief Translate object on both axis and propagate to children. */
-			void translate(int32_t p_x, int32_t p_y);
+			virtual void translate(int32_t p_x, int32_t p_y);
 			/** \brief Translate object on both axis and propagate to children. */
-			void translate(const eve::vec2i & p_value);
+			virtual void translate(const eve::vec2i & p_value);
 			/** \brief Translate object on X axis and propagate to children. */
-			void translateX(int32_t p_value);
+			virtual void translateX(int32_t p_value);
 			/** \brief Translate object on Y axis and propagate to children. */
-			void translateY(int32_t p_value);
+			virtual void translateY(int32_t p_value);
 
 
+		public:
 			/** \brief Inflate object on both axis (rise its size) and propagate to children. */
-			void inflate(int32_t p_width, int32_t p_height);
+			virtual void inflate(int32_t p_width, int32_t p_height);
 			/** \brief Inflate object on both axis (rise its size) and propagate to children. */
-			void inflate(const eve::vec2i & p_value);
+			virtual void inflate(const eve::vec2i & p_value);
 			/** \brief Inflate object on X axis (rise its width) and propagate to children. */
-			void inflateX(int32_t p_value);
+			virtual void inflateX(int32_t p_value);
 			/** \brief Inflate object on Y axis (rise its height) and propagate to children. */
-			void inflateY(int32_t p_value);
+			virtual void inflateY(int32_t p_value);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -228,13 +229,13 @@ namespace eve
 			int32_t getPositionY(void) const;
 
 			/** \brief Set position. */
-			void setPosition(int32_t p_x, int32_t p_y);
+			virtual void setPosition(int32_t p_x, int32_t p_y);
 			/** \brief Set position. */
-			void setPosition(const eve::vec2i & p_value);
+			virtual void setPosition(const eve::vec2i & p_value);
 			/** \brief Set position on X axis. */
-			void setPositionX(int32_t p_value);
+			virtual void setPositionX(int32_t p_value);
 			/** \brief Set position on Y axis. */
-			void setPositionY(int32_t p_value);
+			virtual void setPositionY(int32_t p_value);
 
 
 		public:
@@ -246,13 +247,13 @@ namespace eve
 			int32_t getHeight(void);
 
 			/** \brief Set size. */
-			void setSize(int32_t p_width, int32_t p_height);
+			virtual void setSize(int32_t p_width, int32_t p_height);
 			/** \brief Set size. */
-			void setSize(const eve::vec2i & p_value);
+			virtual void setSize(const eve::vec2i & p_value);
 			/** \brief Set width */
-			void setWidth(int32_t p_value);
+			virtual void setWidth(int32_t p_value);
 			/** \brief Set height */
-			void setHeight(int32_t p_value);
+			virtual void setHeight(int32_t p_value);
 
 
 		public:

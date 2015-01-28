@@ -93,6 +93,37 @@ namespace eve
 			/** \brief Release and delete threaded data. (pure virtual) */
 			virtual void releaseThreadedData(void) override;
 
+
+		public:
+			/** \brief Inflate object on both axis (rise its size) and propagate to children. */
+			virtual void inflate(int32_t p_width, int32_t p_height) override;
+			/** \brief Inflate object on X axis (rise its width) and propagate to children. */
+			virtual void inflateX(int32_t p_value) override;
+			/** \brief Inflate object on Y axis (rise its height) and propagate to children. */
+			virtual void inflateY(int32_t p_value) override;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set position. */
+			virtual void setPosition(int32_t p_x, int32_t p_y) override;
+			/** \brief Set position on X axis. */
+			virtual void setPositionX(int32_t p_value) override;
+			/** \brief Set position on Y axis. */
+			virtual void setPositionY(int32_t p_value) override;
+
+
+		public:
+			/** \brief Set size. */
+			virtual void setSize(int32_t p_width, int32_t p_height) override;
+			/** \brief Set width */
+			virtual void setWidth(int32_t p_value) override;
+			/** \brief Set height */
+			virtual void setHeight(int32_t p_value) override;
+
 		}; // class Frame
 
 	} // namespace ui

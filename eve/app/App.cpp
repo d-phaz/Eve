@@ -135,7 +135,7 @@ void eve::app::App::release(void)
 	eve::evt::unregister_events_application(this);
 
 	// View container.
-	eve::sys::View * view = nullptr;
+	eve::ui::View * view = nullptr;
 	while (!m_pVecViews->empty())
 	{
 		view = m_pVecViews->back();
@@ -193,7 +193,7 @@ bool eve::app::App::removeView(eve::ui::View * p_pView)
 	bool breturn = (itr != m_pVecViews->end());
 	if (breturn)
 	{
-		eve::sys::View * view = (*itr);
+		eve::ui::View * view = (*itr);
 		m_pVecViews->erase(itr);
 	}
 	
@@ -211,7 +211,7 @@ bool eve::app::App::releaseView(eve::ui::View * p_pView)
 	bool breturn = (itr != m_pVecViews->end());
 	if (breturn)
 	{
-		eve::sys::View * view = (*itr);
+		eve::ui::View * view = (*itr);
 		m_pVecViews->erase(itr);
 		EVE_RELEASE_PTR(view);
 	}

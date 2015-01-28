@@ -70,7 +70,12 @@ namespace eve
 			eve::ogl::SubContext *					m_pContext;			//!< Specifies OpenGL context pointer.
 
 			std::list<eve::core::Renderer*> *		m_pVecRenderers;	//!< Specifies render Engine(s) container.
-			
+
+		protected:
+			int64_t									m_baseWait;			//!< Specifies base wait time based on FPS.
+			int64_t									m_bufWait;			//!< Specifies calculated wait time.
+			int64_t									m_fps;				//!< Specifies target FPS (default to 30).
+			int64_t									m_elapsed;			//!< Specifies render elapsed time in milliseconds.
 			eve::time::Timer *						m_pTimerRender;		//!< Specifies timer used to compute FPS.
 
 
@@ -138,10 +143,29 @@ namespace eve
 			*/
 			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
 
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Get FPS based on rendering elapsed time. */
+			const float getFPS(void) const;
+			/** \brief Set target FPS. */
+			void setFPS(int64_t p_fps);
+
 		}; // class Node
 
 	} // namespace sys
 
 } // namespace eve
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+EVE_FORCE_INLINE const float eve::sys::Render::getFPS(void) const { return 1000.0f / static_cast<float>(m_elapsed > 1 ? m_elapsed : 1); }
 
 #endif // __EVE_SYSTEM_RENDER_H__

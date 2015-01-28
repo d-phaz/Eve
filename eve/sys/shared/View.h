@@ -109,45 +109,6 @@ namespace eve
 			*/
 			bool releaseRenderer(eve::core::Renderer * p_pRenderer);
 
-
-		public:
-			/** \brief File drop event handler. (pure virtual) */
-			virtual void cb_evtFileDrop(eve::evt::FileEventArgs & p_args) override{}
-
-
-			/** \brief Key down event handler. (pure virtual) */
-			virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override{}
-			/** \brief Key up event handler. (pure virtual) */
-			virtual void cb_evtKeyUp(eve::evt::KeyEventArgs & p_args) override{}
-			/** \brief Text input event handler. (pure virtual) */
-			virtual void cb_evtTextInput(eve::evt::TextEventArgs & p_args) override{}
-
-
-			/** \brief Mouse down event handler. (pure virtual) */
-			virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override{}
-			/** \brief Mouse wheel event handler. (pure virtual) */
-			virtual void cb_evtMouseWheel(eve::evt::MouseEventArgs & p_args) override{};
-			/** \brief Mouse up event handler. (pure virtual) */
-			virtual void cb_evtMouseUp(eve::evt::MouseEventArgs & p_args) override{}
-			/** \brief Mouse double click event handler. (pure virtual) */
-			virtual void cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args) override{}
-			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
-			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) override{}
-			/** \brief Mouse passive motion (no button pressed) event handler. (pure virtual) */
-			virtual void cb_evtPassiveMotion(eve::evt::MouseEventArgs & p_args) override{}
-
-
-			/** \brief Window resize event handler. (pure virtual) */
-			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg) override{}
-			/** \brief Window move event handler. (pure virtual) */
-			virtual void cb_evtWindowMove(eve::evt::MoveEventArgs & p_arg) override{}
-			/** \brief Window gain focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusGot(eve::evt::EventArgs & p_arg) override{}
-			/** \brief Window loose focus event handler. (pure virtual) */
-			virtual void cb_evtWindowFocusLost(eve::evt::EventArgs & p_arg) override{}
-			/** \brief Window close event handler. (pure virtual) */
-			virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) override{}
-
 		}; // class View
 
 	} // namespace sys
