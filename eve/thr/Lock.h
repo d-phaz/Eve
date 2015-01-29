@@ -53,7 +53,7 @@ namespace eve
 
 		/** 
 		* \class eve::thr::Lock
-		* \brief lock using critical section
+		* \brief lock using critical section.
 		* \note extends eve::thr::Fence
 		*/
 		class Lock
@@ -65,7 +65,11 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
+#if defined(EVE_OS_WIN)
 			CRITICAL_SECTION		m_criticalSections;
+#elif defined(EVE_OS_DARWIN)
+			pthread_mutex_t			m_mutex;		
+#endif
 
 
 			//////////////////////////////////////

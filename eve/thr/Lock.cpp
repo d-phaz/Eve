@@ -38,7 +38,11 @@ eve::thr::Lock::Lock(void)
 	// Inheritance
 	: eve::thr::Fence()
 	// Members init
+#if defined(EVE_OS_WIN)
 	, m_criticalSections()
+#elif defined(EVE_OS_DARWIN)
+	, m_mutex()
+#endif
 {}
 
 
@@ -46,14 +50,35 @@ eve::thr::Lock::Lock(void)
 //=================================================================================================
 void eve::thr::Lock::init(void)
 {
+#if defined(EVE_OS_WIN)
 	eve::mem::memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
 	::InitializeCriticalSection(&m_criticalSections);
+
+#elif defined(EVE_OS_DARWIN)
+	static const pthread_mutexattr_t attr = { PTHREAD_MUTEX_RECURSIVE };
+	if (pthread_mutex_init(&m_mutex, &attr) != 0)
+	{
+		EVE_LOG_ERROR("Unable to create mutex pthread_mutex_init() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
 
 //=================================================================================================
 void eve::thr::Lock::release(void)
 {
+#if defined(EVE_OS_WIN)
 	::DeleteCriticalSection(&m_criticalSections);
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_destroy(&m_mutex) != 0) 
+	{
+		EVE_LOG_ERROR("Unable to release mutex pthread_mutex_destroy() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
 
 
@@ -61,11 +86,31 @@ void eve::thr::Lock::release(void)
 //=============================================================================================
 void eve::thr::Lock::lock(void)
 {
+#if defined(EVE_OS_WIN)
 	::EnterCriticalSection(&m_criticalSections);
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_lock(&m_mutex) != 0)
+	{
+		EVE_LOG_ERROR("Unable to lock mutex pthread_mutex_lock() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
 	
 //=============================================================================================
 void eve::thr::Lock::unlock(void)
 {
+#if defined(EVE_OS_WIN)
 	::LeaveCriticalSection(&m_criticalSections);
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_unlock(&m_mutex) != 0)
+	{
+		EVE_LOG_ERROR("Unable to unlock mutex pthread_mutex_unlock() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
