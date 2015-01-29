@@ -90,8 +90,8 @@ bool eve::scene::Skeleton::init(const aiMesh * p_pMesh, const aiScene * p_pScene
 		m_numBones			 = numBones;
 
 		// Allocate arrays memory.
-		m_pBoneIndices = (eve::vec4ui*)malloc(sizeof(eve::vec4ui) * numVertices);
-		m_pWeights	   = (eve::vec4f*)malloc(sizeof(eve::vec4f) * numVertices);
+		m_pBoneIndices = (eve::vec4ui*)eve::mem::malloc(sizeof(eve::vec4ui) * numVertices);
+		m_pWeights	   = (eve::vec4f*)eve::mem::malloc(sizeof(eve::vec4f) * numVertices);
 
 		// Read bone indices and weights for bone animation.
 		std::vector<aiVertexWeight> * vTempWeightsPerVertex = new std::vector<aiVertexWeight>[numVertices];

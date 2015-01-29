@@ -186,7 +186,6 @@ void eve::ogl::Shader::oglInit(void)
 void eve::ogl::Shader::oglUpdate(void)
 {
 	this->oglRelease();
-	this->init();
 	this->oglInit();
 }
 
@@ -202,8 +201,6 @@ void eve::ogl::Shader::oglRelease(void)
 
 	glDeleteProgramPipelines(1, &m_id);
 	EVE_OGL_CHECK_ERROR;
-
-	this->release();
 }
 
 

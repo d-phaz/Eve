@@ -146,8 +146,8 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 		int32_t numIndices	= numFaces * 3;
 
 		// Allocate arrays memory.
-		float *  pVertices = (float*)malloc(numVertices * 8 * sizeof(float));
-		GLuint * pIndices  = (GLuint*)malloc(numIndices * sizeof(GLuint));
+		float *  pVertices = (float*)eve::mem::malloc(numVertices * 8 * sizeof(float));
+		GLuint * pIndices  = (GLuint*)eve::mem::malloc(numIndices * sizeof(GLuint));
 
 		float min_x = 0.0f;
 		float min_y = 0.0f;
@@ -296,8 +296,8 @@ void eve::scene::Mesh::init(void)
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4;
 	fmtUniform.dynamic	 = false;
-	fmtUniform.data		 = this->getMatrixModelView().data();
 	m_pUniformMatrix	 = m_pScene->create(fmtUniform);
+	m_pUniformMatrix->pushData(m_matrixModelView, 0);
 }
 
 //=================================================================================================
@@ -364,7 +364,7 @@ void eve::scene::Mesh::updateMatrixModelView(void)
 	// Call parent class.
 	eve::math::TMesh<float>::updateMatrixModelView();
 	// Update uniform buffer.
-	m_pUniformMatrix->setData(m_matrixModelView.data());
+	m_pUniformMatrix->pushData(m_matrixModelView, 0);
 }
 
 

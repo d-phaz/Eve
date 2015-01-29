@@ -120,6 +120,7 @@ namespace eve
 
 			operator T*() { return reinterpret_cast<T*>(m); }
 			operator const T*() const { return const_cast<T*>(m); }
+			T * ptr(void) const;
 
 			TMatrix22<T>&		operator=(const TMatrix22<T>& rhs);
 			TMatrix22<T>&		operator=(const T &rhs);
@@ -280,6 +281,11 @@ eve::math::TMatrix22<T>::TMatrix22(const eve::math::TMatrix22<T> & src)
 {
 	std::memcpy( m, src.m, MEM_LEN );
 }
+
+
+
+//=================================================================================================
+template< typename T > EVE_FORCE_INLINE T * eve::math::TMatrix22<T>::ptr(void) const { return const_cast<T*>(m); }
 
 
 

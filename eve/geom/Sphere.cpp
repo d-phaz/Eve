@@ -6,7 +6,7 @@
 //=================================================================================================
 GLuint * eve::geom::create_sphere_indices(int32_t p_segments)
 {
-	GLuint * indices = (GLuint*)malloc(((p_segments * p_segments) * 6) * sizeof(GLuint));
+	GLuint * indices = (GLuint*)eve::mem::malloc(((p_segments * p_segments) * 6) * sizeof(GLuint));
 	GLuint * ind = indices - 1;
 	for (int32_t r = 0; r < p_segments; r++)
 	{
@@ -30,7 +30,7 @@ GLuint * eve::geom::create_sphere_indices(int32_t p_segments)
 //=================================================================================================
 float * eve::geom::create_sphere_textured_vertices(const eve::vec3f & p_position, float p_radius, int32_t p_segments)
 {
-	float * vertices = (float*)malloc(((p_segments * p_segments) * 8) * sizeof(float));
+	float * vertices = (float*)eve::mem::malloc(((p_segments * p_segments) * 8) * sizeof(float));
 
 	float radius	= p_radius * 0.5f;
 	const float S	= 1.0f / static_cast<float>(p_segments - 1);
@@ -69,7 +69,7 @@ float * eve::geom::create_sphere_textured_vertices(const eve::vec3f & p_position
 //=================================================================================================
 float * eve::geom::create_sphere_colored_vertices(const eve::vec3f & p_position, float p_radius, const eve::color4f & p_color, int32_t p_segments)
 {
-	float * vertices = (float*)malloc(((p_segments * p_segments) * 10) * sizeof(float));
+	float * vertices = (float*)eve::mem::malloc(((p_segments * p_segments) * 10) * sizeof(float));
 
 	float radius	= p_radius * 0.5f;
 	const float S	= 1.0f / static_cast<float>(p_segments - 1);

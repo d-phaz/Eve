@@ -80,7 +80,6 @@ namespace eve
 
 			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
 			eve::ogl::Uniform *		m_pUniformMatrices;		//!< Specifies uniform buffer containing matrices.
-			mutable float *			m_pMatrices;			//!< Specifies matrices array pointer.
 
 
 			//////////////////////////////////////

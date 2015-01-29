@@ -40,7 +40,6 @@ eve::ogl::FormatUniform::FormatUniform(void)
 	// Members init
 	, blockSize(0)
 	, dynamic(false)
-	, data(nullptr)
 {}
 
 //=================================================================================================
@@ -54,7 +53,6 @@ eve::ogl::FormatUniform::FormatUniform(const eve::ogl::FormatUniform & p_other)
 	// Members init
 	, blockSize(p_other.blockSize)
 	, dynamic(p_other.dynamic)
-	, data(p_other.data)
 {}
 
 //=================================================================================================
@@ -64,7 +62,6 @@ const eve::ogl::FormatUniform & eve::ogl::FormatUniform::operator = (const eve::
 	{
 		this->blockSize = p_other.blockSize;
 		this->dynamic	= p_other.dynamic;
-		this->data		= p_other.data;
 	}
 	return *this;
 }
@@ -105,10 +102,8 @@ void eve::ogl::Uniform::setAttributes(eve::ogl::Format * p_format)
 
 	m_blockSize = format->blockSize;
 	m_bDynamic	= format->dynamic;
-	m_pData		= format->data;
 
 	EVE_ASSERT(m_blockSize);
-	EVE_ASSERT(m_pData);
 }
 
 
@@ -116,13 +111,16 @@ void eve::ogl::Uniform::setAttributes(eve::ogl::Format * p_format)
 //=================================================================================================
 void eve::ogl::Uniform::init(void)
 {
+	m_pData = (float*)eve::mem::align_malloc(16, m_blockSize);
+	eve::mem::align_memset_16(m_pData, 0, m_blockSize);
+
 	m_usage = m_bDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
 }
 
 //=================================================================================================
 void eve::ogl::Uniform::release(void)
 {
-	// Nothing to do for now.
+	eve::mem::align_free(m_pData);
 }
 
 
@@ -184,8 +182,6 @@ void eve::ogl::Uniform::oglRelease(void)
 {
 	glDeleteBuffers(1, &m_id);
 	EVE_OGL_CHECK_ERROR;
-
-	this->release();
 }
 
 
@@ -203,6 +199,61 @@ void eve::ogl::Uniform::oglUpdateData(float * p_data)
 
 	m_pData = p_data;
 	this->oglUpdate();
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(float * p_data, size_t p_size, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data, p_size);
+	this->requestOglUpdate();
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(const eve::math::TVec2<float> & p_data, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_VEC2);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(const eve::math::TVec3<float> & p_data, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_VEC3);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(const eve::math::TVec4<float> & p_data, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_VEC4);
+	this->requestOglUpdate();
+}
+
+
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(const eve::math::TMatrix22<float> & p_data, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_MAT2);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(const eve::math::TMatrix33<float> & p_data, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_MAT3);
+	this->requestOglUpdate();
+}
+
+//=================================================================================================
+void eve::ogl::Uniform::pushData(const eve::math::TMatrix44<float> & p_data, size_t p_padding)
+{
+	memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_MAT4);
+	this->requestOglUpdate();
 }
 
 
@@ -263,19 +314,4 @@ void eve::ogl::Uniform::unbind_skeleton(void)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, EVE_OGL_TRANSFORM_SKELETON, 0);
 	EVE_OGL_CHECK_ERROR;
-}
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-void eve::ogl::Uniform::setData(float * p_data)
-{
-	EVE_ASSERT(p_data);
-
-	m_pData = p_data;
-	this->requestOglUpdate();
 }

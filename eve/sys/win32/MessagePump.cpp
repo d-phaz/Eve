@@ -519,11 +519,11 @@ LRESULT eve::sys::MessagePump::handleDrop(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 	{
 		uint32_t nChar = ::DragQueryFileW( query, n, NULL, 0 );
 			
-		name = (wchar_t*)malloc((nChar + 1) * sizeof(wchar_t));
+		name = (wchar_t*)eve::mem::malloc((nChar + 1) * sizeof(wchar_t));
 		::DragQueryFileW(query, n, name, nChar + 1);
 
 		vecFiles.push_back(std::wstring(name));
-		free(name);
+		eve::mem::free(name);
 
 		n++;
 	}

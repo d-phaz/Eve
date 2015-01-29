@@ -136,14 +136,14 @@ void eve::mem::Pointer::release_ptr(T * p_pPtr)
 * \brief Release and nullify standard C pointer.
 */
 #define EVE_RELEASE_PTR_C( PTR )	\
-	free( PTR );					\
+	eve::mem::free( PTR );			\
 	PTR = 0;
 /**
 * \def EVE_RELEASE_PTR_C_SAFE
 * \brief Test, release and nullify standard C pointer.
 */
 #define EVE_RELEASE_PTR_C_SAFE( PTR )	\
-	if (PTR) { free( PTR );				\
+	if (PTR) { eve::mem::free( PTR );	\
 	PTR = 0; }
 
 

@@ -124,7 +124,7 @@ void eve::ogl::Fbo::init(void)
 		m_layers = (GL_COLOR | GL_DEPTH);
 		m_slotNum += 1;
 	}
-	m_pSlotTextureIds	= (GLuint*)malloc(sizeof(GLuint)* m_slotNum);
+	m_pSlotTextureIds	= (GLuint*)eve::mem::malloc(sizeof(GLuint)* m_slotNum);
 	m_black				= (float*)calloc(4, sizeof(float));
 }
 
@@ -234,8 +234,6 @@ void eve::ogl::Fbo::oglRelease(void)
 
 	glDeleteTextures(static_cast<GLsizei>(m_slotNum), m_pSlotTextureIds);
 	EVE_OGL_CHECK_ERROR;
-
-	this->release();
 }
 
 

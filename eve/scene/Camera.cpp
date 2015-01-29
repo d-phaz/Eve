@@ -78,7 +78,6 @@ eve::scene::Camera::Camera(eve::scene::Scene * p_pParentScene, eve::scene::Objec
 	, m_pAiCamera(nullptr)
 	, m_pVao(nullptr)
 	, m_pUniformMatrices(nullptr)
-	, m_pMatrices(nullptr)
 {}
 
 
@@ -160,15 +159,11 @@ bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pSce
 
 //=================================================================================================
 void eve::scene::Camera::init(void)
-{
-	// Matrices array.
-	m_pMatrices = (float*)eve::mem::align_malloc(16, EVE_OGL_SIZEOF_MAT4 * 2);
-	
+{	
 	// Uniform buffer.
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4 * 2;
 	fmtUniform.dynamic	 = false;
-	fmtUniform.data		 = m_pMatrices;
 	m_pUniformMatrices	 = m_pScene->create(fmtUniform);
 
 	// Call parent class.
@@ -187,8 +182,6 @@ void eve::scene::Camera::release(void)
 	// Do not delete -> shared pointer.
 	m_pAiCamera = nullptr;
 
-	eve::mem::align_free(m_pMatrices);
-
 	// Call parent class.
 	eve::scene::Object::release();
 	eve::math::TCamera<float>::release();
@@ -202,9 +195,7 @@ void eve::scene::Camera::calcModelView(void) const
 	// Call parent class.
 	eve::math::TCamera<float>::calcModelView();
 	// Update uniform buffer.
-	memcpy(m_pMatrices, this->getMatrixModelView().data(), EVE_OGL_SIZEOF_MAT4);
-	m_pUniformMatrices->setData(m_pMatrices);
-	//m_pUniformMatrices->setData(this->getMatrixModelViewProjection().data());
+	m_pUniformMatrices->pushData(this->getMatrixModelView(), 0);
 }
 
 //=================================================================================================
@@ -213,9 +204,7 @@ void eve::scene::Camera::calcProjection(void) const
 	// Call parent class.
 	eve::math::TCamera<float>::calcProjection();
 	// Update uniform buffer.
-	memcpy(m_pMatrices + 16, this->getMatrixProjection().data(), EVE_OGL_SIZEOF_MAT4);
-	m_pUniformMatrices->setData(m_pMatrices);
-	//m_pUniformMatrices->setData(this->getMatrixModelViewProjection().data());
+	m_pUniformMatrices->pushData(this->getMatrixProjection(), EVE_OGL_PADDING_MAT4);
 }
 
 

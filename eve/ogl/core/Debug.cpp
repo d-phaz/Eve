@@ -120,16 +120,16 @@ void eve::ogl::check_shader_program(wchar_t * p_pFunction, wchar_t * p_pFile, in
 		glGetProgramiv(p_programId, GL_INFO_LOG_LENGTH, &logLength);
 
 		size_t size = std::max(logLength, 1);
-		char * buf = (char*)malloc(size *sizeof(char));
+		char * buf = (char*)eve::mem::malloc(size *sizeof(char));
 		glGetProgramInfoLog(p_programId, logLength, NULL, buf);
 
-		wchar_t * wbuf = (wchar_t*)malloc(size * sizeof(wchar_t));
+		wchar_t * wbuf = (wchar_t*)eve::mem::malloc(size * sizeof(wchar_t));
 		mbstowcs(wbuf, buf, size);
 
 		EVE_LOG_ERROR("OpenGL Error: in function %s in file %s at line %d Shader program link failed: %s.", p_pFunction, p_pFile, p_line, wbuf);
 
-		free(wbuf);
-		free(buf);
+		eve::mem::free(wbuf);
+		eve::mem::free(buf);
 
 		EVE_ASSERT_FAILURE;
 	}

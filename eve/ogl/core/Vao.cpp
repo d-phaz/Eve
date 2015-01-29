@@ -259,8 +259,6 @@ void eve::ogl::Vao::oglRelease(void)
 	glDeleteBuffers(1, &m_arrayBufferId);
 	glDeleteBuffers(1, &m_elementBufferId);
 	EVE_OGL_CHECK_ERROR;
-
-	this->release();
 }
 
 
@@ -309,7 +307,7 @@ void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
 
 
 	// Copy original vertices.
-	float * vertices = (float*)malloc((m_numVertices + addedVerts) * m_verticesStride);
+	float * vertices = (float*)eve::mem::malloc((m_numVertices + addedVerts) * m_verticesStride);
 	memcpy(vertices, m_pVertices.get(), m_numVertices * m_verticesStride);
 	// Add new vertices.
 	float * verts	 = vertices + (m_numVertices * m_verticesStrideUnit);
@@ -319,7 +317,7 @@ void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
 
 
 	// Copy original indices.
-	GLuint * indices = (GLuint*)malloc((m_numIndices + addedInds) * sizeof(GLuint));
+	GLuint * indices = (GLuint*)eve::mem::malloc((m_numIndices + addedInds) * sizeof(GLuint));
 	memcpy(indices, m_pIndices.get(), (m_numIndices * sizeof(GLuint)));
 	// Add new indices, incremented of original vertices number.
 	GLuint * inds	 = indices + m_numIndices - 1;

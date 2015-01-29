@@ -31,3 +31,25 @@
 
 // Main header
 #include "eve/mem/Allocator.h"
+
+
+//=================================================================================================
+void eve::mem::check_heap(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line)
+{
+#if defined(EVE_OS_WIN)
+	int32_t	heapstatus = _heapchk();
+	switch (heapstatus)
+	{
+	case _HEAPEMPTY:	EVE_LOG_INFO("Heap is empty in function %s in file %s at line %d.", p_pFunction, p_pFile, p_line);
+	case _HEAPOK:		break;
+
+	case _HEAPBADBEGIN:	EVE_LOG_ERROR("Bad start of heap in function %s in file %s at line %d.", p_pFunction, p_pFile, p_line);			EVE_ASSERT_FAILURE;	break;
+	case _HEAPBADNODE:	EVE_LOG_ERROR("Bad node in heap in function %s in file %s at line %d.", p_pFunction, p_pFile, p_line);			EVE_ASSERT_FAILURE;	break;
+	default:			EVE_LOG_ERROR("heap_check() call error in function %s in file %s at line %d.", p_pFunction, p_pFile, p_line);	EVE_ASSERT_FAILURE;	break;
+	}
+
+#else
+	
+	// Do nothing.
+#endif
+}

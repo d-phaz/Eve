@@ -131,6 +131,7 @@ namespace eve
 
 			operator T*() { return (T*)m; }
 			operator const T*() const { return (const T*)m; }
+			T * ptr(void) const;
 
 			TMatrix33<T>&		operator=(const TMatrix33<T>& rhs);
 			TMatrix33<T>&		operator=(T rhs);
@@ -316,6 +317,13 @@ eve::math::TMatrix33<T>::TMatrix33(const eve::math::TMatrix33<T>& src)
 {
 	std::memcpy( m, src.m, MEM_LEN );
 }
+
+
+
+//=================================================================================================
+template< typename T > EVE_FORCE_INLINE T * eve::math::TMatrix33<T>::ptr(void) const { return const_cast<T*>(m); }
+
+
 
 template< typename T >
 eve::math::TMatrix33<T> & eve::math::TMatrix33<T>::operator=(const eve::math::TMatrix33<T>& rhs)

@@ -265,10 +265,10 @@ eve::ogl::PixelFormat eve::ogl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, in
     eve::ogl::PixelFormat fmt;
 
 	// Attributes
-    int32_t * iAttributes = (int32_t*)malloc( sizeof(int32_t)*14 );
+	int32_t * iAttributes = (int32_t*)eve::mem::malloc(sizeof(int32_t)* 14);
 	memset( iAttributes, 0, sizeof(int32_t)*14 );
 
-    int32_t * iValues = (int32_t*)malloc( sizeof(int32_t) * 14 );
+	int32_t * iValues = (int32_t*)eve::mem::malloc(sizeof(int32_t)* 14);
 	memset( iValues, 0, sizeof(int32_t)*14 );
 
 	// Inc
@@ -344,8 +344,8 @@ eve::ogl::PixelFormat eve::ogl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, in
     }
 
 	// Free memory
-	free( iAttributes );
-	free( iValues );
+	eve::mem::free(iAttributes);
+	eve::mem::free(iValues);
 
     return fmt;
 }

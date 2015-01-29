@@ -109,7 +109,7 @@ std::string eve::io::load_program(const std::string & p_filePath, const char * p
 		szPreambleLength = strlen(p_preamble);
 	}
 
-	char * cSourceString = (char*)malloc(szSourceLength + szPreambleLength + 1);
+	char * cSourceString = (char*)eve::mem::malloc(szSourceLength + szPreambleLength + 1);
 
 	if (p_preamble)
 	{
@@ -119,7 +119,7 @@ std::string eve::io::load_program(const std::string & p_filePath, const char * p
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)
 	{
 		fclose(pFileStream);
-		free(cSourceString);
+		eve::mem::free(cSourceString);
 
 		// File read failed.
 		EVE_ASSERT_FAILURE;
@@ -135,6 +135,6 @@ std::string eve::io::load_program(const std::string & p_filePath, const char * p
 	cSourceString[szSourceLength + szPreambleLength] = '\0';
 
 	std::string ret(cSourceString);
-	free(cSourceString);
+	eve::mem::free(cSourceString);
 	return ret;
 }
