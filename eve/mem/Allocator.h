@@ -60,8 +60,10 @@ namespace eve
 		void * realloc(void * p_pPtr, size_t p_size);
 		/** \brief Sets the first p_size p_byte of the block of memory pointed by ptr to the specified p_byte (interpreted as an unsigned char). */
 		void memset(void * p_pPtr, int32_t p_byte, size_t p_size);
-		/** \brief Copies the values of p_size byte from the location pointed by source directly to the memory block pointed by destination. */
+		/** \brief Copies the values of p_size byte from the location pointed by p_pSrc directly to the memory block pointed by p_pDest. */
 		void memcpy(void * p_pDest, const void * p_pSrc, size_t p_size);
+		/** \brief Copies the content of the location pointed by p_pSrc directly to the memory block pointed by p_pDest for p_num elements. */
+		template<class T> void copy(T * p_pDest, T * p_pSrc, size_t p_num);
 		/** \brief C-style memory free. */
 		void free(void * p_pPtr);
 
@@ -153,6 +155,15 @@ EVE_FORCE_INLINE void eve::mem::memcpy(void * p_pDest, const void * p_pSrc, size
 	EVE_ASSERT(p_pDest);
 	EVE_ASSERT(p_pSrc);
 	std::memcpy(p_pDest, p_pSrc, p_size);
+	EVE_MEM_CHECK;
+}
+
+//=================================================================================================
+template<class T> EVE_FORCE_INLINE void eve::mem::copy(T * p_pDest, T * p_pSrc, size_t p_num)
+{
+	EVE_ASSERT(p_pDest);
+	EVE_ASSERT(p_pSrc);
+	std::copy(p_pSrc, p_pSrc + p_num, p_pDest);
 	EVE_MEM_CHECK;
 }
 

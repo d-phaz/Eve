@@ -178,7 +178,7 @@ namespace eve
 
 		public:
 			/** \brief Push data in uniform buffer data using memory position padding and request update. */
-			void pushData(float * p_data, size_t p_size, size_t p_padding);
+			void pushData(float * p_data, size_t p_num, size_t p_padding);
 
 
 			/** \brief Push vector in uniform buffer data using memory position padding and request update. */

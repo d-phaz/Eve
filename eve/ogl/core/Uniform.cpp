@@ -204,9 +204,9 @@ void eve::ogl::Uniform::oglUpdateData(float * p_data)
 
 
 //=================================================================================================
-void eve::ogl::Uniform::pushData(float * p_data, size_t p_size, size_t p_padding)
+void eve::ogl::Uniform::pushData(float * p_data, size_t p_num, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data, p_size);
+	eve::mem::copy(m_pData + p_padding, p_data, p_num);
 	this->requestOglUpdate();
 }
 
@@ -215,21 +215,21 @@ void eve::ogl::Uniform::pushData(float * p_data, size_t p_size, size_t p_padding
 //=================================================================================================
 void eve::ogl::Uniform::pushData(const eve::math::TVec2<float> & p_data, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_VEC2);
+	eve::mem::copy(m_pData + p_padding, p_data.ptr(), EVE_OGL_PADDING_VEC2);
 	this->requestOglUpdate();
 }
 
 //=================================================================================================
 void eve::ogl::Uniform::pushData(const eve::math::TVec3<float> & p_data, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_VEC3);
+	eve::mem::copy(m_pData + p_padding, p_data.ptr(), EVE_OGL_PADDING_VEC3);
 	this->requestOglUpdate();
 }
 
 //=================================================================================================
 void eve::ogl::Uniform::pushData(const eve::math::TVec4<float> & p_data, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_VEC4);
+	eve::mem::copy(m_pData + p_padding, p_data.ptr(), EVE_OGL_PADDING_VEC4);
 	this->requestOglUpdate();
 }
 
@@ -238,21 +238,21 @@ void eve::ogl::Uniform::pushData(const eve::math::TVec4<float> & p_data, size_t 
 //=================================================================================================
 void eve::ogl::Uniform::pushData(const eve::math::TMatrix22<float> & p_data, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_MAT2);
+	eve::mem::copy(m_pData + p_padding, p_data.ptr(), EVE_OGL_PADDING_MAT2);
 	this->requestOglUpdate();
 }
 
 //=================================================================================================
 void eve::ogl::Uniform::pushData(const eve::math::TMatrix33<float> & p_data, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_MAT3);
+	eve::mem::copy(m_pData + p_padding, p_data.ptr(), EVE_OGL_PADDING_MAT3);
 	this->requestOglUpdate();
 }
 
 //=================================================================================================
 void eve::ogl::Uniform::pushData(const eve::math::TMatrix44<float> & p_data, size_t p_padding)
 {
-	eve::mem::memcpy(m_pData + p_padding, p_data.ptr(), EVE_OGL_SIZEOF_MAT4);
+	eve::mem::copy(m_pData + p_padding, p_data.ptr(), EVE_OGL_PADDING_MAT4);
 	this->requestOglUpdate();
 }
 
