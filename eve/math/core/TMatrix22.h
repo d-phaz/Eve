@@ -279,7 +279,7 @@ eve::math::TMatrix22<T>::TMatrix22(const eve::math::TMatrix22<FromT>& src)
 template< class T >
 eve::math::TMatrix22<T>::TMatrix22(const eve::math::TMatrix22<T> & src)
 {
-	std::memcpy( m, src.m, MEM_LEN );
+	eve::mem::memcpy(m, src.m, MEM_LEN);
 }
 
 
@@ -293,7 +293,7 @@ template< typename T > EVE_FORCE_INLINE T * eve::math::TMatrix22<T>::ptr(void) c
 template< class T >
 eve::math::TMatrix22<T> & eve::math::TMatrix22<T>::operator=(const eve::math::TMatrix22<T>& rhs)
 {
-	std::memcpy( m, rhs.m, MEM_LEN );
+	eve::mem::memcpy(m, rhs.m, MEM_LEN);
 	return *this;
 }
 
@@ -303,7 +303,7 @@ eve::math::TMatrix22<T> & eve::math::TMatrix22<T>::operator=(const T & rhs)
 	//for( int32_t i = 0; i < DIM_SQ; ++i ) {
 	//	m[i] = rhs;
 	//}
-	std::memset(m, rhs, MEM_LEN);
+	eve::mem::memset(m, rhs, MEM_LEN);
 	return *this;
 }
 
@@ -511,7 +511,7 @@ void eve::math::TMatrix22<T>::set(const T *dt, bool srcIsRowMajor)
 		m10 = dt[1]; m11 = dt[3];
 	}
 	else {
-		std::memcpy( m, dt, MEM_LEN );
+		eve::mem::memcpy(m, dt, MEM_LEN);
 	}
 }
 
@@ -587,7 +587,7 @@ void eve::math::TMatrix22<T>::setRows(const eve::math::TVec2<T> &r0, const eve::
 template< class T >
 void eve::math::TMatrix22<T>::setToNull(void)
 {
-	std::memset( m, 0, MEM_LEN );
+	eve::mem::memset(m, 0, MEM_LEN);
 }
 
 template< class T >

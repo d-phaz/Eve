@@ -58,8 +58,10 @@ namespace eve
 		void * calloc(size_t p_num, size_t p_size);
 		/** \brief Changes the p_size of the memory block pointed to by p_pPtr. The function may move the memory block to a new location (whose address is returned by the function). */
 		void * realloc(void * p_pPtr, size_t p_size);
-		/** \brief Sets the first p_size bytes of the block of memory pointed by ptr to the specified p_byte (interpreted as an unsigned char). */
+		/** \brief Sets the first p_size p_byte of the block of memory pointed by ptr to the specified p_byte (interpreted as an unsigned char). */
 		void memset(void * p_pPtr, int32_t p_byte, size_t p_size);
+		/** \brief Copies the values of p_size byte from the location pointed by source directly to the memory block pointed by destination. */
+		void memcpy(void * p_pDest, const void * p_pSrc, size_t p_size);
 		/** \brief C-style memory free. */
 		void free(void * p_pPtr);
 
@@ -142,6 +144,15 @@ EVE_FORCE_INLINE void eve::mem::memset(void * p_pPtr, int32_t p_byte, size_t p_s
 {
 	EVE_ASSERT(p_pPtr);
 	std::memset(p_pPtr, p_byte, p_size);
+	EVE_MEM_CHECK;
+}
+
+//=================================================================================================
+EVE_FORCE_INLINE void eve::mem::memcpy(void * p_pDest, const void * p_pSrc, size_t p_size)
+{
+	EVE_ASSERT(p_pDest);
+	EVE_ASSERT(p_pSrc);
+	std::memcpy(p_pDest, p_pSrc, p_size);
 	EVE_MEM_CHECK;
 }
 

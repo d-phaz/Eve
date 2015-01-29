@@ -462,7 +462,7 @@ eve::math::TMatrix44<T>::TMatrix44(const eve::math::TMatrix33<T>& src)
 template< typename T >
 eve::math::TMatrix44<T>::TMatrix44(const eve::math::TMatrix44<T>& src)
 {
-	std::memcpy( m, src.m, MEM_LEN );
+	eve::mem::memcpy(m, src.m, MEM_LEN);
 }
 
 
@@ -476,7 +476,7 @@ template< typename T > EVE_FORCE_INLINE T * eve::math::TMatrix44<T>::ptr(void) c
 template< typename T >
 eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix44<T>& rhs)
 {
-	std::memcpy( m, rhs.m, MEM_LEN );
+	eve::mem::memcpy(m, rhs.m, MEM_LEN);
 	return *this;
 }
 
@@ -780,7 +780,7 @@ void eve::math::TMatrix44<T>::set(const T *dt, bool srcIsRowMajor)
 		m[3] = dt[12]; m[7] = dt[13]; m[11] = dt[14]; m[15] = dt[15];
 	}
 	else {
-		std::memcpy( m, dt, MEM_LEN );
+		eve::mem::memcpy(m, dt, MEM_LEN);
 	}
 }
 
@@ -952,11 +952,11 @@ eve::math::TMatrix33<T> eve::math::TMatrix44<T>::subMatrix33(int32_t row, int32_
 template< typename T >
 void eve::math::TMatrix44<T>::setToNull()
 {
-	//std::memset( m, 0, MEM_LEN );
-	m[ 0] = 0; m[ 4] = 0; m[ 8] = 0; m[12] = 0;
-	m[ 1] = 0; m[ 5] = 0; m[ 9] = 0; m[13] = 0;
-	m[ 2] = 0; m[ 6] = 0; m[10] = 0; m[14] = 0;
-	m[ 3] = 0; m[ 7] = 0; m[11] = 0; m[15] = 0;
+	eve::mem::memset( m, 0, MEM_LEN );
+// 	m[ 0] = 0; m[ 4] = 0; m[ 8] = 0; m[12] = 0;
+// 	m[ 1] = 0; m[ 5] = 0; m[ 9] = 0; m[13] = 0;
+// 	m[ 2] = 0; m[ 6] = 0; m[10] = 0; m[14] = 0;
+// 	m[ 3] = 0; m[ 7] = 0; m[11] = 0; m[15] = 0;
 }
 
 //=================================================================================================

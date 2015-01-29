@@ -41,12 +41,8 @@
 #include "eve/thr/Thread.h"
 #endif 
 
-#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
-#include "eve/sys/win32/WindowRoot.h"
-#endif
-
-#ifndef __EVE_SYSTEM_WINDOW_CHILD_H__
-#include "eve/sys/win32/WindowChild.h"
+#ifndef __EVE_SYSTEM_WINDOW_H__
+#include "eve/sys/win32/Window.h"
 #endif
 
 

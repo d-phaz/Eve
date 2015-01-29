@@ -73,6 +73,21 @@ LONG eve::sys::Window::m_ex_style_fullscreen = WS_EX_APPWINDOW;
 
 
 //=================================================================================================
+eve::sys::Window * eve::sys::Window::create_ptr(int32_t p_x
+											   , int32_t p_y
+											   , uint32_t p_width
+											   , uint32_t p_height
+											   , eve::sys::WindowType p_type
+											   , HWND p_parent)
+{
+	eve::sys::Window * ptr = new eve::sys::Window(p_x, p_y, p_width, p_height, p_type, p_parent);
+	ptr->init();
+	return ptr;
+}
+
+
+
+//=================================================================================================
 eve::sys::Window::Window(int32_t p_x 
 					   , int32_t p_y
 					   , uint32_t p_width

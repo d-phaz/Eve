@@ -120,12 +120,12 @@ void eve::sys::Node::initThreadedData(void)
 	{
 	case eve::sys::WindowType_App:
 	case eve::sys::WindowType_Output:
-		m_pWindow = eve::sys::WindowRoot::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.windowType);
+		m_pWindow = eve::sys::Window::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.windowType);
 		break;
 
 	case eve::sys::WindowType_Child:
 		EVE_ASSERT(m_pParent);
-		m_pWindow = eve::sys::WindowChild::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_pParent->m_pWindow->getHandle());
+		m_pWindow = eve::sys::Window::create_ptr(m_format.x, m_format.y, m_format.width, m_format.height, m_format.windowType, m_pParent->m_pWindow->getHandle());
 		break;
 
 	case eve::sys::WindowType_Unknown:

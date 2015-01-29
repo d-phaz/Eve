@@ -122,6 +122,22 @@ namespace eve
 			EVE_DISABLE_COPY(Window);
 			EVE_PUBLIC_DESTRUCTOR(Window);
 
+		public:
+			/**
+			* \brief Create and return new pointer.
+			* \param p_x is the Window position on X-axis.
+			* \param p_y is the Window position on Y-axis.
+			* \param p_width is the Window width.
+			* \param p_height is the Window height.
+			* \param p_parent parent window handle.
+			*/
+			static eve::sys::Window * create_ptr(int32_t p_x
+											   , int32_t p_y
+											   , uint32_t p_width
+											   , uint32_t p_height
+											   , eve::sys::WindowType p_type
+											   , HWND p_parent = nullptr);
+
 
 		public:
 			/** 

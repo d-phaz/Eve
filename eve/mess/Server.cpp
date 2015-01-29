@@ -61,7 +61,7 @@ static wchar_t * get_current_date(void)
 	struct tm timestamp;
 	localtime_s(&timestamp, &curTime);
 
-	memset(strCurrDate, 0, sizeof(strCurrDate));
+	eve::mem::memset(strCurrDate, 0, sizeof(strCurrDate));
 	swprintf(strCurrDate, sizeof(strCurrDate), EVE_TXT("[%04d-%02d-%02d %02d:%02d]"), timestamp.tm_year + 1900, timestamp.tm_mon + 1, timestamp.tm_mday, timestamp.tm_hour, timestamp.tm_min);
 
 	return strCurrDate;

@@ -46,7 +46,7 @@ eve::thr::Lock::Lock(void)
 //=================================================================================================
 void eve::thr::Lock::init(void)
 {
-	memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
+	eve::mem::memset(&m_criticalSections, 0, sizeof(CRITICAL_SECTION));
 	::InitializeCriticalSection(&m_criticalSections);
 }
 

@@ -131,6 +131,6 @@ bool eve::thr::equal_ID(DWORD inLeft, DWORD inRight)
 DWORD eve::thr::zero_ID(void)
 {
 	DWORD a;
-	memset(&a, 0, sizeof(a));
+	eve::mem::memset(&a, 0, sizeof(a));
 	return a;
 }

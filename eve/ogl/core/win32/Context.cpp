@@ -42,8 +42,8 @@
 #endif
 #endif
 
-#ifndef __EVE_SYSTEM_WINDOW_ROOT_H__
-#include "eve/sys/win32/WindowRoot.h"
+#ifndef __EVE_SYSTEM_WINDOW_H__
+#include "eve/sys/win32/Window.h"
 #endif
 
 #ifndef __EVE_SYSTEM_NOTIFICATION_H__
@@ -103,7 +103,7 @@ void eve::ogl::Context::init(void)
 	m_pixelFormat = eve::ogl::PixelFormat::default_format();
 
 	// Create dummy window.
-	eve::sys::Window * win = eve::sys::WindowRoot::create_ptr(0, 0, 1, 1, eve::sys::WindowType_Output);
+	eve::sys::Window * win = eve::sys::Window::create_ptr(0, 0, 1, 1, eve::sys::WindowType_Output);
 
 	// Initialize OpenGL drawing device.
 	m_hDC = ::GetDC(win->getHandle());
