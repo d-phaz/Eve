@@ -111,7 +111,7 @@ namespace eve
 			void updateMatrixRotation(void);
 			/** \brief Update translation matrix. */
 			void updateMatrixTranslation(void);
-			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
+			/** \brief Update model view matrix based on rot/trans matrices concatenation. */
 			virtual void updateMatrixModelView(void);
 
 
@@ -486,4 +486,4 @@ template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TLig
 template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TLight<T>::getMatrixTranslation(void) const	{ return m_matrixTranslation;	}
 template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TLight<T>::getMatrixModelView(void) const	{ return m_matrixModelView;		}
 
-#endif // __EVE_MATH_TMESH_H__
+#endif // __EVE_MATH_TLIGHT_H__

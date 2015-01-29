@@ -42,10 +42,6 @@
 #include "eve/scene/EventListener.h"
 #endif
 
-#ifndef __EVE_MATH_TCAMERA_H__
-#include "eve/math/TCamera.h"
-#endif
-
 #ifndef __EVE_MATH_INCLUDES_H__
 #include "eve/math/Includes.h"
 #endif
@@ -63,12 +59,12 @@ namespace eve
 		/** 
 		* \class eve::scene::Camera
 		* \brief Scene camera object.
-		* \note extends eve::scene::Object, eve::scene::EventListenerSceneCamera, eve::math::TCamera
+		* \note extends eve::scene::Object, eve::scene::EventListenerSceneCamera, eve::math::Camera
 		*/
 		class Camera
 			: public eve::scene::Object
 			, public eve::scene::EventListenerSceneCamera
-			, public eve::math::TCamera<float>
+			, public eve::math::Camera
 		{
 
 			//////////////////////////////////////

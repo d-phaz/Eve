@@ -42,10 +42,6 @@
 #include "eve/scene/EventListener.h"
 #endif
 
-#ifndef __EVE_MATH_TMESH_H__
-#include "eve/math/TMesh.h"
-#endif
-
 #ifndef __EVE_MATH_INCLUDES_H__
 #include "eve/math/Includes.h"
 #endif
@@ -66,12 +62,12 @@ namespace eve
 		/** 
 		* \class eve::scene::Mesh
 		* \brief Scene mesh object.
-		* \note extends eve::scene::Object, eve::scene::EventListenerSceneObject, eve::math::TMesh
+		* \note extends eve::scene::Object, eve::scene::EventListenerSceneObject, eve::math::Mesh
 		*/
 		class Mesh
 			: public eve::scene::Object
 			, public eve::scene::EventListenerSceneObject
-			, public eve::math::TMesh<float>
+			, public eve::math::Mesh
 		{
 
 			//////////////////////////////////////

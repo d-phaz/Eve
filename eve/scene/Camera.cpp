@@ -72,7 +72,7 @@ eve::scene::Camera::Camera(eve::scene::Scene * p_pParentScene, eve::scene::Objec
 	// Inheritance
 	: eve::scene::Object(p_pParentScene, p_pParent, SceneObject_Camera)
 	, eve::scene::EventListenerSceneCamera()
-	, eve::math::TCamera<float>()
+	, eve::math::Camera()
 
 	// Members init
 	, m_pAiCamera(nullptr)
@@ -168,7 +168,7 @@ void eve::scene::Camera::init(void)
 
 	// Call parent class.
 	eve::scene::Object::init();
-	eve::math::TCamera<float>::init();
+	eve::math::Camera::init();
 }
 
 //=================================================================================================
@@ -184,7 +184,7 @@ void eve::scene::Camera::release(void)
 
 	// Call parent class.
 	eve::scene::Object::release();
-	eve::math::TCamera<float>::release();
+	eve::math::Camera::release();
 }
 
 
@@ -193,7 +193,7 @@ void eve::scene::Camera::release(void)
 void eve::scene::Camera::calcModelView(void) const
 {
 	// Call parent class.
-	eve::math::TCamera<float>::calcModelView();
+	eve::math::Camera::calcModelView();
 	// Update uniform buffer.
 	m_pUniformMatrices->pushData(this->getMatrixModelView(), 0);
 }
@@ -202,7 +202,7 @@ void eve::scene::Camera::calcModelView(void) const
 void eve::scene::Camera::calcProjection(void) const
 {
 	// Call parent class.
-	eve::math::TCamera<float>::calcProjection();
+	eve::math::Camera::calcProjection();
 	// Update uniform buffer.
 	m_pUniformMatrices->pushData(this->getMatrixProjection(), EVE_OGL_PADDING_MAT4);
 }
