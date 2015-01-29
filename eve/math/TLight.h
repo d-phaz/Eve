@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_MATH_TMESH_H__
-#define __EVE_MATH_TMESH_H__
+#ifndef __EVE_MATH_TLIGHT_H__
+#define __EVE_MATH_TLIGHT_H__
 
 #ifndef __EVE_MEMORY_INCLUDES_H__
 #include "eve/mem/Includes.h"
@@ -56,14 +56,14 @@ namespace eve
 	{
 
 		/** 
-		* \class eve::math::TMesh
+		* \class eve::math::TLight
 		*
-		* \brief Template 3D object math and manipulation, using RTS matrix order.
+		* \brief Template 3D light math and manipulation, using RT matrix order.
 		*
 		* \note extends eve::mem::Pointer
 		*/
 		template <typename T>
-		class TMesh
+		class TLight
 			: public eve::mem::Pointer
 		{
 
@@ -74,11 +74,9 @@ namespace eve
 		protected:
 			mutable eve::math::TVec3<T>			m_rotation;						//!< Specifies Rotation (radians).
 			mutable eve::math::TVec3<T>			m_translation;					//!< Specifies translation.
-			mutable eve::math::TVec3<T>			m_scale;						//!< Specifies scale.
 
 			mutable eve::math::TMatrix44<T>		m_matrixRotation;				//!< Specifies rotation matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixTranslation;			//!< Specifies translation matrix.
-			mutable eve::math::TMatrix44<T>		m_matrixScale;					//!< Specifies scale matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixModelView;				//!< Specifies model view matrix.
 
 
@@ -86,19 +84,19 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_ASSIGNATION(TMesh);
-			EVE_PUBLIC_DESTRUCTOR(TMesh);
+			EVE_DISABLE_ASSIGNATION(TLight);
+			EVE_PUBLIC_DESTRUCTOR(TLight);
 
 		public:
 			/** \brief Create new pointer, copy of \p_parent. */
-			static eve::math::TMesh<T> * create_ptr(const TMesh<T> & p_parent);
+			static eve::math::TLight<T> * create_ptr(const TLight<T> & p_parent);
 
 			
 		public:
 			/** \brief Class constructor. */
-			explicit TMesh(void);
+			explicit TLight(void);
 			/** \brief Copy constructor. */
-			explicit TMesh(const TMesh<T> & p_parent);
+			explicit TLight(const TLight<T> & p_parent);
 
 
 		public:
@@ -113,8 +111,6 @@ namespace eve
 			void updateMatrixRotation(void);
 			/** \brief Update translation matrix. */
 			void updateMatrixTranslation(void);
-			/** \brief Update scale matrix. */
-			void updateMatrixScale(void);
 			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
 			virtual void updateMatrixModelView(void);
 
@@ -143,19 +139,6 @@ namespace eve
 			void translateY(T p_translationY);
 			/** \brief Translate object on Z-axis. */
 			void translateZ(T p_translationZ);
-
-
-		public:
-			/** \brief Scale object. */
-			void scale(const eve::math::TVec3<T> & p_scale);
-			/** \brief Scale object. */
-			void scale(T p_x, T p_y, T p_z);
-			/** \brief Scale object on X-axis. */
-			void scaleX(T p_scaleX);
-			/** \brief Scale object on Y-axis. */
-			void scaleY(T p_scaleY);
-			/** \brief Scale object on Z-axis. */
-			void scaleZ(T p_scaleZ);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -207,38 +190,14 @@ namespace eve
 
 
 		public:
-			/** \brief Get scale. */
-			const eve::math::TVec3<T> & getScale(void) const;
-			/** \brief Get scale on X-axis. */
-			const T getScaleX(void) const;
-			/** \brief Get scale on Y-axis. */
-			const T getScaleY(void) const;
-			/** \brief Get scale on Z-axis. */
-			const T getScaleZ(void) const;
-
-			/** \brief Set scale. */
-			void setScale(const eve::math::TVec3<T> & p_value);
-			/** \brief Set scale. */
-			void setScale(T p_x, T p_y, T p_z);
-			/** \brief Set scale on X-axis. */
-			void setScaleX(T p_value);
-			/** \brief Set scale on Y-axis. */
-			void setScaleY(T p_value);
-			/** \brief Set scale on Z-axis. */
-			void setScaleZ(T p_value);
-
-
-		public:
 			/** \brief Get rotation matrix. */
 			eve::math::TMatrix44<T> & getMatrixRotation(void) const;
 			/** \brief Get translation matrix. */
 			eve::math::TMatrix44<T> & getMatrixTranslation(void) const;
-			/** \brief Get scale matrix. */
-			eve::math::TMatrix44<T> & getMatrixScale(void) const;
 			/** \brief Get model view matrix. */
 			eve::math::TMatrix44<T> & getMatrixModelView(void) const;
 
-		}; // class TMesh
+		}; // class TLight
 
 	} // namespace math
 
@@ -247,9 +206,9 @@ namespace eve
 
 //=================================================================================================
 template <typename T>
-eve::math::TMesh<T> * eve::math::TMesh<T>::create_ptr(const eve::math::TMesh<T> & p_parent)
+eve::math::TLight<T> * eve::math::TLight<T>::create_ptr(const eve::math::TLight<T> & p_parent)
 {
-	eve::math::TMesh<T> * ptr = new eve::math::TMesh<T>(p_parent);
+	eve::math::TLight<T> * ptr = new eve::math::TLight<T>(p_parent);
 	return ptr;
 }
 
@@ -257,35 +216,31 @@ eve::math::TMesh<T> * eve::math::TMesh<T>::create_ptr(const eve::math::TMesh<T> 
 
 //=================================================================================================
 template <typename T>
-eve::math::TMesh<T>::TMesh(void)
+eve::math::TLight<T>::TLight(void)
 	// Inheritance
 	: eve::mem::Pointer()
 
 	// Members init
 	, m_rotation(eve::math::TVec3<T>::zero())
 	, m_translation(eve::math::TVec3<T>::zero())
-	, m_scale(eve::math::TVec3<T>::one())
 
 	, m_matrixRotation(eve::math::TMatrix44<T>::identity())
 	, m_matrixTranslation(eve::math::TMatrix44<T>::identity())
-	, m_matrixScale(eve::math::TMatrix44<T>::identity())
 	, m_matrixModelView(eve::math::TMatrix44<T>::identity())
 {}
 
 //=================================================================================================
 template <typename T>
-eve::math::TMesh<T>::TMesh(const eve::math::TMesh<T> & p_parent)
+eve::math::TLight<T>::TLight(const eve::math::TLight<T> & p_parent)
 	// Inheritance
 	: eve::mem::Pointer()
 
 	// Members init
 	, m_rotation(p_parent.m_rotation)
 	, m_translation(p_parent.m_translation)
-	, m_scale(p_parent.m_scale)
 
 	, m_matrixRotation(p_parent.m_matrixRotation)
 	, m_matrixTranslation(p_parent.m_matrixTranslation)
-	, m_matrixScale(p_parent.m_matrixScale)
 	, m_matrixModelView(p_parent.m_matrixModelView)
 {}
 
@@ -293,17 +248,16 @@ eve::math::TMesh<T>::TMesh(const eve::math::TMesh<T> & p_parent)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::init(void)
+void eve::math::TLight<T>::init(void)
 {
 	m_matrixRotation	= eve::math::TMatrix44<T>::createRotation(m_rotation);
 	m_matrixTranslation	= eve::math::TMatrix44<T>::createTranslation(m_translation);
-	m_matrixScale		= eve::math::TMatrix44<T>::createScale(m_scale);
-	m_matrixModelView	= m_matrixRotation * m_matrixTranslation * m_matrixScale;
+	m_matrixModelView	= m_matrixRotation * m_matrixTranslation;
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::release(void)
+void eve::math::TLight<T>::release(void)
 {
 	// Nothing to do for now.
 }
@@ -312,7 +266,7 @@ void eve::math::TMesh<T>::release(void)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::updateMatrixRotation(void)
+void eve::math::TLight<T>::updateMatrixRotation(void)
 {
 	m_matrixRotation = eve::math::TMatrix44<T>::createRotation(m_rotation);
 	this->updateMatrixModelView();
@@ -320,7 +274,7 @@ void eve::math::TMesh<T>::updateMatrixRotation(void)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::updateMatrixTranslation(void)
+void eve::math::TLight<T>::updateMatrixTranslation(void)
 {
 	m_matrixTranslation = eve::math::TMatrix44<T>::createTranslation(m_translation);
 	this->updateMatrixModelView();
@@ -328,24 +282,16 @@ void eve::math::TMesh<T>::updateMatrixTranslation(void)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::updateMatrixScale(void)
+void eve::math::TLight<T>::updateMatrixModelView(void)
 {
-	m_matrixScale = eve::math::TMatrix44<T>::createScale(m_scale);
-	this->updateMatrixModelView();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::updateMatrixModelView(void)
-{
-	m_matrixModelView = m_matrixRotation * m_matrixTranslation * m_matrixScale;
+	m_matrixModelView = m_matrixRotation * m_matrixTranslation;
 }
 
 
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::rotate(const eve::math::TVec3<T> & p_rotation)
+void eve::math::TLight<T>::rotate(const eve::math::TVec3<T> & p_rotation)
 {
 	m_rotation += p_rotation;
 	this->updateMatrixRotation();
@@ -353,7 +299,7 @@ void eve::math::TMesh<T>::rotate(const eve::math::TVec3<T> & p_rotation)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::rotate(T p_x, T p_y, T p_z)
+void eve::math::TLight<T>::rotate(T p_x, T p_y, T p_z)
 {
 	m_rotation.x += p_x;
 	m_rotation.y += p_y;
@@ -363,7 +309,7 @@ void eve::math::TMesh<T>::rotate(T p_x, T p_y, T p_z)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::rotateX(T p_rotationX)
+void eve::math::TLight<T>::rotateX(T p_rotationX)
 {
 	m_rotation.x += p_rotationX;
 	this->updateMatrixRotation();
@@ -371,7 +317,7 @@ void eve::math::TMesh<T>::rotateX(T p_rotationX)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::rotateY(T p_rotationY)
+void eve::math::TLight<T>::rotateY(T p_rotationY)
 {
 	m_rotation.y += p_rotationY;
 	this->updateMatrixRotation();
@@ -379,7 +325,7 @@ void eve::math::TMesh<T>::rotateY(T p_rotationY)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::rotateZ(T p_rotationZ)
+void eve::math::TLight<T>::rotateZ(T p_rotationZ)
 {
 	m_rotation.z += p_rotationZ;
 	this->updateMatrixRotation();
@@ -389,7 +335,7 @@ void eve::math::TMesh<T>::rotateZ(T p_rotationZ)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::translate(const eve::math::TVec3<T> & p_translation)
+void eve::math::TLight<T>::translate(const eve::math::TVec3<T> & p_translation)
 {
 	m_translation += p_translation;
 	this->updateMatrixTranslation();
@@ -397,7 +343,7 @@ void eve::math::TMesh<T>::translate(const eve::math::TVec3<T> & p_translation)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::translate(T p_x, T p_y, T p_z)
+void eve::math::TLight<T>::translate(T p_x, T p_y, T p_z)
 {
 	m_translation.x += p_x;
 	m_translation.y += p_y;
@@ -407,7 +353,7 @@ void eve::math::TMesh<T>::translate(T p_x, T p_y, T p_z)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::translateX(T p_translationX)
+void eve::math::TLight<T>::translateX(T p_translationX)
 {
 	m_translation.x += p_translationX;
 	this->updateMatrixTranslation();
@@ -415,7 +361,7 @@ void eve::math::TMesh<T>::translateX(T p_translationX)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::translateY(T p_translationY)
+void eve::math::TLight<T>::translateY(T p_translationY)
 {
 	m_translation.y += p_translationY;
 	this->updateMatrixTranslation();
@@ -423,54 +369,10 @@ void eve::math::TMesh<T>::translateY(T p_translationY)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::translateZ(T p_translationZ)
+void eve::math::TLight<T>::translateZ(T p_translationZ)
 {
 	m_translation.z += p_translationZ;
 	this->updateMatrixTranslation();
-}
-
-
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::scale(const eve::math::TVec3<T> & p_scale)
-{
-	m_scale += p_scale;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::scale(T p_x, T p_y, T p_z)
-{
-	m_scale.x += p_x;
-	m_scale.y += p_y;
-	m_scale.z += p_z;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::scaleX(T p_scaleX)
-{
-	m_scale.x += p_scaleX;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::scaleY(T p_scaleY)
-{
-	m_scale.y += p_scaleY;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::scaleZ(T p_scaleZ)
-{
-	m_scale.z += p_scaleZ;
-	this->updateMatrixScale();
 }
 
 
@@ -480,14 +382,14 @@ void eve::math::TMesh<T>::scaleZ(T p_scaleZ)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-template <typename T> EVE_FORCE_INLINE const eve::math::TVec3<T> &  eve::math::TMesh<T>::getRotation(void) const  { return m_rotation;   }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getRotationX(void) const { return m_rotation.x; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getRotationY(void) const { return m_rotation.y; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getRotationZ(void) const { return m_rotation.z; }
+template <typename T> EVE_FORCE_INLINE const eve::math::TVec3<T> &  eve::math::TLight<T>::getRotation(void) const  { return m_rotation;   }
+template <typename T> EVE_FORCE_INLINE const T						eve::math::TLight<T>::getRotationX(void) const { return m_rotation.x; }
+template <typename T> EVE_FORCE_INLINE const T						eve::math::TLight<T>::getRotationY(void) const { return m_rotation.y; }
+template <typename T> EVE_FORCE_INLINE const T						eve::math::TLight<T>::getRotationZ(void) const { return m_rotation.z; }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setRotation(const eve::math::TVec3<T> & p_value)
+void eve::math::TLight<T>::setRotation(const eve::math::TVec3<T> & p_value)
 {
 	m_rotation = p_value;
 	this->updateMatrixRotation();
@@ -495,7 +397,7 @@ void eve::math::TMesh<T>::setRotation(const eve::math::TVec3<T> & p_value)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setRotation(T p_x, T p_y, T p_z)
+void eve::math::TLight<T>::setRotation(T p_x, T p_y, T p_z)
 {
 	m_rotation.x = p_x;
 	m_rotation.y = p_y;
@@ -505,7 +407,7 @@ void eve::math::TMesh<T>::setRotation(T p_x, T p_y, T p_z)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setRotationX(T p_value)
+void eve::math::TLight<T>::setRotationX(T p_value)
 {
 	m_rotation.x = p_value;
 	this->updateMatrixRotation();
@@ -513,7 +415,7 @@ void eve::math::TMesh<T>::setRotationX(T p_value)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setRotationY(T p_value)
+void eve::math::TLight<T>::setRotationY(T p_value)
 {
 	m_rotation.y = p_value;
 	this->updateMatrixRotation();
@@ -521,7 +423,7 @@ void eve::math::TMesh<T>::setRotationY(T p_value)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setRotationZ(T p_value)
+void eve::math::TLight<T>::setRotationZ(T p_value)
 {
 	m_rotation.z = p_value;
 	this->updateMatrixRotation();
@@ -530,14 +432,14 @@ void eve::math::TMesh<T>::setRotationZ(T p_value)
 
 
 //=================================================================================================
-template <typename T> EVE_FORCE_INLINE const eve::math::TVec3<T> &	eve::math::TMesh<T>::getTranslation(void) const  { return m_translation; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getTranslationX(void) const { return m_translation.x; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getTranslationY(void) const { return m_translation.y; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getTranslationZ(void) const { return m_translation.z; }
+template <typename T> EVE_FORCE_INLINE const eve::math::TVec3<T> &	eve::math::TLight<T>::getTranslation(void) const  { return m_translation; }
+template <typename T> EVE_FORCE_INLINE const T						eve::math::TLight<T>::getTranslationX(void) const { return m_translation.x; }
+template <typename T> EVE_FORCE_INLINE const T						eve::math::TLight<T>::getTranslationY(void) const { return m_translation.y; }
+template <typename T> EVE_FORCE_INLINE const T						eve::math::TLight<T>::getTranslationZ(void) const { return m_translation.z; }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setTranslation(const eve::math::TVec3<T> & p_value)
+void eve::math::TLight<T>::setTranslation(const eve::math::TVec3<T> & p_value)
 {
 	m_translation = p_value;
 	this->updateMatrixTranslation();
@@ -545,7 +447,7 @@ void eve::math::TMesh<T>::setTranslation(const eve::math::TVec3<T> & p_value)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setTranslation(T p_x, T p_y, T p_z)
+void eve::math::TLight<T>::setTranslation(T p_x, T p_y, T p_z)
 {
 	m_translation.x = p_x;
 	m_translation.y = p_y;
@@ -555,7 +457,7 @@ void eve::math::TMesh<T>::setTranslation(T p_x, T p_y, T p_z)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setTranslationX(T p_value)
+void eve::math::TLight<T>::setTranslationX(T p_value)
 {
 	m_translation.x = p_value;
 	this->updateMatrixTranslation();
@@ -563,7 +465,7 @@ void eve::math::TMesh<T>::setTranslationX(T p_value)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setTranslationY(T p_value)
+void eve::math::TLight<T>::setTranslationY(T p_value)
 {
 	m_translation.y = p_value;
 	this->updateMatrixTranslation();
@@ -571,7 +473,7 @@ void eve::math::TMesh<T>::setTranslationY(T p_value)
 
 //=================================================================================================
 template <typename T>
-void eve::math::TMesh<T>::setTranslationZ(T p_value)
+void eve::math::TLight<T>::setTranslationZ(T p_value)
 {
 	m_translation.z = p_value;
 	this->updateMatrixTranslation();
@@ -580,59 +482,8 @@ void eve::math::TMesh<T>::setTranslationZ(T p_value)
 
 
 //=================================================================================================
-template <typename T> EVE_FORCE_INLINE const eve::math::TVec3<T> &	eve::math::TMesh<T>::getScale(void) const  { return m_scale;   }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getScaleX(void) const { return m_scale.x; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getScaleY(void) const { return m_scale.y; }
-template <typename T> EVE_FORCE_INLINE const T						eve::math::TMesh<T>::getScaleZ(void) const { return m_scale.z; }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::setScale(const eve::math::TVec3<T> & p_value)
-{
-	m_scale = p_value;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::setScale(T p_x, T p_y, T p_z)
-{
-	m_scale.x = p_x;
-	m_scale.y = p_y;
-	m_scale.z = p_z;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::setScaleX(T p_value)
-{
-	m_scale.x = p_value;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::setScaleY(T p_value)
-{
-	m_scale.y = p_value;
-	this->updateMatrixScale();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TMesh<T>::setScaleZ(T p_value)
-{
-	m_scale.z = p_value;
-	this->updateMatrixScale();
-}
-
-
-
-//=================================================================================================
-template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixRotation(void) const		{ return m_matrixRotation;		}
-template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixTranslation(void) const	{ return m_matrixTranslation;	}
-template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixScale(void) const		{ return m_matrixScale;			}
-template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMesh<T>::getMatrixModelView(void) const	{ return m_matrixModelView;		}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TLight<T>::getMatrixRotation(void) const	{ return m_matrixRotation;		}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TLight<T>::getMatrixTranslation(void) const	{ return m_matrixTranslation;	}
+template <typename T> EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TLight<T>::getMatrixModelView(void) const	{ return m_matrixModelView;		}
 
 #endif // __EVE_MATH_TMESH_H__
