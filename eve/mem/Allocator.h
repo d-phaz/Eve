@@ -48,6 +48,8 @@ namespace eve
 	{
 		/** \brief Check heap state, log it and create error assertion. */
 		void check_heap(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line);
+		/** \brief Check memory state, log it and create error assertion. */
+		void check_memory(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line);
 
 
 		/** \brief C-style memory allocation. */
@@ -88,6 +90,25 @@ namespace eve
 #else
 #define EVE_MEM_CHECK_HEAP 
 #endif
+/**
+* \def EVE_MEM_CHECK_MEMORY
+* \brief Convenience macro to check memory.
+*/
+#ifndef NDEBUG
+#define EVE_MEM_CHECK_MEMORY	eve::mem::check_memory(EVE_TXT_ENFORCE(__FUNCTION__), EVE_TXT_ENFORCE(__FILE__), __LINE__)
+#else
+#define EVE_MEM_CHECK_MEMORY 
+#endif
+/**
+* \def EVE_MEM_CHECK
+* \brief Convenience macro to check heap and memory.
+*/
+#ifndef NDEBUG
+#define EVE_MEM_CHECK	EVE_MEM_CHECK_HEAP; \
+						EVE_MEM_CHECK_MEMORY;
+#else
+#define EVE_MEM_CHECK 
+#endif
 
 
 
@@ -95,7 +116,7 @@ namespace eve
 EVE_FORCE_INLINE void * eve::mem::malloc(size_t p_size)
 {
 	void * ptr = std::malloc(p_size);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 	return ptr;
 }
 
@@ -103,7 +124,7 @@ EVE_FORCE_INLINE void * eve::mem::malloc(size_t p_size)
 EVE_FORCE_INLINE void * eve::mem::calloc(size_t p_num, size_t p_size)
 {
 	void * ptr = std::calloc(p_num, p_size);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 	return ptr;
 }
 
@@ -112,7 +133,7 @@ EVE_FORCE_INLINE void * eve::mem::realloc(void * p_pPtr, size_t p_size)
 {
 	EVE_ASSERT(p_pPtr);
 	void * ptr = std::realloc(p_pPtr, p_size);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 	return ptr;
 }
 
@@ -121,7 +142,7 @@ EVE_FORCE_INLINE void eve::mem::memset(void * p_pPtr, int32_t p_byte, size_t p_s
 {
 	EVE_ASSERT(p_pPtr);
 	std::memset(p_pPtr, p_byte, p_size);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 }
 
 //=================================================================================================
@@ -129,7 +150,7 @@ EVE_FORCE_INLINE void eve::mem::free(void * p_pPtr)
 {
 	EVE_ASSERT(p_pPtr);
 	std::free(p_pPtr);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 }
 
 
@@ -139,7 +160,7 @@ EVE_FORCE_INLINE void * eve::mem::align_malloc(size_t p_alignment, size_t p_size
 {
 #if defined(EVE_OS_WIN)
 	void * ptr = _aligned_malloc(p_size, p_alignment);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 	return ptr;
 
 #elif defined(EVE_OS_DARWIN)
@@ -148,7 +169,7 @@ EVE_FORCE_INLINE void * eve::mem::align_malloc(size_t p_alignment, size_t p_size
 	{
 		EVE_LOG_ERROR("Unable to allocate memory, size:%d, alignment:%d", p_size, p_alignment)
 	}
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 	return ptr;
 
 #elif defined(EVE_OS_LINUX)
@@ -157,7 +178,7 @@ EVE_FORCE_INLINE void * eve::mem::align_malloc(size_t p_alignment, size_t p_size
 	{
 		EVE_LOG_ERROR("Unable to allocate memory, size:%d, alignment:%d", p_size, p_alignment)
 	}
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 	return ptr;
 
 #endif
@@ -179,7 +200,7 @@ EVE_FORCE_INLINE void eve::mem::align_free(void * p_pPtr)
 
 #endif
 
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 }
 
 
@@ -190,7 +211,7 @@ EVE_FORCE_INLINE void eve::mem::align_memset_16(void * p_pPtr, int32_t p_byte, s
 	EVE_ASSERT((p_size & 0x0F) == 0);
 	EVE_ASSERT(((uintptr_t)p_pPtr & 0x0F) == 0);
 	std::memset(p_pPtr, p_byte, p_size);
-	EVE_MEM_CHECK_HEAP;
+	EVE_MEM_CHECK;
 }
 
 

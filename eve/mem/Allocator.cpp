@@ -53,3 +53,21 @@ void eve::mem::check_heap(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_li
 	// Do nothing.
 #endif
 }
+
+
+
+//=================================================================================================
+void eve::mem::check_memory(wchar_t * p_pFunction, wchar_t * p_pFile, int32_t p_line)
+{
+#if defined(EVE_OS_WIN)
+	if (::_CrtCheckMemory() == FALSE)
+	{
+		EVE_LOG_ERROR("Memory problem detected in function %s in file %s at line %d.", p_pFunction, p_pFile, p_line);
+		EVE_ASSERT_FAILURE;
+	}
+
+#else
+
+	// Do nothing.
+#endif
+}
