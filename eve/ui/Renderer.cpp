@@ -85,8 +85,8 @@ void eve::ui::Renderer::init(void)
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4;
 	fmtUniform.dynamic	 = false;
-	fmtUniform.data		 = m_matrixProjection.data();
 	m_pUniformMatrices	 = this->create(fmtUniform);
+	m_pUniformMatrices->pushData(m_matrixProjection, 0);
 
 	// Orthographic matrix.
 	this->calcMatrices();
@@ -117,7 +117,7 @@ void eve::ui::Renderer::calcMatrices(void)
 														  , static_cast<float>(m_viewWidth)
 														  , static_cast<float>(m_viewHeight)
 														  , static_cast<float>(m_viewY));
-	m_pUniformMatrices->setData(m_matrixProjection.data());
+	m_pUniformMatrices->pushData(m_matrixProjection, 0);
 }
 
 

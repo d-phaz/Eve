@@ -6,7 +6,7 @@
 //=================================================================================================
 GLuint * eve::geom::create_cube_indices(void)
 {
-	GLuint * indices = (GLuint*)malloc(36 * sizeof(GLuint));
+	GLuint * indices = (GLuint*)eve::mem::malloc(36 * sizeof(GLuint));
 	GLuint * ind = indices - 1;
 	// Front
 	*++ind = 0;
@@ -59,7 +59,7 @@ GLuint * eve::geom::create_cube_indices(void)
 //=================================================================================================
 float * eve::geom::create_cube_textured_vertices(const eve::vec3f & p_position, const eve::vec3f & p_size)
 {
-	float * vertices = (float*)malloc((24 * 8) * sizeof(float));
+	float * vertices = (float*)eve::mem::malloc((24 * 8) * sizeof(float));
 
 	float posX = p_position.x;
 	float posY = p_position.y;
@@ -179,7 +179,7 @@ float * eve::geom::create_cube_textured_vertices(const eve::vec3f & p_position, 
 //=================================================================================================
 float * eve::geom::create_cube_colored_vertices(const eve::vec3f & p_position, const eve::vec3f & p_size, const eve::color4f & p_color)
 {
-	float * vertices = (float*)malloc(240 * sizeof(float));
+	float * vertices = (float*)eve::mem::malloc(240 * sizeof(float));
 
 	float posX = p_position.x;
 	float posY = p_position.y;

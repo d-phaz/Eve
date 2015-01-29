@@ -188,7 +188,7 @@ wchar_t * eve::mess::Server::format_message(const wchar_t * ptitle, const wchar_
 
 	int size		= eve::mess::Server::get_buf_size(p_format, p_args);
 	size_t msize	= (size + mess.length()) * sizeof(wchar_t);
-	wchar_t * buf	= (wchar_t*)malloc(msize);
+	wchar_t * buf	= (wchar_t*)eve::mem::malloc(msize);
 
 	vswprintf(buf, msize, mess.c_str(), p_args);
 
@@ -210,7 +210,7 @@ void eve::mess::Server::default_log_error(const wchar_t *p_funcName, const wchar
 	va_end(arg);
 
 	eve::mess::Server::print_to_output(mess);
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 
@@ -230,7 +230,7 @@ void eve::mess::Server::default_log_info(const wchar_t *p_funcName, const wchar_
 	va_end(arg);
 
 	eve::mess::Server::print_to_output(mess);
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 
@@ -250,7 +250,7 @@ void eve::mess::Server::default_log_warning(const wchar_t *p_funcName, const wch
 	va_end(arg);
 
 	eve::mess::Server::print_to_output(mess);
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 
@@ -270,7 +270,7 @@ void eve::mess::Server::default_log_progress(const wchar_t *p_funcName, const wc
 	va_end(arg);
 
 	eve::mess::Server::print_to_output(mess);
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 
@@ -290,7 +290,7 @@ void eve::mess::Server::default_log_debug(const wchar_t *p_funcName, const wchar
 	va_end(arg);
 
 	eve::mess::Server::print_to_output(mess);
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 
@@ -311,7 +311,7 @@ void eve::mess::Server::default_log_in_file_error(const wchar_t *p_funcName, con
 
 	fwprintf(get_error_stream(), mess);
 	fflush(get_error_stream());
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -328,7 +328,7 @@ void eve::mess::Server::default_log_in_file_info(const wchar_t *p_funcName, cons
 
 	fwprintf(get_info_stream(), mess);
 	fflush(get_info_stream());
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -345,7 +345,7 @@ void eve::mess::Server::default_log_in_file_warning(const wchar_t *p_funcName, c
 
 	fwprintf(get_warning_stream(), mess);
 	fflush(get_warning_stream());
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -362,7 +362,7 @@ void eve::mess::Server::default_log_in_file_progress(const wchar_t *p_funcName, 
 
 	fwprintf(get_progress_stream(), mess);
 	fflush(get_progress_stream());
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 }
@@ -379,7 +379,7 @@ void eve::mess::Server::default_log_in_file_debug(const wchar_t *p_funcName, con
 
 	fwprintf(get_debug_stream(), mess);
 	fflush(get_debug_stream());
-	free(mess);
+	eve::mem::free(mess);
 
 	m_p_mutex->unlock();
 }

@@ -231,8 +231,8 @@ void RenderGL::init(void)
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4;
 	fmtUniform.dynamic = true;
-	fmtUniform.data = m_dataSwapper->m_pCamera->getMatrixModelViewProjection().m;
 	m_pUniform = this->create(fmtUniform);
+	m_pUniform->pushData(m_dataSwapper->m_pCamera->getMatrixModelViewProjection(), 0);
 
 	eve::ogl::FormatTex fmtTex;
 	if (!eve::io::load_image(eve::io::resource_path_image("Particle.tga"), &fmtTex))

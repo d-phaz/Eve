@@ -107,8 +107,8 @@ void RenderGL::init(void)
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize	= EVE_OGL_SIZEOF_MAT4;
 	fmtUniform.dynamic		= false;
-	fmtUniform.data			= m_pCamera->getMatrixModelViewProjection().data();
 	m_pUniform = this->create(fmtUniform);
+	m_pUniform->pushData(m_pCamera->getMatrixModelViewProjection(), 0);
 
 	eve::ogl::FormatTex fmtTex;
 	std::string path("C:\\Users\\aleister_doe\\Desktop\\import\\1.jpg");

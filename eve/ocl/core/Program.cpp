@@ -87,7 +87,7 @@ void eve::ocl::Program::init(void)
 		m_err = clGetProgramBuildInfo(m_program, m_device, CL_PROGRAM_BUILD_LOG, 0, NULL, &ret_val_size);
 		EVE_OCL_CHECK_PROGRAM(m_err);
 
-		build_log = (char *)malloc(ret_val_size + 1);
+		build_log = (char *)eve::mem::malloc(ret_val_size + 1);
 		m_err = clGetProgramBuildInfo(m_program, m_device, CL_PROGRAM_BUILD_LOG, ret_val_size, build_log, NULL);
 		EVE_OCL_CHECK_PROGRAM(m_err);
 
@@ -96,7 +96,7 @@ void eve::ocl::Program::init(void)
 
 		std::wstring wLog = eve::str::to_wstring(std::string(build_log));
 		EVE_LOG_ERROR("OpenCL program build log: %s", wLog.c_str());
-		free(build_log);
+		eve::mem::free(build_log);
 	}
 
 	m_pKernels = new std::vector<eve::ocl::Kernel*>();
@@ -152,12 +152,12 @@ char * eve::ocl::Program::load(const char * p_path, const char * p_preamble, siz
 	fseek(pFileStream, 0, SEEK_SET);
 
 	// Allocate a buffer for the source code string and read it in.
-	char* cSourceString = (char *)malloc(szSourceLength + szPreambleLength + 1);
+	char* cSourceString = (char *)eve::mem::malloc(szSourceLength + szPreambleLength + 1);
 	memcpy(cSourceString, p_preamble, szPreambleLength);
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)
 	{
 		fclose(pFileStream);
-		free(cSourceString);
+		eve::mem::free(cSourceString);
 		return 0;
 	}
 

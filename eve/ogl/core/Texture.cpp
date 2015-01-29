@@ -192,8 +192,6 @@ void eve::ogl::Texture::oglRelease(void)
 	glDeleteTextures(1, &m_id);
 	m_id = 0;
 	EVE_OGL_CHECK_ERROR;
-
-	this->release();
 }
 
 

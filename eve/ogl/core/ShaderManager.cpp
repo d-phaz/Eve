@@ -238,8 +238,6 @@ void eve::ogl::ShaderManager::oglRelease(void)
 	}
 	
 	EVE_OGL_CHECK_ERROR;
-
-	this->release();
 }
 
 void eve::ogl::ShaderManager::loadShader(const std::string& shaderKey, const std::string& program, GLenum type){

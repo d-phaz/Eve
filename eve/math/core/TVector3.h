@@ -379,7 +379,7 @@ EVE_FORCE_INLINE const T & eve::math::TVec3<T>::operator[](int32_t n) const
 template<typename T>
 EVE_FORCE_INLINE T *	eve::math::TVec3<T>::ptr(void) const
 { 
-	return &(const_cast<eve::math::TVec3*>(this)->x); 
+	return &(const_cast<eve::math::TVec3<T>*>(this)->x); 
 }
 
 

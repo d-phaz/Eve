@@ -7,7 +7,7 @@
 # Files listing.
 #################################################
 set( SRCS
-	 # ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Allocator.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/mem/Pointer.cpp

@@ -37,6 +37,10 @@
 #include "eve/ogl/core/Object.h"
 #endif
 
+#ifndef __EVE_MATH_TYPES_H__
+#include "eve/math/Types.h"
+#endif
+
 
 namespace eve
 {
@@ -60,7 +64,6 @@ namespace eve
 		public:
 			GLint					blockSize;			//!< Specifies uniform block size.
 			bool					dynamic;			//!< Specifies whether the buffer use dynamic draw (per draw call update).
-			float *					data;				//!< Specifies host data to send to buffer, ownership is external.
 
 		public:
 			/** \brief Class constructor. */
@@ -101,7 +104,7 @@ namespace eve
 			GLenum						m_usage;				//!< Specifies whether the buffer use GL_STATIC_DRAW or GL_DYNAMIC_DRAW.
 			bool						m_bDynamic;				//!< Specifies whether the buffer use dynamic draw (per draw call update).
 
-			float *						m_pData;				//!< Specifies host data to send to buffer, ownership is external.
+			float *						m_pData;				//!< Specifies host data to send to buffer.
 			float *						m_pOglData;				//!< Specifies device buffer data address.
 
 
@@ -174,6 +177,27 @@ namespace eve
 
 
 		public:
+			/** \brief Push data in uniform buffer data using memory position padding and request update. */
+			void pushData(float * p_data, size_t p_size, size_t p_padding);
+
+
+			/** \brief Push vector in uniform buffer data using memory position padding and request update. */
+			void pushData(const eve::math::TVec2<float> & p_data, size_t p_padding);
+			/** \brief Push vector in uniform buffer data using memory position padding and request update. */
+			void pushData(const eve::math::TVec3<float> & p_data, size_t p_padding);
+			/** \brief Push vector in uniform buffer data using memory position padding and request update. */
+			void pushData(const eve::math::TVec4<float> & p_data, size_t p_padding);
+
+
+			/** \brief Push matrix in uniform buffer data using memory position padding and request update. */
+			void pushData(const eve::math::TMatrix22<float> & p_data, size_t p_padding);
+			/** \brief Push matrix in uniform buffer data using memory position padding and request update. */
+			void pushData(const eve::math::TMatrix33<float> & p_data, size_t p_padding);
+			/** \brief Push matrix in uniform buffer data using memory position padding and request update. */
+			void pushData(const eve::math::TMatrix44<float> & p_data, size_t p_padding);
+
+
+		public:
 			/** \brief Bind (activate). */
 			void bind(GLuint p_binding);
 			/** \brief Bind to camera transform buffer. */
@@ -221,10 +245,6 @@ namespace eve
 		public:
 			/** \brief Get OpenGL texture unique id. (pure virtual) */
 			virtual const GLuint getId(void) const override;
-
-		public:
-			/** \brief Set buffer data. */
-			void setData(float * p_data);
 			
 		}; // class Fbo
 
@@ -264,6 +284,11 @@ EVE_FORCE_INLINE size_t eve::ogl::align_size_of(size_t p_originalSize)
 
 
 /**
+* \def EVE_OGL_SIZEOF_MAT2
+* \brief Convenience macro to retrieve GLSL convenient size of GLSL mat2 type.
+*/
+#define EVE_OGL_SIZEOF_MAT2 (sizeof(float) * 4)
+/**
 * \def EVE_OGL_SIZEOF_MAT3
 * \brief Convenience macro to retrieve GLSL convenient size of GLSL mat3 type.
 */
@@ -273,6 +298,41 @@ EVE_FORCE_INLINE size_t eve::ogl::align_size_of(size_t p_originalSize)
 * \brief Convenience macro to retrieve GLSL convenient size of GLSL mat4 type.
 */
 #define EVE_OGL_SIZEOF_MAT4 (sizeof(float) * 16)
+
+
+
+/**
+* \def EVE_OGL_PADDING_VEC2
+* \brief Convenience macro to retrieve GLSL convenient padding of GLSL vec2 type.
+*/
+#define EVE_OGL_PADDING_VEC2 2
+/**
+* \def EVE_OGL_PADDING_VEC3
+* \brief Convenience macro to retrieve GLSL convenient padding of GLSL vec3 type.
+*/
+#define EVE_OGL_PADDING_VEC3 4
+/**
+* \def EVE_OGL_PADDING_VEC4
+* \brief Convenience macro to retrieve GLSL convenient padding of GLSL vec4 type.
+*/
+#define EVE_OGL_PADDING_VEC4 4
+
+
+/**
+* \def EVE_OGL_PADDING_MAT2
+* \brief Convenience macro to retrieve GLSL convenient padding of GLSL mat2 type.
+*/
+#define EVE_OGL_PADDING_MAT2 4
+/**
+* \def EVE_OGL_PADDING_MAT3
+* \brief Convenience macro to retrieve GLSL convenient padding of GLSL mat3 type.
+*/
+#define EVE_OGL_PADDING_MAT3 16
+/**
+* \def EVE_OGL_PADDING_MAT4
+* \brief Convenience macro to retrieve GLSL convenient padding of GLSL mat4 type.
+*/
+#define EVE_OGL_PADDING_MAT4 16
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

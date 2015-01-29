@@ -96,7 +96,7 @@ void eve::ocl::Engine::init(void)
 	if (m_numPlatforms > 0)
 	{
 		// Get available platforms.
-		cl_platform_id * platforms = (cl_platform_id*)malloc(m_numPlatforms * sizeof(cl_platform_id));
+		cl_platform_id * platforms = (cl_platform_id*)eve::mem::malloc(m_numPlatforms * sizeof(cl_platform_id));
 		m_err = clGetPlatformIDs(m_numPlatforms, platforms, NULL);
 		EVE_OCL_CHECK_PLATFORM(m_err);
 
@@ -118,7 +118,7 @@ void eve::ocl::Engine::init(void)
 			EVE_OCL_CHECK_DEVICE(m_err);
 
 			// Get per platform available device(s).
-			cl_device_id * devices = (cl_device_id*)malloc(m_numDevices * sizeof(cl_device_id));
+			cl_device_id * devices = (cl_device_id*)eve::mem::malloc(m_numDevices * sizeof(cl_device_id));
 			m_err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, m_numDevices, devices, NULL);
 			EVE_OCL_CHECK_DEVICE(m_err);
 
@@ -147,9 +147,9 @@ void eve::ocl::Engine::init(void)
 					m_deviceMaxFlops	= device;
 				}
 			}
-			free(devices);
+			eve::mem::free(devices);
 		}
-		free(platforms);
+		eve::mem::free(platforms);
 	}
 
 	// Print selected device infos.
@@ -166,12 +166,12 @@ void eve::ocl::Engine::init(void)
 		m_err = clGetDeviceInfo(m_deviceMaxFlops, CL_DEVICE_VENDOR, 0, NULL, &paramValueSize);
 		EVE_OCL_CHECK_DEVICE(m_err);
 
-		txt = (char*)malloc(sizeof(char)* paramValueSize);
+		txt = (char*)eve::mem::malloc(sizeof(char)* paramValueSize);
 		m_err = clGetDeviceInfo(m_deviceMaxFlops, CL_DEVICE_VENDOR, paramValueSize, txt, NULL);
 		EVE_OCL_CHECK_DEVICE(m_err);
 
 		mess = eve::str::to_wstring(txt);
-		free(txt);
+		eve::mem::free(txt);
 		EVE_LOG_INFO("OpenCL Device Vendor:          %s", mess.c_str());
 
 
@@ -179,12 +179,12 @@ void eve::ocl::Engine::init(void)
 		m_err = clGetDeviceInfo(m_deviceMaxFlops, CL_DEVICE_NAME, 0, NULL, &paramValueSize);
 		EVE_OCL_CHECK_DEVICE(m_err);
 
-		txt = (char*)malloc(sizeof(char)* paramValueSize);
+		txt = (char*)eve::mem::malloc(sizeof(char)* paramValueSize);
 		m_err = clGetDeviceInfo(m_deviceMaxFlops, CL_DEVICE_NAME, paramValueSize, txt, NULL);
 		EVE_OCL_CHECK_DEVICE(m_err);
 
 		mess = eve::str::to_wstring(txt);
-		free(txt);
+		eve::mem::free(txt);
 		EVE_LOG_INFO("OpenCL Device Name:            %s", mess.c_str());
 
 
@@ -192,12 +192,12 @@ void eve::ocl::Engine::init(void)
 		m_err = clGetDeviceInfo(m_deviceMaxFlops, CL_DEVICE_VERSION, 0, NULL, &paramValueSize);
 		EVE_OCL_CHECK_DEVICE(m_err);
 
-		txt = (char*)malloc(sizeof(char)* paramValueSize);
+		txt = (char*)eve::mem::malloc(sizeof(char)* paramValueSize);
 		m_err = clGetDeviceInfo(m_deviceMaxFlops, CL_DEVICE_VERSION, paramValueSize, txt, NULL);
 		EVE_OCL_CHECK_DEVICE(m_err);
 
 		mess = eve::str::to_wstring(txt);
-		free(txt);
+		eve::mem::free(txt);
 		EVE_LOG_INFO("OpenCL Device Version:         %s", mess.c_str());
 
 

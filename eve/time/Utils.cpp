@@ -148,13 +148,13 @@ std::wstring eve::time::formatted(const std::wstring & p_format, const struct tm
 
 	for (size_t bufferSize = 256;; bufferSize += 256)
 	{
-		buffer		= (wchar_t*)malloc(bufferSize * sizeof(wchar_t));
+		buffer		= (wchar_t*)eve::mem::malloc(bufferSize * sizeof(wchar_t));
 		numChars	= wcsftime(buffer, bufferSize - 1, p_format.c_str(), tm);
 
 		if (numChars > 0)
 		{
 			std::wstring ret(buffer);
-			free(buffer);
+			eve::mem::free(buffer);
 			return ret;
 		}
 	}
