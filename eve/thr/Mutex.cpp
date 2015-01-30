@@ -32,6 +32,10 @@
 // Main header
 #include "eve/thr/Mutex.h"
 
+#ifndef __EVE_MESSAGING_SERVER_H__
+#include "eve/mess/Server.h"
+#endif
+
 
 //=============================================================================================
 eve::thr::Mutex::Mutex(void)

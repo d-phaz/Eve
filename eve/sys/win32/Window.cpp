@@ -133,7 +133,7 @@ void eve::sys::Window::init(void)
 
 	case eve::sys::WindowType_Child:
 		m_style		= WS_CHILDWINDOW;
-		m_exStyle = WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT | WS_EX_ACCEPTFILES;
+		m_exStyle	= WS_EX_NOPARENTNOTIFY | WS_EX_NOINHERITLAYOUT | WS_EX_ACCEPTFILES;
 		break;
 
 	case eve::sys::WindowType_Output:

@@ -37,10 +37,6 @@
 #include "eve/mem/Pointer.h"
 #endif
 
-#ifndef __EVE_MESSAGING_SERVER_H__
-#include "eve/mess/Server.h"
-#endif
-
 
 namespace eve
 {

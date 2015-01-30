@@ -32,6 +32,10 @@
 // Main header
 #include "eve/thr/Lock.h"
 
+#ifndef __EVE_MESSAGING_SERVER_H__
+#include "eve/mess/Server.h"
+#endif
+
 
 //=============================================================================================
 eve::thr::Lock::Lock(void)
