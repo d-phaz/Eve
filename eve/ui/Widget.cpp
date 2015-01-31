@@ -49,6 +49,8 @@ eve::ui::Widget::Widget(void)
 	, m_height(0)
 	, m_minWidth(0)
 	, m_minHeight(0)
+	, m_maxWidth(INT_MAX)
+	, m_maxHeight(INT_MAX)
 	, m_bEnabled(false)
 	, m_bSelected(false)
 	, m_bVisible(false)
@@ -68,6 +70,8 @@ eve::ui::Widget::Widget(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_hei
 	, m_height(p_height)
 	, m_minWidth(0)
 	, m_minHeight(0)
+	, m_maxWidth(INT_MAX)
+	, m_maxHeight(INT_MAX)
 	, m_bEnabled(false)
 	, m_bSelected(false)
 	, m_bVisible(false)
@@ -87,6 +91,8 @@ eve::ui::Widget::Widget(const eve::vec2i & p_position, const eve::vec2i & p_size
 	, m_height(p_size.y)
 	, m_minWidth(0)
 	, m_minHeight(0)
+	, m_maxWidth(INT_MAX)
+	, m_maxHeight(INT_MAX)
 	, m_bEnabled(false)
 	, m_bSelected(false)
 	, m_bVisible(false)
@@ -215,6 +221,9 @@ void eve::ui::Widget::childUpdateSize(void)
 
 	m_width  = total_width  > m_minWidth  ? total_width  : m_minWidth;
 	m_height = total_height > m_minHeight ? total_height : m_minHeight;
+
+	m_width  = m_width  < m_maxWidth  ? m_width  : m_maxWidth;
+	m_height = m_height < m_maxHeight ? m_height : m_maxHeight;
 }
 
 //=================================================================================================
@@ -236,12 +245,12 @@ void eve::ui::Widget::enable(void)
 }
 
 //=================================================================================================
-void eve::ui::Widget::disnable(void)
+void eve::ui::Widget::disable(void)
 {
 	m_bEnabled = false;
 	for (auto && itr : (*m_pChildren))
 	{
-		itr->disnable();
+		itr->disable();
 	}
 }
 
@@ -396,30 +405,8 @@ void eve::ui::Widget::translateY(int32_t p_value)
 //=================================================================================================
 void eve::ui::Widget::inflate(int32_t p_width, int32_t p_height)
 {
-	float   ratioX  = 0.0f;
-	float   ratioY  = 0.0f;
-	int32_t deportX = p_width;
-	int32_t deportY = p_height;
-
-	if (m_width + deportX < m_minWidth)
-	{
-		deportX = m_minWidth - m_width;
-	}
-	if (m_height + deportY < m_minHeight)
-	{
-		deportY = m_minHeight - m_height;
-	}
-
-	for (auto && itr : (*m_pChildren))
-	{
-		ratioX = static_cast<float>(itr->getWidth()) / static_cast<float>(m_width);
-		ratioY = static_cast<float>(itr->getHeight()) / static_cast<float>(m_height);
-
-		itr->inflate(static_cast<int32_t>(static_cast<float>(deportX) * ratioX)
-				   , static_cast<int32_t>(static_cast<float>(deportY) * ratioY));
-	}
-	m_width  += deportX;
-	m_height += deportY;
+	this->inflateX(p_width);
+	this->inflateY(p_height);
 }
 
 //=================================================================================================
@@ -436,32 +423,44 @@ void eve::ui::Widget::inflateX(int32_t p_value)
 	{
 		deport = m_minWidth - m_width;
 	}
-
-	float ratio = 0.0f;
-	for (auto && itr : (*m_pChildren))
+	else if (m_width + deport > m_maxWidth)
 	{
-		ratio = static_cast<float>(itr->getWidth()) / static_cast<float>(m_width);
-		itr->inflateX(static_cast<int32_t>(static_cast<float>(deport) * ratio));
+		deport = m_maxWidth - m_width;
 	}
-	m_width += deport;
+	if (deport != 0)
+	{
+		float ratio = 0.0f;
+		for (auto && itr : (*m_pChildren))
+		{
+			ratio = static_cast<float>(itr->getWidth()) / static_cast<float>(m_width);
+			itr->inflateX(static_cast<int32_t>(static_cast<float>(deport) * ratio));
+		}
+		m_width += deport;
+	}
 }
 
 //=================================================================================================
 void eve::ui::Widget::inflateY(int32_t p_value)
 {
 	int32_t deport = p_value;
-	if (m_height + p_value < m_minHeight)
+	if (m_height + deport < m_minHeight)
 	{
 		deport = m_minHeight - m_height;
 	}
-
-	float ratio = 0.0f;
-	for (auto && itr : (*m_pChildren))
+	else if (m_height + deport > m_maxHeight)
 	{
-		ratio = static_cast<float>(itr->getHeight()) / static_cast<float>(m_height);
-		itr->inflateY(static_cast<int32_t>(static_cast<float>(deport)* ratio));
+		deport = m_maxHeight - m_height;
 	}
-	m_height += deport;
+	if (deport != 0)
+	{
+		float ratio = 0.0f;
+		for (auto && itr : (*m_pChildren))
+		{
+			ratio = static_cast<float>(itr->getHeight()) / static_cast<float>(m_height);
+			itr->inflateY(static_cast<int32_t>(static_cast<float>(deport) * ratio));
+		}
+		m_height += deport;
+	}
 }
 
 
@@ -478,12 +477,12 @@ void eve::ui::Widget::setParentWidget(eve::ui::Widget * p_pParent)
 
 	// Propagate states.
 	if (m_pParent->isEnabled())		{ this->enable();	}
-	else							{ this->disnable(); }
+	else							{ this->disable();  }
 
 	if (m_pParent->isVisible())		{ this->show();		}
 	else							{ this->hide();		}
 
-	if (m_pParent->isSelected())		{ this->select();	}
+	if (m_pParent->isSelected())	{ this->select();	}
 	else							{ this->unselect(); }
 }
 
@@ -492,9 +491,7 @@ void eve::ui::Widget::setParentWidget(eve::ui::Widget * p_pParent)
 //=================================================================================================
 void eve::ui::Widget::setPosition(int32_t p_x, int32_t p_y)
 {
-	int32_t deportX(p_x - m_x);
-	int32_t deportY(p_y - m_y);
-	this->translate(deportX, deportY);
+	this->translate(p_x - m_x, p_y - m_y);
 }
 
 //=================================================================================================
@@ -506,15 +503,13 @@ void eve::ui::Widget::setPosition(const eve::vec2i & p_value)
 //=================================================================================================
 void eve::ui::Widget::setPositionX(int32_t p_value)
 {
-	int32_t deport = p_value - m_x;
-	this->translateX(deport);
+	this->translateX(p_value - m_x);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setPositionY(int32_t p_value)
 {
-	int32_t deport = p_value - m_y;
-	this->translateY(deport);
+	this->translateY(p_value - m_y);
 }
 
 
@@ -522,9 +517,7 @@ void eve::ui::Widget::setPositionY(int32_t p_value)
 //=================================================================================================
 void eve::ui::Widget::setSize(int32_t p_width, int32_t p_height)
 {
-	int32_t deportX(p_width - m_width);
-	int32_t deportY(p_height - m_height);
-	this->inflate(deportX, deportY);
+	this->inflate(p_width - m_width, p_height - m_height);
 }
 
 //=================================================================================================
@@ -536,15 +529,13 @@ void eve::ui::Widget::setSize(const eve::vec2i & p_value)
 //=================================================================================================
 void eve::ui::Widget::setWidth(int32_t p_value)
 {
-	int32_t deport = p_value - m_width;
-	this->inflateX(deport);
+	this->inflateX(p_value - m_width);
 }
 
 //=================================================================================================
 void eve::ui::Widget::setHeight(int32_t p_value)
 {
-	int32_t deport = p_value - m_height;
-	this->inflateY(deport);
+	this->inflateY(p_value - m_height);
 }
 
 
@@ -552,16 +543,8 @@ void eve::ui::Widget::setHeight(int32_t p_value)
 //=================================================================================================
 void eve::ui::Widget::setMinSize(int32_t p_width, int32_t p_height)
 {
-	m_minWidth = p_width;
-	if (m_width < m_minWidth)
-	{
-		this->setWidth(m_minWidth);
-	}
-	m_minHeight = p_height;
-	if (m_height < m_minHeight)
-	{
-		this->setHeight(m_minHeight);
-	}
+	this->setMinWidth(p_width);
+	this->setMinHeight(p_height);
 }
 
 //=================================================================================================
@@ -589,3 +572,39 @@ void eve::ui::Widget::setMinHeight(int32_t p_value)
 		this->setHeight(m_minHeight);
 	}
 }
+
+
+
+//=================================================================================================
+void eve::ui::Widget::setMaxSize(int32_t p_width, int32_t p_height)
+{
+	this->setMaxWidth(p_width);
+	this->setMaxHeight(p_height);
+}
+
+//=================================================================================================
+void eve::ui::Widget::setMaxSize(const eve::vec2i & p_value)
+{
+	this->setMaxSize(p_value.x, p_value.y);
+}
+
+//=================================================================================================
+void eve::ui::Widget::setMaxWidth(int32_t p_value)
+{
+	m_maxWidth = p_value;
+	if (m_width > m_maxWidth)
+	{
+		this->setWidth(m_maxWidth);
+	}
+}
+
+//=================================================================================================
+void eve::ui::Widget::setMaxHeight(int32_t p_value)
+{
+	m_maxHeight = p_value;
+	if (m_height > m_maxHeight)
+	{
+		this->setHeight(m_maxHeight);
+	}
+}
+
