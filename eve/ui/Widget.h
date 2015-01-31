@@ -73,10 +73,13 @@ namespace eve
 		protected:
 			int32_t							m_x;					//!< Specifies widget position on X axis.
 			int32_t							m_y;					//!< Specifies widget position on Y axis.
+
 			int32_t							m_width;				//!< Specifies widget width.
 			int32_t							m_height;				//!< Specifies widget height.
-			int32_t							m_minWidth;				//!< Specifies widget minimum width.
-			int32_t							m_minHeight;			//!< Specifies widget minimum height.
+			int32_t							m_minWidth;				//!< Specifies widget minimum width (default to zero).
+			int32_t							m_minHeight;			//!< Specifies widget minimum height (default to zero).
+			int32_t							m_maxWidth;				//!< Specifies widget maximum width (default to INT_MAX).
+			int32_t							m_maxHeight;			//!< Specifies widget maximum height (default to INT_MAX).
 
 		protected:
 			bool							m_bEnabled;				//!< Specifies enabled state (default to false).
@@ -141,7 +144,7 @@ namespace eve
 			/** \brief Enable widget and propagate to children. */
 			virtual void enable(void);
 			/** \brief Disable widget and propagate to children. */
-			virtual void disnable(void);
+			virtual void disable(void);
 
 
 		public:
@@ -277,6 +280,24 @@ namespace eve
 
 
 		public:
+			/** \brief Get maximum size. */
+			const eve::vec2i getMaxSize(void) const;
+			/** \brief Get maximum width. */
+			const int32_t getMaxWidth(void) const;
+			/** \brief Get maximum height. */
+			const int32_t getMaxHeight(void) const;
+
+			/** \brief Set maximum size. */
+			virtual void setMaxSize(int32_t p_width, int32_t p_height);
+			/** \brief Set maximum size. */
+			virtual void setMaxSize(const eve::vec2i & p_value);
+			/** \brief Set maximum width. */
+			virtual void setMaxWidth(int32_t p_value);
+			/** \brief Set maximum height. */
+			virtual void setMaxHeight(int32_t p_value);
+
+
+		public:
 			/** \brief Get enabled state. */
 			bool isEnabled(void);
 			/** \brief Get visible state. */
@@ -319,6 +340,12 @@ EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getHeight(void) const		{ return
 EVE_FORCE_INLINE const eve::vec2i	eve::ui::Widget::getMinSize(void) const		{ return eve::vec2i(m_minWidth, m_minHeight); }
 EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getMinWidth(void) const	{ return m_minWidth; }
 EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getMinHeight(void) const	{ return m_minHeight; }
+
+
+//=================================================================================================
+EVE_FORCE_INLINE const eve::vec2i	eve::ui::Widget::getMaxSize(void) const		{ return eve::vec2i(m_maxWidth, m_maxHeight); }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getMaxWidth(void) const	{ return m_maxWidth; }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getMaxHeight(void) const	{ return m_maxHeight; }
 
 
 //=================================================================================================
