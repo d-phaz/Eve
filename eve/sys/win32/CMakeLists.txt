@@ -23,11 +23,7 @@ set( SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Node.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Node.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/WindowChild.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/WindowChild.h 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/WindowRoot.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/WindowRoot.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/sys/win32/Window.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${SRCS} )
 source_group( "System\\win32" FILES ${SRCS} )

@@ -226,7 +226,7 @@ void eve::ogl::Vao::oglUpdate(void)
 		glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
 
 		m_pVerticesData = reinterpret_cast<float*>(glMapBufferRange(GL_ARRAY_BUFFER, 0, m_verticesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-		memcpy(m_pVerticesData, m_pVertices.get(), m_verticesSize);
+		eve::mem::memcpy(m_pVerticesData, m_pVertices.get(), m_verticesSize);
 
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -240,7 +240,7 @@ void eve::ogl::Vao::oglUpdate(void)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
 
 		m_pIndicesData = reinterpret_cast<GLuint*>(glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, m_indicesSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
-		memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
+		eve::mem::memcpy(m_pIndicesData, m_pIndices.get(), m_indicesSize);
 
 		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -308,17 +308,17 @@ void eve::ogl::Vao::add(eve::ogl::Vao * p_pVao)
 
 	// Copy original vertices.
 	float * vertices = (float*)eve::mem::malloc((m_numVertices + addedVerts) * m_verticesStride);
-	memcpy(vertices, m_pVertices.get(), m_numVertices * m_verticesStride);
+	eve::mem::memcpy(vertices, m_pVertices.get(), m_numVertices * m_verticesStride);
 	// Add new vertices.
 	float * verts	 = vertices + (m_numVertices * m_verticesStrideUnit);
-	memcpy(verts, p_pVao->getVertices().get(), addedVerts * m_verticesStride);
+	eve::mem::memcpy(verts, p_pVao->getVertices().get(), addedVerts * m_verticesStride);
 	// Update shared pointer.
 	m_pVertices.reset(vertices);
 
 
 	// Copy original indices.
 	GLuint * indices = (GLuint*)eve::mem::malloc((m_numIndices + addedInds) * sizeof(GLuint));
-	memcpy(indices, m_pIndices.get(), (m_numIndices * sizeof(GLuint)));
+	eve::mem::memcpy(indices, m_pIndices.get(), (m_numIndices * sizeof(GLuint)));
 	// Add new indices, incremented of original vertices number.
 	GLuint * inds	 = indices + m_numIndices - 1;
 	GLuint * newInds = p_pVao->getIndices().get() - 1;

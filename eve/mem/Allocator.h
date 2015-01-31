@@ -53,28 +53,32 @@ namespace eve
 
 
 		/** \brief C-style memory allocation. */
-		void * malloc(size_t p_size);
+		static void * malloc(size_t p_size);
 		/** \brief Allocates a block of memory for an array of p_num elements, each of them p_size bytes long, and initializes all its bits to zero. */
-		void * calloc(size_t p_num, size_t p_size);
+		static void * calloc(size_t p_num, size_t p_size);
 		/** \brief Changes the p_size of the memory block pointed to by p_pPtr. The function may move the memory block to a new location (whose address is returned by the function). */
-		void * realloc(void * p_pPtr, size_t p_size);
-		/** \brief Sets the first p_size bytes of the block of memory pointed by ptr to the specified p_byte (interpreted as an unsigned char). */
-		void memset(void * p_pPtr, int32_t p_byte, size_t p_size);
+		static void * realloc(void * p_pPtr, size_t p_size);
+		/** \brief Sets the first p_size p_byte of the block of memory pointed by ptr to the specified p_byte (interpreted as an unsigned char). */
+		static void memset(void * p_pPtr, int32_t p_byte, size_t p_size);
+		/** \brief Copies the values of p_size byte from the location pointed by p_pSrc directly to the memory block pointed by p_pDest. */
+		static void memcpy(void * p_pDest, const void * p_pSrc, size_t p_size);
+		/** \brief Copies the content of the location pointed by p_pSrc directly to the memory block pointed by p_pDest for p_num elements. */
+		template<class T> static void copy(T * p_pDest, T * p_pSrc, size_t p_num);
 		/** \brief C-style memory free. */
-		void free(void * p_pPtr);
+		static void free(void * p_pPtr);
 
 
 		/** 
 		* \brief Aligned memory allocation.
 		* \param p_alignment must be an integer power of 2.
 		*/
-		void * align_malloc(size_t p_alignment, size_t p_size);
+		static void * align_malloc(size_t p_alignment, size_t p_size);
 		/** \brief Free aligned memory. */
-		void align_free(void * p_pPtr);		
+		static void align_free(void * p_pPtr);
 
 
 		/** \brief 16 byte aligned memset. */
-		void align_memset_16(void * p_pPtr, int32_t p_byte, size_t p_size);
+		static void align_memset_16(void * p_pPtr, int32_t p_byte, size_t p_size);
 
 	} // namespace mem
 
@@ -142,6 +146,24 @@ EVE_FORCE_INLINE void eve::mem::memset(void * p_pPtr, int32_t p_byte, size_t p_s
 {
 	EVE_ASSERT(p_pPtr);
 	std::memset(p_pPtr, p_byte, p_size);
+	EVE_MEM_CHECK;
+}
+
+//=================================================================================================
+EVE_FORCE_INLINE void eve::mem::memcpy(void * p_pDest, const void * p_pSrc, size_t p_size)
+{
+	EVE_ASSERT(p_pDest);
+	EVE_ASSERT(p_pSrc);
+	std::memcpy(p_pDest, p_pSrc, p_size);
+	EVE_MEM_CHECK;
+}
+
+//=================================================================================================
+template<class T> EVE_FORCE_INLINE void eve::mem::copy(T * p_pDest, T * p_pSrc, size_t p_num)
+{
+	EVE_ASSERT(p_pDest);
+	EVE_ASSERT(p_pSrc);
+	std::copy(p_pSrc, p_pSrc + p_num, p_pDest);
 	EVE_MEM_CHECK;
 }
 

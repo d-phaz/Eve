@@ -14,6 +14,7 @@ set( SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/MatrixDecompose.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TBox.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TCamera.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TLight.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TMesh.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/TRay.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/math/Types.h )

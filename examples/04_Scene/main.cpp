@@ -211,7 +211,7 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 	}
 	else if (p_args.key == eve::sys::key_Return)
 	{
-		std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
+		std::wstring path(EVE_TXT("C:\\Users\\Romain\\Desktop\\import\\untitled_spot.dae"));
 		m_pScene->load(path);
 	}
 

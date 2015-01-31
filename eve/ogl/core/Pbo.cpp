@@ -137,7 +137,7 @@ void eve::ogl::Pbo::oglUpdate(void)
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_id);
 
 	m_pOglData = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT); // GL_WRITE_ONLY
-	memcpy(m_pOglData, m_pPixels.get(), m_size);
+	eve::mem::memcpy(m_pOglData, m_pPixels.get(), m_size);
 
 	glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);

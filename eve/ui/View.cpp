@@ -32,10 +32,6 @@
 // Main class header
 #include "eve/ui/View.h"
 
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
-#endif
-
 
 //=================================================================================================
 eve::ui::View::View(void)

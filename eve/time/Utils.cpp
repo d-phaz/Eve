@@ -102,7 +102,7 @@ struct tm eve::time::millis_to_local(const int64_t p_millis)
 		if (now >= 0 && now <= 0x793406fff)
 			localtime_s(&res, &now);
 		else
-			memset(&res, 0, sizeof(tm));
+			eve::mem::memset(&res, 0, sizeof(tm));
 #else
 		result = *localtime(&now);
 #endif

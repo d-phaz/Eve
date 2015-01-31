@@ -45,6 +45,10 @@
 #include "eve/math/TCamera.h"
 #endif 
 
+#ifndef __EVE_MATH_TLIGHT_H__
+#include "eve/math/TLight.h"
+#endif
+
 #ifndef __EVE_MATH_TMESH_H__
 #include "eve/math/TMesh.h"
 #endif
@@ -65,37 +69,26 @@ namespace eve
 	{
 		typedef eve::math::TBox<double>			Boxd;
 		typedef eve::math::TBox<float>			Boxf;
-#if defined(EVE_PRECISION_DOUBLE)
-		typedef eve::math::TBox<double>			Box;
-#else
-		typedef eve::math::TBox<float>			Box;
-#endif
+		typedef eve::math::TBox<eve_real_t>		Box;
 
 		typedef eve::math::TRay<double>			Rayd;
 		typedef eve::math::TRay<float>			Rayf;
-#if defined(EVE_PRECISION_DOUBLE)
-		typedef eve::math::TRay<double>			Ray;
-#else
-		typedef eve::math::TRay<float>			Ray;
-#endif
+		typedef eve::math::TRay<eve_real_t>		Ray;
 
 
 		typedef eve::math::TCamera<double>		Camerad;
 		typedef eve::math::TCamera<float>		Cameraf;
-#if defined(EVE_PRECISION_DOUBLE)
-		typedef eve::math::TCamera<double>		Camera;
-#else
-		typedef eve::math::TCamera<float>		Camera;
-#endif
+		typedef eve::math::TCamera<eve_real_t>	Camera;
+
+
+		typedef eve::math::TLight<double>		Lightd;
+		typedef eve::math::TLight<float>		Lightf;
+		typedef eve::math::TLight<eve_real_t>	Light;
 
 
 		typedef eve::math::TMesh<double>		Meshd;
 		typedef eve::math::TMesh<float>			Meshf;
-#if defined(EVE_PRECISION_DOUBLE)
-		typedef eve::math::TMesh<double>		Mesh;
-#else
-		typedef eve::math::TMesh<float>			Mesh;
-#endif
+		typedef eve::math::TMesh<eve_real_t>	Mesh;
 
 	} // namespace math
 

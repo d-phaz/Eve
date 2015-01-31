@@ -75,6 +75,8 @@ namespace eve
 			int32_t							m_y;					//!< Specifies widget position on Y axis.
 			int32_t							m_width;				//!< Specifies widget width.
 			int32_t							m_height;				//!< Specifies widget height.
+			int32_t							m_minWidth;				//!< Specifies widget minimum width.
+			int32_t							m_minHeight;			//!< Specifies widget minimum height.
 
 		protected:
 			bool							m_bEnabled;				//!< Specifies enabled state (default to false).
@@ -224,9 +226,9 @@ namespace eve
 			/** \brief Get position. */
 			const eve::vec2i getPosition(void) const;
 			/** \brief Get position on X axis. */
-			int32_t getPositionX(void) const;
+			const int32_t getPositionX(void) const;
 			/** \brief Get position on Y axis. */
-			int32_t getPositionY(void) const;
+			const int32_t getPositionY(void) const;
 
 			/** \brief Set position. */
 			virtual void setPosition(int32_t p_x, int32_t p_y);
@@ -242,9 +244,9 @@ namespace eve
 			/** \brief Get size. */
 			const eve::vec2i getSize(void) const;
 			/** \brief Get width. */
-			int32_t getWidth(void);
+			const int32_t getWidth(void) const;
 			/** \brief Get height. */
-			int32_t getHeight(void);
+			const int32_t getHeight(void) const;
 
 			/** \brief Set size. */
 			virtual void setSize(int32_t p_width, int32_t p_height);
@@ -254,6 +256,24 @@ namespace eve
 			virtual void setWidth(int32_t p_value);
 			/** \brief Set height */
 			virtual void setHeight(int32_t p_value);
+
+
+		public:
+			/** \brief Get minimum size. */
+			const eve::vec2i getMinSize(void) const;
+			/** \brief Get minimum width. */
+			const int32_t getMinWidth(void) const;
+			/** \brief Get minimum height. */
+			const int32_t getMinHeight(void) const;
+
+			/** \brief Set minimum size. */
+			virtual void setMinSize(int32_t p_width, int32_t p_height);
+			/** \brief Set minimum size. */
+			virtual void setMinSize(const eve::vec2i & p_value);
+			/** \brief Set minimum width. */
+			virtual void setMinWidth(int32_t p_value);
+			/** \brief Set minimum height. */
+			virtual void setMinHeight(int32_t p_value);
 
 
 		public:
@@ -285,14 +305,20 @@ EVE_FORCE_INLINE std::vector<eve::ui::Widget*> * eve::ui::Widget::getChildren(vo
 
 //=================================================================================================
 EVE_FORCE_INLINE const eve::vec2i	eve::ui::Widget::getPosition(void) const	{ return eve::vec2i(m_x, m_y);	}
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getPositionX(void) const	{ return m_x; }
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getPositionY(void) const	{ return m_y; }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getPositionY(void) const	{ return m_y; }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getPositionX(void) const	{ return m_x; }
 
 
 //=================================================================================================
 EVE_FORCE_INLINE const eve::vec2i   eve::ui::Widget::getSize(void) const		{ return eve::vec2i(m_width, m_height);	}
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getWidth(void)				{ return m_width; }
-EVE_FORCE_INLINE int32_t			eve::ui::Widget::getHeight(void)			{ return m_height; }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getWidth(void)	const		{ return m_width; }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getHeight(void) const		{ return m_height; }
+
+
+//=================================================================================================
+EVE_FORCE_INLINE const eve::vec2i	eve::ui::Widget::getMinSize(void) const		{ return eve::vec2i(m_minWidth, m_minHeight); }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getMinWidth(void) const	{ return m_minWidth; }
+EVE_FORCE_INLINE const int32_t		eve::ui::Widget::getMinHeight(void) const	{ return m_minHeight; }
 
 
 //=================================================================================================

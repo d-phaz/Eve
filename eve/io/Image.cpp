@@ -106,7 +106,7 @@ bool eve::io::load_image(const std::string & p_path, eve::ogl::FormatTex * p_pFo
 				size_t size = channels * p_pFormat->width * p_pFormat->height * sizeof(GLubyte);
 				GLubyte * pixels = (GLubyte*)eve::mem::malloc(size);
 				GLubyte * fiPix  = FreeImage_GetBits(dib);
-				memcpy(pixels, fiPix, size);
+				eve::mem::memcpy(pixels, fiPix, size);
 
 				p_pFormat->pixels.reset(pixels);
 

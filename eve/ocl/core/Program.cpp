@@ -153,7 +153,7 @@ char * eve::ocl::Program::load(const char * p_path, const char * p_preamble, siz
 
 	// Allocate a buffer for the source code string and read it in.
 	char* cSourceString = (char *)eve::mem::malloc(szSourceLength + szPreambleLength + 1);
-	memcpy(cSourceString, p_preamble, szPreambleLength);
+	eve::mem::memcpy(cSourceString, p_preamble, szPreambleLength);
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)
 	{
 		fclose(pFileStream);

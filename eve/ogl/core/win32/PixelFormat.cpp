@@ -266,10 +266,10 @@ eve::ogl::PixelFormat eve::ogl::PixelFormat::pfiToSystemPixelFormat( HDC hdc, in
 
 	// Attributes
 	int32_t * iAttributes = (int32_t*)eve::mem::malloc(sizeof(int32_t)* 14);
-	memset( iAttributes, 0, sizeof(int32_t)*14 );
+	eve::mem::memset(iAttributes, 0, sizeof(int32_t)* 14);
 
 	int32_t * iValues = (int32_t*)eve::mem::malloc(sizeof(int32_t)* 14);
-	memset( iValues, 0, sizeof(int32_t)*14 );
+	eve::mem::memset(iValues, 0, sizeof(int32_t)* 14);
 
 	// Inc
     int32_t i = 0;

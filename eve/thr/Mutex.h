@@ -60,7 +60,11 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			void *		m_mutex;		///< Mutex handle
+#if defined(EVE_OS_WIN)
+			void *				m_mutex;		//!< Specifies Mutex handle.
+#elif defined(EVE_OS_DARWIN)
+			pthread_mutex_t		m_mutex;		//!< Specifies Mutex handle.
+#endif
 
 
 			//////////////////////////////////////

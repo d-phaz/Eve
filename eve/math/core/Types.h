@@ -54,6 +54,14 @@
 #endif
 
 
+/** \typedef eve_real_t \brief Floating point type based on double precision activation. */
+#if defined(EVE_PRECISION_DOUBLE)
+typedef	double		eve_real_t;
+#else
+typedef float		eve_real_t;
+#endif
+
+
 namespace eve
 {
 	namespace math
@@ -62,6 +70,7 @@ namespace eve
 		typedef EVE_ALIGNED16(uint32_t)		__vec4ui[4];
 		typedef EVE_ALIGNED16(float)		__vec4f[4];
 		typedef EVE_ALIGNED16(double)		__vec4d[4];
+		typedef EVE_ALIGNED16(eve_real_t)	__vec4r[4];
 
 	} // namespace math
 
@@ -70,6 +79,7 @@ namespace eve
 	typedef eve::math::__vec4ui					vec4ui_t;
 	typedef eve::math::__vec4f					vec4f_t;
 	typedef eve::math::__vec4d					vec4d_t;
+	typedef eve::math::__vec4r					vec4r_t;
 
 	
 	typedef __m128								simd_float4_t;
@@ -79,35 +89,43 @@ namespace eve
 	typedef eve::math::TVec2<uint32_t>			vec2ui;
 	typedef eve::math::TVec2<float>				vec2f;
 	typedef eve::math::TVec2<double>			vec2d;
+	typedef eve::math::TVec2<eve_real_t>		vec2r;
 
 	typedef eve::math::TVec3<int32_t>			vec3i;
 	typedef eve::math::TVec3<uint32_t>			vec3ui;
 	typedef eve::math::TVec3<float>				vec3f;
 	typedef eve::math::TVec3<double>			vec3d;
+	typedef eve::math::TVec3<eve_real_t>		vec3r;
 
 	typedef eve::math::TVec4<int32_t>			vec4i;
 	typedef eve::math::TVec4<uint32_t>			vec4ui;
 	typedef eve::math::TVec4<float>				vec4f;
 	typedef eve::math::TVec4<double>			vec4d;
+	typedef eve::math::TVec4<eve_real_t>		vec4r;
 
 	typedef eve::math::TVec4<int32_t>			color4i;
 	typedef eve::math::TVec4<uint32_t>			color4ui;
 	typedef eve::math::TVec4<float>				color4f;
 	typedef eve::math::TVec4<double>			color4d;
+	typedef eve::math::TVec4<eve_real_t>		color4r;
 		
 
 	typedef eve::math::TMatrix22<float>			mat22f;
 	typedef eve::math::TMatrix22<double>		mat22d;
+	typedef eve::math::TMatrix22<eve_real_t>	mat22r;
 
 	typedef eve::math::TMatrix33<float>			mat33f;
 	typedef eve::math::TMatrix33<double>		mat33d;
+	typedef eve::math::TMatrix33<eve_real_t>	mat33r;
 
 	typedef eve::math::TMatrix44<float>			mat44f;
 	typedef eve::math::TMatrix44<double>		mat44d;
+	typedef eve::math::TMatrix44<eve_real_t>	mat44r;
 	
 
 	typedef eve::math::TQuaternion<float>		quatf;
 	typedef eve::math::TQuaternion<double>		quatd;
+	typedef eve::math::TQuaternion<eve_real_t>	quatr;
 
 } // namespace eve
 

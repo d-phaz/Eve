@@ -81,7 +81,7 @@ eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * 
 	// Inheritance
 	: eve::scene::Object(p_pParentScene, p_pParent, SceneObject_Mesh)
 	, eve::scene::EventListenerSceneObject()
-	, eve::math::TMesh<float>()
+	, eve::math::Mesh()
 
 	// Members init
 	, m_pVao(nullptr)
@@ -290,7 +290,7 @@ void eve::scene::Mesh::init(void)
 {
 	// Call parent class
 	eve::scene::Object::init();
-	eve::math::TMesh<float>::init();
+	eve::math::Mesh::init();
 
 	// Uniform buffer.
 	eve::ogl::FormatUniform fmtUniform;
@@ -316,7 +316,7 @@ void eve::scene::Mesh::release(void)
 
 	// Call parent class
 	eve::scene::Object::release();
-	eve::math::TMesh<float>::release();
+	eve::math::Mesh::release();
 }
 
 
@@ -362,7 +362,7 @@ void eve::scene::Mesh::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_ar
 void eve::scene::Mesh::updateMatrixModelView(void)
 {
 	// Call parent class.
-	eve::math::TMesh<float>::updateMatrixModelView();
+	eve::math::Mesh::updateMatrixModelView();
 	// Update uniform buffer.
 	m_pUniformMatrix->pushData(m_matrixModelView, 0);
 }

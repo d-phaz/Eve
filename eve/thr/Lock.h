@@ -37,6 +37,10 @@
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
 #ifndef __EVE_THREADING_FENCE_H__
 #include "eve/thr/Fence.h"
 #endif
@@ -49,7 +53,7 @@ namespace eve
 
 		/** 
 		* \class eve::thr::Lock
-		* \brief lock using critical section
+		* \brief lock using critical section.
 		* \note extends eve::thr::Fence
 		*/
 		class Lock
@@ -61,7 +65,11 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
+#if defined(EVE_OS_WIN)
 			CRITICAL_SECTION		m_criticalSections;
+#elif defined(EVE_OS_DARWIN)
+			pthread_mutex_t			m_mutex;		
+#endif
 
 
 			//////////////////////////////////////

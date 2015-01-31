@@ -113,7 +113,7 @@ std::string eve::io::load_program(const std::string & p_filePath, const char * p
 
 	if (p_preamble)
 	{
-		memcpy(cSourceString, p_preamble, szPreambleLength);
+		eve::mem::memcpy(cSourceString, p_preamble, szPreambleLength);
 	}
 
 	if (fread((cSourceString)+szPreambleLength, szSourceLength, 1, pFileStream) != 1)

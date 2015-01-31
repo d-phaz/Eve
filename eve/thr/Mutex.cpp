@@ -32,6 +32,10 @@
 // Main header
 #include "eve/thr/Mutex.h"
 
+#ifndef __EVE_MESSAGING_SERVER_H__
+#include "eve/mess/Server.h"
+#endif
+
 
 //=============================================================================================
 eve::thr::Mutex::Mutex(void)
@@ -46,13 +50,42 @@ eve::thr::Mutex::Mutex(void)
 //=================================================================================================
 void eve::thr::Mutex::init(void)
 {
+#if defined(EVE_OS_WIN)
 	m_mutex = ::CreateMutexW(NULL, false, NULL);
+	if (!m_mutex)
+	{
+		EVE_LOG_ERROR("Unable to create mutex CreateMutex() failed with error: %s.", eve::mess::get_error_msg());
+		EVE_ASSERT_FAILURE;
+	}
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_init(&m_mutex, 0) != 0)
+	{
+		EVE_LOG_ERROR("Unable to create mutex pthread_mutex_init() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
 
 //=================================================================================================
 void eve::thr::Mutex::release(void)
 {
-	::CloseHandle(m_mutex);
+#if defined(EVE_OS_WIN)
+	if (::CloseHandle(m_mutex) == FALSE)
+	{
+		EVE_LOG_ERROR("Unable to release mutex CloseHandle() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_destroy(&m_mutex) != 0) 
+	{
+		EVE_LOG_ERROR("Unable to release mutex pthread_mutex_destroy() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
 
 
@@ -60,11 +93,39 @@ void eve::thr::Mutex::release(void)
 //=============================================================================================
 void eve::thr::Mutex::lock(void)
 {
-	::WaitForSingleObjectEx(m_mutex, INFINITE, FALSE);
+#if defined(EVE_OS_WIN)
+	if (::WaitForSingleObjectEx(m_mutex, INFINITE, FALSE) != WAIT_OBJECT_0)
+	{
+		EVE_LOG_ERROR("Unable to lock mutex WaitForSingleObjectEx() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_lock(&m_mutex) != 0)
+	{
+		EVE_LOG_ERROR("Unable to lock mutex pthread_mutex_lock() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
 
 //=============================================================================================
 void eve::thr::Mutex::unlock(void)
 {
-	::ReleaseMutex(m_mutex);
+#if defined(EVE_OS_WIN)
+	if (::ReleaseMutex(m_mutex) == FALSE)
+	{
+		EVE_LOG_ERROR("Unable to unlock mutex ReleaseMutex() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#elif defined(EVE_OS_DARWIN)
+	if (pthread_mutex_unlock(&m_mutex) != 0)
+	{
+		EVE_LOG_ERROR("Unable to unlock mutex pthread_mutex_unlock() failed.");
+		EVE_ASSERT_FAILURE;
+	}
+
+#endif
 }
