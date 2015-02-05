@@ -30,89 +30,67 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_INCLUDES_H__
-#define __EVE_CORE_INCLUDES_H__
-
-
-#ifndef __EVE_CORE_SYSTEM_DEFINITION__
-#include "eve/core/SystemDefinition.h"
-#endif
-
-
-// C++ standard lib
-#include <stdlib.h>
-// C++ standard definitions
-#include <stddef.h>
-// standard input/output stream objects
-#include <stdio.h>
-#include <iostream>
-#include <locale>
-#include <sstream>
-#include <fstream>
-// x64 compliant integers
-#include <stdint.h>
-// math
-#include <float.h>
-#include <math.h>
-#include <climits>
-// algorithm
-#include <algorithm>
-// pointers and memory
-#include <malloc.h>
-#include <memory>
-// assertion
-#include <cassert>
-// standard string
-#include <string>
-// container types
-#include <set>
-#include <list>
-#include <queue>
-#include <deque>
-#include <vector>
-#include <map>
-#include <hash_map>
-#include <stack>
-// utility
-#include <utility>
-// type utility
-#include <type_traits>
-// time
-#if defined(EVE_OS_WIN)
-#include <sys\timeb.h>
-#elif defined(EVE_OS_DARWIN)
-#include <mach/mach_time.h>
-#elif defined(EVE_OS_LINUX)
-#include <time.h>
-#endif
-//random
-#include <random>
-// STD exception
-#include <stdexcept>
-
-
-#if defined(EVE_OS_WIN)
-
-	#include <Windows.h>
-	#include <Shtypes.h>
-
-#endif // defined(EVE_OS_WIN)
-
-
-#ifndef __EVE_EXTERNAL_H__
-#include "eve/generated/External.h"
-#endif
-
-#ifndef __EVE_VERSION_H__
-#include "eve/generated/Version.h"
-#endif
-
-#ifndef __EVE_CORE_MACRO_H__
-#include "eve/core/Macro.h"
-#endif
-
 #ifndef __EVE_CORE_OBJECT_H__
-#include "eve/core/Object.h"
+#define __EVE_CORE_OBJECT_H__
+
+#ifndef __EVE_CORE_INCLUDES_H__
+#include "eve/core/Includes.h"
 #endif
 
-#endif // __EVE_CORE_INCLUDES_H__
+
+namespace eve
+{
+	namespace core
+	{
+
+		/** 
+		 * \class eve::core::Object
+		 * \brief Eve base object class
+		 */
+		class Object
+		{
+
+			//////////////////////////////////////
+			//				DATA				//
+			//////////////////////////////////////
+
+		protected:
+			static	uint32_t			m_current_id;		//!< Overall incremented id.
+					uint32_t			m_uniqueId;			//!< Object unique id.
+
+
+			//////////////////////////////////////
+			//				METHOD				//
+			//////////////////////////////////////
+
+			EVE_DISABLE_COPY(Object);
+			EVE_PROTECT_DESTRUCTOR(Object);
+
+		protected:
+			/** \brief Class constructor. */
+			explicit Object(void);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Get object unique id. */
+			const int32_t getUniqueId(void) const;
+
+		}; // class Object
+
+	} // namespace core
+
+} // namespace eve
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+EVE_FORCE_INLINE const int32_t eve::core::Object::getUniqueId(void) const { return m_uniqueId; }
+
+#endif // __EVE_CORE_OBJECT_H__

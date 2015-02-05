@@ -272,12 +272,6 @@ namespace eve
 
 			SceneLightEventType_CastShadow,
 
-			SceneLightEventType_AmbiantFactor,
-			SceneLightEventType_AmbiantColor,
-			SceneLightEventType_AmbiantColorRed,
-			SceneLightEventType_AmbiantColorGreen,
-			SceneLightEventType_AmbiantColorBlue,
-
 			SceneLightEventType_Exponent,
 			SceneLightEventType_CutOff,
 			
