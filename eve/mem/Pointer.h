@@ -45,9 +45,11 @@ namespace eve
 
 		/** 
 		 * \class eve::mem::Pointer
-		 * \brief Abstract base pointer class
+		 * \brief Abstract base pointer class.
+		 * \note Extends eve::core::Object.
 		 */
 		class Pointer
+			: public eve::core::Object
 		{
 
 			//////////////////////////////////////

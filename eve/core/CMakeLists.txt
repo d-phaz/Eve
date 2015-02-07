@@ -10,6 +10,8 @@ set( SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Flags.h
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Includes.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Macro.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Object.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Object.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Renderer.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/Renderer.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/core/SystemDefinition.h )

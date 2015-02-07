@@ -262,7 +262,7 @@ namespace eve
 			/** \brief Get title bar height. */
 			static uint32_t get_title_bar_height(void);
 
-			/** \brief get window border thickness. */
+			/** \brief Get window border thickness. */
 			static uint32_t get_border_thickness(void);
 
 		}; // class Window

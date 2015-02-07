@@ -29,61 +29,13 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Main class header
-#include "eve/sys/shared/View.h"
+// Main header
+#include "eve/core/Object.h"
 
-#ifndef __EVE_SYSTEM_MESSAGE_PUMP_H__
-#include "eve/sys/win32/MessagePump.h"
-#endif
 
+uint32_t eve::core::Object::m_current_id = 0;
 
 //=================================================================================================
-eve::sys::View::View(void)
-	// Inheritance.
-	: eve::sys::Node()
-	// Members init.
-	, m_pRender(nullptr)
+eve::core::Object::Object(void)
+	: m_uniqueId(++m_current_id)
 {}
-
-
-
-//=================================================================================================
-void eve::sys::View::initThreadedData(void)
-{
-	// Call parent class.
-	eve::sys::Node::initThreadedData();
-
-	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
-	m_pRender->start();
-
-}
-
-//=================================================================================================
-void eve::sys::View::releaseThreadedData(void)
-{
-	m_pRender->stop();
-	EVE_RELEASE_PTR(m_pRender);
-
-	// Call parent class.
-	eve::sys::Node::releaseThreadedData();
-}
-
-
-
-//=================================================================================================
-bool eve::sys::View::registerRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->registerRendererBack(p_pRenderer);
-}
-
-//=================================================================================================
-bool eve::sys::View::unregisterRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->unregisterRenderer(p_pRenderer);
-}
-
-//=================================================================================================
-bool eve::sys::View::releaseRenderer(eve::core::Renderer * p_pRenderer)
-{
-	return m_pRender->releaseRenderer(p_pRenderer);
-}
