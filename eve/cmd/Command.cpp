@@ -29,68 +29,36 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
-#ifndef __EVE_CORE_OBJECT_H__
-#define __EVE_CORE_OBJECT_H__
+// Main header
+#include "eve/cmd/Command.h"
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
-#endif
-
-
-namespace eve
-{
-	namespace core
-	{
-
-		/** 
-		 * \class eve::core::Object
-		 * \brief Eve base object class
-		 */
-		class Object
-		{
-
-			//////////////////////////////////////
-			//				DATA				//
-			//////////////////////////////////////
-
-		protected:
-			static	uint32_t				m_current_id;		//!< Overall incremented id.
-					uint32_t				m_uniqueId;			//!< Object unique id.
-
-
-			//////////////////////////////////////
-			//				METHOD				//
-			//////////////////////////////////////
-
-			EVE_DISABLE_COPY(Object);
-			EVE_PROTECT_DESTRUCTOR(Object);
-
-		protected:
-			/** \brief Class constructor. */
-			explicit Object(void);
-
-
-			///////////////////////////////////////////////////////////////////////////////////////
-			//		GET / SET
-			///////////////////////////////////////////////////////////////////////////////////////
-
-		public:
-			/** \brief Get object unique id. */
-			const uint32_t getUniqueId(void) const;
-
-		}; // class Object
-
-	} // namespace core
-
-} // namespace eve
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE const uint32_t		 eve::core::Object::getUniqueId(void) const { return m_uniqueId; }
+eve::cmd::Command::Command(void)
+	: _cb_undo(nullptr)
+	, _cb_redo(nullptr)
+{}
 
-#endif // __EVE_CORE_OBJECT_H__
+//=================================================================================================
+eve::cmd::Command::~Command(void)
+{}
+
+//=================================================================================================
+void eve::cmd::Command::init(eve::evt::CallbackAuto * p_undo, eve::evt::CallbackAuto * p_redo)
+{
+	EVE_ASSERT(p_undo);
+	EVE_ASSERT(p_redo);
+	_cb_undo = p_undo;
+	_cb_redo = p_redo;
+}
+
+//=================================================================================================
+void eve::cmd::Command::release(void)
+{
+	delete _cb_undo;
+	delete _cb_redo;
+}
+
+//=================================================================================================
+void eve::cmd::Command::undo(void) { _cb_undo->execute(); }
+void eve::cmd::Command::redo(void) { _cb_redo->execute(); }

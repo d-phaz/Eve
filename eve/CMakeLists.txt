@@ -69,6 +69,7 @@ endif()
 # Files listing and folder creation.
 #################################################
 include( ${CMAKE_CURRENT_SOURCE_DIR}/app/CMakeLists.txt )
+include( ${CMAKE_CURRENT_SOURCE_DIR}/cmd/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/core/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/dx11/CMakeLists.txt )
 include( ${CMAKE_CURRENT_SOURCE_DIR}/evt/CMakeLists.txt )

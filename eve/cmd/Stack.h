@@ -30,45 +30,66 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_OBJECT_H__
-#define __EVE_CORE_OBJECT_H__
+#ifndef __EVE_COMMAND_STACK_H__ 
+#define __EVE_COMMAND_STACK_H__
 
-#ifndef __EVE_CORE_INCLUDES_H__
-#include "eve/core/Includes.h"
+#ifndef __EVE_COMMAND_COMMAND_H__
+#include "eve/cmd/Command.h"
 #endif
 
 
 namespace eve
 {
-	namespace core
+	namespace cmd
 	{
-
-		/** 
-		 * \class eve::core::Object
-		 * \brief Eve base object class
-		 */
-		class Object
+		/**
+		* \class eve::cmd::CommandStack
+		* \brief Command FIFO stack used to undo/redo.
+		* \note extends eve::mem::Pointer
+		*/
+		class CommandStack final
+			: public eve::mem::Pointer
 		{
 
 			//////////////////////////////////////
-			//				DATA				//
+			//				DATAS				//
 			//////////////////////////////////////
 
 		protected:
-			static	uint32_t				m_current_id;		//!< Overall incremented id.
-					uint32_t				m_uniqueId;			//!< Object unique id.
+			int64_t						_cursor;			//!< Current command id.
+			std::list<Command*> *		_p_commands;		//!< Commands FIFO list.
+			uint32_t					_max_size;			//!< Command list max size (default to 40).
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Object);
-			EVE_PROTECT_DESTRUCTOR(Object);
+			EVE_DISABLE_COPY(CommandStack);
+			EVE_PUBLIC_DESTRUCTOR(CommandStack);
 
-		protected:
+		public:
 			/** \brief Class constructor. */
-			explicit Object(void);
+			explicit CommandStack(void);
+
+
+		public:
+			/** \brief Alloc and init class members. (pure virtual) */
+			virtual void init(void) override;
+			/** \brief Release and delete class members. (pure virtual) */
+			virtual void release(void) override;
+
+
+		public:
+			/** \brief Add new command to stack. */
+			void add(eve::evt::CallbackAuto * p_undo, eve::evt::CallbackAuto * p_redo);
+
+
+		public:
+			/** \brief Execute undo callback. */
+			void undo(void);
+			/** \brief Execute redo callback. */
+			void redo(void);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
@@ -76,12 +97,21 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Get object unique id. */
-			const uint32_t getUniqueId(void) const;
+			/** \brief Get command list max size. */
+			const uint32_t get_max_size(void) const;
+			/** \brief Set command list max size. */
+			void set_max_size(uint32_t p_size);
 
-		}; // class Object
 
-	} // namespace core
+		public:
+			/** \brief Get undo possible state. */
+			const bool can_undo(void) const;
+			/** \brief Get redo possible state. */
+			const bool can_redo(void) const;
+
+		}; // class CommandStack
+
+	} // namespace cmd
 
 } // namespace eve
 
@@ -91,6 +121,11 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE const uint32_t		 eve::core::Object::getUniqueId(void) const { return m_uniqueId; }
+EVE_FORCE_INLINE const uint32_t eve::cmd::CommandStack::get_max_size(void) const { return _max_size; }
 
-#endif // __EVE_CORE_OBJECT_H__
+
+//=================================================================================================
+EVE_FORCE_INLINE const bool eve::cmd::CommandStack::can_undo(void) const { return (_p_commands->size() > 0 && _cursor > 0); }
+EVE_FORCE_INLINE const bool eve::cmd::CommandStack::can_redo(void) const { return (_p_commands->size() > 0 && _cursor < _p_commands->size()); }
+
+#endif // __EVE_COMMAND_STACK_H__

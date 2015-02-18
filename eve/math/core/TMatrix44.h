@@ -300,7 +300,7 @@ namespace eve
 			static TMatrix44<T>  zero(void)		{ return TMatrix44(static_cast<T>(0)); }
 
 			// creates translation matrix
-			static TMatrix44<T>	createTranslation(const eve::math::TVec3<T> &v, T w = 1);
+			static TMatrix44<T>	createTranslation(const eve::math::TVec3<T> &v, T w = static_cast<T>(1));
 			static TMatrix44<T>	createTranslation(const eve::math::TVec4<T> &v) { return createTranslation(v.xyz(), v.w); }
 
 			// creates rotation matrix
@@ -1305,8 +1305,19 @@ void eve::math::TMatrix44<T>::fromZupToYup(void)
 										   , 0.0, 1.0, 0.0, 0.0 
 										   , 0.0, 0.0, 0.0, 1.0 );
 
+// 	static eve::math::TMatrix44<T> matMirror(1.0, 0.0, 0.0, 0.0
+// 										   , 0.0, 0.0, 1.0, 0.0
+// 										   , 0.0, 1.0, 0.0, 0.0 
+// 										   , 0.0, 0.0, 0.0, 1.0 );
+
+// 	static eve::math::TMatrix44<T> matMirror(1.0, 0.0, 0.0, 0.0
+// 										   , 0.0, 0.0, 1.0, 0.0
+// 										   , 0.0,-1.0, 0.0, 0.0 
+// 										   , 0.0, 0.0, 0.0, 1.0 );
+
 	*this = matMirror * (*this);
 	*this = eve::math::TMatrix44<T>::createRotation(eve::math::TVec3<T>::yAxis(), static_cast<T>(M_PI)) * (*this);
+	//*this = *this * matMirror;
 }
 
 

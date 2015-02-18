@@ -30,67 +30,77 @@
 */
 
 #pragma once
-#ifndef __EVE_CORE_OBJECT_H__
-#define __EVE_CORE_OBJECT_H__
+#ifndef __EVE_COMMAND_COMMAND_H__ 
+#define __EVE_COMMAND_COMMAND_H__
 
 #ifndef __EVE_CORE_INCLUDES_H__
 #include "eve/core/Includes.h"
 #endif
 
+#ifndef __EVE_EVT_TCALLBACK_AUTO_H__
+#include "eve/evt/TCallbackAuto.h"
+#endif
+
+#ifndef __EVE_MEMORY_INCLUDES_H__
+#include "eve/mem/Includes.h"
+#endif
+
+#ifndef __EVE_MESSAGING_INCLUDES_H__
+#include "eve/mess/Includes.h"
+#endif
+
 
 namespace eve
 {
-	namespace core
+	namespace cmd
 	{
-
-		/** 
-		 * \class eve::core::Object
-		 * \brief Eve base object class
-		 */
-		class Object
+		
+		/**
+		* \class eve::cmd::Command
+		* \brief Command used by undo/redo stack.
+		*/
+		class Command final
 		{
 
 			//////////////////////////////////////
-			//				DATA				//
+			//				DATAS				//
 			//////////////////////////////////////
 
 		protected:
-			static	uint32_t				m_current_id;		//!< Overall incremented id.
-					uint32_t				m_uniqueId;			//!< Object unique id.
+			eve::evt::CallbackAuto *		_cb_undo;	//!< Undo callback.
+			eve::evt::CallbackAuto *		_cb_redo;	//!< Redo callback.
 
 
 			//////////////////////////////////////
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Object);
-			EVE_PROTECT_DESTRUCTOR(Object);
-
-		protected:
-			/** \brief Class constructor. */
-			explicit Object(void);
-
-
-			///////////////////////////////////////////////////////////////////////////////////////
-			//		GET / SET
-			///////////////////////////////////////////////////////////////////////////////////////
+			EVE_DISABLE_COPY(Command);
 
 		public:
-			/** \brief Get object unique id. */
-			const uint32_t getUniqueId(void) const;
+			/** \brief Class constructor. */
+			explicit Command(void);
+			/** \brief Class destructor. */
+			virtual ~Command(void);
 
-		}; // class Object
 
-	} // namespace core
+		public:
+			/** \brief Alloc and init class members. */
+			void init(eve::evt::CallbackAuto * p_undo, eve::evt::CallbackAuto * p_redo);
+			/** \brief Release and delete class members. */
+			void release(void);
+
+
+		public:
+			/** \brief Execute undo callback. */
+			void undo(void);
+			/** \brief Execute redo callback. */
+			void redo(void);
+
+		}; // class Command
+
+	} // namespace cmd
 
 } // namespace eve
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//		GET / SET
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-EVE_FORCE_INLINE const uint32_t		 eve::core::Object::getUniqueId(void) const { return m_uniqueId; }
-
-#endif // __EVE_CORE_OBJECT_H__
+#endif // __EVE_COMMAND_COMMAND_H__
