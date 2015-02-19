@@ -62,7 +62,7 @@ namespace eve
 		* \brief Abstract base thread class containing init and release abstract methods,
 		* each thread must inherit from this class to properly alloc/init and release/free its members.
 		*
-		* \note extends mem::Pointer
+		* \note extends eve::mem::Pointer
 		*/
 		class Thread
 			: public eve::mem::Pointer
