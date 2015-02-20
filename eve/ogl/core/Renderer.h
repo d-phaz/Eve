@@ -73,6 +73,10 @@
 #include "eve/ogl/core/Vao.h"
 #endif
 
+#ifndef __EVE_OPENGL_CORE_VAO_STAGED_H__
+#include "eve/ogl/core/VaoStaged.h"
+#endif
+
 
 namespace eve { namespace thr { class SpinLock;  } }
 
@@ -151,19 +155,21 @@ namespace eve
 
 		public:
 			/** \brief Create and return new eve::ogl::Fbo pointer based on eve::ogl::FormatFbo. */
-			eve::ogl::Fbo *		create(eve::ogl::FormatFbo & p_format);
+			eve::ogl::Fbo *				create(eve::ogl::FormatFbo & p_format);
 			/** \brief Create and return new eve::ogl::Pbo pointer based on eve::ogl::FormatPbo. */
-			eve::ogl::Pbo *		create(eve::ogl::FormatPbo & p_format);
+			eve::ogl::Pbo *				create(eve::ogl::FormatPbo & p_format);
 			/** \brief Create and return new eve::ogl::Shader pointer based on eve::ogl::FormatShader. */
-			eve::ogl::Shader *	create(eve::ogl::FormatShader & p_format);
+			eve::ogl::Shader *			create(eve::ogl::FormatShader & p_format);
 			/** \brief Create and return new eve::ogl::ShaderManager pointer based on eve::ogl::FormatShaderAdvanced. */
-			eve::ogl::ShaderManager * create(eve::ogl::FormatShaderAdvanced & p_format);
+			eve::ogl::ShaderManager *	create(eve::ogl::FormatShaderAdvanced & p_format);
 			/** \brief Create and return new eve::ogl::Texture pointer based on eve::ogl::FormatTex. */
-			eve::ogl::Texture * create(eve::ogl::FormatTex & p_format);
+			eve::ogl::Texture *			create(eve::ogl::FormatTex & p_format);
 			/** \brief Create and return new eve::ogl::Uniform pointer based on eve::ogl::FormatUniform. */
-			eve::ogl::Uniform * create(eve::ogl::FormatUniform & p_format);
+			eve::ogl::Uniform *			create(eve::ogl::FormatUniform & p_format);
 			/** \brief Create and return new eve::ogl::Vao pointer based on eve::ogl::FormatVao. */
-			eve::ogl::Vao *		create(eve::ogl::FormatVao & p_format);
+			eve::ogl::Vao *				create(eve::ogl::FormatVao & p_format);
+			/** \brief Create and return new eve::ogl::VaoStaged pointer based on eve::ogl::FormatVaoStaged. */
+			eve::ogl::VaoStaged *		create(eve::ogl::FormatVaoStaged & p_format);
 
 		}; // class Renderer
 

@@ -48,13 +48,10 @@ namespace eve
 	{
 		/** \brief Decompose matrix to extract translation, rotation and scale. */
 		void decompose_matrix44(const eve::mat44f & mat, eve::vec3f & t, eve::quatf & r, eve::vec3f & s, eve::quatf & so);
-		/** \brief Decompose matrix to extract translation, rotation and scale. */
+		/** \brief Decompose matrix to extract translation and rotation. */
 		void decompose_matrix44(const eve::mat44f & mat, eve::vec3f & t, eve::quatf & r);
 
 
-		/** \brief Extract Camera view look at properties (eye, target, world up). */
-		template <typename T> 
-		void get_look_at(const eve::math::TMatrix44<T> & mat, eve::math::TVec3<T> & eye, eve::math::TVec3<T> & center, eve::math::TVec3<T> & up, float lookDistance = 1.0f);
 		/** \brief Extract camera eye position from model view matrix (that will work with stereo camera as well). */
 		template <typename T> 
 		void get_eye_point(const eve::math::TMatrix44<T> & mat, eve::math::TVec3<T> & eye);
@@ -62,26 +59,6 @@ namespace eve
 	} // namespace math
 
 } // namespace eve
-
-//=================================================================================================
-template <typename T> EVE_FORCE_INLINE static eve::math::TVec3<T> transform3x3(const eve::math::TMatrix44<T> & m, const eve::math::TVec3<T> & v)
-{
-	return eve::math::TVec3<T>( (m.m[0] * v.x + m.m[1] * v.y + m.m[ 2] * v.z),
-								(m.m[4] * v.x + m.m[5] * v.y + m.m[ 6] * v.z),
-								(m.m[8] * v.x + m.m[9] * v.y + m.m[10] * v.z));
-}
-
-//=================================================================================================
-template <typename T> EVE_FORCE_INLINE void eve::math::get_look_at(const eve::math::TMatrix44<T> & mat, eve::math::TVec3<T> & eye, eve::math::TVec3<T> & center, eve::math::TVec3<T> & up, float lookDistance)
-{
-	eve::math::TMatrix44<T> inv = mat.inverted();
-
-	eye		= inv * eve::math::TVec3<T>::zero();
-	up		= transform3x3(mat, eve::math::TVec3<T>::world_up());
-	center	= transform3x3(mat, eve::math::TVec3<T>::view_direction());
-	center.normalize();
-	center = eye + center*lookDistance;
-}
 
 //=================================================================================================
 template <typename T> EVE_FORCE_INLINE void eve::math::get_eye_point(const eve::math::TMatrix44<T> & mat, eve::math::TVec3<T> & eye)

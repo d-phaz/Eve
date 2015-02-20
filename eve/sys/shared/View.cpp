@@ -55,7 +55,6 @@ void eve::sys::View::initThreadedData(void)
 
 	m_pRender = eve::sys::Render::create_ptr(m_pWindow->getHandle());
 	m_pRender->start();
-
 }
 
 //=================================================================================================

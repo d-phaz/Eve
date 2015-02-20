@@ -111,5 +111,12 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_args)
 }
 
 
-// Launch application for view "Example".
-EVE_APPLICATION(Example);
+
+// Create entry point.
+void entry_point(void)
+{
+	EveApp->addView<Example>();
+}
+
+// Launch application entry point method.
+EVE_APPLICATION(entry_point);

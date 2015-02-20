@@ -209,3 +209,9 @@ eve::ogl::Vao * eve::ogl::Renderer::create(eve::ogl::FormatVao & p_format)
 {
 	return EVE_OGL_CREATE(eve::ogl::Vao, p_format, this);
 }
+
+//=================================================================================================
+eve::ogl::VaoStaged * eve::ogl::Renderer::create(eve::ogl::FormatVaoStaged & p_format)
+{
+	return EVE_OGL_CREATE(eve::ogl::VaoStaged, p_format, this);
+}

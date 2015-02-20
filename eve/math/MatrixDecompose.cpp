@@ -627,7 +627,7 @@ void eve::math::decompose_matrix44( const eve::mat44f & mat, eve::vec3f & t, eve
     t.y = parts.t[Y] * mul;
     t.z = parts.t[Z] * mul;
 
-    r.set(parts.q.x(), parts.q.y(), parts.q.z(), parts.q.w);
+	r.set(parts.q.w, parts.q.x(), parts.q.y(), parts.q.z());
 
     mul = 1.0f;
     if (parts.k.w != 0.0f)
@@ -639,7 +639,7 @@ void eve::math::decompose_matrix44( const eve::mat44f & mat, eve::vec3f & t, eve
     s.y  = parts.k.y() * mul;
     s.z  = parts.k.z() * mul;
 
-    so.set(parts.u.x(), parts.u.y(), parts.u.z(), parts.u.w);
+	so.set(parts.u.w, parts.u.x(), parts.u.y(), parts.u.z());
 }
 
 
@@ -669,5 +669,5 @@ void eve::math::decompose_matrix44( const eve::mat44f & mat, eve::vec3f & t, eve
 	t.y = parts.t[Y] * mul;
 	t.z = parts.t[Z] * mul;
 
-	r.set(parts.q.x(), parts.q.y(), parts.q.z(), parts.q.w);
+	r.set(parts.q.w, parts.q.x(), parts.q.y(), parts.q.z());
 }

@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_OPENGL_CORE_VAO_H__
-#define __EVE_OPENGL_CORE_VAO_H__
+#ifndef __EVE_OPENGL_CORE_VAO_STAGED_H__
+#define __EVE_OPENGL_CORE_VAO_STAGED_H__
 
 #ifndef __EVE_OPENGL_CORE_OBJECT_H__
 #include "eve/ogl/core/Object.h"
@@ -43,14 +43,14 @@ namespace eve
 	namespace ogl
 	{
 		/**
-		* \class eve::ogl::FormatVao
+		* \class eve::ogl::FormatVaoStaged
 		*
-		* \brief OpenGL vertex array object format class.
-		* Used to create OpenGL vertex array object based on properties.
+		* \brief OpenGL vertex array object using per data array buffer format class.
+		* Used to create OpenGL vertex array object  using per data array buffer based on properties.
 		*
 		* \note extends eve::ogl::Format
 		*/
-		class FormatVao final
+		class FormatVaoStaged final
 			: public eve::ogl::Format
 		{
 		public:
@@ -61,31 +61,33 @@ namespace eve
 			GLsizei						perVertexNumDiffuse;		//<! Specifies per vertex diffuse coordinates values amount (should be 2 is using texture coordinates, 4 if using color).
 			GLsizei						perVertexNumNormal;			//<! Specifies per vertex normals values amount (should be 3).
 
-			std::shared_ptr<float>		vertices;					//!< Specifies a pointer to vertices data in memory (used as std::shared_ptr).
+			std::shared_ptr<float>		positions;					//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
+			std::shared_ptr<float>		diffuses;					//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
+			std::shared_ptr<float>		normals;					//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
 			std::shared_ptr<GLuint>		indices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
 
 		public:
 			/** \brief Class constructor. */
-			FormatVao(void);
+			FormatVaoStaged(void);
 			/** \brief Class destructor. */
-			virtual ~FormatVao(void);
+			virtual ~FormatVaoStaged(void);
 
 			/** \brief Copy constructor. */
-			FormatVao(const eve::ogl::FormatVao & p_other);
+			FormatVaoStaged(const eve::ogl::FormatVaoStaged & p_other);
 			/** \brief Assignment operator. */
-			const eve::ogl::FormatVao & operator = (const eve::ogl::FormatVao & p_other);
+			const eve::ogl::FormatVaoStaged & operator = (const eve::ogl::FormatVaoStaged & p_other);
 
-		}; // class FormatVao
+		}; // class FormatVaoStaged
 
 
 		/** 
-		* \class eve::ogl::Vao
+		* \class eve::ogl::VaoStaged
 		*
-		* \brief Create and manage OpenGL vertex array object.
+		* \brief Create and manage OpenGL vertex array object using per data array buffer.
 		*
 		* \note extends eve::ogl::Object
 		*/
-		class Vao
+		class VaoStaged
 			: public eve::ogl::Object
 		{
 
@@ -98,8 +100,16 @@ namespace eve
 			//////////////////////////////////////
 
 		private:
+			enum VaoStages
+			{
+				Vao_Stage_Position,
+				Vao_Stage_Diffuse,
+				Vao_Stage_Normal,
+			}; // enum VaoStages
+
+		private:
 			GLuint						m_id;						//!< Specifies OpenGL unique vertex array object ID.
-			GLuint						m_arrayBufferId;			//<! Specifies OpenGL array buffer (vertices) ID.
+			GLuint *					m_arrayBufferId;			//<! Specifies OpenGL array buffers (position, diffuse, normal) IDs.
 			GLuint						m_elementBufferId;			//<! Specifies OpenGL element buffer (indices) ID.
 
 		private:
@@ -110,21 +120,29 @@ namespace eve
 			GLsizei						m_perVertexNumDiffuse;		//<! Specifies per vertex diffuse coordinates values amount (should be 2 if using texture coordinates, 4 if using color).
 			GLsizei						m_perVertexNumNormal;		//<! Specifies per vertex normals values amount (should be 3).
 
-			float *						m_pVerticesData;			//!< Specifies vertices device buffer data address.
-			std::shared_ptr<float>		m_pVertices;				//!< Specifies a pointer to vertices data in memory (used as std::shared_ptr).
-			bool						m_bUpdateVertices;			//!< Specifies whether or not vertices must be updated.
+			float *						m_pPositionsData;			//!< Specifies position device buffer data address.
+			std::shared_ptr<float>		m_pPositions;				//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
+			bool						m_bPositionsUpdate;			//!< Specifies whether or not positions must be updated.
+
+			float *						m_pDiffusesData;			//!< Specifies diffuse device buffer data address.
+			std::shared_ptr<float>		m_pDiffuses;				//!< Specifies a pointer to diffuse data in memory (used as std::shared_ptr).
+			bool						m_bDiffusesUpdate;			//!< Specifies whether or not diffuses must be updated.
+
+			float *						m_pNormalsData;				//!< Specifies normal device buffer data address.
+			std::shared_ptr<float>		m_pNormals;					//!< Specifies a pointer to normal data in memory (used as std::shared_ptr).
+			bool						m_bNormalsUpdate;			//!< Specifies whether or not normals must be updated.
+
 			GLuint *					m_pIndicesData;				//!< Specifies indices device buffer data address.
 			std::shared_ptr<GLuint>		m_pIndices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
-			bool						m_bUpdateIndices;			//!< Specifies whether or not indices must be updated.
+			bool						m_bIndicesUpdate;			//!< Specifies whether or not indices must be updated.
 
 		private:
-			GLuint						m_offsetPosition;			//<! Specifies vertices positions data offset in array.
-			GLuint						m_offsetDiffuse;			//<! Specifies vertices diffuse coordinates data offset in array.
-			GLuint						m_offsetNormals;			//<! Specifies vertices normals data offset in array.
-
-			size_t						m_verticesStrideUnit;		//<! Specifies vertices array unit stride (m_perVertexNumPosition + m_perVertexNumDiffuse + m_perVertexNumNormal).
-			GLsizei						m_verticesStride;			//<! Specifies vertices array stride  ((m_perVertexNumPosition + m_perVertexNumDiffuse + m_perVertexNumNormal) * sizeof(float)).
-			GLsizeiptr					m_verticesSize;				//<! Specifies size of vertices array in memory.
+			GLsizei						m_positionStride;			//<! Specifies position array stride  (m_perVertexNumPosition * sizeof(float)).
+			GLsizeiptr					m_positionSize;				//<! Specifies size of position array in memory.
+			GLsizei						m_diffuseStride;			//<! Specifies diffuse array stride  (m_perVertexNumDiffuse * sizeof(float)).
+			GLsizeiptr					m_diffuseSize;				//<! Specifies size of vertices array in memory.
+			GLsizei						m_normalStride;				//<! Specifies vertices array stride  (m_perVertexNumNormal * sizeof(float)).
+			GLsizeiptr					m_normalSize;				//<! Specifies size of vertices array in memory.
 
 			GLsizeiptr					m_indicesSize;				//<! Specifies indices array size in memory.
 
@@ -133,12 +151,12 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Vao);
-			EVE_PUBLIC_DESTRUCTOR(Vao);
+			EVE_DISABLE_COPY(VaoStaged);
+			EVE_PUBLIC_DESTRUCTOR(VaoStaged);
 			
 		public:
 			/** \brief Class constructor. */
-			explicit Vao(void);
+			explicit VaoStaged(void);
 
 
 		protected:
@@ -171,10 +189,10 @@ namespace eve
 
 
 		public:
-			/** \brief Add target VAO, data structures have to be compatible. */
-			void add(eve::ogl::Vao * p_pVao);
-			/** \brief Merge target VAO and release it, data structures have to be compatible. */
-			void merge(eve::ogl::Vao * p_pVao);
+			/** \brief Add target staged VAO, data structures have to be compatible. */
+			void add(eve::ogl::VaoStaged * p_pVao);
+			/** \brief Merge target staged VAO and release it, data structures have to be compatible. */
+			void merge(eve::ogl::VaoStaged * p_pVao);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,12 +221,41 @@ namespace eve
 
 
 		public:
-			/** \brief Get the pointer to vertices data in memory (used as std::shared_ptr). */
-			std::shared_ptr<float> getVertices(void) const;
-			/** \brief Set array buffer data (vertices), adds the object as a shared owner, increasing the use_count. */
-			void setVertices(const std::shared_ptr<float> & p_data);
-			/** \brief Set array buffer data (vertices), transfer ownership without altering the use_count. */
-			void setVertices(const std::shared_ptr<float> && p_data);
+			/** \brief Get the pointer to position data in memory (used as std::shared_ptr). */
+			std::shared_ptr<float> getPositions(void) const;
+			/** \brief Set position array buffer data, adds the object as a shared owner, increasing the use_count. */
+			void setPositions(const std::shared_ptr<float> & p_data);
+			/** \brief Set position array buffer data, transfer ownership without altering the use_count. */
+			void setPositions(const std::shared_ptr<float> && p_data);
+
+
+		public:
+			/** \brief Get the pointer to diffuse data in memory (used as std::shared_ptr). */
+			std::shared_ptr<float> getDiffuses(void) const;
+			/** \brief Set diffuse array buffer data, adds the object as a shared owner, increasing the use_count. */
+			void setDiffuses(const std::shared_ptr<float> & p_data);
+			/** \brief Set diffuse array buffer data, transfer ownership without altering the use_count. */
+			void setDiffuses(const std::shared_ptr<float> && p_data);
+
+
+		public:
+			/** \brief Get the pointer to normal data in memory (used as std::shared_ptr). */
+			std::shared_ptr<float> getNormals(void) const;
+			/** \brief Set normal array buffer data, adds the object as a shared owner, increasing the use_count. */
+			void setNormals(const std::shared_ptr<float> & p_data);
+			/** \brief Set normal array buffer data, transfer ownership without altering the use_count. */
+			void setNormals(const std::shared_ptr<float> && p_data);
+
+
+		public:
+			/** \brief Set position, diffuse, normal array buffer data, adds the object as a shared owner, increasing the use_count. */
+			void setVertices(const std::shared_ptr<float> & p_positions
+						   , const std::shared_ptr<float> & p_diffuses
+						   , const std::shared_ptr<float> & p_normals);
+			/** \brief Set position, diffuse, normal array buffer data, transfer ownership without altering the use_count. */
+			void setVertices(const std::shared_ptr<float> && p_positions
+						   , const std::shared_ptr<float> && p_diffuses
+						   , const std::shared_ptr<float> && p_normals);
 
 
 		public:
@@ -218,9 +265,8 @@ namespace eve
 			void setIndices(const std::shared_ptr<GLuint> & p_data);
 			/** \brief Set element buffer data (indices), transfer ownership without altering the use_count. */
 			void setIndices(const std::shared_ptr<GLuint> && p_data);
-
-			
-		}; // class Vao
+						
+		}; // class VaoStaged
 
 	} // namespace ogl
 
@@ -232,25 +278,27 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE const GLuint eve::ogl::Vao::getId(void) const	{ return m_id; }
+EVE_FORCE_INLINE const GLuint eve::ogl::VaoStaged::getId(void) const	{ return m_id; }
 
 
 //=================================================================================================
-EVE_FORCE_INLINE const GLint eve::ogl::Vao::getNumVertices(void) const	{ return m_numVertices; }
-EVE_FORCE_INLINE const GLint eve::ogl::Vao::getNumIndices(void) const	{ return m_numIndices;  }
+EVE_FORCE_INLINE const GLint eve::ogl::VaoStaged::getNumVertices(void) const	{ return m_numVertices;	}
+EVE_FORCE_INLINE const GLint eve::ogl::VaoStaged::getNumIndices(void) const		{ return m_numIndices;	}
 
 
 //=================================================================================================
-EVE_FORCE_INLINE const GLsizei eve::ogl::Vao::getPerVertexNumPosition(void) const	{ return m_perVertexNumPosition;	}
-EVE_FORCE_INLINE const GLsizei eve::ogl::Vao::getPerVertexNumDiffuse(void) const	{ return m_perVertexNumDiffuse;		}
-EVE_FORCE_INLINE const GLsizei eve::ogl::Vao::getPerVertexNumNormal(void) const		{ return m_perVertexNumNormal;		}
+EVE_FORCE_INLINE const GLsizei eve::ogl::VaoStaged::getPerVertexNumPosition(void) const	{ return m_perVertexNumPosition;	}
+EVE_FORCE_INLINE const GLsizei eve::ogl::VaoStaged::getPerVertexNumDiffuse(void) const	{ return m_perVertexNumDiffuse;		}
+EVE_FORCE_INLINE const GLsizei eve::ogl::VaoStaged::getPerVertexNumNormal(void) const	{ return m_perVertexNumNormal;		}
 
 
 //=================================================================================================
-EVE_FORCE_INLINE std::shared_ptr<float>	eve::ogl::Vao::getVertices(void) const	{ return m_pVertices; }
+EVE_FORCE_INLINE std::shared_ptr<float>	eve::ogl::VaoStaged::getPositions(void) const	{ return m_pPositions;	}
+EVE_FORCE_INLINE std::shared_ptr<float>	eve::ogl::VaoStaged::getDiffuses(void) const	{ return m_pDiffuses;	}
+EVE_FORCE_INLINE std::shared_ptr<float>	eve::ogl::VaoStaged::getNormals(void) const		{ return m_pNormals;	}
 
 
 //=================================================================================================
-EVE_FORCE_INLINE std::shared_ptr<GLuint> eve::ogl::Vao::getIndices(void) const	{ return m_pIndices;  }
+EVE_FORCE_INLINE std::shared_ptr<GLuint> eve::ogl::VaoStaged::getIndices(void) const	{ return m_pIndices; }
 
 #endif // __EVE_OPENGL_CORE_VAO_H__

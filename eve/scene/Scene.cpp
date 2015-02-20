@@ -216,7 +216,7 @@ bool eve::scene::Scene::load(const std::wstring & p_filePath)
 	// Loading failed.
 	else
 	{
-		EVE_LOG_ERROR("File import failed, report: %s", eve::str::to_wstring(pImporter->GetErrorString()));
+		EVE_LOG_ERROR("File import failed, report: %s", eve::str::to_wstring(pImporter->GetErrorString()).c_str());
 		// TODO: create error window.
 	}
 
@@ -292,8 +292,8 @@ void eve::scene::Scene::cb_display(void)
 			itr->oglDraw();
 		}
 
-		m_pCameraActive->oglUnbind();
 		m_pShaderMesh->unbind();
+		m_pCameraActive->oglUnbind();
 
 		// Disable culling
 		glDisable(GL_CULL_FACE);

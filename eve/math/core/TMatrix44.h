@@ -76,17 +76,17 @@ namespace eve
 			//////////////////////////////////////
 
 		public:
-			static const size_t DIM = 4;
-			static const size_t DIM_SQ = DIM*DIM;
+			static const size_t DIM		= 4;
+			static const size_t DIM_SQ	= DIM*DIM;
 			static const size_t MEM_LEN = sizeof(T)*DIM_SQ;
 
 			//
 			// This class is OpenGL friendly and stores the m as how OpenGL would expect it.
 			// m[i,j]:
-			// | m[0,0] m[0,1] m[0,2] m[0,2] |
-			// | m[1,0] m[1,1] m[1,2] m[1,2] |
-			// | m[2,0] m[2,1] m[2,2] m[2,2] |
-			// | m[3,0] m[3,1] m[3,2] m[3,2] |
+			// | m[0,0] m[0,1] m[0,2] m[0,3] |
+			// | m[1,0] m[1,1] m[1,2] m[1,3] |
+			// | m[2,0] m[2,1] m[2,2] m[2,3] |
+			// | m[3,0] m[3,1] m[3,2] m[3,3] |
 			//
 			// m[idx]
 			// | m[ 0] m[ 4] m[ 8] m[12] |
@@ -94,8 +94,11 @@ namespace eve
 			// | m[ 2] m[ 6] m[10] m[14] |
 			// | m[ 3] m[ 7] m[11] m[15] |
 			//
-			union {
+			union 
+			{
 				T m[16];
+				T mcols[4][4];		// [Cols][Rows]
+				
 				struct {
 					// This looks like it's transposed from the above, but it's really not.
 					// It just has to be written this way so it follows the right ordering
@@ -105,8 +108,13 @@ namespace eve
 					T m02, m12, m22, m32;
 					T m03, m13, m23, m33;
 				};
-				// [Cols][Rows]
-				T mcols[4][4];
+
+				struct {
+					eve::math::TVec4<T> right;
+					eve::math::TVec4<T> up; 
+					eve::math::TVec4<T> direction;
+					eve::math::TVec4<T> position;
+				};
 			};
 
 
@@ -189,6 +197,8 @@ namespace eve
 			void				set(const T *dt, bool srcIsRowMajor = false);
 			// OpenGL layout: m[0]=d0, m[1]=d1, m[2]=d2 ... m[13]=d13, m[14]=d14, m[15]=d15 - unless srcIsRowMajor is true
 			void				set(T d0, T d1, T d2, T d3, T d4, T d5, T d6, T d7, T d8, T d9, T d10, T d11, T d12, T d13, T d14, T d15, bool srcIsRowMajor = false);
+			/** \brief Set from matrix. */
+			void				set(const TMatrix44<T> &rhs);
 
 			eve::math::TVec4<T>	getColumn(int32_t col) const;
 			void				setColumn(int32_t col, const eve::math::TVec4<T> &v);
@@ -201,6 +211,13 @@ namespace eve
 
 			void				getRows(eve::math::TVec4<T> *r0, eve::math::TVec4<T> *r1, eve::math::TVec4<T> *r2, eve::math::TVec4<T> *r3) const;
 			void				setRows(const eve::math::TVec4<T> &r0, const eve::math::TVec4<T> &r1, const eve::math::TVec4<T> &r2, const eve::math::TVec4<T> &r3);
+
+			/** \brief Get Right axis. */
+			eve::math::TVec3<T> getRight(void) const;
+			/** \brief Get world up axis. */
+			eve::math::TVec3<T> getUp(void) const;
+			/** \brief Get direction axis. */
+			eve::math::TVec3<T> getDirection(void) const;
 
 			// returns a sub-matrix starting at row, col
 			TMatrix22<T>		subMatrix22(int32_t row, int32_t col) const;
@@ -226,9 +243,6 @@ namespace eve
 			void				transpose(void);
 			TMatrix44<T>		transposed(void) const;
 
-			void				invert(T epsilon = EVE_MATH_EPSILON) { *this = inverted(epsilon); }
-			TMatrix44<T>		inverted(T epsilon = EVE_MATH_EPSILON) const;
-
 			// pre-multiplies row vector v - no divide by w
 			eve::math::TVec3<T>	preMultiply(const eve::math::TVec3<T> &v) const;
 			eve::math::TVec4<T>	preMultiply(const eve::math::TVec4<T> &v) const;
@@ -236,6 +250,9 @@ namespace eve
 			// post-multiplies column vector v - no divide by w
 			eve::math::TVec3<T>	postMultiply(const eve::math::TVec3<T> &v) const;
 			eve::math::TVec4<T>	postMultiply(const eve::math::TVec4<T> &v) const;
+
+			void				invert(T epsilon = EVE_MATH_EPSILON) { *this = inverted(epsilon); }
+			TMatrix44<T>		inverted(T epsilon = EVE_MATH_EPSILON) const;
 
 			//! Computes inverse; assumes the matrix is affine, i.e. the bottom row is [0 0 0 1]
 			void				affineInvert(void){ *this = affineInverted(); }
@@ -245,19 +262,26 @@ namespace eve
 			void				orthonormalInvert(void);
 			TMatrix44<T>		orthonormalInverted(void) const { TMatrix44<T> result(*this); result.orthonormalInvert(); return result; }
 
-			// post-multiplies column vector [rhs.x rhs.y rhs.z 1] and divides by w - same as operator*( const TVec3<T>& )
-			eve::math::TVec3<T>	transformPoint(const eve::math::TVec3<T> &rhs) const;
 
-			// post-multiplies column vector [rhs.x rhs.y rhs.z 1] but omits divide by w
+			// post-multiplies column vector [rhs.x rhs.y rhs.z 1] and divides by w - same as operator*( const TVec3<T>& ).
+			eve::math::TVec3<T>	transformPoint(const eve::math::TVec3<T> &rhs) const;
+			// post-multiplies column vector [rhs.x rhs.y rhs.z 1] but omits divide by w.
 			eve::math::TVec3<T>	transformPointAffine(const eve::math::TVec3<T> &rhs) const;
+			// post-multiplies column vector [rhs.x rhs.y rhs.z rhs.w].
+			eve::math::TVec4<T>	transformPoint(const eve::math::TVec4<T> &rhs) const;
 
 			// post-multiplies column vector [rhs.x rhs.y rhs.z 0]
 			eve::math::TVec3<T>	transformVec(const eve::math::TVec3<T> &rhs) const;
-			eve::math::TVec4<T>	transformVec(const eve::math::TVec4<T> &rhs) const { return transformVec(rhs.xyz()); }
+			// post-multiplies column vector [rhs.x rhs.y rhs.z rhs.w]
+			eve::math::TVec4<T>	transformVec(const eve::math::TVec4<T> &rhs) const;
+
 
 			// returns the translation values from the last column
-			eve::math::TVec4<T>	getTranslate() const { return eve::math::TVec4<T>(m03, m13, m23, m33); }
+			//eve::math::TVec4<T>	getTranslate() const { return eve::math::TVec4<T>(m03, m13, m23, m33); }
+			// returns the translation values from the last column
+			eve::math::TVec3<T>	getTranslate(void) const { return eve::math::TVec3<T>(m03, m13, m23); }
 			// sets the translation values in the last column
+			void				setTranslate(T x, T y, T z)				   { m03 = x; m13 = y; m23 = z; }
 			void				setTranslate(const eve::math::TVec3<T>& v) { m03 = v.x; m13 = v.y; m23 = v.z; }
 			void				setTranslate(const eve::math::TVec4<T>& v) { setTranslate(v.xyz()); }
 
@@ -275,6 +299,14 @@ namespace eve
 			void				rotate(const eve::math::TVec3<T> &from, const eve::math::TVec3<T> &to, const eve::math::TVec3<T> &worldUp) { *this *= createRotation(from, to, worldUp); }
 			void				rotate(const eve::math::TVec4<T> &from, const eve::math::TVec4<T> &to, const eve::math::TVec4<T> &worldUp) { *this *= createRotation(from, to, worldUp); }
 
+			// returns the scale values
+			EVE_FORCE_INLINE eve::math::TVec3<T>	getScale(void) const 
+			{ 
+				eve::math::TVec3<T> x_vec(m00, m01, m02);
+				eve::math::TVec3<T> y_vec(m10, m11, m12);
+				eve::math::TVec3<T> z_vec(m20, m21, m22);
+				return eve::math::TVec3<T>(x_vec.length(), y_vec.length(), z_vec.length());
+			}
 			// multiplies the current matrix by the scale matrix derived from supplies parameters
 			void				scale(T s) { TMatrix44 op = createScale(s); TMatrix44 mat = *this; *this = op*mat; }
 			void				scale(const eve::math::TVec2<T> &v) { *this *= createScale(v); }
@@ -295,13 +327,15 @@ namespace eve
 			// returns an identity matrix
 			static TMatrix44<T>	identity(void)	{ return TMatrix44(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 			// returns 1 filled matrix
-			static TMatrix44<T>  one(void)		{ return TMatrix44(static_cast<T>(1)); }
+			static TMatrix44<T> one(void)		{ return TMatrix44(static_cast<T>(1)); }
 			// returns 0 filled matrix
-			static TMatrix44<T>  zero(void)		{ return TMatrix44(static_cast<T>(0)); }
+			static TMatrix44<T> zero(void)		{ return TMatrix44(static_cast<T>(0)); }
+
 
 			// creates translation matrix
 			static TMatrix44<T>	createTranslation(const eve::math::TVec3<T> &v, T w = static_cast<T>(1));
 			static TMatrix44<T>	createTranslation(const eve::math::TVec4<T> &v) { return createTranslation(v.xyz(), v.w); }
+
 
 			// creates rotation matrix
 			static TMatrix44<T>	createRotation(const eve::math::TVec3<T> &axis, T radians);
@@ -315,60 +349,73 @@ namespace eve
 			static TMatrix44<T>	createRotationOnb(const eve::math::TVec3<T>& u, const eve::math::TVec3<T>& v, const eve::math::TVec3<T>& w);
 			static TMatrix44<T>	createRotationOnb(const eve::math::TVec4<T>& u, const eve::math::TVec4<T>& v, const eve::math::TVec4<T>& w) { return createRotationOnb(u.xyz(), v.xyz(), w.xyz()); }
 
+
 			// creates scale matrix
 			static TMatrix44<T>	createScale(T s);
 			static TMatrix44<T>	createScale(const eve::math::TVec2<T> &v);
 			static TMatrix44<T>	createScale(const eve::math::TVec3<T> &v);
 			static TMatrix44<T>	createScale(const eve::math::TVec4<T> &v);
 
+
 			// creates a rotation matrix with z-axis aligned to targetDir	
 			static TMatrix44<T>	alignZAxisWithTarget(eve::math::TVec3<T> targetDir, eve::math::TVec3<T> upDir);
 			static TMatrix44<T>	alignZAxisWithTarget(eve::math::TVec4<T> targetDir, eve::math::TVec4<T> upDir) { return alignZAxisWithTarget(targetDir.xyz(), upDir.xyz()); }
 
 
-			static TMatrix44<T> look_at(eve::math::TVec3<T> const & eye, eve::math::TVec3<T> const & center, eve::math::TVec3<T> const & up);
+			// post-multiplies column vector [rhs.x rhs.y rhs.z 0]
+			static eve::math::TVec3<T> transform3x3(const eve::math::TMatrix44<T> & m, const eve::math::TVec3<T> & v);
+			// post-multiplies column vector [rhs.x rhs.y rhs.z rhs.w]
+			static eve::math::TVec4<T> transform4x4(const eve::math::TMatrix44<T> & m, const eve::math::TVec4<T> & v);
 
-			/// Creates a frustum matrix.
-			/// 
-			/// @param left 
-			/// @param right 
-			/// @param bottom 
-			/// @param top 
-			/// @param nearVal 
-			/// @param farVal 
-			/// @tparam T Value type used to build the matrix. Currently supported: half (not recommended), float or double.
+			// post-multiplies column vector [rhs.x rhs.y rhs.z 0]
+			static eve::math::TVec3<T> transform3x3(const eve::math::TVec3<T> & v, const eve::math::TMatrix44<T> & m);
+			// post-multiplies column vector [rhs.x rhs.y rhs.z rhs.w]
+			static eve::math::TVec4<T> transform4x4(const eve::math::TVec4<T> & v, const eve::math::TMatrix44<T> & m);
+
+
+			/** \brief Extract matrix look at properties (eye, target, world up). */
+			static void get_look_at(const eve::math::TMatrix44<T> & mat
+								  , eve::math::TVec3<T> & eye
+								  , eve::math::TVec3<T> & center
+								  , eve::math::TVec3<T> & up
+								  , T lookDistance = static_cast<T>(1.0));
+			/** \brief Create and return look at matrix. */
+			static TMatrix44<T> look_at(eve::math::TVec3<T> const & eye
+									  , eve::math::TVec3<T> const & center
+									  , eve::math::TVec3<T> const & up);
+
+
+			/** \brief Create a frustum matrix. */
 			static TMatrix44<T> frustum(T left, T right, T bottom, T top, T nearVal, T farVal);
-
-			/// Creates a perspective matrix.
-			/// 
-			/// @param fovy 
-			/// @param aspect 
-			/// @param zNear 
-			/// @param zFar
-			/// @tparam T Value type used to build the matrix. Currently supported: half (not recommended), float or double.
+			/** \brief Creates a perspective matrix. */
 			static TMatrix44<T> perspective(T fovy, T aspect, T zNear, T zFar);
 
-			/// Creates a matrix for an orthographic parallel viewing volume.
-			/// 
-			/// @param left 
-			/// @param right 
-			/// @param bottom 
-			/// @param top 
-			/// @param zNear 
-			/// @param zFar 
-			/// @tparam T Value type used to build the matrix. Currently supported: half (not recommended), float or double.
-			static TMatrix44<T> ortho(T left, T right, T bottom, T top, T zNear, T zFar);
 
-			/// Creates a matrix for projecting two-dimensional coordinates onto the screen.
-			/// 
-			/// @param left 
-			/// @param right 
-			/// @param bottom 
-			/// @param top 
-			/// @tparam T Value type used to build the matrix. Currently supported: half (not recommended), float or double.
+			/** \brief Creates a matrix for an orthographic parallel viewing volume. */
+			static TMatrix44<T> ortho(T left, T right, T bottom, T top, T zNear, T zFar);
+			/** \brief Creates a matrix for projecting two-dimensional coordinates onto the screen. */
 			static TMatrix44<T> ortho(T left, T right, T bottom, T top);
 
-		}; // TMatrix44
+		}; // class TMatrix44
+
+
+		/** \brief Rotate matrix on axis angle. */
+		template <typename T>
+		eve::math::TMatrix44<T> rotate(eve::math::TMatrix44<T> const & m, T radians, eve::math::TVec3<T> const & v);
+
+
+		/** \brief Map the specified object coordinates (obj.x, obj.y, obj.z) into window coordinates. */
+		template <typename T, typename U>
+		eve::math::TVec3<T> project(const eve::math::TVec3<T> & obj
+								  , const eve::math::TMatrix44<T> & model
+								  , const eve::math::TMatrix44<T> & proj
+								  , const eve::math::TVec4<U> & viewport);
+		/** \brief Map the specified window coordinates (win.x, win.y, win.z) into object coordinates. */
+		template <typename T, typename U>
+		eve::math::TVec3<T> un_project(const eve::math::TVec3<T> & win
+									 , const eve::math::TMatrix44<T> & model
+									 , const eve::math::TMatrix44<T> & proj
+									 , const eve::math::TVec4<U> & viewport);
 
 
 	} // namespace math
@@ -474,7 +521,7 @@ template< typename T > EVE_FORCE_INLINE T * eve::math::TMatrix44<T>::ptr(void) c
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix44<T>& rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix44<T>& rhs)
 {
 	eve::mem::memcpy(m, rhs.m, MEM_LEN);
 	return *this;
@@ -482,7 +529,7 @@ eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMa
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(T rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(T rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; i++ ) {
 		m[i] = rhs;
@@ -493,7 +540,7 @@ eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(T rhs)
 //=================================================================================================
 template< typename T >
 template< typename FromT >
-eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix44<FromT>& rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix44<FromT>& rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; i++ ) {
 		m[i] = static_cast<T>(rhs.m[i]);
@@ -503,7 +550,7 @@ eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator=(const eve::math::TMa
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix22<T>& rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix22<T>& rhs)
 {
 	setToIdentity();
 	m00 = rhs.m00; m01 = rhs.m01;
@@ -513,7 +560,7 @@ eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(const eve::math::TM
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix33<T>& rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(const eve::math::TMatrix33<T>& rhs)
 {
 	setToIdentity();
 	m00 = rhs.m00; m01 = rhs.m01; m02 = rhs.m02;
@@ -524,7 +571,7 @@ eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator=(const eve::math::TM
 
 //=================================================================================================
 template< typename T >
-bool eve::math::TMatrix44<T>::equalCompare(const eve::math::TMatrix44<T>& rhs, T epsilon) const
+EVE_FORCE_INLINE bool eve::math::TMatrix44<T>::equalCompare(const eve::math::TMatrix44<T>& rhs, T epsilon) const
 {
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
 		if (eve::math::abs(m[i] - rhs.m[i]) >= epsilon)
@@ -568,7 +615,7 @@ EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator*=(c
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator+=(const eve::math::TMatrix44<T> &rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator+=(const eve::math::TMatrix44<T> &rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
 		m[i] += rhs.m[i];
@@ -578,7 +625,7 @@ eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator+=(const eve::math::TM
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator-=(const eve::math::TMatrix44<T> &rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator-=(const eve::math::TMatrix44<T> &rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
 		m[i] -= rhs.m[i];
@@ -588,7 +635,7 @@ eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator-=(const eve::math::TM
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator*=(T rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator*=(T rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
 		m[i] *= rhs;
@@ -598,7 +645,7 @@ eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator*=(T rhs)
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator/=(T rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator/=(T rhs)
 {
 	T invS = static_cast<T>(1)/rhs;
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
@@ -609,7 +656,7 @@ eve::math::TMatrix44<T>& eve::math::TMatrix44<T>::operator/=(T rhs)
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator+=(T rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator+=(T rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
 		m[i] += rhs;
@@ -619,7 +666,7 @@ eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator+=(T rhs)
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator-=(T rhs)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> & eve::math::TMatrix44<T>::operator-=(T rhs)
 {
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
 		m[i] -= rhs;
@@ -658,7 +705,7 @@ EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator
 
 //=================================================================================================
 template< typename T >
-const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator+(const eve::math::TMatrix44<T> &rhs) const
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator+(const eve::math::TMatrix44<T> &rhs) const
 {
 	eve::math::TMatrix44<T> ret;
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
@@ -669,7 +716,7 @@ const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator+(const eve::math
 
 //=================================================================================================
 template< typename T >
-const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator-(const eve::math::TMatrix44<T> &rhs) const
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator-(const eve::math::TMatrix44<T> &rhs) const
 {
 	eve::math::TMatrix44<T> ret;
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
@@ -680,7 +727,7 @@ const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator-(const eve::math
 
 //=================================================================================================
 template< typename T >
-const eve::math::TVec3<T> eve::math::TMatrix44<T>::operator*(const eve::math::TVec3<T> &rhs) const
+EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TMatrix44<T>::operator*(const eve::math::TVec3<T> &rhs) const
 {
 	T x = m[ 0]*rhs.x + m[ 4]*rhs.y + m[ 8]*rhs.z + m[12];
 	T y = m[ 1]*rhs.x + m[ 5]*rhs.y + m[ 9]*rhs.z + m[13];
@@ -692,7 +739,7 @@ const eve::math::TVec3<T> eve::math::TMatrix44<T>::operator*(const eve::math::TV
 
 //=================================================================================================
 template< typename T >
-const eve::math::TVec4<T> eve::math::TMatrix44<T>::operator*(const eve::math::TVec4<T> &rhs) const
+EVE_FORCE_INLINE const eve::math::TVec4<T> eve::math::TMatrix44<T>::operator*(const eve::math::TVec4<T> &rhs) const
 {
 	return eve::math::TVec4<T>(
 		m[ 0]*rhs.x + m[ 4]*rhs.y + m[ 8]*rhs.z + m[12]*rhs.w,
@@ -704,7 +751,7 @@ const eve::math::TVec4<T> eve::math::TMatrix44<T>::operator*(const eve::math::TV
 
 //=================================================================================================
 template< typename T >
-const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator*(T rhs) const
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator*(T rhs) const
 {
 	eve::math::TMatrix44<T> ret;
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
@@ -715,7 +762,7 @@ const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator*(T rhs) const
 
 //=================================================================================================
 template< typename T >
-const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator/(T rhs) const
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator/(T rhs) const
 {
 	eve::math::TMatrix44<T> ret;
 	T s = (T)1/rhs;
@@ -727,7 +774,7 @@ const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator/(T rhs) const
 
 //=================================================================================================
 template< typename T >
-const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator+(T rhs) const
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator+(T rhs) const
 {
 	eve::math::TMatrix44<T> ret;
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
@@ -738,7 +785,7 @@ const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator+(T rhs) const
 
 //=================================================================================================
 template< typename T >
-const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator-(T rhs) const
+EVE_FORCE_INLINE const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator-(T rhs) const
 {
 	eve::math::TMatrix44<T> ret;
 	for( int32_t i = 0; i < DIM_SQ; ++i ) {
@@ -751,7 +798,7 @@ const eve::math::TMatrix44<T> eve::math::TMatrix44<T>::operator-(T rhs) const
 
 //=================================================================================================
 template< typename T >
-T& eve::math::TMatrix44<T>::at(int32_t row, int32_t col)
+EVE_FORCE_INLINE T& eve::math::TMatrix44<T>::at(int32_t row, int32_t col)
 {
 	EVE_ASSERT(row >= 0 && row < DIM);
 	EVE_ASSERT(col >= 0 && col < DIM);
@@ -760,7 +807,7 @@ T& eve::math::TMatrix44<T>::at(int32_t row, int32_t col)
 
 //=================================================================================================
 template< typename T >
-const T& eve::math::TMatrix44<T>::at(int32_t row, int32_t col) const
+EVE_FORCE_INLINE const T& eve::math::TMatrix44<T>::at(int32_t row, int32_t col) const
 {
 	EVE_ASSERT(row >= 0 && row < DIM);
 	EVE_ASSERT(col >= 0 && col < DIM);
@@ -771,7 +818,7 @@ const T& eve::math::TMatrix44<T>::at(int32_t row, int32_t col) const
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::set(const T *dt, bool srcIsRowMajor)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::set(const T *dt, bool srcIsRowMajor)
 {
 	if( srcIsRowMajor ) {
 		m[0] = dt[ 0]; m[4] = dt[ 1]; m[ 8] = dt[ 2]; m[12] = dt[ 3];
@@ -786,7 +833,7 @@ void eve::math::TMatrix44<T>::set(const T *dt, bool srcIsRowMajor)
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::set(T d0, T d1, T d2, T d3, T d4, T d5, T d6, T d7, T d8, T d9, T d10, T d11, T d12, T d13, T d14, T d15, bool srcIsRowMajor)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::set(T d0, T d1, T d2, T d3, T d4, T d5, T d6, T d7, T d8, T d9, T d10, T d11, T d12, T d13, T d14, T d15, bool srcIsRowMajor)
 {
 	if( srcIsRowMajor ) {
 		m[0] =  d0; m[4] =  d1; m[ 8] =  d2; m[12] =  d3;
@@ -802,11 +849,18 @@ void eve::math::TMatrix44<T>::set(T d0, T d1, T d2, T d3, T d4, T d5, T d6, T d7
 	}
 }
 
+//=================================================================================================
+template< typename T >
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::set(const TMatrix44<T> & rhs)
+{
+	eve::mem::memcpy(m, rhs.m, MEM_LEN);
+}
+
 
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec4<T> eve::math::TMatrix44<T>::getColumn(int32_t col) const
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::getColumn(int32_t col) const
 {
 	size_t i = col*DIM;
 	return eve::math::TVec4<T>(
@@ -819,7 +873,7 @@ eve::math::TVec4<T> eve::math::TMatrix44<T>::getColumn(int32_t col) const
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::setColumn(int32_t col, const eve::math::TVec4<T> &v)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setColumn(int32_t col, const eve::math::TVec4<T> &v)
 {
 	size_t i = col*DIM;
 	m[i + 0] = v.x;
@@ -832,7 +886,7 @@ void eve::math::TMatrix44<T>::setColumn(int32_t col, const eve::math::TVec4<T> &
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec4<T> eve::math::TMatrix44<T>::getRow(int32_t row) const
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::getRow(int32_t row) const
 { 
 	return eve::math::TVec4<T>(
 		m[row +  0], 
@@ -844,7 +898,7 @@ eve::math::TVec4<T> eve::math::TMatrix44<T>::getRow(int32_t row) const
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::setRow(int32_t row, const eve::math::TVec4<T> &v)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setRow(int32_t row, const eve::math::TVec4<T> &v)
 { 
 	m[row +  0] = v.x; 
 	m[row +  4] = v.y; 
@@ -856,7 +910,7 @@ void eve::math::TMatrix44<T>::setRow(int32_t row, const eve::math::TVec4<T> &v)
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::getColumns(eve::math::TVec4<T> *c0, eve::math::TVec4<T> *c1, eve::math::TVec4<T> *c2, eve::math::TVec4<T> *c3) const
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::getColumns(eve::math::TVec4<T> *c0, eve::math::TVec4<T> *c1, eve::math::TVec4<T> *c2, eve::math::TVec4<T> *c3) const
 {
 	*c0 = getColumn( 0 );
 	*c1 = getColumn( 1 );
@@ -866,7 +920,7 @@ void eve::math::TMatrix44<T>::getColumns(eve::math::TVec4<T> *c0, eve::math::TVe
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::setColumns(const eve::math::TVec4<T> &c0, const eve::math::TVec4<T> &c1, const eve::math::TVec4<T> &c2, const eve::math::TVec4<T> &c3)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setColumns(const eve::math::TVec4<T> &c0, const eve::math::TVec4<T> &c1, const eve::math::TVec4<T> &c2, const eve::math::TVec4<T> &c3)
 {
 	setColumn( 0, c0 );
 	setColumn( 1, c1 );
@@ -878,7 +932,7 @@ void eve::math::TMatrix44<T>::setColumns(const eve::math::TVec4<T> &c0, const ev
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::getRows(eve::math::TVec4<T> *r0, eve::math::TVec4<T> *r1, eve::math::TVec4<T> *r2, eve::math::TVec4<T> *r3) const
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::getRows(eve::math::TVec4<T> *r0, eve::math::TVec4<T> *r1, eve::math::TVec4<T> *r2, eve::math::TVec4<T> *r3) const
 {
 	*r0 = getRow( 0 );
 	*r1 = getRow( 1 );
@@ -888,7 +942,7 @@ void eve::math::TMatrix44<T>::getRows(eve::math::TVec4<T> *r0, eve::math::TVec4<
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::setRows(const eve::math::TVec4<T> &r0, const eve::math::TVec4<T> &r1, const eve::math::TVec4<T> &r2, const eve::math::TVec4<T> &r3)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setRows(const eve::math::TVec4<T> &r0, const eve::math::TVec4<T> &r1, const eve::math::TVec4<T> &r2, const eve::math::TVec4<T> &r3)
 {
 	setRow( 0, r0 );
 	setRow( 1, r1 );
@@ -899,8 +953,31 @@ void eve::math::TMatrix44<T>::setRows(const eve::math::TVec4<T> &r0, const eve::
 
 
 //=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getRight(void) const
+{
+	return eve::math::TVec3<T>(m[0], m[4], m[8]);
+}
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getUp(void) const
+{
+	return eve::math::TVec3<T>(m[1], m[5], m[9]);
+}
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getDirection(void) const
+{
+	return eve::math::TVec3<T>(m[2], m[6], m[10]);
+}
+
+
+
+//=================================================================================================
 template< typename T >
-eve::math::TMatrix22<T> eve::math::TMatrix44<T>::subMatrix22(int32_t row, int32_t col) const
+EVE_FORCE_INLINE eve::math::TMatrix22<T> eve::math::TMatrix44<T>::subMatrix22(int32_t row, int32_t col) const
 {
 	eve::math::TMatrix22<T> ret;
 	ret.setToNull();
@@ -924,7 +1001,7 @@ eve::math::TMatrix22<T> eve::math::TMatrix44<T>::subMatrix22(int32_t row, int32_
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix33<T> eve::math::TMatrix44<T>::subMatrix33(int32_t row, int32_t col) const
+EVE_FORCE_INLINE eve::math::TMatrix33<T> eve::math::TMatrix44<T>::subMatrix33(int32_t row, int32_t col) const
 {
 	eve::math::TMatrix33<T> ret;
 	ret.setToNull();
@@ -950,7 +1027,7 @@ eve::math::TMatrix33<T> eve::math::TMatrix44<T>::subMatrix33(int32_t row, int32_
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::setToNull()
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setToNull()
 {
 	eve::mem::memset( m, 0, MEM_LEN );
 // 	m[ 0] = 0; m[ 4] = 0; m[ 8] = 0; m[12] = 0;
@@ -961,7 +1038,7 @@ void eve::math::TMatrix44<T>::setToNull()
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::setToIdentity()
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setToIdentity()
 {
 	m[ 0] = 1; m[ 4] = 0; m[ 8] = 0; m[12] = 0;
 	m[ 1] = 0; m[ 5] = 1; m[ 9] = 0; m[13] = 0;
@@ -973,7 +1050,7 @@ void eve::math::TMatrix44<T>::setToIdentity()
 
 //=================================================================================================
 template< typename T >
-T eve::math::TMatrix44<T>::determinant() const
+EVE_FORCE_INLINE T eve::math::TMatrix44<T>::determinant() const
 {
 	T a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
 	T a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
@@ -997,7 +1074,7 @@ T eve::math::TMatrix44<T>::determinant() const
 
 //=================================================================================================
 template< typename T >
-T eve::math::TMatrix44<T>::trace(bool fullTrace) const
+EVE_FORCE_INLINE T eve::math::TMatrix44<T>::trace(bool fullTrace) const
 {
 	if( fullTrace ) {
 		return m00 + m11 + m22 + m33;
@@ -1010,7 +1087,7 @@ T eve::math::TMatrix44<T>::trace(bool fullTrace) const
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::diagonal() const
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::diagonal() const
 {
 	eve::math::TMatrix44 ret;
 	ret.m00 = m00; ret.m01 =   0; ret.m02 =   0; ret.m03 =   0;
@@ -1022,7 +1099,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::diagonal() const
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::lowerTriangular() const
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::lowerTriangular() const
 {
 	eve::math::TMatrix44 ret;
 	ret.m00 = m00; ret.m01 =   0; ret.m02 =   0; ret.m03 =   0;
@@ -1034,7 +1111,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::lowerTriangular() const
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::upperTriangular() const
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::upperTriangular() const
 {
 	eve::math::TMatrix44 ret;
 	ret.m00 = m00; ret.m01 = m01; ret.m02 = m02; ret.m03 = m03;
@@ -1048,7 +1125,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::upperTriangular() const
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::transpose()
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::transpose()
 {
 	T t;
 	t = m01; m01 = m10; m10 = t;
@@ -1061,7 +1138,7 @@ void eve::math::TMatrix44<T>::transpose()
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::transposed() const
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::transposed() const
 {
 	return eve::math::TMatrix44<T>(
 		m[ 0], m[ 4], m[ 8], m[12],
@@ -1075,70 +1152,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::transposed() const
 
 //=================================================================================================
 template< typename T >
-inline eve::math::TMatrix44<T> eve::math::TMatrix44<T>::inverted(T epsilon) const
-{
-	eve::math::TMatrix44<T> inv(static_cast<T>(0.0));
-
-	T a0 = m[ 0]*m[ 5] - m[ 1]*m[ 4];
-	T a1 = m[ 0]*m[ 6] - m[ 2]*m[ 4];
-	T a2 = m[ 0]*m[ 7] - m[ 3]*m[ 4];
-	T a3 = m[ 1]*m[ 6] - m[ 2]*m[ 5];
-	T a4 = m[ 1]*m[ 7] - m[ 3]*m[ 5];
-	T a5 = m[ 2]*m[ 7] - m[ 3]*m[ 6];
-	T b0 = m[ 8]*m[13] - m[ 9]*m[12];
-	T b1 = m[ 8]*m[14] - m[10]*m[12];
-	T b2 = m[ 8]*m[15] - m[11]*m[12];
-	T b3 = m[ 9]*m[14] - m[10]*m[13];
-	T b4 = m[ 9]*m[15] - m[11]*m[13];
-	T b5 = m[10]*m[15] - m[11]*m[14];
-
-	T det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
-
-	if (eve::math::abs(det) > epsilon) {
-		inv.m[ 0] = + m[ 5]*b5 - m[ 6]*b4 + m[ 7]*b3;
-		inv.m[ 4] = - m[ 4]*b5 + m[ 6]*b2 - m[ 7]*b1;
-		inv.m[ 8] = + m[ 4]*b4 - m[ 5]*b2 + m[ 7]*b0;
-		inv.m[12] = - m[ 4]*b3 + m[ 5]*b1 - m[ 6]*b0;
-		inv.m[ 1] = - m[ 1]*b5 + m[ 2]*b4 - m[ 3]*b3;
-		inv.m[ 5] = + m[ 0]*b5 - m[ 2]*b2 + m[ 3]*b1;
-		inv.m[ 9] = - m[ 0]*b4 + m[ 1]*b2 - m[ 3]*b0;
-		inv.m[13] = + m[ 0]*b3 - m[ 1]*b1 + m[ 2]*b0;
-		inv.m[ 2] = + m[13]*a5 - m[14]*a4 + m[15]*a3;
-		inv.m[ 6] = - m[12]*a5 + m[14]*a2 - m[15]*a1;
-		inv.m[10] = + m[12]*a4 - m[13]*a2 + m[15]*a0;
-		inv.m[14] = - m[12]*a3 + m[13]*a1 - m[14]*a0;
-		inv.m[ 3] = - m[ 9]*a5 + m[10]*a4 - m[11]*a3;
-		inv.m[ 7] = + m[ 8]*a5 - m[10]*a2 + m[11]*a1;
-		inv.m[11] = - m[ 8]*a4 + m[ 9]*a2 - m[11]*a0;
-		inv.m[15] = + m[ 8]*a3 - m[ 9]*a1 + m[10]*a0;
-
-		T invDet = ((T)1)/det;
-		inv.m[ 0] *= invDet;
-		inv.m[ 1] *= invDet;
-		inv.m[ 2] *= invDet;
-		inv.m[ 3] *= invDet;
-		inv.m[ 4] *= invDet;
-		inv.m[ 5] *= invDet;
-		inv.m[ 6] *= invDet;
-		inv.m[ 7] *= invDet;
-		inv.m[ 8] *= invDet;
-		inv.m[ 9] *= invDet;
-		inv.m[10] *= invDet;
-		inv.m[11] *= invDet;
-		inv.m[12] *= invDet;
-		inv.m[13] *= invDet;
-		inv.m[14] *= invDet;
-		inv.m[15] *= invDet;
-	}
-
-	return inv;
-}
-
-
-
-//=================================================================================================
-template< typename T >
-eve::math::TVec3<T> eve::math::TMatrix44<T>::preMultiply(const eve::math::TVec3<T> &v) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::preMultiply(const eve::math::TVec3<T> &v) const
 {
 	return eve::math::TVec3<T>(
 		v.x*m00 + v.y*m10 + v.z*m20,
@@ -1149,7 +1163,7 @@ eve::math::TVec3<T> eve::math::TMatrix44<T>::preMultiply(const eve::math::TVec3<
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec4<T> eve::math::TMatrix44<T>::preMultiply(const eve::math::TVec4<T> &v) const
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::preMultiply(const eve::math::TVec4<T> &v) const
 {
 	return eve::math::TVec4<T>(
 		v.x*m00 + v.y*m10 + v.z*m20 + v.w*m30,
@@ -1161,7 +1175,7 @@ eve::math::TVec4<T> eve::math::TMatrix44<T>::preMultiply(const eve::math::TVec4<
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TMatrix44<T>::postMultiply(const eve::math::TVec3<T> &v) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::postMultiply(const eve::math::TVec3<T> &v) const
 {
 	return eve::math::TVec3<T>(
 		m00*v.x + m01*v.y + m02*v.z,
@@ -1172,7 +1186,7 @@ eve::math::TVec3<T> eve::math::TMatrix44<T>::postMultiply(const eve::math::TVec3
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec4<T> eve::math::TMatrix44<T>::postMultiply(const eve::math::TVec4<T> &v) const
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::postMultiply(const eve::math::TVec4<T> &v) const
 {
 	return eve::math::TVec4<T>(
 		m00*v.x + m01*v.y + m02*v.z + m03*v.w,
@@ -1186,7 +1200,69 @@ eve::math::TVec4<T> eve::math::TMatrix44<T>::postMultiply(const eve::math::TVec4
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::affineInverted() const
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::inverted(T epsilon) const
+{
+	eve::math::TMatrix44<T> inv(static_cast<T>(0.0));
+
+	T a0 = m[0] * m[5] - m[1] * m[4];
+	T a1 = m[0] * m[6] - m[2] * m[4];
+	T a2 = m[0] * m[7] - m[3] * m[4];
+	T a3 = m[1] * m[6] - m[2] * m[5];
+	T a4 = m[1] * m[7] - m[3] * m[5];
+	T a5 = m[2] * m[7] - m[3] * m[6];
+	T b0 = m[8] * m[13] - m[9] * m[12];
+	T b1 = m[8] * m[14] - m[10] * m[12];
+	T b2 = m[8] * m[15] - m[11] * m[12];
+	T b3 = m[9] * m[14] - m[10] * m[13];
+	T b4 = m[9] * m[15] - m[11] * m[13];
+	T b5 = m[10] * m[15] - m[11] * m[14];
+
+	T det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0;
+
+	if (eve::math::abs(det) > epsilon)
+	{
+		inv.m[0] = +m[5] * b5 - m[6] * b4 + m[7] * b3;
+		inv.m[4] = -m[4] * b5 + m[6] * b2 - m[7] * b1;
+		inv.m[8] = +m[4] * b4 - m[5] * b2 + m[7] * b0;
+		inv.m[12] = -m[4] * b3 + m[5] * b1 - m[6] * b0;
+		inv.m[1] = -m[1] * b5 + m[2] * b4 - m[3] * b3;
+		inv.m[5] = +m[0] * b5 - m[2] * b2 + m[3] * b1;
+		inv.m[9] = -m[0] * b4 + m[1] * b2 - m[3] * b0;
+		inv.m[13] = +m[0] * b3 - m[1] * b1 + m[2] * b0;
+		inv.m[2] = +m[13] * a5 - m[14] * a4 + m[15] * a3;
+		inv.m[6] = -m[12] * a5 + m[14] * a2 - m[15] * a1;
+		inv.m[10] = +m[12] * a4 - m[13] * a2 + m[15] * a0;
+		inv.m[14] = -m[12] * a3 + m[13] * a1 - m[14] * a0;
+		inv.m[3] = -m[9] * a5 + m[10] * a4 - m[11] * a3;
+		inv.m[7] = +m[8] * a5 - m[10] * a2 + m[11] * a1;
+		inv.m[11] = -m[8] * a4 + m[9] * a2 - m[11] * a0;
+		inv.m[15] = +m[8] * a3 - m[9] * a1 + m[10] * a0;
+
+		T invDet = static_cast<T>(1) / det;
+		inv.m[0] *= invDet;
+		inv.m[1] *= invDet;
+		inv.m[2] *= invDet;
+		inv.m[3] *= invDet;
+		inv.m[4] *= invDet;
+		inv.m[5] *= invDet;
+		inv.m[6] *= invDet;
+		inv.m[7] *= invDet;
+		inv.m[8] *= invDet;
+		inv.m[9] *= invDet;
+		inv.m[10] *= invDet;
+		inv.m[11] *= invDet;
+		inv.m[12] *= invDet;
+		inv.m[13] *= invDet;
+		inv.m[14] *= invDet;
+		inv.m[15] *= invDet;
+	}
+
+	return inv;
+}
+
+//=================================================================================================
+template< typename T >
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::affineInverted() const
 {
 	eve::math::TMatrix44<T> ret;
 
@@ -1225,7 +1301,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::affineInverted() const
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TMatrix44<T>::transformPoint(const eve::math::TVec3<T> &rhs) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::transformPoint(const eve::math::TVec3<T> &rhs) const
 {
 	T x = m00*rhs.x + m01*rhs.y + m02*rhs.z + m03;
 	T y = m10*rhs.x + m11*rhs.y + m12*rhs.z + m13;
@@ -1237,7 +1313,7 @@ eve::math::TVec3<T> eve::math::TMatrix44<T>::transformPoint(const eve::math::TVe
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TMatrix44<T>::transformPointAffine(const eve::math::TVec3<T> &rhs) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::transformPointAffine(const eve::math::TVec3<T> &rhs) const
 {
 	T x = m00*rhs.x + m01*rhs.y + m02*rhs.z + m03;
 	T y = m10*rhs.x + m11*rhs.y + m12*rhs.z + m13;
@@ -1246,11 +1322,23 @@ eve::math::TVec3<T> eve::math::TMatrix44<T>::transformPointAffine(const eve::mat
 	return eve::math::TVec3<T>(x, y, z);
 }
 
+//=================================================================================================
+template< typename T >
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::transformPoint(const eve::math::TVec4<T> &rhs) const
+{
+	T x = m00*rhs.x + m01*rhs.y + m02*rhs.z + m03*rhs.w;
+	T y = m10*rhs.x + m11*rhs.y + m12*rhs.z + m13*rhs.w;
+	T z = m20*rhs.x + m21*rhs.y + m22*rhs.z + m23*rhs.w;
+	T w = m30*rhs.x + m31*rhs.y + m32*rhs.z + m33*rhs.w;
+
+	return eve::math::TVec4<T>(x, y, z, w);
+}
+
 
 
 //=================================================================================================
 template< typename T >
-eve::math::TVec3<T> eve::math::TMatrix44<T>::transformVec(const eve::math::TVec3<T> &rhs) const
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::transformVec(const eve::math::TVec3<T> &rhs) const
 {
 	T x = m00*rhs.x + m01*rhs.y + m02*rhs.z;
 	T y = m10*rhs.x + m11*rhs.y + m12*rhs.z;
@@ -1259,11 +1347,23 @@ eve::math::TVec3<T> eve::math::TMatrix44<T>::transformVec(const eve::math::TVec3
 	return eve::math::TVec3<T>(x, y, z);
 }
 
+//=================================================================================================
+template< typename T >
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::transformVec(const eve::math::TVec4<T> &rhs) const
+{
+	T x = m00*rhs.x + m01*rhs.y + m02*rhs.z + m03*rhs.w;
+	T y = m10*rhs.x + m11*rhs.y + m12*rhs.z + m13*rhs.w;
+	T z = m20*rhs.x + m21*rhs.y + m22*rhs.z + m23*rhs.w;
+	T w = m30*rhs.x + m31*rhs.y + m32*rhs.z + m33*rhs.w;
+
+	return eve::math::TVec4<T>(x, y, z, w);
+}
+
 
 
 //=================================================================================================
 template< typename T >
-void eve::math::TMatrix44<T>::orthonormalInvert()
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::orthonormalInvert()
 {
 	// transpose upper 3x3 (R->R^t)
 	std::swap( at(0,1), at(1,0) );
@@ -1281,7 +1381,7 @@ void eve::math::TMatrix44<T>::orthonormalInvert()
 
 //=================================================================================================
 template< typename T >
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::invertTransform() const
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::invertTransform() const
 {
 	eve::math::TMatrix44<T> ret;
 
@@ -1298,33 +1398,21 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::invertTransform() const
 
 //=================================================================================================
 template<typename T>
-void eve::math::TMatrix44<T>::fromZupToYup(void)
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::fromZupToYup(void)
 {
 	static eve::math::TMatrix44<T> matMirror(1.0, 0.0, 0.0, 0.0
 										   , 0.0, 0.0,-1.0, 0.0
 										   , 0.0, 1.0, 0.0, 0.0 
 										   , 0.0, 0.0, 0.0, 1.0 );
-
-// 	static eve::math::TMatrix44<T> matMirror(1.0, 0.0, 0.0, 0.0
-// 										   , 0.0, 0.0, 1.0, 0.0
-// 										   , 0.0, 1.0, 0.0, 0.0 
-// 										   , 0.0, 0.0, 0.0, 1.0 );
-
-// 	static eve::math::TMatrix44<T> matMirror(1.0, 0.0, 0.0, 0.0
-// 										   , 0.0, 0.0, 1.0, 0.0
-// 										   , 0.0,-1.0, 0.0, 0.0 
-// 										   , 0.0, 0.0, 0.0, 1.0 );
-
 	*this = matMirror * (*this);
 	*this = eve::math::TMatrix44<T>::createRotation(eve::math::TVec3<T>::yAxis(), static_cast<T>(M_PI)) * (*this);
-	//*this = *this * matMirror;
 }
 
 
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createTranslation(const eve::math::TVec3<T> &v, T w)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createTranslation(const eve::math::TVec3<T> &v, T w)
 {
 	eve::math::TMatrix44<T> ret;
 	ret.m[12] = v.x;
@@ -1339,7 +1427,9 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createTranslation(const eve::ma
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math::TVec3<T> &from, const eve::math::TVec3<T> &to, const eve::math::TVec3<T> &worldUp)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math::TVec3<T> & from
+																			   , const eve::math::TVec3<T> & to
+																			   , const eve::math::TVec3<T> & worldUp)
 {
     // The goal is to obtain a rotation matrix that takes 
     // "fromDir" to "toDir".  We do this in two steps and 
@@ -1361,7 +1451,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math:
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math::TVec3<T> &axis, T angle)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math::TVec3<T> &axis, T angle)
 {
 	eve::math::TVec3<T> unit(axis.normalized());
 	T sine   = eve::math::sin( angle );
@@ -1394,7 +1484,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math:
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math::TVec3<T> &eulerRadians)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math::TVec3<T> &eulerRadians)
 {
 	// The ordering for this is XYZ. In OpenGL, the ordering
 	// is the same, but the operations needs to happen in
@@ -1441,7 +1531,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createRotation(const eve::math:
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T>	eve::math::TMatrix44<T>::createRotationOnb(const eve::math::TVec3<T>& u, const eve::math::TVec3<T>& v, const eve::math::TVec3<T>& w)
+EVE_FORCE_INLINE eve::math::TMatrix44<T>	eve::math::TMatrix44<T>::createRotationOnb(const eve::math::TVec3<T>& u, const eve::math::TVec3<T>& v, const eve::math::TVec3<T>& w)
 {
 	return eve::math::TMatrix44<T>(
 		u.x,  u.y, u.z, 0,
@@ -1455,7 +1545,7 @@ eve::math::TMatrix44<T>	eve::math::TMatrix44<T>::createRotationOnb(const eve::ma
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(T s)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(T s)
 {
 	eve::math::TMatrix44<T> ret;
 	ret.setToIdentity();
@@ -1468,7 +1558,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(T s)
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TVec2<T> &v)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TVec2<T> &v)
 {
 	eve::math::TMatrix44<T> ret;
 	ret.setToIdentity();
@@ -1481,7 +1571,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TV
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TVec3<T> &v)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TVec3<T> &v)
 {
 	eve::math::TMatrix44<T> ret;
 	ret.setToIdentity();
@@ -1494,7 +1584,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TV
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TVec4<T> &v)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TVec4<T> &v)
 {
 	eve::math::TMatrix44<T> ret;
 	ret.setToIdentity();
@@ -1509,7 +1599,7 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::createScale(const eve::math::TV
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::alignZAxisWithTarget(eve::math::TVec3<T> targetDir, eve::math::TVec3<T> upDir)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::alignZAxisWithTarget(eve::math::TVec3<T> targetDir, eve::math::TVec3<T> upDir)
 {
     // Ensure that the target direction is non-zero.
     if( targetDir.lengthSquared() == 0 )
@@ -1552,8 +1642,67 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::alignZAxisWithTarget(eve::math:
 
 
 //=================================================================================================
+template <typename T> 
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::transform3x3(const eve::math::TMatrix44<T> & m, const eve::math::TVec3<T> & v)
+{
+	return eve::math::TVec3<T>((m.m[ 0] * v.x + m.m[ 1] * v.y + m.m[ 2] * v.z),
+							   (m.m[ 4] * v.x + m.m[ 5] * v.y + m.m[ 6] * v.z),
+							   (m.m[ 8] * v.x + m.m[ 9] * v.y + m.m[10] * v.z));
+}
+//=================================================================================================
+template <typename T> 
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::transform4x4(const eve::math::TMatrix44<T> & m, const eve::math::TVec4<T> & v)
+{
+	return eve::math::TVec4<T>((m.m[ 0] * v.x + m.m[ 1] * v.y + m.m[ 2] * v.z + m.m[ 3] * v.w),
+							   (m.m[ 4] * v.x + m.m[ 5] * v.y + m.m[ 6] * v.z + m.m[ 7] * v.w),
+							   (m.m[ 8] * v.x + m.m[ 9] * v.y + m.m[10] * v.z + m.m[11] * v.w),
+							   (m.m[12] * v.x + m.m[13] * v.y + m.m[14] * v.z + m.m[15] * v.w));
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::transform3x3(const eve::math::TVec3<T> & v, const eve::math::TMatrix44<T> & m)
+{
+	return eve::math::TVec3<T>((m.m[ 0] * v.x + m.m[ 4] * v.y + m.m[ 8] * v.z),
+							   (m.m[ 1] * v.x + m.m[ 5] * v.y + m.m[ 9] * v.z),
+							   (m.m[ 2] * v.x + m.m[ 6] * v.y + m.m[10] * v.z));
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::transform4x4(const eve::math::TVec4<T> & v, const eve::math::TMatrix44<T> & m)
+{
+	return eve::math::TVec4<T>((m.m[ 0] * v.x + m.m[ 4] * v.y + m.m[ 8] * v.z + m.m[12] * v.w),
+							   (m.m[ 1] * v.x + m.m[ 5] * v.y + m.m[ 9] * v.z + m.m[13] * v.w),
+							   (m.m[ 2] * v.x + m.m[ 6] * v.y + m.m[10] * v.z + m.m[14] * v.w),
+							   (m.m[ 3] * v.x + m.m[ 7] * v.y + m.m[11] * v.z + m.m[15] * v.w));
+}
+
+
+
+
+//=================================================================================================
+template <typename T> 
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::get_look_at(const eve::math::TMatrix44<T> & mat
+														 , eve::math::TVec3<T> & eye
+														 , eve::math::TVec3<T> & center
+														 , eve::math::TVec3<T> & up
+														 , T lookDistance)
+{
+	eve::math::TMatrix44<T> inv = mat.inverted();
+
+	eye = inv * eve::math::TVec3<T>::zero();
+	up = eve::math::TMatrix44<T>::transform3x3(mat, eve::math::TVec3<T>::world_up());
+	center = eve::math::TMatrix44<T>::transform3x3(mat, eve::math::TVec3<T>::view_direction());
+	center.normalize();
+	center = eye + center*lookDistance;
+}
+
+//=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::look_at(eve::math::TVec3<T> const & eye, eve::math::TVec3<T> const & center, eve::math::TVec3<T> const & up)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::look_at(eve::math::TVec3<T> const & eye
+																		, eve::math::TVec3<T> const & center
+																		, eve::math::TVec3<T> const & up)
 {
 	eve::math::TVec3<T> f = (center - eye).normalized();
 	eve::math::TVec3<T> u = up.normalized();
@@ -1584,25 +1733,25 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::look_at(eve::math::TVec3<T> con
 
 //=================================================================================================
 template<typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::frustum(T left, T right, T bottom, T top, T nearVal, T farVal)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::frustum(T left, T right, T bottom, T top, T nearVal, T farVal)
 {
 	eve::math::TMatrix44<T> Result;
 	Result.setToIdentity();
 
-	Result.m[ 0] =  (T(2) * nearVal) / (right - left);
-	Result.m[ 5] =  (T(2) * nearVal) / (top - bottom);
+	Result.m[ 0] =  (static_cast<T>(2.0) * nearVal) / (right - left);
+	Result.m[ 5] =  (static_cast<T>(2.0) * nearVal) / (top - bottom);
 	Result.m[ 8] =  (right + left) / (right - left);
 	Result.m[ 9] =  (top + bottom) / (top - bottom);
 	Result.m[10] = -(farVal + nearVal) / (farVal - nearVal);
-	Result.m[11] = -T(1);
-	Result.m[14] = -(T(2) * farVal * nearVal) / (farVal - nearVal);
+	Result.m[11] = -static_cast<T>(1.0);
+	Result.m[14] = -(static_cast<T>(2.0) * farVal * nearVal) / (farVal - nearVal);
 
 	return Result;
 }
 
 //=================================================================================================
 template <typename T> 
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::perspective(T fovy, T aspect, T zNear, T zFar)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::perspective(T fovy, T aspect, T zNear, T zFar)
 {
 	T const rad = toRadians(fovy);
 	T tanHalfFovy = tan(rad / T(2));
@@ -1610,25 +1759,25 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::perspective(T fovy, T aspect, T
 	eve::math::TMatrix44<T> Result;
 	Result.setToNull();
 
-	Result.m[ 0] = T(1) / (aspect * tanHalfFovy);
-	Result.m[ 5] = T(1) / (tanHalfFovy);
-	Result.m[10] = - (zFar + zNear) / (zFar - zNear);
-	Result.m[11] = - T(1);
-	Result.m[14] = - (T(2) * zFar * zNear) / (zFar - zNear);
+	Result.m[ 0] =  static_cast<T>(1.0) / (aspect * tanHalfFovy);
+	Result.m[ 5] =  static_cast<T>(1.0) / (tanHalfFovy);
+	Result.m[10] = -(zFar + zNear) / (zFar - zNear);
+	Result.m[11] = -static_cast<T>(1.0);
+	Result.m[14] = -(static_cast<T>(2.0) * zFar * zNear) / (zFar - zNear);
 
 	return Result;
 }
 
 //=================================================================================================
 template <typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::ortho(T left, T right, T bottom, T top, T zNear, T zFar)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::ortho(T left, T right, T bottom, T top, T zNear, T zFar)
 {
 	eve::math::TMatrix44<T>  Result;
 	Result.setToIdentity();
 
-	Result.m[ 0] =  T(2) / (right - left);
-	Result.m[ 5] =  T(2) / (top - bottom);
-	Result.m[10] = -T(2) / (zFar - zNear);
+	Result.m[ 0] =  static_cast<T>(2.0) / (right - left);
+	Result.m[ 5] =  static_cast<T>(2.0) / (top - bottom);
+	Result.m[10] = -static_cast<T>(2.0) / (zFar - zNear);
 	Result.m[12] = -(right + left) / (right - left);
 	Result.m[13] = -(top + bottom) / (top - bottom);
 	Result.m[14] = -(zFar + zNear) / (zFar - zNear);
@@ -1638,14 +1787,14 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::ortho(T left, T right, T bottom
 
 //=================================================================================================
 template <typename T>
-eve::math::TMatrix44<T> eve::math::TMatrix44<T>::ortho(T left, T right, T bottom, T top)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::ortho(T left, T right, T bottom, T top)
 {
 	eve::math::TMatrix44<T>  Result;
 	Result.setToIdentity();
 
-	Result.m[ 0] =  T(2) / (right - left);
-	Result.m[ 5] =  T(2) / (top - bottom);
-	Result.m[10] = -T(1);
+	Result.m[ 0] =  static_cast<T>(2.0) / (right - left);
+	Result.m[ 5] =  static_cast<T>(2.0) / (top - bottom);
+	Result.m[10] = -static_cast<T>(1.0);
 	Result.m[12] = -(right + left) / (right - left);
 	Result.m[13] = -(top + bottom) / (top - bottom);
 
@@ -1654,17 +1803,17 @@ eve::math::TMatrix44<T> eve::math::TMatrix44<T>::ortho(T left, T right, T bottom
 
 //=================================================================================================
 template <typename T>
-eve::math::TMatrix44<T> rotate(eve::math::TMatrix44<T> const & m, T const & angle, eve::math::TVec3<T> const & v)
+EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::rotate(eve::math::TMatrix44<T> const & m, T radians, eve::math::TVec3<T> const & v)
 {
-	T a = toRadians(angle);
-	T c = cos(a);
-	T s = sin(a);
+	T a = radians;
+	T c = eve::math::cos(a);
+	T s = eve::math::sin(a);
 
-	eve::math::TVec3<T> axis = normalize(v);
+	eve::math::TVec3<T> axis = v.normalized();
 
-	eve::math::TVec3<T> temp = (T(1) - c) * axis;
+	eve::math::TVec3<T> temp = (static_cast<T>(1.0) - c) * axis;
 
-	eve::math::TMatrix44<T> Rotate(static_cast<T>(0));
+	eve::math::TMatrix44<T> Rotate(static_cast<T>(0.0));
 	Rotate[0][0] = c + temp[0] * axis[0];
 	Rotate[0][1] = 0 + temp[0] * axis[1] + s * axis[2];
 	Rotate[0][2] = 0 + temp[0] * axis[2] - s * axis[1];
@@ -1677,7 +1826,7 @@ eve::math::TMatrix44<T> rotate(eve::math::TMatrix44<T> const & m, T const & angl
 	Rotate[2][1] = 0 + temp[2] * axis[1] - s * axis[0];
 	Rotate[2][2] = c + temp[2] * axis[2];
 
-	eve::math::TMatrix44<T> Result(static_cast<T>(0));
+	eve::math::TMatrix44<T> Result(static_cast<T>(0.0));
 	Result[0] = m[0] * Rotate[0][0] + m[1] * Rotate[0][1] + m[2] * Rotate[0][2];
 	Result[1] = m[0] * Rotate[1][0] + m[1] * Rotate[1][1] + m[2] * Rotate[1][2];
 	Result[2] = m[0] * Rotate[2][0] + m[1] * Rotate[2][1] + m[2] * Rotate[2][2];
@@ -1686,41 +1835,34 @@ eve::math::TMatrix44<T> rotate(eve::math::TMatrix44<T> const & m, T const & angl
 }
 
 
-/// Map the specified object coordinates (obj.x, obj.y, obj.z) into window coordinates.
-/// 
-/// @param obj 
-/// @param model 
-/// @param proj
-/// @param viewport 
-/// @tparam T Native type used for the computation. Currently supported: half (not recommended), float or double.
-/// @tparam U Currently supported: Floating-point types and integer types.
+
+//=================================================================================================
 template <typename T, typename U>
-static EVE_FORCE_INLINE eve::math::TVec3<T> project(const eve::math::TVec3<T> & obj, const eve::math::TMatrix44<T> & model, const eve::math::TMatrix44<T> & proj, const eve::math::TVec4<U> & viewport)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::project(const eve::math::TVec3<T> & obj
+													  , const eve::math::TMatrix44<T> & model
+													  , const eve::math::TMatrix44<T> & proj
+													  , const eve::math::TVec4<U> & viewport)
 {
 	eve::math::TVec4<T> tmp(obj, static_cast<T>(1));
 	tmp = model * tmp;
 	tmp = proj * tmp;
 
 	tmp /= tmp.w;
-	tmp = tmp * T(0.5) + T(0.5);
-	tmp[0] = tmp[0] * T(viewport[2]) + T(viewport[0]);
-	tmp[1] = tmp[1] * T(viewport[3]) + T(viewport[1]);
+	tmp = tmp * static_cast<T>(0.5) + static_cast<T>(0.5);
+	tmp[0] = tmp[0] * static_cast<T>(viewport[2]) + static_cast<T>(viewport[0]);
+	tmp[1] = tmp[1] * static_cast<T>(viewport[3]) + static_cast<T>(viewport[1]);
 
 	return eve::math::TVec3<T>(tmp.xyz());
 }
 
-/// Map the specified window coordinates (win.x, win.y, win.z) into object coordinates.
-/// 
-/// @param win 
-/// @param model 
-/// @param proj
-/// @param viewport 
-/// @tparam T Native type used for the computation. Currently supported: float or double.
-/// @tparam U Currently supported: Floating-point types and integer types.
+//=================================================================================================
 template <typename T, typename U>
-static EVE_FORCE_INLINE eve::math::TVec3<T> un_project(const eve::math::TVec3<T> & win, const eve::math::TMatrix44<T> & model, const eve::math::TMatrix44<T> & proj, const eve::math::TVec4<U> & viewport)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::un_project(const eve::math::TVec3<T> & win
+														 , const eve::math::TMatrix44<T> & model
+														 , const eve::math::TMatrix44<T> & proj
+														 , const eve::math::TVec4<U> & viewport)
 {
-	eve::math::TMatrix44<T> invMat = proj * model;		//glm::inverse(proj * model);
+	eve::math::TMatrix44<T> invMat = proj * model;
 	invMat.invert();
 
 	eve::math::TVec4<T> tmp(win, static_cast<T>(1));

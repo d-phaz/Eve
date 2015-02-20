@@ -50,16 +50,16 @@
 #include "eve/math/TCamera.h"
 #endif 
 
-#ifndef __EVE_MATH_TLIGHT_H__
-#include "eve/math/TLight.h"
-#endif
-
-#ifndef __EVE_MATH_TMESH_H__
-#include "eve/math/TMesh.h"
-#endif
+#ifndef __EVE_MATH_TCAMERA_H__
+#include "eve/math/TCamera.h"
+#endif 
 
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
+#endif
+
+#ifndef __EVE_MATH_TTRANSFORM_H__
+#include "eve/math/TTransform.h"
 #endif
 
 #ifndef __EVE_MATH_TYPES_H__

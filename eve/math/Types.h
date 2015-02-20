@@ -41,18 +41,6 @@
 #include "eve/math/TBox.h"
 #endif 
 
-#ifndef __EVE_MATH_TCAMERA_H__
-#include "eve/math/TCamera.h"
-#endif 
-
-#ifndef __EVE_MATH_TLIGHT_H__
-#include "eve/math/TLight.h"
-#endif
-
-#ifndef __EVE_MATH_TMESH_H__
-#include "eve/math/TMesh.h"
-#endif
-
 #ifndef __EVE_MATH_TRAY_H__
 #include "eve/math/TRay.h"
 #endif
@@ -74,21 +62,6 @@ namespace eve
 		typedef eve::math::TRay<double>			Rayd;
 		typedef eve::math::TRay<float>			Rayf;
 		typedef eve::math::TRay<eve_real_t>		Ray;
-
-
-		typedef eve::math::TCamera<double>		Camerad;
-		typedef eve::math::TCamera<float>		Cameraf;
-		typedef eve::math::TCamera<eve_real_t>	Camera;
-
-
-		typedef eve::math::TLight<double>		Lightd;
-		typedef eve::math::TLight<float>		Lightf;
-		typedef eve::math::TLight<eve_real_t>	Light;
-
-
-		typedef eve::math::TMesh<double>		Meshd;
-		typedef eve::math::TMesh<float>			Meshf;
-		typedef eve::math::TMesh<eve_real_t>	Mesh;
 
 	} // namespace math
 

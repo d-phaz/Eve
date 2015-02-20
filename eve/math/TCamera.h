@@ -57,6 +57,10 @@
 #include "eve/math/TRay.h"
 #endif
 
+#ifndef __EVE_MATH_TTRANSFORM_H__
+#include "eve/math/TTransform.h"
+#endif
+
 
 namespace eve
 {
@@ -68,11 +72,11 @@ namespace eve
 		*
 		* \brief Template 3D Camera object math and manipulation.
 		*
-		* \note extends eve::mem::Pointer
+		* \note extends TTransform
 		*/
 		template <typename T>
 		class TCamera
-			: public eve::mem::Pointer
+			: public eve::math::TTransform<T>
 		{
 
 			//////////////////////////////////////
@@ -80,18 +84,8 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			T									m_width;						//!< View width.
-			T									m_height;						//!< View height.
-
-		protected:
-			eve::math::TVec3<T>					m_eyePoint;						//!< Eye position in 3D world.
-			eve::math::TVec3<T>					m_target;						//!< View target in 3D world.
-			eve::math::TVec3<T>					m_worldUp;						//!< View UP axis.
-
-		protected:
-			eve::math::TVec3<T>					m_viewDirection;				//!< Normalized view direction.
-			eve::math::TQuaternion<T>			m_orientation;					//!< Orientation (rotation).
-			T									m_centerOfInterest;				//!< Center of interest.
+			T									m_cam_view_width;				//!< View width.
+			T									m_cam_view_height;				//!< View height.
 
 		protected:
 			T									m_fov;							//!< Horizontal field of view (aspect).
@@ -102,14 +96,8 @@ namespace eve
 			eve::math::TVec2<T>					m_lensShift;					//!< Lens shift on both axis.
 
 		protected:
-			mutable eve::math::TVec3<T>			m_U;							//!< Right vector.
-			mutable eve::math::TVec3<T>			m_V;							//!< Readjust up-vector.
-			mutable eve::math::TVec3<T>			m_W;							//!< Negative view direction.
-
-		protected:
 			mutable eve::math::TMatrix44<T>		m_matrixProjection;				//!< Projection matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixProjectionInverse;		//!< Inversed projection matrix.
-			mutable eve::math::TMatrix44<T>		m_matrixModelView;				//!< Model view matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixModelViewInverse;		//!< Inversed model view matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixModelViewProjection;	//!< Projection matrix * Model view matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixViewport;				//!< Viewport matrix.
@@ -160,14 +148,15 @@ namespace eve
 
 
 		protected:
-			/** \brief Compute matrices. */
-			void calcMatrices(void) const;
-			/** \brief Compute model view matrix. */
-			virtual void calcModelView(void) const;
-			/** \brief Compute projection matrix. */
-			virtual void calcProjection(void) const;
+			/** \brief Update all matrices. */
+			void updateMatrices(void);
+
+			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
+			virtual void updateMatrixModelView(void) override;
+			/** \brief Update projection matrix. */
+			virtual void updateMatrixProjection(void);
 			/** \brief Compute viewport matrix */
-			void calcViewportMatrix(void);
+			void updateMatrixViewport(void);
 
 
 		public:
@@ -181,21 +170,12 @@ namespace eve
 
 		public:
 			/** \brief Calibrate camera by setting projection and model view matrix. */
-			void calibrateCamera(const eve::math::TMatrix44<T> & p_matrixProjection, const eve::math::TMatrix44<T> & p_matrixModelView);
-			/** \brief Release calibration by computing matrices from RTS values. */
-			void releaseCalibration(void);
+			void calibrate(const eve::math::TMatrix44<T> & p_matrixProjection, const eve::math::TMatrix44<T> & p_matrixModelView);
 
 
 		public:
-			/** \brief Generate ray from point. */
-			eve::math::TRay<T> generateRay(T p_uPos, T p_vPos, T p_imagePlaneAspectRatio) const;
-			/** \brief Generate ray from point. */
-			eve::math::TRay<T> generateRay(T p_uPos, T p_vPos, T p_imagePlaneWidth, T p_imagePlaneHeight) const;
-			/** \brief Generate ray from point. */
-			eve::math::TRay<T> generateRay(eve::math::TVec2<T> p_pos, T p_imagePlaneWidth, T p_imagePlaneHeight) const;
-
-
-		public:
+			/** \brief Convert world-space coordinate to screen coordinates. */
+			eve::math::TVec2<T> worldToScreen(const eve::math::TVec3<T> & p_worldCoord) const;
 			/** \brief Convert world-space coordinate to screen coordinates. */
 			eve::math::TVec2<T> worldToScreen(const eve::math::TVec3<T> & p_worldCoord, T p_screenWidth, T p_screenHeight) const;
 			/** \brief Convert world-space coordinate to eye-space (camera-space, -Z is along the view direction). */
@@ -207,104 +187,16 @@ namespace eve
 
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
-			//		MATRIX
-			///////////////////////////////////////////////////////////////////////////////////////////////
-
-		public:
-			/** \brief Translate object. */
-			virtual void translate(const eve::math::TVec3<T> & p_translation);
-			/** \brief Translate object on X-axis. */
-			virtual void translateX(T p_translationX);
-			/** \brief Translate object on Y-axis. */
-			virtual void translateY(T p_translationY);
-			/** \brief Translate object on Z-axis. */
-			virtual void translateZ(T p_translationZ);
-
-
-		public:
-			/** \brief Rotate object. */
-			virtual void rotate(const eve::math::TVec3<T> & p_rotation);
-			/** \brief Rotate object on X-axis. */
-			virtual void rotateX(T p_rotationX);
-			/** \brief Rotate object on Y-axis. */
-			virtual void rotateY(T p_rotationY);
-			/** \brief Rotate object on Z-axis. */
-			virtual void rotateZ(T p_rotationZ);
-
-
-			///////////////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Get eye point. */
-			const eve::math::TVec3<T> getEyePoint(void) const;
-			/** \brief Get eye point position on X-axis. */
-			const T getEyePointX(void) const;
-			/** \brief Get eye point position on Y-axis. */
-			const T getEyePointY(void) const;
-			/** \brief Get eye point position on Z-axis. */
-			const T getEyePointZ(void) const;
-
-			/** \brief Set eye point. */
-			void setEyePoint(const eve::math::TVec3<T> & p_eyePoint);
-			/** \brief Set eye point X value. */
-			void setEyePointX(T p_eyePointX);
-			/** \brief Set eye point Y value. */
-			void setEyePointY(T p_eyePointY);
-			/** \brief Set eye point Z value. */
-			void setEyePointZ(T p_eyePointZ);
-
-
-		public:
-			/** \brief Get translation. */
-			const eve::math::TVec3<T> getTranslation(void) const;
-			/** \brief Get translation on X-axis. */
-			const T getTranslationX(void) const;
-			/** \brief Get translation on Y-axis. */
-			const T getTranslationY(void) const;
-			/** \brief Get translation on Z-axis. */
-			const T getTranslationZ(void) const;
-
-
-		public:
-			/** \brief Get center of interest. */
-			const T getCenterOfInterest(void) const;
-			/** \brief Set center of interest. */
-			void setCenterOfInterest(T p_centerOfInterest);
-
-
-		public:
-			/** \brief Get center of interest point. */
-			const eve::math::TVec3<T> getCenterOfInterestPoint(void) const;
-			/** \brief Set center of interest point. */
-			void setCenterOfInterestPoint(const eve::math::TVec3<T> & p_centerOfInterestPoint);
-
-
-		public:
-			/** \brief Get world up. */
-			const eve::math::TVec3<T> getWorldUp(void) const;
-			/** \brief Set world up. */
-			void setWorldUp(const eve::math::TVec3<T> & p_worldUp);
-
-
-		public:
-            /** \brief Get Right Vector. */
-			const eve::math::TVec3<T> getRightVector(void) const;
-
-
-		public:
-			/** \brief Get view direction. */
-			const eve::math::TVec3<T> getViewDirection(void) const;
-			/** \brief Set view direction. */
-			void setViewDirection(const eve::math::TVec3<T> & p_viewDirection);
-
-
-		public:
-			/** \brief Get camera orientation. */
-			const eve::math::TQuaternion<T> getOrientation(void) const;
-			/** \brief Set camera orientation. */
-			void setOrientation(const eve::math::TQuaternion<T> & p_orientation);
+			/** \brief Get Right axis. */
+			eve::math::TVec3<T> getRight(void) const;
+			/** \brief Get world up axis. */
+			eve::math::TVec3<T> getUp(void) const;
+			/** \brief Get direction axis. */
+			eve::math::TVec3<T> getDirection(void) const;
 
 
 		public:
@@ -315,9 +207,9 @@ namespace eve
 
 
 		public:
-			/** \brief Get camera aspect ratio (4/3, 16/9, ...), basically : display width / display height. */
-			const T getAspectRatio(void) const;
-			/** \brief Set camera aspect ratio (4/3, 16/9, ...), basically : display width / display height.*/
+			/** \brief Get camera aspect ratio (4/3, 16/9, ...), basically (display width / display height). */
+			const T getAspectRatio(void) const;							   
+			/** \brief Set camera aspect ratio (4/3, 16/9, ...), basically (display width / display height).*/
 			void setAspectRatio(T p_aspectRatio);
 
 
@@ -341,13 +233,6 @@ namespace eve
 
 
 		public:
-			/** \brief Get near clipping plane coordinates. */
-			void getNearClipCoordinates(eve::math::TVec3<T> * p_pTopLeft, eve::math::TVec3<T> * p_pTopRight, eve::math::TVec3<T> * p_pBottomLeft, eve::math::TVec3<T> * p_pBottomRight) const;
-			/** \brief Get far clipping plane coordinates. */
-			void getFarClipCoordinates(eve::math::TVec3<T> * p_pTopLeft, eve::math::TVec3<T> * p_pTopRight, eve::math::TVec3<T> * p_pBottomLeft, eve::math::TVec3<T> * p_pBottomRight) const;
-
-
-		public:
 			/** \brief Get camera frustum coordinates. */
 			void getFrustum(T * p_pLeft, T * p_pTop, T * p_pRight, T * p_pBottom, T * p_pNear, T * p_pFar) const;
 
@@ -355,8 +240,6 @@ namespace eve
 		public:
 			/** \brief Get projection matrix. */
 			eve::math::TMatrix44<T> & getMatrixProjection(void) const;
-			/** \brief Get model view matrix. */
-			virtual eve::math::TMatrix44<T> & getMatrixModelView(void) const;
 			/** \brief Get model view projection matrix (MVP). */
 			eve::math::TMatrix44<T> & getMatrixModelViewProjection(void) const;
 			/** \brief Get inverse projection matrix. */
@@ -365,11 +248,6 @@ namespace eve
 			eve::math::TMatrix44<T> & getMatrixInverseModelView(void) const;
 			/** \brief Get viewport matrix. */
 			eve::math::TMatrix44<T> & getMatrixViewport(void) const;
-
-
-		public:
-			/** \brief Get billboard vectors. */
-			void getBillboardVectors(eve::math::TVec3<T> * p_pRight, eve::math::TVec3<T> * p_pUp) const;
 
 
 		public:
@@ -490,19 +368,11 @@ eve::math::TCamera<T> * eve::math::TCamera<T>::create_ptr(const eve::math::TCame
 template <typename T>
 eve::math::TCamera<T>::TCamera(void)
 	// Inheritance
-	: eve::mem::Pointer()
+	: eve::math::TTransform<T>()
 
 	// Members init
-	, m_width(static_cast<T>(800.0))
-	, m_height(static_cast<T>(600.0))
-
-	, m_eyePoint(eve::math::TVec3<T>::zero())
-	, m_target(eve::math::TVec3<T>::zero())
-	, m_worldUp(eve::math::TVec3<T>::zero())
-
-	, m_viewDirection(eve::math::TVec3<T>::zero())
-	, m_orientation(eve::math::TQuaternion<T>::identity())
-	, m_centerOfInterest(static_cast<T>(0.0))
+	, m_cam_view_width(static_cast<T>(800.0))
+	, m_cam_view_height(static_cast<T>(600.0))
 
 	, m_fov(static_cast<T>(65.0))
 	, m_aspectRatio(static_cast<T>(4.0/3.0))
@@ -511,13 +381,8 @@ eve::math::TCamera<T>::TCamera(void)
 	, m_frustumDepth(static_cast<T>(0.0))
 	, m_lensShift(eve::math::TVec2<T>::zero())
 
-	, m_U(eve::math::TVec3<T>::xAxis())
-	, m_V(eve::math::TVec3<T>::yAxis())
-	, m_W(eve::math::TVec3<T>::zero())
-
 	, m_matrixProjection(eve::math::TMatrix44<T>::zero())
 	, m_matrixProjectionInverse(eve::math::TMatrix44<T>::zero())
-	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
 	, m_matrixViewport(eve::math::TMatrix44<T>::identity())
@@ -532,19 +397,11 @@ eve::math::TCamera<T>::TCamera(void)
 template <typename T>
 eve::math::TCamera<T>::TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov)
 	// Inheritance
-	: eve::mem::Pointer()
+	: eve::math::TTransform<T>()
 
 	// Members init
-	, m_width(p_width)
-	, m_height(p_height)
-
-	, m_eyePoint(eve::math::TVec3<T>::zero())
-	, m_target(eve::math::TVec3<T>::zero())
-	, m_worldUp(eve::math::TVec3<T>::zero())
-
-	, m_viewDirection(eve::math::TVec3<T>::zero())
-	, m_orientation(eve::math::TQuaternion<T>::identity())
-	, m_centerOfInterest(static_cast<T>(0.0))
+	, m_cam_view_width(p_width)
+	, m_cam_view_height(p_height)
 
 	, m_fov(p_fov)
 	, m_aspectRatio(static_cast<T>(0.0))
@@ -553,13 +410,8 @@ eve::math::TCamera<T>::TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov
 	, m_frustumDepth(static_cast<T>(0.0))
 	, m_lensShift(eve::math::TVec2<T>::zero())
 
-	, m_U(eve::math::TVec3<T>::xAxis())
-	, m_V(eve::math::TVec3<T>::yAxis())
-	, m_W(eve::math::TVec3<T>::zero())
-
 	, m_matrixProjection(eve::math::TMatrix44<T>::zero())
 	, m_matrixProjectionInverse(eve::math::TMatrix44<T>::zero())
-	, m_matrixModelView(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewInverse(eve::math::TMatrix44<T>::zero())
 	, m_matrixModelViewProjection(eve::math::TMatrix44<T>::zero())
 	, m_matrixViewport(eve::math::TMatrix44<T>::identity())
@@ -574,19 +426,11 @@ eve::math::TCamera<T>::TCamera(T p_width, T p_height, T p_near, T p_far, T p_fov
 template <typename T>
 eve::math::TCamera<T>::TCamera(const eve::math::TCamera<T> & p_parent)
 	// Inheritance
-	: eve::mem::Pointer()
+	: eve::math::TTransform<T>(p_parent)
 
 	// Members init
-	, m_width(p_parent.m_width)
-	, m_height(p_parent.m_height)
-
-	, m_eyePoint(p_parent.m_eyePoint)
-	, m_target(p_parent.m_target)
-	, m_worldUp(p_parent.m_worldUp)
-
-	, m_viewDirection(p_parent.m_viewDirection)
-	, m_orientation(p_parent.m_orientation)
-	, m_centerOfInterest(p_parent.m_centerOfInterest)
+	, m_cam_view_width(p_parent.m_cam_view_width)
+	, m_cam_view_height(p_parent.m_cam_view_height)
 
 	, m_fov(p_parent.m_fov)
 	, m_aspectRatio(p_parent.m_aspectRatio)
@@ -595,13 +439,8 @@ eve::math::TCamera<T>::TCamera(const eve::math::TCamera<T> & p_parent)
 	, m_frustumDepth(p_parent.m_frustumDepth)
 	, m_lensShift(p_parent.m_lensShift)
 
-	, m_U(p_parent.m_U)
-	, m_V(p_parent.m_V)
-	, m_W(p_parent.m_W)
-
 	, m_matrixProjection(p_parent.m_matrixProjection)
 	, m_matrixProjectionInverse(p_parent.m_matrixProjectionInverse)
-	, m_matrixModelView(p_parent.m_matrixModelView)
 	, m_matrixModelViewInverse(p_parent.m_matrixModelViewInverse)
 	, m_matrixModelViewProjection(p_parent.m_matrixModelViewProjection)
 	, m_matrixViewport(p_parent.m_matrixViewport)
@@ -619,27 +458,16 @@ template <typename T>
 void eve::math::TCamera<T>::initDefault(void)
 {
 	// Default values.
-	m_aspectRatio		= m_width/m_height;
+	m_aspectRatio		= m_cam_view_width / m_cam_view_height;
 	m_frustumDepth		= m_farClip - m_nearClip;
-
-	m_eyePoint.x		= static_cast<T>(10.0);
-	m_eyePoint.y		= static_cast<T>(10.0);
-	m_eyePoint.z		= static_cast<T>(10.0);
-
-	m_worldUp.x			= static_cast<T>(0.0);
-	m_worldUp.y			= static_cast<T>(1.0);
-	m_worldUp.z			= static_cast<T>(0.0);	
-
-	m_target.x			= static_cast<T>(0.0);
-	m_target.y			= static_cast<T>(0.0);
-	m_target.z			= static_cast<T>(0.0);
-
-	m_viewDirection		= (m_target - m_eyePoint).normalized();
-	m_orientation		= eve::math::TQuaternion<T>( eve::math::TMatrix44<T>::alignZAxisWithTarget(-m_viewDirection, m_worldUp) ).normalized();
-	m_centerOfInterest	= m_eyePoint.distance( m_target );
 
 	// Members init.
 	this->init();
+
+	// Matrix init.
+	eve::math::TVec3<T> tra(static_cast<T>(10.0), static_cast<T>(10.0), static_cast<T>(10.0));
+	eve::math::TVec3<T> tar(static_cast<T>( 0.0), static_cast<T>( 0.0), static_cast<T>( 0.0));
+	this->lookAt(tra, tar, eve::math::TVec3<T>::world_up());
 }
 
 
@@ -648,14 +476,17 @@ void eve::math::TCamera<T>::initDefault(void)
 template <typename T>
 void eve::math::TCamera<T>::init(void)
 {
+	// Call parent class.
+	eve::math::TTransform<T>::init();
+
 	// Test values.
-	if (m_aspectRatio < static_cast<T>(0.000001)) {
-		m_aspectRatio = m_width / m_height;
-	}
+	//if (m_aspectRatio < static_cast<T>(0.000001)) {
+		m_aspectRatio = m_cam_view_width / m_cam_view_height;
+	//}
 
 	// Compute matrices.
-	this->calcMatrices();
-	this->calcViewportMatrix();
+	this->updateMatrices();
+	this->updateMatrixViewport();
 }
 
 //=================================================================================================
@@ -663,47 +494,41 @@ template <typename T>
 void eve::math::TCamera<T>::release(void)
 {
 	// Nothing to do for now.
+
+	// Call parent class.
+	eve::math::TTransform<T>::release();
 }
 
 
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::calcMatrices(void) const
+EVE_FORCE_INLINE void eve::math::TCamera<T>::updateMatrices(void)
 {
-	this->calcProjection();
-	this->calcModelView();
+	this->updateMatrixModelView();
+	this->updateMatrixProjection();
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::calcModelView(void) const
+EVE_FORCE_INLINE void eve::math::TCamera<T>::updateMatrixModelView(void)
 {
-	m_W = -m_viewDirection.normalized();
-	m_U = m_orientation * eve::math::TVec3<T>::xAxis();
-	m_V = m_orientation * eve::math::TVec3<T>::yAxis();
+	// Call parent class.
+	eve::math::TTransform<T>::updateMatrixModelView();
 
-	eve::math::TVec3<T> d(-m_eyePoint.dot(m_U), -m_eyePoint.dot(m_V), -m_eyePoint.dot(m_W));
-	T * m = m_matrixModelView.m;
-	m[0] = m_U.x;		m[4] = m_U.y;		m[8] = m_U.z;		m[12] = d.x;
-	m[1] = m_V.x;		m[5] = m_V.y;		m[9] = m_V.z;		m[13] = d.y;
-	m[2] = m_W.x;		m[6] = m_W.y;		m[10] = m_W.z;		m[14] = d.z;
-	/*m[ 3] = 0.0f;		m[ 7] = 0.0f;		m[11] = 0.0f;*/		m[15] = static_cast<T>(1.0);
-
-	// Update inverse model view matrix
-	m_matrixModelViewInverse = m_matrixModelView.inverted();
-
-	// Update MVP
-	m_matrixModelViewProjection = m_matrixProjection * m_matrixModelView;
+	// Update inverse model view matrix.
+	m_matrixModelViewInverse.set(m_matrixModelView.inverted());
+	// Update MVP.
+	m_matrixModelViewProjection.set(m_matrixProjection * m_matrixModelViewInverse);
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::calcProjection(void) const
+EVE_FORCE_INLINE void eve::math::TCamera<T>::updateMatrixProjection(void)
 {
-	m_frustumTop	= m_nearClip * eve::math::tan(static_cast<T>(M_PI) / static_cast<T>(180.0) * m_fov * static_cast<T>(0.5));
+	m_frustumTop	=  m_nearClip * eve::math::tan(static_cast<T>(M_PI) / static_cast<T>(180.0) * m_fov * static_cast<T>(0.5));
 	m_frustumBottom = -m_frustumTop;
-	m_frustumRight	= m_frustumTop * m_aspectRatio;
+	m_frustumRight	=  m_frustumTop * m_aspectRatio;
 	m_frustumLeft	= -m_frustumRight;
 
 	// Perform lens shift
@@ -719,110 +544,71 @@ void eve::math::TCamera<T>::calcProjection(void) const
 	}
 
 	T *m = m_matrixProjection.m;
-	m[0] = static_cast<T>(2.0) * m_nearClip / (m_frustumRight - m_frustumLeft);
-	//m[ 4] =  static_cast<T>(0.0);
-	m[8] = (m_frustumRight + m_frustumLeft) / (m_frustumRight - m_frustumLeft);
-	//m[12] =  static_cast<T>(0.0);
-
-	//m[ 1] =  static_cast<T>(0.0);
-	m[5] = static_cast<T>(2.0) * m_nearClip / (m_frustumTop - m_frustumBottom);
-	m[9] = (m_frustumTop + m_frustumBottom) / (m_frustumTop - m_frustumBottom);
-	//m[13] =  static_cast<T>(0.0);
-
-	//m[ 2] =  static_cast<T>(0.0);
-	//m[ 6] =  static_cast<T>(0.0);
+	m[ 0] =  static_cast<T>(2.0) * m_nearClip / (m_frustumRight - m_frustumLeft);
+	m[ 5] =  static_cast<T>(2.0) * m_nearClip / (m_frustumTop - m_frustumBottom);
+	m[ 8] =  (m_frustumRight + m_frustumLeft) / (m_frustumRight - m_frustumLeft);
+	m[ 9] =  (m_frustumTop + m_frustumBottom) / (m_frustumTop - m_frustumBottom);
 	m[10] = -(m_farClip + m_nearClip) / (m_farClip - m_nearClip);
+	m[11] = -static_cast<T>(1.0);
 	m[14] = -(static_cast<T>(2.0) * m_farClip * m_nearClip) / (m_farClip - m_nearClip);
-
-	//m[ 3] = static_cast<T>(0.0);
-	//m[ 7] = static_cast<T>(0.0);
-	m[11] = static_cast<T>(-1.0);
-	//m[15] = static_cast<T>(0.0);
 
 
 	m = m_matrixProjectionInverse.m;
-	m[0] = (m_frustumRight - m_frustumLeft) / (static_cast<T>(2.0) * m_nearClip);
-	//m[ 4] = static_cast<T>(0.0);
-	//m[ 8] = static_cast<T>(0.0);
-	m[12] = (m_frustumRight + m_frustumLeft) / (static_cast<T>(2.0) * m_nearClip);
-
-	//m[ 1] = static_cast<T>(0.0);
-	m[5] = (m_frustumTop - m_frustumBottom) / (static_cast<T>(2.0) * m_nearClip);
-	//m[ 9] = static_cast<T>(0.0);
-	m[13] = (m_frustumTop + m_frustumBottom) / (static_cast<T>(2.0) * m_nearClip);
-
-	//m[ 2] = static_cast<T>(0.0);
-	//m[ 6] = static_cast<T>(0.0);
-	//m[10] = static_cast<T>(0.0);
-	m[14] = static_cast<T>(-1.0);
-
-	//m[ 3] = static_cast<T>(0.0);
-	//m[ 7] = static_cast<T>(0.0);
+	m[ 0] =  (m_frustumRight - m_frustumLeft) / (static_cast<T>(2.0) * m_nearClip);
+	m[ 5] =  (m_frustumTop - m_frustumBottom) / (static_cast<T>(2.0) * m_nearClip);
 	m[11] = -(m_farClip - m_nearClip) / (static_cast<T>(2.0) * m_farClip*m_nearClip);
+	m[12] =  (m_frustumRight + m_frustumLeft) / (static_cast<T>(2.0) * m_nearClip);
+	m[13] =  (m_frustumTop + m_frustumBottom) / (static_cast<T>(2.0) * m_nearClip);
+	m[14] = -static_cast<T>(1.0);
 	m[15] =  (m_farClip + m_nearClip) / (static_cast<T>(2.0) * m_farClip*m_nearClip);
+
+	// Update MVP.
+	m_matrixModelViewProjection.set(m_matrixProjection * m_matrixModelViewInverse);
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::calcViewportMatrix(void)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::updateMatrixViewport(void)
 {
-	//T halfWidth  = m_width / static_cast<T>(2.0);
-	//T halfHeight = m_height / static_cast<T>(2.0);
-
-	//eve::math::TMatrix44<T> * m = &m_matrixViewport;
-	////m[ 0] = halfWidth;				m[ 4] = static_cast<T>(0.0);	m[ 8] = static_cast<T>(0.0);		m[12] = static_cast<T>(0.0);
-	////m[ 1] = static_cast<T>(0.0);	m[ 5] = halfHeight;				m[ 9] = static_cast<T>(0.0);		m[13] = static_cast<T>(0.0);
-	////m[ 2] = static_cast<T>(0.0);	m[ 6] = static_cast<T>(0.0);	m[10] = static_cast<T>(1.0);		m[14] = static_cast<T>(0.0);
-	////m[ 3] = halfWidth;				m[ 7] = halfHeight;				m[11] = static_cast<T>(0.0);		m[15] = static_cast<T>(1.0);
-
-	//m[ 0] = halfWidth;		
-	//m[ 5] = halfHeight;
-	//m[ 3] = halfWidth;		
-	//m[ 7] = halfHeight;
-
-	m_matrixViewport = eve::math::TMatrix44<T>::ortho(static_cast<T>(0.0), m_width, m_height, static_cast<T>(0.0));
+	m_matrixViewport.set(eve::math::TMatrix44<T>::ortho(static_cast<T>(0.0), m_cam_view_width, static_cast<T>(0.0), m_cam_view_height));
 }
 
 
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::lookAt(const eve::math::TVec3<T> & p_target)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::lookAt(const eve::math::TVec3<T> & p_target)
 {
-	m_viewDirection = (p_target - m_eyePoint).normalized();
-	m_orientation	= eve::math::TQuaternion<T>(eve::math::TMatrix44<T>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
-
-	this->calcModelView();
+	eve::math::TVec3<T>			dir	= (p_target - m_translation).normalized();
+	eve::math::TMatrix44<T>		mat = eve::math::TMatrix44<T>::alignZAxisWithTarget(-dir, getUp());
+	eve::math::TQuaternion<T>	rot	= eve::math::TQuaternion<T>(mat).normalized();
+	this->setRotation(rot);
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::lookAt(const eve::math::TVec3<T> & p_eyePoint, const eve::math::TVec3<T> & p_target)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::lookAt(const eve::math::TVec3<T> & p_eyePoint, const eve::math::TVec3<T> & p_target)
 {
-	m_eyePoint		= p_eyePoint;
-	m_viewDirection = (p_target - m_eyePoint).normalized();
-	m_orientation	= eve::math::TQuaternion<T>(eve::math::TMatrix44<T>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
-
-	this->calcModelView();
+	this->setTranslation(p_eyePoint);
+	this->lookAt(p_target);
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::lookAt(const eve::math::TVec3<T> & p_eyePoint, const eve::math::TVec3<T> & p_target, const eve::math::TVec3<T> & p_up)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::lookAt(const eve::math::TVec3<T> & p_eyePoint, const eve::math::TVec3<T> & p_target, const eve::math::TVec3<T> & p_up)
 {
-	m_eyePoint		= p_eyePoint;
-	m_worldUp		= p_up.normalized();
-	m_viewDirection = (p_target - m_eyePoint).normalized();
-	m_orientation	= eve::math::TQuaternion<T>(eve::math::TMatrix44<T>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
-
-	this->calcModelView();
+	this->setTranslation(p_eyePoint);
+	eve::math::TVec3<T>			dir = (p_target - m_translation).normalized();
+	eve::math::TMatrix44<T>		mat = eve::math::TMatrix44<T>::alignZAxisWithTarget(-dir, p_up);
+	eve::math::TQuaternion<T>	rot = eve::math::TQuaternion<T>(mat).normalized();
+	this->setRotation(rot);
 }
 
 
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::calibrateCamera(const eve::math::TMatrix44<T> & p_matrixProjection, const eve::math::TMatrix44<T> & p_matrixModelView)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::calibrate(const eve::math::TMatrix44<T> & p_matrixProjection, const eve::math::TMatrix44<T> & p_matrixModelView)
 {
 	m_matrixProjection			= p_matrixProjection;
 	m_matrixProjectionInverse	= m_matrixProjection.inverted();
@@ -830,48 +616,30 @@ void eve::math::TCamera<T>::calibrateCamera(const eve::math::TMatrix44<T> & p_ma
 	m_matrixModelView			= p_matrixModelView;
 	m_matrixModelViewInverse	= m_matrixModelView.inverted();
 
-	m_matrixModelViewProjection = m_matrixProjection * m_matrixModelView;
+	m_matrixModelViewProjection = m_matrixProjection * m_matrixModelViewInverse;
+
+	eve::math::TQuaternion<T> rot;
+	eve::math::decompose_matrix44(m_matrixModelView, m_translation, rot);
+	m_rotation.set(rot.toVec3());
 }
+
+
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::releaseCalibration(void)
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TCamera<T>::worldToScreen(const eve::math::TVec3<T> & p_worldCoord) const
 {
-	this->calcMatrices();
-}
+	eve::math::TVec3<T> eyeCoord = m_matrixModelView.transformPointAffine(p_worldCoord);
+	eve::math::TVec3<T> ndc		 = m_matrixProjection.transformPoint(eyeCoord);
 
+	return eve::math::TVec2<T>((ndc.x + static_cast<T>(1.0)) / static_cast<T>(2.0) * m_cam_view_width
+							 , (static_cast<T>(1.0) - (ndc.y + static_cast<T>(1.0)) / static_cast<T>(2.0)) * m_cam_view_height);
 
-
-//=================================================================================================
-template <typename T>
-eve::math::TRay<T> eve::math::TCamera<T>::generateRay(T p_uPos, T p_vPos, T p_imagePlaneAspectRatio) const
-{
-	T s = (p_uPos - static_cast<T>(0.5)) * p_imagePlaneAspectRatio;
-	T t = (p_vPos - static_cast<T>(0.5));
-	T viewDistance = p_imagePlaneAspectRatio / eve::math::abs(m_frustumRight - m_frustumLeft) * m_nearClip;
-
-	return eve::math::TRay<T>(m_eyePoint, (m_U * s + m_V * t - (m_W * viewDistance)).normalized());
 }
 
 //=================================================================================================
 template <typename T>
-eve::math::TRay<T> eve::math::TCamera<T>::generateRay(T p_uPos, T p_vPos, T p_imagePlaneWidth, T p_imagePlaneHeight) const
-{
-	return this->generateRay(p_uPos, p_vPos, p_imagePlaneWidth / p_imagePlaneHeight);
-}
-
-//=================================================================================================
-template <typename T>
-eve::math::TRay<T> eve::math::TCamera<T>::generateRay(eve::math::TVec2<T> p_pos, T p_imagePlaneWidth, T p_imagePlaneHeight) const
-{
-	return this->generateRay(p_pos.x, p_pos.y, p_imagePlaneWidth / p_imagePlaneHeight);
-}
-
-
-
-//=================================================================================================
-template <typename T>
-eve::math::TVec2<T> eve::math::TCamera<T>::worldToScreen(const eve::math::TVec3<T> & p_worldCoord, T p_screenWidth, T p_screenHeight) const
+EVE_FORCE_INLINE eve::math::TVec2<T> eve::math::TCamera<T>::worldToScreen(const eve::math::TVec3<T> & p_worldCoord, T p_screenWidth, T p_screenHeight) const
 {
 	eve::math::TVec3<T> eyeCoord = m_matrixModelView.transformPointAffine(p_worldCoord);
 	eve::math::TVec3<T> ndc		 = m_matrixProjection.transformPoint(eyeCoord);
@@ -881,21 +649,21 @@ eve::math::TVec2<T> eve::math::TCamera<T>::worldToScreen(const eve::math::TVec3<
 
 //=================================================================================================
 template <typename T>
-eve::math::TVec3<T> eve::math::TCamera<T>::worldToEye(const eve::math::TVec3<T> & p_worldCoord)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TCamera<T>::worldToEye(const eve::math::TVec3<T> & p_worldCoord)
 {
 	return m_matrixModelView.transformPointAffine(p_worldCoord);
 }
 
 //=================================================================================================
 template <typename T>
-T eve::math::TCamera<T>::worldToEyeDepth(const eve::math::TVec3<T> & p_worldCoord) const
+EVE_FORCE_INLINE T eve::math::TCamera<T>::worldToEyeDepth(const eve::math::TVec3<T> & p_worldCoord) const
 {
 	return (m_matrixModelView.m[2] * p_worldCoord.x + m_matrixModelView.m[6] * p_worldCoord.y + m_matrixModelView.m[10] * p_worldCoord.z + m_matrixModelView.m[14]);
 }
 
 //=================================================================================================
 template <typename T>
-eve::math::TVec3<T> eve::math::TCamera<T>::worldToNdc(const eve::math::TVec3<T> & p_worldCoord)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TCamera<T>::worldToNdc(const eve::math::TVec3<T> & p_worldCoord)
 {
 	eve::math::TVec3<T> eye = m_matrixModelView.transformPointAffine(p_worldCoord);
 
@@ -905,198 +673,28 @@ eve::math::TVec3<T> eve::math::TCamera<T>::worldToNdc(const eve::math::TVec3<T> 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//		MATRIX
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::translate(const eve::math::TVec3<T> & p_translation)
-{
-	this->setEyePoint(m_eyePoint + p_translation);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::translateX(T p_translationX)
-{
-	this->setEyePointX(m_eyePoint.x + p_translationX);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::translateY(T p_translationY)
-{
-	this->setEyePointY(m_eyePoint.y + p_translationY);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::translateZ(T p_translationZ)
-{
-	this->setEyePointZ(m_eyePoint.z + p_translationZ);
-}
-
-
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::rotate(const eve::math::TVec3<T> & p_rotation)
-{
-	eve::math::TVec3<T> coi = getCenterOfInterestPoint() + p_rotation;
-	this->lookAt(coi);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::rotateX(T p_rotationX)
-{
-	eve::math::TVec3<T> coi = getCenterOfInterestPoint();
-	coi.x += p_rotationX;
-	this->lookAt(coi);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::rotateY(T p_rotationY)
-{
-	eve::math::TVec3<T> coi = getCenterOfInterestPoint();
-	coi.y += p_rotationY;
-	this->lookAt(coi);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::rotateZ(T p_rotationZ)
-{
-	eve::math::TVec3<T> coi = getCenterOfInterestPoint();
-	coi.z += p_rotationZ;
-	this->lookAt(coi);
-}
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 //		GET / SET
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-template<typename T> EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getEyePoint(void) const	{ return m_eyePoint;   }
-template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointX(void) const { return m_eyePoint.x; }
-template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointY(void) const { return m_eyePoint.y; }
-template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getEyePointZ(void) const { return m_eyePoint.z; }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setEyePoint(const eve::math::TVec3<T> & p_eyePoint)
-{
-	m_eyePoint = p_eyePoint;
-	this->calcModelView();
+template<typename T>
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TCamera<T>::getRight(void) const 
+{ 
+	return m_matrixModelView.getRight();
 }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setEyePointX(T p_eyePointX)
-{
-	m_eyePoint.x = p_eyePointX;
-	this->calcModelView();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setEyePointY(T p_eyePointY)
-{
-	m_eyePoint.y = p_eyePointY;
-	this->calcModelView();
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setEyePointZ(T p_eyePointZ)
-{
-	m_eyePoint.z = p_eyePointZ;
-	this->calcModelView();
-}
-
-
-
-//=================================================================================================
-template<typename T> EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getTranslation(void) const	{ return m_eyePoint;   }
-template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationX(void) const	{ return m_eyePoint.x; }
-template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationY(void) const	{ return m_eyePoint.y; }
-template<typename T> EVE_FORCE_INLINE const T					eve::math::TCamera<T>::getTranslationZ(void) const	{ return m_eyePoint.z; }
-
-
-
-//=================================================================================================
-template<typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getCenterOfInterest(void) const		{ return m_centerOfInterest; }
-template<typename T> EVE_FORCE_INLINE void eve::math::TCamera<T>::setCenterOfInterest(T p_centerOfInterest) { m_centerOfInterest = p_centerOfInterest; }
-
-
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T>	eve::math::TCamera<T>::getCenterOfInterestPoint(void) const	{ return (m_eyePoint + m_viewDirection * m_centerOfInterest); }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setCenterOfInterestPoint(const eve::math::TVec3<T> & p_centerOfInterestPoint)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TCamera<T>::getUp(void) const
 {
-	m_centerOfInterest = m_eyePoint.distance(p_centerOfInterestPoint);
-	this->lookAt(p_centerOfInterestPoint);
+	return m_matrixModelView.getUp();
 }
 
-
-
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getWorldUp(void) const { return m_worldUp; }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setWorldUp(const eve::math::TVec3<T> & p_worldUp)
+EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TCamera<T>::getDirection(void) const
 {
-	m_worldUp = p_worldUp.normalized();
-	m_orientation = eve::math::TQuaternion<T>(eve::math::TMatrix44<T>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
-
-	this->calcModelView();
-}
-
-
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getRightVector(void) const { return m_U; }
-
-
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec3<T> eve::math::TCamera<T>::getViewDirection(void) const { return m_viewDirection; }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setViewDirection(const eve::math::TVec3<T> & p_viewDirection)
-{
-	m_viewDirection = p_viewDirection.normalized();
-	m_orientation	= eve::math::TQuaternion<T>(eve::math::TVec3<T>(static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(-1.0)), m_viewDirection);
-
-	this->calcModelView();
-}
-
-
-
-//=================================================================================================
-template<typename T>
-EVE_FORCE_INLINE const eve::math::TQuaternion<T> eve::math::TCamera<T>::getOrientation(void) const { return m_orientation; }
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::setOrientation(const eve::math::TQuaternion<T> & p_orientation)
-{
-	m_orientation = p_orientation.normalized();
-	m_viewDirection = m_orientation * eve::math::TVec3<T>(static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(-1.0));
-
-	this->calcModelView();
+	return m_matrixModelView.getDirection();
 }
 
 
@@ -1107,10 +705,10 @@ EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFov(void) const { return m_fo
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setFov(T p_fov)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setFov(T p_fov)
 {
 	m_fov = p_fov;
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 
@@ -1121,10 +719,10 @@ EVE_FORCE_INLINE const T eve::math::TCamera<T>::getAspectRatio(void) const { ret
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setAspectRatio(T p_aspectRatio)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setAspectRatio(T p_aspectRatio)
 {
 	m_aspectRatio = p_aspectRatio;
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 
@@ -1135,10 +733,10 @@ EVE_FORCE_INLINE const T eve::math::TCamera<T>::getNearClip(void) const { return
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setNearClip(T p_nearClip)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setNearClip(T p_nearClip)
 {
 	m_nearClip = p_nearClip;
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 //=================================================================================================
@@ -1147,49 +745,24 @@ EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFarClip(void) const { return 
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setFarClip(T p_farClip)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setFarClip(T p_farClip)
 {
 	m_farClip = p_farClip;
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFrustumDepth(void) const { return m_frustumDepth; }
-
-
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::getNearClipCoordinates(eve::math::TVec3<T> * p_pTopLeft, eve::math::TVec3<T> * p_pTopRight, eve::math::TVec3<T> * p_pBottomLeft, eve::math::TVec3<T> * p_pBottomRight) const
-{
-	eve::math::TVec3<T> viewDirection(m_viewDirection.normalized());
-
-	*p_pTopLeft		= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumTop    * m_V) + (m_frustumLeft  * m_U);
-	*p_pTopRight	= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumTop    * m_V) + (m_frustumRight * m_U);
-	*p_pBottomLeft	= m_eyePoint + (m_nearClip * viewDirection) + (m_frustumBottom * m_V) + (m_frustumLeft  * m_U);
-	*p_pBottomRight = m_eyePoint + (m_nearClip * viewDirection) + (m_frustumBottom * m_V) + (m_frustumRight * m_U);
-}
-
-//=================================================================================================
-template <typename T>
-void eve::math::TCamera<T>::getFarClipCoordinates(eve::math::TVec3<T> * p_pTopLeft, eve::math::TVec3<T> * p_pTopRight, eve::math::TVec3<T> * p_pBottomLeft, eve::math::TVec3<T> * p_pBottomRight) const
-{
-	eve::math::TVec3<T> viewDirection(m_viewDirection.normalized());
-
-	T ratio = m_farClip / m_nearClip;
-
-	*p_pTopLeft		= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumTop    * m_V) + (ratio * m_frustumLeft  * m_U);
-	*p_pTopRight	= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumTop    * m_V) + (ratio * m_frustumRight * m_U);
-	*p_pBottomLeft	= m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumBottom * m_V) + (ratio * m_frustumLeft  * m_U);
-	*p_pBottomRight = m_eyePoint + (m_farClip * viewDirection) + (ratio * m_frustumBottom * m_V) + (ratio * m_frustumRight * m_U);
+EVE_FORCE_INLINE const T eve::math::TCamera<T>::getFrustumDepth(void) const 
+{ 
+	return m_frustumDepth; 
 }
 
 
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::getFrustum(T * p_pLeft, T * p_pTop, T * p_pRight, T * p_pBottom, T * p_pNear, T * p_pFar) const
+EVE_FORCE_INLINE void eve::math::TCamera<T>::getFrustum(T * p_pLeft, T * p_pTop, T * p_pRight, T * p_pBottom, T * p_pNear, T * p_pFar) const
 {
 	*p_pLeft	= m_frustumLeft;
 	*p_pTop		= m_frustumTop;
@@ -1203,11 +776,9 @@ void eve::math::TCamera<T>::getFrustum(T * p_pLeft, T * p_pTop, T * p_pRight, T 
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixProjection(void) const				{ return m_matrixProjection; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixProjection(void) const			{ return m_matrixProjection; }
 template<typename T>								
-EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelView(void) const				{ return m_matrixModelView; }
-template<typename T>								
-EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelViewProjection(void) const		{ return m_matrixModelViewProjection; }
+EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixModelViewProjection(void) const	{ return m_matrixModelViewProjection; }
 template<typename T>								
 EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixInverseProjection(void) const		{ return m_matrixProjectionInverse; }
 template<typename T>								
@@ -1219,22 +790,10 @@ EVE_FORCE_INLINE eve::math::TMatrix44<T> &	eve::math::TCamera<T>::getMatrixViewp
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::getBillboardVectors(eve::math::TVec3<T> * p_pRight, eve::math::TVec3<T> * p_pUp) const
-{
-	p_pRight->set(m_matrixModelView.m[0], m_matrixModelView.m[4], m_matrixModelView.m[8]);
-	p_pUp->set(m_matrixModelView.m[1], m_matrixModelView.m[5], m_matrixModelView.m[9]);
-}
-
-
-
-//=================================================================================================
-template <typename T>
-T eve::math::TCamera<T>::getDistanceInScene(const eve::math::TVec3<T> & p_target)
+EVE_FORCE_INLINE T eve::math::TCamera<T>::getDistanceInScene(const eve::math::TVec3<T> & p_target)
 {
 	eve::vec4f temp = m_matrixModelView * eve::vec4f(p_target.x, p_target.y, p_target.z, static_cast<T>(1.0));
-
 	T distance = eve::math::TVec3<T>(temp.x, temp.y, temp.z).length();
-
 	return distance;
 }
 
@@ -1242,41 +801,41 @@ T eve::math::TCamera<T>::getDistanceInScene(const eve::math::TVec3<T> & p_target
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setPerspective(T p_horizFovDegrees, T p_aspectRatio, T p_nearPlane, T p_farPlane)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setPerspective(T p_horizFovDegrees, T p_aspectRatio, T p_nearPlane, T p_farPlane)
 {
 	m_fov			= p_horizFovDegrees;
 	m_aspectRatio	= p_aspectRatio;
 	m_nearClip		= p_nearPlane;
 	m_farClip		= p_farPlane;
 
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 
 
 //=================================================================================================
-template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplayWidth(void) const  { return m_width;  }
-template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplayHeight(void) const { return m_height; }
+template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplayWidth(void) const  { return m_cam_view_width;  }
+template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplayHeight(void) const { return m_cam_view_height; }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setDisplaySize(T p_width, T p_height, bool p_bUpdateAspectRatio)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setDisplaySize(T p_width, T p_height, bool p_bUpdateAspectRatio)
 {
-	m_width		= p_width;
-	m_height	= p_height;
+	m_cam_view_width		= p_width;
+	m_cam_view_height	= p_height;
 
 	if (p_bUpdateAspectRatio) 
 	{
-		this->setAspectRatio(m_width / m_height);
+		this->setAspectRatio(m_cam_view_width / m_cam_view_height);
 	}
 
-	this->calcViewportMatrix();
+	this->updateMatrixViewport();
 }
 
 //=================================================================================================
 template <typename T>
 template <typename U>
-void eve::math::TCamera<T>::setDisplaySize(U p_width, U p_height, bool p_bUpdateAspectRatio)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setDisplaySize(U p_width, U p_height, bool p_bUpdateAspectRatio)
 {
 	this->setDisplaySize(static_cast<T>(p_width), static_cast<T>(p_height), p_bUpdateAspectRatio);
 }
@@ -1288,7 +847,7 @@ EVE_FORCE_INLINE const eve::math::TVec2<T> eve::math::TCamera<T>::getLensShift(v
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::getLensShift(T * p_pHorizontal, T * p_pVertical) const
+EVE_FORCE_INLINE void eve::math::TCamera<T>::getLensShift(T * p_pHorizontal, T * p_pVertical) const
 {
 	*p_pHorizontal	= m_lensShift.x;
 	*p_pVertical	= m_lensShift.y;
@@ -1296,22 +855,22 @@ void eve::math::TCamera<T>::getLensShift(T * p_pHorizontal, T * p_pVertical) con
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setLensShift(T p_horizontal, T p_vertical)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setLensShift(T p_horizontal, T p_vertical)
 {
 	m_lensShift.x = p_horizontal;
 	m_lensShift.y = p_vertical;
 
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setLensShift(const eve::math::TVec2<T> & p_shift)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setLensShift(const eve::math::TVec2<T> & p_shift)
 {
 	m_lensShift.x = p_shift.x;
 	m_lensShift.y = p_shift.y;
 
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 //=================================================================================================
@@ -1320,10 +879,10 @@ EVE_FORCE_INLINE const T eve::math::TCamera<T>::getLensShiftHorizontal(void) con
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setLensShiftHorizontal(T p_horizontal)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setLensShiftHorizontal(T p_horizontal)
 {
 	m_lensShift.x = p_horizontal;
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 //=================================================================================================
@@ -1332,120 +891,19 @@ EVE_FORCE_INLINE const T eve::math::TCamera<T>::getLensShiftVertical(void) const
 
 //=================================================================================================
 template <typename T>
-void eve::math::TCamera<T>::setLensShiftVertical(T p_vertical)
+EVE_FORCE_INLINE void eve::math::TCamera<T>::setLensShiftVertical(T p_vertical)
 {
 	m_lensShift.y = p_vertical;
-	this->calcProjection();
+	this->updateMatrixProjection();
 }
 
 
 
 //=================================================================================================
 template<typename T>
-EVE_FORCE_INLINE const eve::math::TVec2<T> eve::math::TCamera<T>::getHalfSize(void) const { return eve::math::TVec2<T>(m_width*static_cast<T>(0.5), m_height*static_cast<T>(0.5)); }
+EVE_FORCE_INLINE const eve::math::TVec2<T> eve::math::TCamera<T>::getHalfSize(void) const 
+{ 
+	return eve::math::TVec2<T>(m_cam_view_width * static_cast<T>(0.5), m_cam_view_height * static_cast<T>(0.5)); 
+}
 
-
-
-
-
-//=================================================================================================
-//template <typename T>
-// bool eve::math::TCamera<T>::initFromImport( const aiCamera * pCamera, const aiScene * pScene, const eve::math::TVec3<T> & p_upAxis )
-// {
-// #ifndef NDEBUG
-// 	NATIVE_ASSERT( (pCamera!=NULL)	);
-// 	NATIVE_ASSERT( (pScene!=NULL)	);
-// #endif
-// 
-// 	// Create return value.
-// 	bool breturn = (pCamera!=NULL) && (pScene!=NULL);
-// 
-// 	if( breturn )
-// 	{
-// 		// Stock item type.
-// 		m_itemType		= Item_Camera;
-// 		m_itemSubType	= Item_Camera_Simple;
-// 
-// 		// Stock ASSIMP pointer.
-// 		m_pAiScene	= pScene;
-// 		m_pAiCamera = pCamera;
-// 
-// 		// Loaded camera data copy.
-// 		m_name				= std::string( m_pAiCamera->mName.data );
-// 
-// 		m_aspectRatio		= m_pAiCamera->mAspect;
-// 		m_nearClip			= m_pAiCamera->mClipPlaneNear;
-// 		m_farClip			= m_pAiCamera->mClipPlaneFar;
-// 		m_frustumDepth		= m_farClip - m_nearClip;
-// 		m_fov				= toDegrees( m_pAiCamera->mHorizontalFOV );
-// 
-// 		m_eyePoint.x		= m_pAiCamera->mPosition.x;
-// 		m_eyePoint.y		= m_pAiCamera->mPosition.y;
-// 		m_eyePoint.z		= m_pAiCamera->mPosition.z;
-// 
-// 		m_target.x			= m_pAiCamera->mLookAt.x;
-// 		m_target.y			= m_pAiCamera->mLookAt.y;
-// 		m_target.z			= m_pAiCamera->mLookAt.z;
-// 
-// 		m_worldUp.x			= m_pAiCamera->mUp.x;
-// 		m_worldUp.y			= m_pAiCamera->mUp.y;
-// 		m_worldUp.z			= m_pAiCamera->mUp.z;
-// 
-// 		// Find scene node 
-// 		aiNode * pRoot = m_pAiScene->mRootNode;
-// 		aiNode * pNode = pRoot->FindNode( m_name.c_str() );
-// 		breturn = pNode!=NULL;
-// 
-// #ifndef NDEBUG
-// 		NATIVE_ASSERT( breturn );
-// #else
-// 		if( breturn )
-// #endif
-// 		{
-// 			// Compute scene node matrix 
-// 			aiMatrix4x4 mat;
-// 			while( pNode != pRoot )
-// 			{
-// 				mat = pNode->mTransformation * mat;
-// 				pNode = pNode->mParent;
-// 			}
-// 
-// 			//if( p_upAxis.z > static_cast<T>(0.0) )
-// 			//{
-// 			//	aiMatrix4x4 aim;
-// 			//	m_pAiCamera->GetCameraMatrix(aim);
-// 			//	mat = aim * mat;
-// 			//}
-// 
-// 			eve::math::TMatrix44<T> matrix( mat.a1, mat.b1, mat.c1, mat.d1
-// 							, mat.a2, mat.b2, mat.c2, mat.d2
-// 							, mat.a3, mat.b3, mat.c3, mat.d3
-// 							, mat.a4, mat.b4, mat.c4, mat.d4 );
-// 
-// 			// Correct Up Axis if needed.
-// 			if( p_upAxis.z > static_cast<T>(0.0) )
-// 			{
-// 				matrix.fromZupToYup();
-// 			}
-// 
-// 			// Invert matrix to retrieve camera view coordinates.
-// 			matrix.invert();
-// 			
-// 			// Extract camera data from model view matrix.
-// 			eve::math::get_look_at( matrix, m_eyePoint, m_target, m_worldUp );
-// 
-// 			// Compute camera matrix required data.
-// 			m_viewDirection		= (m_target - m_eyePoint).normalized();
-// 			m_orientation		= eve::math::TQuaternion<T>( eve::math::TMatrix44<T>::alignZAxisWithTarget(-m_viewDirection, m_worldUp) ).normalized();
-// 			m_centerOfInterest	= m_eyePoint.distance( m_target );
-// 			
-// 		}
-// 
-// 		// Init all data.
-// 		this->init();
-// 	}
-// 
-// 	return breturn;
-// }
-
-#endif // __EVE_MATH_TCAMERA_H__
+#endif // __EVE_MATH_TCAMERA_OBJECT_H__

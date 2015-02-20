@@ -72,7 +72,7 @@ eve::scene::Camera::Camera(eve::scene::Scene * p_pParentScene, eve::scene::Objec
 	// Inheritance
 	: eve::scene::Object(p_pParentScene, p_pParent, SceneObject_Camera)
 	, eve::scene::EventListenerSceneCamera()
-	, eve::math::Camera()
+	, eve::math::TCamera<float>()
 
 	// Members init
 	, m_pAiCamera(nullptr)
@@ -112,7 +112,7 @@ bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pSce
 		m_farClip		= m_pAiCamera->mClipPlaneFar;
 		m_frustumDepth	= m_farClip - m_nearClip;
 		m_fov			= eve::math::toDegrees(m_pAiCamera->mHorizontalFOV);
-		
+				
 		// Compute scene node matrix.
 		aiMatrix4x4 mat;
 		while (pNode != pRoot)
@@ -120,12 +120,9 @@ bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pSce
 			mat = pNode->mTransformation * mat;
 			pNode = pNode->mParent;
 		}
-		//if (p_upAxis.z > 0.0f)
-		//{
 		//	aiMatrix4x4 aim;
 		//	m_pAiCamera->GetCameraMatrix(aim);
 		//	mat = aim * mat;
-		//}
 		eve::math::TMatrix44<float> matrix(mat.a1, mat.b1, mat.c1, mat.d1
 										 , mat.a2, mat.b2, mat.c2, mat.d2
 										 , mat.a3, mat.b3, mat.c3, mat.d3
@@ -134,19 +131,34 @@ bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pSce
 		// Correct Up Axis if needed.
 		if (p_upAxis == eve::Axis_Z)
 		{
-			matrix.fromZupToYup();
+			//matrix.fromZupToYup();
 		}
 		
+		//// Invert matrix to retrieve camera view coordinates.
+		//matrix.invert();
+
+		//// Extract camera data from model view matrix.
+		//eve::math::TMatrix44<float>::get_look_at(matrix, m_eyePoint, m_target, m_worldUp);
+
+		//// Compute camera matrix required data.
+		//m_viewDirection		= (m_target - m_eyePoint).normalized();
+		//m_orientation		= eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
+		//m_centerOfInterest  = m_eyePoint.distance(m_target);	
+
 		// Invert matrix to retrieve camera view coordinates.
 		matrix.invert();
 
 		// Extract camera data from model view matrix.
-		eve::math::get_look_at(matrix, m_eyePoint, m_target, m_worldUp);
+		eve::math::TVec3<float> target, worldUp;
+		eve::math::TMatrix44<float>::get_look_at(matrix, m_translation, target, worldUp);
 
-		// Compute camera matrix required data.
-		m_viewDirection		= (m_target - m_eyePoint).normalized();
-		m_orientation		= eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
-		m_centerOfInterest  = m_eyePoint.distance(m_target);	
+		eve::math::TVec3<float>		  viewDirection = (target - m_translation).normalized();
+		eve::math::TQuaternion<float> orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-viewDirection, worldUp)).normalized();
+
+		// Grab rotation.
+		m_rotation.x = orientation.getPitch();
+		m_rotation.y = orientation.getYaw();
+		m_rotation.z = orientation.getRoll();
 
 		// Members init.
 		this->init();
@@ -168,7 +180,7 @@ void eve::scene::Camera::init(void)
 
 	// Call parent class.
 	eve::scene::Object::init();
-	eve::math::Camera::init();
+	eve::math::TCamera<float>::init();
 }
 
 //=================================================================================================
@@ -184,25 +196,25 @@ void eve::scene::Camera::release(void)
 
 	// Call parent class.
 	eve::scene::Object::release();
-	eve::math::Camera::release();
+	eve::math::TCamera<float>::release();
 }
 
 
 
 //=================================================================================================
-void eve::scene::Camera::calcModelView(void) const
+void eve::scene::Camera::updateMatrixModelView(void)
 {
 	// Call parent class.
-	eve::math::Camera::calcModelView();
+	eve::math::TCamera<float>::updateMatrixModelView();
 	// Update uniform buffer.
-	m_pUniformMatrices->pushData(this->getMatrixModelView(), 0);
+	m_pUniformMatrices->pushData(this->getMatrixInverseModelView(), 0);
 }
 
 //=================================================================================================
-void eve::scene::Camera::calcProjection(void) const
+void eve::scene::Camera::updateMatrixProjection(void)
 {
 	// Call parent class.
-	eve::math::Camera::calcProjection();
+	eve::math::TCamera<float>::updateMatrixProjection();
 	// Update uniform buffer.
 	m_pUniformMatrices->pushData(this->getMatrixProjection(), EVE_OGL_PADDING_MAT4);
 }
@@ -220,7 +232,16 @@ void eve::scene::Camera::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_
 	 
 	 	case SceneObjectEventType_TranslateX:			this->translateX(p_args.value);				break;
 	 	case SceneObjectEventType_TranslateY:			this->translateY(p_args.value);				break;
-	 	case SceneObjectEventType_TranslateZ:			this->translateZ(p_args.value);				break;	 
+		case SceneObjectEventType_TranslateZ:			this->translateZ(p_args.value);				break;
+
+
+		case SceneObjectEventType_SetRotationX:			this->setRotationX(p_args.value);			break;
+		case SceneObjectEventType_SetRotationY:			this->setRotationY(p_args.value);			break;
+		case SceneObjectEventType_SetRotationZ:			this->setRotationZ(p_args.value);			break;
+
+		case SceneObjectEventType_SetTranslationX:		this->setTranslationX(p_args.value);		break;
+		case SceneObjectEventType_SetTranslationY:		this->setTranslationY(p_args.value);		break;
+		case SceneObjectEventType_SetTranslationZ:		this->setTranslationZ(p_args.value);		break;
 	 
 	 	default: EVE_ASSERT_FAILURE; break;
 	}

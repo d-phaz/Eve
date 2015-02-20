@@ -51,7 +51,7 @@ namespace eve { namespace scene { class Material; } }
 namespace eve { namespace scene { class Skeleton; } }
 
 namespace eve { namespace ogl { class Uniform; } }
-namespace eve { namespace ogl { class Vao; } }
+namespace eve { namespace ogl { class VaoStaged; } }
 
 
 namespace eve
@@ -62,12 +62,12 @@ namespace eve
 		/** 
 		* \class eve::scene::Mesh
 		* \brief Scene mesh object.
-		* \note extends eve::scene::Object, eve::scene::EventListenerSceneObject, eve::math::Mesh
+		* \note extends eve::scene::Object, eve::scene::EventListenerSceneObject, eve::math::TTransform<float>
 		*/
 		class Mesh
 			: public eve::scene::Object
 			, public eve::scene::EventListenerSceneObject
-			, public eve::math::Mesh
+			, public eve::math::TTransform<float>
 		{
 
 			//////////////////////////////////////
@@ -75,7 +75,7 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			eve::ogl::Vao *			m_pVao;					//!< Specifies OpenGL vertex array object.
+			eve::ogl::VaoStaged *	m_pVaoStaged;			//!< Specifies OpenGL vertex array object.
 			const aiMesh *			m_pAiMesh;				//!< Specifies Assimp mesh (shared pointer).
 			eve::scene::Material *	m_pMaterial;			//!< Specifies material.
 			eve::scene::Skeleton *	m_pSkeleton;			//!< Specifies bones rigging skeleton used in mesh animation.
@@ -137,8 +137,8 @@ namespace eve
 			///////////////////////////////////////////////////////////////////////////////////////
 
 		public:
-			/** \brief Get OpenGL VAO. */
-			eve::ogl::Vao * getVao(void) const;
+			/** \brief Get OpenGL staged VAO. */
+			eve::ogl::VaoStaged * getVao(void) const;
 
 
 		public:
@@ -166,7 +166,7 @@ namespace eve
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //=================================================================================================
-EVE_FORCE_INLINE eve::ogl::Vao *		eve::scene::Mesh::getVao(void) const		{ return m_pVao;		}
+EVE_FORCE_INLINE eve::ogl::VaoStaged *	eve::scene::Mesh::getVao(void) const		{ return m_pVaoStaged; }
 EVE_FORCE_INLINE eve::scene::Material * eve::scene::Mesh::getMaterial(void) const	{ return m_pMaterial;	}
 EVE_FORCE_INLINE eve::scene::Skeleton * eve::scene::Mesh::getSkeleton(void) const	{ return m_pSkeleton;	}
 

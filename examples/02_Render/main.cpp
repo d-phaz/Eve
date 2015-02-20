@@ -44,7 +44,7 @@ class RenderGL final
 	//////////////////////////////////////
 
 private:
-	eve::math::Cameraf *	m_pCamera;
+	eve::math::TCamera<float> *	m_pCamera;
 
 	eve::ogl::Shader *		m_pShader;
 	eve::ogl::Uniform *		m_pUniform;
@@ -97,7 +97,7 @@ void RenderGL::init(void)
 	// Call parent class.
 	eve::ogl::Renderer::init();
 
-	m_pCamera = eve::math::Cameraf::create_ptr(800, 600);
+	m_pCamera = eve::math::TCamera<float>::create_ptr(800, 600);
 
 	eve::ogl::FormatShader fmtShader;
 	fmtShader.vert = eve::io::load_program(eve::io::resource_path_glsl("Textured3D.vert"));
@@ -267,5 +267,12 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 }
 
 
-// Launch application for view "Example".
-EVE_APPLICATION(Example);
+
+// Create entry point.
+void entry_point(void)
+{
+	EveApp->addView<Example>();
+}
+
+// Launch application entry point method.
+EVE_APPLICATION(entry_point);

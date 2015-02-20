@@ -179,7 +179,7 @@ void Example::initThreadedData(void)
 	//	ExampleDisplay * test = this->addDisplay<ExampleDisplay>(50, 50, 800, 600);
 	//}
 	
-	ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
+	//ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
 }
 
 void Example::releaseThreadedData(void)
@@ -211,7 +211,7 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 	}
 	else if (p_args.key == eve::sys::key_Return)
 	{
-		std::wstring path(EVE_TXT("C:\\Users\\Romain\\Desktop\\import\\untitled_spot.dae"));
+		std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
 		m_pScene->load(path);
 	}
 
@@ -231,5 +231,12 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 }
 
 
-// Launch application for view "Example".
-EVE_APPLICATION(Example);
+
+// Create entry point.
+void entry_point(void)
+{
+	EveApp->addView<Example>();
+}
+
+// Launch application entry point method.
+EVE_APPLICATION(entry_point);

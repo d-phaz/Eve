@@ -70,7 +70,7 @@ public:
 
 
 	eve::ogl::Attractor<eve::math::TMatrix44<float>, eve::math::TVec4<float>, float> 	* m_attractor;
-	eve::math::Cameraf *	m_pCamera;
+	eve::math::TCamera<float> *	m_pCamera;
 	eve::math::TVec2<float> m_mouseInput;
 	eve::time::Timer *  m_timer;
 
@@ -199,7 +199,7 @@ void RenderGL::init(void)
 	eve::ogl::Renderer::init();
 
 	m_dataSwapper = dataSwapper::get_instance();
-	m_dataSwapper->m_pCamera = eve::math::Cameraf::create_ptr(1920.0f, 1080.0f);
+	m_dataSwapper->m_pCamera = eve::math::TCamera<float>::create_ptr(1920.0f, 1080.0f);
 	m_dataSwapper->m_pCamera->setPerspective(60.0f, (float)1920.0f / (float)1080.0f, 5.f, 3000.0f);
 
 	m_dataSwapper->m_pCamera->setFov(1000.0f);
@@ -317,9 +317,9 @@ void RenderGL::cb_display(void)
 	m_particleManager->loadVec4Uniform(
 		m_shaderManager->getShaderProgramID("shaderProg"),
 		"camPos",
-		m_dataSwapper->m_pCamera->getEyePointX(),
-		m_dataSwapper->m_pCamera->getEyePointY(),
-		m_dataSwapper->m_pCamera->getEyePointZ(),
+		m_dataSwapper->m_pCamera->getTranslationX(),
+		m_dataSwapper->m_pCamera->getTranslationY(),
+		m_dataSwapper->m_pCamera->getTranslationZ(),
 		1.0f);
 
 	m_particleManager->loadMatrix4Uniform(
@@ -568,5 +568,12 @@ void Application::runApp(void)
 }
 
 
-// Launch application for view "Example".
-EVE_APPLICATION_CUSTOM(Example, Application);
+
+// Create entry point.
+void entry_point(void)
+{
+	EveApp->addView<Example>();
+}
+
+// Launch application entry point method.
+EVE_APPLICATION(entry_point);

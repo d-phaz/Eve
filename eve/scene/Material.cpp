@@ -103,7 +103,7 @@ void eve::scene::Material::init(const aiMaterial * p_pMaterial, const std::strin
 			}
 			else
 			{
-				EVE_LOG_ERROR("Unable to load file %s", eve::str::to_wstring(fullPath).c_str());
+				EVE_LOG_ERROR("Unable to load diffuse texture for file %s", eve::str::to_wstring(fullPath).c_str());
 				EVE_ASSERT_FAILURE;
 			}
 		}
@@ -119,7 +119,7 @@ void eve::scene::Material::init(const aiMaterial * p_pMaterial, const std::strin
 			}
 			else
 			{
-				EVE_LOG_ERROR("Unable to load file %s", eve::str::to_wstring(fullPath).c_str());
+				EVE_LOG_ERROR("Unable to load normal texture for file %s", eve::str::to_wstring(fullPath).c_str());
 				EVE_ASSERT_FAILURE;
 			}
 		}
@@ -135,7 +135,7 @@ void eve::scene::Material::init(const aiMaterial * p_pMaterial, const std::strin
 			}
 			else
 			{
-				EVE_LOG_ERROR("Unable to load file %s", eve::str::to_wstring(fullPath).c_str());
+				EVE_LOG_ERROR("Unable to load emissive texture for file %s", eve::str::to_wstring(fullPath).c_str());
 				EVE_ASSERT_FAILURE;
 			}
 		}
@@ -151,7 +151,7 @@ void eve::scene::Material::init(const aiMaterial * p_pMaterial, const std::strin
 			}
 			else
 			{
-				EVE_LOG_ERROR("Unable to load file %s", eve::str::to_wstring(fullPath).c_str());
+				EVE_LOG_ERROR("Unable to load opacity texture for file %s", eve::str::to_wstring(fullPath).c_str());
 				EVE_ASSERT_FAILURE;
 			}
 		}

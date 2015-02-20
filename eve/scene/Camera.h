@@ -64,7 +64,7 @@ namespace eve
 		class Camera
 			: public eve::scene::Object
 			, public eve::scene::EventListenerSceneCamera
-			, public eve::math::Camera
+			, public eve::math::TCamera<float>
 		{
 
 			//////////////////////////////////////
@@ -112,10 +112,14 @@ namespace eve
 
 
 		protected:
-			/** \brief Compute model view matrix. */
-			virtual void calcModelView(void) const override;
-			/** \brief Compute projection matrix. */
-			virtual void calcProjection(void) const override;
+// 			/** \brief Compute model view matrix. */
+// 			virtual void calcModelView(void) const override;
+// 			/** \brief Compute projection matrix. */
+// 			virtual void calcProjection(void) const override;
+			/** \brief Update model view matrix based on rot/trans/scale matrices concatenation. */
+			virtual void updateMatrixModelView(void) override;
+			/** \brief Update projection matrix. */
+			virtual void updateMatrixProjection(void) override;
 
 
 		public:

@@ -92,7 +92,7 @@ namespace eve
 			TQuaternion(const eve::math::TMatrix44<T> &m) { set(m); }
 
 			// get axis-angle representation's axis
-			eve::math::TVec3<T> getAxis(void) const
+			EVE_FORCE_INLINE eve::math::TVec3<T> getAxis(void) const
 			{
 				T cos_angle = w;
 				T invLen = static_cast<T>(1.0) / eve::math::sqrt(static_cast<T>(1.0) - cos_angle * cos_angle);
@@ -101,43 +101,48 @@ namespace eve
 			}
 
 			// get axis-angle representation's angle in radians
-			T getAngle(void) const
+			EVE_FORCE_INLINE T getAngle(void) const
 			{
 				T cos_angle = w;
 				return eve::math::acos(cos_angle) * 2;
 			}
 
-			T getPitch(void) const
+			EVE_FORCE_INLINE T getPitch(void) const
 			{
 				return eve::math::atan2(w * w - v.x * v.x - v.y * v.y + v.z * v.z, static_cast<T>(2) * (v.y * v.z + w * v.x));
 			}
 
-			T getYaw(void) const
+			EVE_FORCE_INLINE T getYaw(void) const
 			{
 				return eve::math::sin(static_cast<T>(-2) * (v.x * v.z - w * v.y));
 			}
 
-			T getRoll(void) const
+			EVE_FORCE_INLINE T getRoll(void) const
 			{
 				return eve::math::atan2(w * w + v.x * v.x - v.y * v.y - v.z * v.z, static_cast<T>(2) * (v.x * v.y + w * v.z));
 			}
 
-			T dot(const eve::math::TQuaternion<T> &quat) const
+			EVE_FORCE_INLINE eve::math::TVec3<T> toVec3(void)
+			{
+				return eve::math::TVec3<T>(getPitch(), getYaw(), getRoll());
+			}
+
+			EVE_FORCE_INLINE T dot(const eve::math::TQuaternion<T> &quat) const
 			{
 				return w * quat.w + v.dot(quat.v);
 			}
 
-			T length(void) const
+			EVE_FORCE_INLINE T length(void) const
 			{
 				return eve::math::sqrt(w*w + v.lengthSquared());
 			}
 
-			T lengthSquared(void) const
+			EVE_FORCE_INLINE T lengthSquared(void) const
 			{
 				return w * w + v.lengthSquared();
 			}
 
-			eve::math::TQuaternion<T> inverse(void) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> inverse(void) const
 			{
 				T norm = w * w + v.x * v.x + v.y * v.y + v.z * v.z;
 				// if we're the zero quaternion, just return identity
@@ -149,7 +154,7 @@ namespace eve
 				return eve::math::TQuaternion<T>(normRecip * w, -normRecip * v.x, -normRecip * v.y, -normRecip * v.z);
 			}
 
-			void normalize(void)
+			EVE_FORCE_INLINE void normalize(void)
 			{
 				if (T len = length()) {
 					w /= len;
@@ -161,7 +166,7 @@ namespace eve
 				}
 			}
 
-			eve::math::TQuaternion<T> normalized(void) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> normalized(void) const
 			{
 				eve::math::TQuaternion<T> result = *this;
 
@@ -179,7 +184,7 @@ namespace eve
 
 			// For unit quaternion, from Advanced Animation and 
 			// Rendering Techniques by Watt and Watt, Page 366:
-			eve::math::TQuaternion<T> log(void) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> log(void) const
 			{
 				T theta = eve::math::acos(eve::math::min(w, static_cast<T>(1.0)));
 
@@ -200,7 +205,7 @@ namespace eve
 			// For pure quaternion (zero scalar part):
 			// from Advanced Animation and Rendering
 			// Techniques by Watt and Watt, Page 366:
-			eve::math::TQuaternion<T> exp(void) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> exp(void) const
 			{
 				T theta = v.length();
 				T sintheta = eve::math::sin(theta);
@@ -216,25 +221,25 @@ namespace eve
 				return eve::math::TQuaternion<T>(costheta, v.x * k, v.y * k, v.z * k);
 			}
 
-			eve::math::TQuaternion<T> inverted(void) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> inverted(void) const
 			{
 				T qdot = this->dot(*this);
 				return eve::math::TQuaternion(-v / qdot, w / qdot);
 			}
 
-			void invert(void)
+			EVE_FORCE_INLINE void invert(void)
 			{
 				T qdot = this->dot(*this);
 				set(-v / qdot, w / qdot);
 			}
 
-			void set(T aW, T x, T y, T z)
+			EVE_FORCE_INLINE void set(T aW, T x, T y, T z)
 			{
 				w = aW;
 				v = eve::math::TVec3<T>(x, y, z);
 			}
 
-			void set(const eve::math::TVec3<T> &from, const eve::math::TVec3<T> &to)
+			EVE_FORCE_INLINE void set(const eve::math::TVec3<T> &from, const eve::math::TVec3<T> &to)
 			{
 				eve::math::TVec3<T> axis = from.cross(to);
 
@@ -258,14 +263,14 @@ namespace eve
 				normalize();
 			}
 
-			void set(const eve::math::TVec3<T> &axis, T radians)
+			EVE_FORCE_INLINE void set(const eve::math::TVec3<T> &axis, T radians)
 			{
 				w = eve::math::cos(radians / static_cast<T>(2));
 				v = axis.normalized() * eve::math::sin(radians / static_cast<T>(2));
 			}
 
 			// assumes ZYX rotation order and radians
-			void set(T xRotation, T yRotation, T zRotation)
+			EVE_FORCE_INLINE void set(T xRotation, T yRotation, T zRotation)
 			{
 				zRotation *= static_cast<T>(0.5);
 				yRotation *= static_cast<T>(0.5);
@@ -288,7 +293,7 @@ namespace eve
 				v.z = Cx*Cy*Sz + Sx*Sy*Cx;
 			}
 
-			void getAxisAngle(eve::math::TVec3<T> *axis, T *radians) const
+			EVE_FORCE_INLINE void getAxisAngle(eve::math::TVec3<T> *axis, T *radians) const
 			{
 				T cos_angle = w;
 				*radians = eve::math::acos(cos_angle) * static_cast<T>(2);
@@ -299,7 +304,7 @@ namespace eve
 				axis->z = v.z * invLen;
 			}
 
-			eve::math::TQuaternion<T> lerp(T t, const eve::math::TQuaternion<T> &end) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> lerp(T t, const eve::math::TQuaternion<T> &end) const
 			{
 				// get cos of "angle" between quaternions
 				float cosTheta = dot(end);
@@ -330,7 +335,7 @@ namespace eve
 			// NOTE: the difference between this and slerp isn't clear, but we're using
 			// the Don Hatch / ilmbase squad code which explicitly requires this impl. of slerp
 			// so I'm leaving it for now
-			eve::math::TQuaternion<T> slerpShortestUnenforced(T t, const eve::math::TQuaternion<T> &end) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> slerpShortestUnenforced(T t, const eve::math::TQuaternion<T> &end) const
 			{
 				eve::math::TQuaternion<T> d = *this - end;
 				T lengthD = eve::math::sqrt(this->dot(end));
@@ -346,7 +351,7 @@ namespace eve
 				return q.normalized();
 			}
 
-			eve::math::TQuaternion<T> slerp(T t, const eve::math::TQuaternion<T> &end) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> slerp(T t, const eve::math::TQuaternion<T> &end) const
 			{
 				// get cosine of "angle" between quaternions
 				T cosTheta = this->dot(end);
@@ -402,7 +407,7 @@ namespace eve
 			// It constructs a spherical cubic interpolation as 
 			// a series of three spherical linear interpolations 
 			// of a quadrangle of unit quaternions. 
-			eve::math::TQuaternion<T> squadShortestEnforced(T t, const eve::math::TQuaternion<T> &qa, const eve::math::TQuaternion<T> &qb, const eve::math::TQuaternion<T> &q2) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> squadShortestEnforced(T t, const eve::math::TQuaternion<T> &qa, const eve::math::TQuaternion<T> &qb, const eve::math::TQuaternion<T> &q2) const
 			{
 				eve::math::TQuaternion<T> r1;
 				if (this->dot(q2) >= 0)
@@ -422,7 +427,7 @@ namespace eve
 					return r1.slerpShortestUnenforced(2 * t * (1 - t), r2.inverted());
 			}
 
-			eve::math::TQuaternion<T> squad(T t, const eve::math::TQuaternion<T> &qa, const eve::math::TQuaternion<T> &qb, const eve::math::TQuaternion<T> &q2) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> squad(T t, const eve::math::TQuaternion<T> &qa, const eve::math::TQuaternion<T> &qb, const eve::math::TQuaternion<T> &q2) const
 			{
 				eve::math::TQuaternion<T> r1 = this->slerp(t, q2);
 				eve::math::TQuaternion<T> r2 = qa.slerp(t, qb);
@@ -448,7 +453,7 @@ namespace eve
 			// The q0 is from the previous adjacent segment and q3 is 
 			// from the next adjacent segment. The q0 and q3 are used
 			// in computing qa and qb.
-			eve::math::TQuaternion<T> spline(T t, const eve::math::TQuaternion<T> &q1, const eve::math::TQuaternion<T> &q2, const eve::math::TQuaternion<T> &q3) const
+			EVE_FORCE_INLINE eve::math::TQuaternion<T> spline(T t, const eve::math::TQuaternion<T> &q1, const eve::math::TQuaternion<T> &q2, const eve::math::TQuaternion<T> &q3) const
 			{
 				eve::math::TQuaternion<T> qa = splineIntermediate(*this, q1, q2);
 				eve::math::TQuaternion<T> qb = splineIntermediate(q1, q2, q3);
@@ -457,7 +462,7 @@ namespace eve
 				return result;
 			}
 
-			void set(const eve::math::TMatrix33<T> &m)
+			EVE_FORCE_INLINE void set(const eve::math::TMatrix33<T> &m)
 			{
 				//T trace = m.m[0] + m.m[4] + m.m[8];
 				T trace = m.trace();
@@ -488,7 +493,7 @@ namespace eve
 				}
 			}
 
-			void set(const eve::math::TMatrix44<T> &m)
+			EVE_FORCE_INLINE void set(const eve::math::TMatrix44<T> &m)
 			{
 				//T trace = m.m[0] + m.m[5] + m.m[10];
 				T trace = m.trace();
@@ -530,7 +535,7 @@ namespace eve
 
 
 			// Operators
-			eve::math::TQuaternion<T>& operator=(const eve::math::TQuaternion<T> &rhs)
+			EVE_FORCE_INLINE eve::math::TQuaternion<T>& operator=(const eve::math::TQuaternion<T> &rhs)
 			{
 				v = rhs.v;
 				w = rhs.w;
@@ -538,14 +543,14 @@ namespace eve
 			}
 
 			template<typename FromT>
-			eve::math::TQuaternion<T>& operator=(const eve::math::TQuaternion<FromT> &rhs)
+			EVE_FORCE_INLINE eve::math::TQuaternion<T>& operator=(const eve::math::TQuaternion<FromT> &rhs)
 			{
 				v = rhs.v;
 				w = static_cast<T>(rhs.w);
 				return *this;
 			}
 
-			const eve::math::TQuaternion<T> operator+(const eve::math::TQuaternion<T> &rhs) const
+			EVE_FORCE_INLINE const eve::math::TQuaternion<T> operator+(const eve::math::TQuaternion<T> &rhs) const
 			{
 				const eve::math::TQuaternion<T>& lhs = *this;
 				return eve::math::TQuaternion<T>(lhs.w + rhs.w, lhs.v.x + rhs.v.x, lhs.v.y + rhs.v.y, lhs.v.z + rhs.v.z);
@@ -553,7 +558,7 @@ namespace eve
 
 			// post-multiply operator, similar to matrices, but different from Shoemake
 			// Concatenates 'rhs' onto 'this'
-			const eve::math::TQuaternion<T> operator*(const eve::math::TQuaternion<T> &rhs) const
+			EVE_FORCE_INLINE const eve::math::TQuaternion<T> operator*(const eve::math::TQuaternion<T> &rhs) const
 			{
 				return eve::math::TQuaternion<T>(rhs.w*w - rhs.v.x*v.x - rhs.v.y*v.y - rhs.v.z*v.z,
 												 rhs.w*v.x + rhs.v.x*w + rhs.v.y*v.z - rhs.v.z*v.y,
@@ -561,13 +566,13 @@ namespace eve
 												 rhs.w*v.z + rhs.v.z*w + rhs.v.x*v.y - rhs.v.y*v.x);
 			}
 
-			const eve::math::TQuaternion<T> operator*(T rhs) const
+			EVE_FORCE_INLINE const eve::math::TQuaternion<T> operator*(T rhs) const
 			{
 				return eve::math::TQuaternion<T>(w * rhs, v.x * rhs, v.y * rhs, v.z * rhs);
 			}
 
 			// transform a vector by the quaternion
-			const eve::math::TVec3<T> operator*(const eve::math::TVec3<T> &vec) const
+			EVE_FORCE_INLINE const eve::math::TVec3<T> operator*(const eve::math::TVec3<T> &vec) const
 			{
 				T vMult		= static_cast<T>(2) * (v.x * vec.x + v.y * vec.y + v.z * vec.z);
 				T crossMult = static_cast<T>(2) * w;
@@ -578,27 +583,27 @@ namespace eve
 										   pMult * vec.z + vMult * v.z + crossMult * (v.x * vec.y - v.y * vec.x));
 			}
 
-			const eve::math::TQuaternion<T> operator-(const eve::math::TQuaternion<T> &rhs) const
+			EVE_FORCE_INLINE const eve::math::TQuaternion<T> operator-(const eve::math::TQuaternion<T> &rhs) const
 			{
 				const eve::math::TQuaternion<T>& lhs = *this;
 				return eve::math::TQuaternion<T>(lhs.w - rhs.w, lhs.v.x - rhs.v.x, lhs.v.y - rhs.v.y, lhs.v.z - rhs.v.z);
 			}
 
-			eve::math::TQuaternion<T>& operator+=(const eve::math::TQuaternion<T> &rhs)
+			EVE_FORCE_INLINE eve::math::TQuaternion<T>& operator+=(const eve::math::TQuaternion<T> &rhs)
 			{
 				w += rhs.w;
 				v += rhs.v;
 				return *this;
 			}
 
-			eve::math::TQuaternion<T>& operator-=(const eve::math::TQuaternion<T>& rhs)
+			EVE_FORCE_INLINE eve::math::TQuaternion<T>& operator-=(const eve::math::TQuaternion<T>& rhs)
 			{
 				w -= rhs.w;
 				v -= rhs.v;
 				return *this;
 			}
 
-			eve::math::TQuaternion<T>& operator*=(const eve::math::TQuaternion<T> &rhs)
+			EVE_FORCE_INLINE eve::math::TQuaternion<T>& operator*=(const eve::math::TQuaternion<T> &rhs)
 			{
 				eve::math::TQuaternion q = (*this) * rhs;
 				v = q.v;
@@ -606,7 +611,7 @@ namespace eve
 				return *this;
 			}
 
-			eve::math::TQuaternion<T>& operator*=(T rhs)
+			EVE_FORCE_INLINE eve::math::TQuaternion<T>& operator*=(T rhs)
 			{
 				w *= rhs;
 				v *= rhs;
@@ -627,12 +632,12 @@ namespace eve
 			inline T& operator[](uint32_t i) { return (&v.x)[i]; }
 			inline const T& operator[](uint32_t i) const { return (&v.x)[i]; }
 
-			static eve::math::TQuaternion<T> identity(void)
+			EVE_FORCE_INLINE static eve::math::TQuaternion<T> identity(void)
 			{
 				return eve::math::TQuaternion<T>();
 			}
 
-			eve::math::TMatrix33<T> toMatrix33(void) const
+			EVE_FORCE_INLINE eve::math::TMatrix33<T> toMatrix33(void) const
 			{
 				eve::math::TMatrix33<T> mV;
 				T xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
@@ -665,7 +670,7 @@ namespace eve
 				return mV;
 			}
 
-			eve::math::TMatrix44<T> toMatrix44(void) const
+			EVE_FORCE_INLINE eve::math::TMatrix44<T> toMatrix44(void) const
 			{
 				eve::math::TMatrix44<T> mV;
 				T xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz;
@@ -711,7 +716,7 @@ namespace eve
 		private:
 			// From advanced Animation and Rendering Techniques by Watt and Watt, Page 366:
 			// computing the inner quadrangle points (qa and qb) to guarantee tangent continuity.
-			static eve::math::TQuaternion<T> splineIntermediate(const eve::math::TQuaternion<T> &q0, const eve::math::TQuaternion<T> &q1, const eve::math::TQuaternion<T> &q2)
+			EVE_FORCE_INLINE static eve::math::TQuaternion<T> splineIntermediate(const eve::math::TQuaternion<T> &q0, const eve::math::TQuaternion<T> &q1, const eve::math::TQuaternion<T> &q2)
 			{
 				eve::math::TQuaternion<T> q1inv = q1.inverted();
 				eve::math::TQuaternion<T> c1 = q1inv * q2;

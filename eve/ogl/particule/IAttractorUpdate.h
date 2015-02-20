@@ -53,7 +53,7 @@ namespace eve
 			}
 
 			//Override me
-			virtual void updateAttractor(AttractorModel<Vector, Value>* attModel, eve::math::Cameraf* camera, eve::math::TVec2<float> input) = 0;
+			virtual void updateAttractor(AttractorModel<Vector, Value>* attModel, eve::math::TCamera<float>* camera, eve::math::TVec2<float> input) = 0;
 		};
 
 	} // namespace ogl

@@ -707,16 +707,13 @@ template <class T> EVE_FORCE_INLINE void eve::math::TVec4<T>::normalize(void)
 
 template<class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::normalize(const eve::math::TVec4<T> & p_v)
 {
-	T length = eve::math::sqrt(p_v.x*p_v.x + p_v.y*p_v.y + p_v.z*p_v.z ++ p_v.w*p_v.w);
-
-	T invS = 1.0f / length;
-
+	T invS = static_cast<T>(1.0) / p_v.length();
 	return eve::math::TVec4<T>(p_v.x * invS, p_v.y * invS, p_v.z * invS, , p_v.w * invS);
 }
 
 template <class T> EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TVec4<T>::normalized(void) const
 {
-	T invS = static_cast<T>(1) / length();
+	T invS = static_cast<T>(1.0) / length();
 	return eve::math::TVec4<T>(x*invS, y*invS, z*invS, w*invS);
 }
 

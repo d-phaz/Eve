@@ -76,17 +76,18 @@ namespace eve
 
 			TVec3<T>  calcPosition(T t) const;
 
-			bool calcTriangleIntersection(const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, TVec3<T> * intersectionPoint) const;
-			bool calcTriangleIntersection(const TVec3<T>  &vert0, const TVec3<T>  &vert1, const TVec3<T>  &vert2, T *result) const;
-			bool calcPlaneIntersection(const TVec3<T>  &origin, const TVec3<T>  &normal, T *result) const;
+			bool calcTriangleIntersection(const TVec3<T> & vert0, const TVec3<T> & vert1, const TVec3<T> & vert2, TVec3<T> * intersectionPoint) const;
+			bool calcTriangleIntersection(const TVec3<T> & vert0, const TVec3<T> & vert1, const TVec3<T> & vert2, T * result) const;
+			bool calcPlaneIntersection(const TVec3<T> & origin, const TVec3<T> & normal, T * result) const;
+			bool calcPlaneIntersection(const TVec3<T> & origin, const TVec3<T> & normal, TVec3<T> * intersection) const;
 
-			void			setOrigin(const TVec3<T>  &aOrigin);
-			const TVec3<T> &	getOrigin(void) const;
+			void setOrigin(const TVec3<T>  & aOrigin);
+			const TVec3<T> & getOrigin(void) const;
 
 			void setDirection(const TVec3<T>  &aDirection);
 
-			const TVec3<T> &	getDirection(void) const;
-			const TVec3<T> &	getInverseDirection(void) const;
+			const TVec3<T> & getDirection(void) const;
+			const TVec3<T> & getInverseDirection(void) const;
 
 			const char getSignX(void) const;
 			const char getSignY(void) const;
@@ -145,7 +146,7 @@ bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & ve
 	w0 = m_origin - vert0;
 	a = -n.dot( w0 );
 	b =  n.dot( dir );
-	if( tmath<T>::fabs(b) < EVE_PICKING_EPSILON ) { // ray is parallel to triangle plane
+	if( eve::math::abs(b) < EVE_PICKING_EPSILON ) { // ray is parallel to triangle plane
 		return false;          
 	}
 
@@ -193,7 +194,7 @@ bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & ve
 	Vec3f edge1, edge2, tvec, pvec, qvec;
 	T det;
 	T u, v;
-	const T RAY_EPSILON = T(0.000001);
+	const T RAY_EPSILON = static_cast<T>(0.000001);
 
 	edge1 = vert1 - vert0;
 	edge2 = vert2 - vert0;
@@ -238,20 +239,38 @@ bool eve::math::TRay<T>::calcTriangleIntersection(const eve::math::TVec3<T> & ve
 #endif
 }
 
+
+
 //=================================================================================================
 template< typename T >
 bool eve::math::TRay<T>::calcPlaneIntersection(const eve::math::TVec3<T> & origin, const eve::math::TVec3<T> & normal, T * result) const
 {
+	EVE_ASSERT(result);
+
 	bool breturn = false;
-
 	T denom = normal.dot( m_direction );
-
 	if( denom != 0.0f )
 	{
 		*result = normal.dot( origin - m_origin ) / denom;
 		breturn = true;
 	}
+	return breturn;
+}
 
+//=================================================================================================
+template< typename T >
+bool eve::math::TRay<T>::calcPlaneIntersection(const TVec3<T> & origin, const TVec3<T> & normal, TVec3<T> * intersection) const
+{
+	EVE_ASSERT(intersection);
+
+	bool breturn = false;
+	T denom = normal.dot(m_direction);
+	if (denom != 0.0f)
+	{
+		TVec3<T> tmp = origin - m_origin;
+		*intersection = m_origin + (m_direction * ((origin * tmp) / den));
+		breturn = true;
+	}
 	return breturn;
 }
 

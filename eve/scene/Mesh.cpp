@@ -48,8 +48,8 @@
 #include "eve/ogl/core/Uniform.h"
 #endif
 
-#ifndef __EVE_OPENGL_CORE_VAO_H__
-#include "eve/ogl/core/Vao.h"
+#ifndef __EVE_OPENGL_CORE_VAO_STAGED_H__
+#include "eve/ogl/core/VaoStaged.h"
 #endif
 
 
@@ -78,13 +78,12 @@ eve::scene::Mesh * eve::scene::Mesh::create_ptr(eve::scene::Scene *		p_pParentSc
 
 //=================================================================================================
 eve::scene::Mesh::Mesh(eve::scene::Scene * p_pParentScene, eve::scene::Object * p_pParent)
-	// Inheritance
+	// Inheritance.
 	: eve::scene::Object(p_pParentScene, p_pParent, SceneObject_Mesh)
 	, eve::scene::EventListenerSceneObject()
-	, eve::math::Mesh()
-
-	// Members init
-	, m_pVao(nullptr)
+	, eve::math::TTransform<float>()
+	// Members init.
+	, m_pVaoStaged(nullptr)
 	, m_pAiMesh(nullptr)
 	, m_pMaterial(nullptr)
 	, m_pSkeleton(nullptr)
@@ -146,8 +145,10 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 		int32_t numIndices	= numFaces * 3;
 
 		// Allocate arrays memory.
-		float *  pVertices = (float*)eve::mem::malloc(numVertices * 8 * sizeof(float));
-		GLuint * pIndices  = (GLuint*)eve::mem::malloc(numIndices * sizeof(GLuint));
+		float *  pPositions = (float*)eve::mem::malloc(numVertices * 3 * sizeof(float));
+		float *  pDiffuses	= (float*)eve::mem::malloc(numVertices * 2 * sizeof(float));
+		float *  pNormals	= (float*)eve::mem::malloc(numVertices * 3 * sizeof(float));
+		GLuint * pIndices   = (GLuint*)eve::mem::malloc(numIndices * sizeof(GLuint));
 
 		float min_x = 0.0f;
 		float min_y = 0.0f;
@@ -167,7 +168,9 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 		aiVector3D * ai_norm = m_pAiMesh->mNormals - 1;
 
 		// Run threw vertices and copy data.
-		float * vert = pVertices - 1;
+		float * pos = pPositions - 1;
+		float * dif = pDiffuses - 1;
+		float * nor = pNormals - 1;
 		for (int32_t j = 0; j < numVertices; j++)
 		{
 			cur_x = (*++ai_vert).x;
@@ -175,9 +178,9 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 			cur_z =   (*ai_vert).z;
 
 			// Positions
-			*++vert = cur_x;
-			*++vert = cur_y;
-			*++vert = cur_z;
+			*++pos = cur_x;
+			*++pos = cur_y;
+			*++pos = cur_z;
 			// Bounding box
 			if (cur_x < min_x)		{ min_x = cur_x; }
 			else if (cur_x > max_x)	{ max_x = cur_x; }
@@ -187,12 +190,12 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 			else if (cur_z > max_z)	{ max_z = cur_z; }
 
 			// Texture coordinates
-			*++vert = (*++ai_texc).x;
-			*++vert =   (*ai_texc).y;
+			*++dif = (*++ai_texc).x;
+			*++dif = (*ai_texc).y;
 			// Normals
-			*++vert = (*++ai_norm).x;
-			*++vert =   (*ai_norm).y;
-			*++vert =   (*ai_norm).z;
+			*++nor = (*++ai_norm).x;
+			*++nor = (*ai_norm).y;
+			*++nor = (*ai_norm).z;
 		}
 		// Bounding box
 		//m_pBox = gl::Box3DCornered::create_ptr(Vec3f(min_x, min_y, min_z), Vec3f(max_x, max_y, max_z), UILayoutConfigColor::STAGE_BOUNDING_BOX);
@@ -206,18 +209,21 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 			*++ind =   (*ai_face).mIndices[1];
 			*++ind =   (*ai_face).mIndices[2];
 		}
-		
+
+
 		// Create VAO format.
-		eve::ogl::FormatVao format;
+		eve::ogl::FormatVaoStaged format;
 		format.numVertices			= numVertices;
 		format.numIndices			= numIndices;
 		format.perVertexNumPosition = 3;
 		format.perVertexNumDiffuse	= 2;
 		format.perVertexNumNormal	= 3;
-		format.vertices.reset(pVertices);
+		format.positions.reset(pPositions);
+		format.diffuses.reset(pDiffuses);
+		format.normals.reset(pNormals);
 		format.indices.reset(pIndices);
 		// Create VAO.
-		m_pVao = m_pScene->create(format);
+		m_pVaoStaged = m_pScene->create(format);
 
 
 		/////////////////////////////////////////
@@ -235,17 +241,18 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 										 , mat.a2, mat.b2, mat.c2, mat.d2
 										 , mat.a3, mat.b3, mat.c3, mat.d3
 										 , mat.a4, mat.b4, mat.c4, mat.d4);
+		
 		// Correct Up Axis if needed.
 		if (p_upAxis == eve::Axis_Z)
 		{
-			matrix.fromZupToYup();
+			//matrix.fromZupToYup();
 		}
 		// Invert matrix to retrieve camera view coordinates.
 		matrix.invert();
 
 		// Extract camera data from model view matrix.
 		eve::math::TVec3<float> target, worldUp;
-		eve::math::get_look_at(matrix, m_translation, target, worldUp);
+		eve::math::TMatrix44<float>::get_look_at(matrix, m_translation, target, worldUp);
 
 		eve::math::TVec3<float>		  viewDirection = (target - m_translation).normalized();
 		eve::math::TQuaternion<float> orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-viewDirection, worldUp)).normalized();
@@ -288,16 +295,16 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 //=================================================================================================
 void eve::scene::Mesh::init(void)
 {
-	// Call parent class
-	eve::scene::Object::init();
-	eve::math::Mesh::init();
-
 	// Uniform buffer.
 	eve::ogl::FormatUniform fmtUniform;
 	fmtUniform.blockSize = EVE_OGL_SIZEOF_MAT4;
-	fmtUniform.dynamic	 = false;
-	m_pUniformMatrix	 = m_pScene->create(fmtUniform);
+	fmtUniform.dynamic = false;
+	m_pUniformMatrix = m_pScene->create(fmtUniform);
 	m_pUniformMatrix->pushData(m_matrixModelView, 0);
+
+	// Call parent class
+	eve::scene::Object::init();
+	eve::math::TTransform<float>::init();
 }
 
 //=================================================================================================
@@ -305,8 +312,8 @@ void eve::scene::Mesh::release(void)
 {
 	m_pUniformMatrix->requestRelease();
 	m_pUniformMatrix = nullptr;
-	m_pVao->requestRelease();
-	m_pVao = nullptr;
+	m_pVaoStaged->requestRelease();
+	m_pVaoStaged = nullptr;
 
 	// Do not delete -> shared pointer.
 	m_pAiMesh = nullptr;
@@ -316,7 +323,7 @@ void eve::scene::Mesh::release(void)
 
 	// Call parent class
 	eve::scene::Object::release();
-	eve::math::Mesh::release();
+	eve::math::TTransform<float>::release();
 }
 
 
@@ -362,7 +369,7 @@ void eve::scene::Mesh::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_ar
 void eve::scene::Mesh::updateMatrixModelView(void)
 {
 	// Call parent class.
-	eve::math::Mesh::updateMatrixModelView();
+	eve::math::TTransform<float>::updateMatrixModelView();
 	// Update uniform buffer.
 	m_pUniformMatrix->pushData(m_matrixModelView, 0);
 }
@@ -375,7 +382,7 @@ void eve::scene::Mesh::oglDraw(void)
 	m_pUniformMatrix->bindModel();
 
 	m_pMaterial->bind();
-	m_pVao->draw();
+	m_pVaoStaged->draw();
 	m_pMaterial->unbind();
 
 	m_pUniformMatrix->unbind_model();

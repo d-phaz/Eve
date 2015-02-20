@@ -45,15 +45,15 @@ namespace eve
 
 			/** Performs ray casting to update the attractor
 			**/
-			virtual void updateAttractor(AttractorModel<eve::math::TVec4<float>, float>* attModel, eve::math::Cameraf* camera, eve::math::TVec2<float> input){
+			virtual void updateAttractor(AttractorModel<eve::math::TVec4<float>, float>* attModel, eve::math::TCamera<float>* camera, eve::math::TVec2<float> input){
 				eve::math::TVec3<float> view, h, v, pos, dir, attractor;
 
 				attractor = eve::math::TVec3<float>(0.0f);
 
 				//Compute the coordinate axes
-				view = eve::math::TVec3<float>(camera->getViewDirection());
-				h = eve::math::TVec3<float>(camera->getRightVector());
-				v = eve::math::TVec3<float>(camera->getWorldUp());
+				view = eve::math::TVec3<float>(camera->getDirection());
+				h = eve::math::TVec3<float>(camera->getRight());
+				v = eve::math::TVec3<float>(camera->getUp());
 
 				//Scale them
 				h *= m_hLength;
@@ -63,9 +63,9 @@ namespace eve
 				float mouseY = (float)(input.y - (m_height / 2.0f) / (m_height / 2.0f)) / m_height; //Map the coordinate to [-1, 1]
 
 				//Compute the intersection with the near plane
-				pos = eve::math::TVec3<float>(camera->getEyePoint()) + view*m_nearClipDistance + h*mouseX - v*mouseY;
+				pos = eve::math::TVec3<float>(camera->getTranslation()) + view*m_nearClipDistance + h*mouseX - v*mouseY;
 				//Compute the direction of the ray
-				dir = eve::math::TVec3<float>::normalize(eve::math::TVec3<float>(camera->getEyePoint()) - pos);
+				dir = eve::math::TVec3<float>::normalize(eve::math::TVec3<float>(camera->getTranslation()) - pos);
 
 				//Shoot attractor along the ray to the given depth
 				attractor = pos + dir * (float)attModel->getDepth();

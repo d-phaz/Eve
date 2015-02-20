@@ -96,7 +96,7 @@ namespace eve
 			{
 			}
 
-			void updateAttractor(eve::math::Cameraf* camera, eve::math::TVec2<float> input)
+			void updateAttractor(eve::math::TCamera<float>* camera, eve::math::TVec2<float> input)
 			{
 				m_updateStrategy->updateAttractor(m_attModel, camera, input);
 			}

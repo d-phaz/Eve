@@ -241,20 +241,20 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION
 * \brief Convenience macro to create application entry point and launch application.
 */
-#define EVE_APPLICATION(VIEW) \
-	EVE_APPLICATION_CUSTOM(VIEW, eve::app::App)
+#define EVE_APPLICATION(ENTRY_POINT) \
+	EVE_APPLICATION_CUSTOM(ENTRY_POINT, eve::app::App)
 
 
 #if defined(EVE_OS_WIN)
 /**
 * \def EVE_APPLICATION_CUSTOM
-* \brief Convenience macro to create application entry point and launch application from taget class.
+* \brief Convenience macro to create application entry point and launch application.
 */
-#define EVE_APPLICATION_CUSTOM(VIEW, APP)																\
+#define EVE_APPLICATION_CUSTOM(ENTRY_POINT, APP)														\
 	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
 	{																									\
 		eve::app::App *	pApp = eve::app::create_class<APP>();											\
-		pApp->addView<VIEW>();																			\
+		(void)(&ENTRY_POINT)();																			\
 		pApp->runApp();																					\
 		eve::app::App::release_instance();																\
 		return 0;																						\
@@ -263,13 +263,13 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 #elif defined(EVE_OS_DARWIN)
 /**
 * \def EVE_APPLICATION_CUSTOM
-* \brief Convenience macro to create application entry point and launch application from taget class.
+* \brief Convenience macro to create application entry point and launch application.
 */
-#define EVE_APPLICATION_CUSTOM(VIEW)										\
+#define EVE_APPLICATION_CUSTOM(ENTRY_POINT, APP)							\
 	int main(int argc, char * const argv[]) 								\
 	{																		\
 		eve::app::App *	pApp = eve::app::create_class<APP>(); \				\
-		pApp->addView<VIEW>();												\
+		(void)(&ENTRY_POINT)();												\
 		pApp->runApp();														\
 		eve::app::App::release_instance();									\
 		return 0;															\

@@ -28,7 +28,9 @@ set( SRCS
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.cpp 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Uniform.h 
 	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.cpp 
-	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.h )
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/Vao.h 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/VaoStaged.cpp 
+	 ${CMAKE_CURRENT_SOURCE_DIR}/ogl/core/VaoStaged.h )
 
 set( SOURCE_FILES ${SOURCE_FILES} ${SRCS} )
 source_group( "OpenGL\\core" FILES ${SRCS} )
