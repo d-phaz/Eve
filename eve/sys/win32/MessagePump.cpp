@@ -242,11 +242,10 @@ std::pair<LRESULT, bool> eve::sys::MessagePump::handleEvent(HWND p_hWnd, UINT p_
 LRESULT eve::sys::MessagePump::handlePaint(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
 	// ValidateRect prevents Windows from resending WM_PAINT
-	RECT rect, *ptr = 0;
+	RECT rect;
 	if (::GetUpdateRect(p_hWnd, &rect, FALSE))
 	{
 		::ValidateRect(p_hWnd, &rect);
-		ptr = &rect;
 	}
 
 	return 0;
@@ -481,7 +480,7 @@ LRESULT eve::sys::MessagePump::handleSize(HWND p_hWnd, UINT p_uMsg, WPARAM p_wPa
 LRESULT eve::sys::MessagePump::handleMoving(HWND p_hWnd, UINT p_uMsg, WPARAM p_wParam, LPARAM p_lParam)
 {
 	// Windows system message pump sends WM_MOVE and WM_MOVING events together.
-	// WM_MOVING is invalidated and we deal with window move(s) in handleMove()
+	// WM_MOVING is invalidated and we deal with window move(s) in handleMove().
 	return TRUE;
 }
 

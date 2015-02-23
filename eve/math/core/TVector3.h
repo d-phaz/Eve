@@ -328,13 +328,17 @@ eve::math::TVec3<T>::TVec3(const eve::math::TVec3<FromT> & src)
 template<typename T>
 EVE_FORCE_INLINE void eve::math::TVec3<T>::set(T ax, T ay, T az)
 {
-	x = ax; y = ay; z = az;
+	x = ax; 
+	y = ay; 
+	z = az;
 }
 
 template<typename T>
 EVE_FORCE_INLINE void eve::math::TVec3<T>::set(const eve::math::TVec3<T> & rhs)
 {
-	x = rhs.x; y = rhs.y; z = rhs.z;
+	x = rhs.x; 
+	y = rhs.y; 
+	z = rhs.z;
 }
 
 

@@ -33,16 +33,8 @@
 #ifndef __EVE_UI_VIEW_H__
 #define __EVE_UI_VIEW_H__
 
-#ifndef __EVE_SYSTEM_VIEW_H__
-#include "eve/sys/shared/View.h"
-#endif
-
-#ifndef __EVE_UI_DISPLAY_H__
-#include "eve/ui/Display.h"
-#endif
-
-#ifndef __EVE_UI_FRAME_H__
-#include "eve/ui/Frame.h"
+#ifndef __EVE_UI_LAYER_H__
+#include "eve/ui/Layer.h"
 #endif
 
 
@@ -50,28 +42,22 @@ namespace eve
 {
 	namespace ui
 	{
-
 		/** 
 		* \class eve::ui::View
 		*
-		* \brief Base application view class.
-		* Create user interface window, stock and manages linked frames and outputs.
-		* View can not create widgets except frames.
-		* Frames handle interactive drawable widgets.
+		* \brief Creates user interface child window and handles interactive drawable widgets.
 		*
-		* \note extends eve::sys::View.
+		* \note extends eve::ui::Layer.
 		*/
 		class View
-			: public eve::sys::View
+			: public eve::ui::Layer
 		{
 
 			//////////////////////////////////////
 			//				DATAS				//
 			//////////////////////////////////////
 
-		protected:
-			std::vector<eve::ui::Frame*> *		m_pVecFrame;		//!< Specifies frame containing vector.
-			std::vector<eve::ui::Display*> *	m_pVecDisplay;		//!< Specifies display containing vector.
+		protected:			
 
 
 			//////////////////////////////////////
@@ -83,21 +69,20 @@ namespace eve
 
 		public:
 			/** \brief Class constructor. */
-			explicit View(void);
+			explicit View(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+			/** \brief Class constructor. */
+			explicit View(const eve::vec2i & p_position, const eve::vec2i & p_size);
 
 
 		public:
 			/** \brief Setup format properties. (pure virtual) */
-			virtual void setup(void) override;
+			virtual void setup(void);
 
 
 		public:
 			/** \brief Alloc and init class members. (pure virtual) */
 			virtual void init(void) override;
-			/**
-			* \brief Release and delete class members. (pure virtual)
-			* Stop this object's thread execution (if any) immediately.
-			*/
+			/** \brief Release and delete class members, propagates to children. (pure virtual) */
 			virtual void release(void) override;
 
 
@@ -109,151 +94,39 @@ namespace eve
 
 
 		public:
-			/**
-			* \brief Add frame to view.
-			* Frame is created and returned as a TFrame pointer.
-			* View takes ownership of newly created frame.
-			* Template class TFrame must inherit eve::ui::Frame.
-			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
-			*/
-			template<class TFrame>
-			TFrame * addFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
-			/**
-			* \brief Add frame to view.
-			* Frame is created and returned as a TFrame pointer.
-			* View takes ownership of newly created frame.
-			* Template class TFrame must inherit eve::ui::Frame.
-			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
-			*/
-			template<class TFrame> 
-			TFrame * addFrame(const eve::vec2i & p_position, const eve::vec2i & p_size);
-			/**
-			* \brief Unregister a frame pointer.
-			* Return false if frame is not registered.
-			*/
-			bool removeFrame(eve::ui::Frame * p_pFrame);
-			/**
-			* \brief Unregister and release a frame pointer.
-			* Return false if frame is not registered.
-			*/
-			bool releaseFrame(eve::ui::Frame * p_pFrame);
+			/** \brief Inflate object on both axis (rise its size) and propagate to children. */
+			virtual void inflate(int32_t p_width, int32_t p_height) override;
+			/** \brief Inflate object on X axis (rise its width) and propagate to children. */
+			virtual void inflateX(int32_t p_value) override;
+			/** \brief Inflate object on Y axis (rise its height) and propagate to children. */
+			virtual void inflateY(int32_t p_value) override;
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			//		GET / SET
+			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set position. */
+			virtual void setPosition(int32_t p_x, int32_t p_y) override;
+			/** \brief Set position on X axis. */
+			virtual void setPositionX(int32_t p_value) override;
+			/** \brief Set position on Y axis. */
+			virtual void setPositionY(int32_t p_value) override;
 
 
 		public:
-			/**
-			* \brief Add display to view.
-			* Display is created and returned as a TDisplay pointer.
-			* View takes ownership of newly created display.
-			* Template class TDisplay must inherit eve::ui::Display.
-			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
-			*/
-			template<class TDisplay>
-			TDisplay * addDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
-			/**
-			* \brief Add display to view.
-			* Display is created and returned as a TDisplay pointer.
-			* View takes ownership of newly created display.
-			* Template class TDisplay must inherit eve::ui::Display.
-			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
-			*/
-			template<class TDisplay>
-			TDisplay * addDisplay(const eve::vec2i & p_position, const eve::vec2i & p_size);
-			/**
-			* \brief Unregister a display pointer.
-			* Return false if display is not registered.
-			*/
-			bool removeDisplay(eve::ui::Display * p_pDisplay);
-			/**
-			* \brief Unregister and release a display pointer.
-			* Return false if display is not registered.
-			*/
-			bool releaseDisplay(eve::ui::Display * p_pDisplay);
-
-
-		public:
-			/** \brief Window resize event handler. */
-			virtual void cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg);
+			/** \brief Set size. */
+			virtual void setSize(int32_t p_width, int32_t p_height) override;
+			/** \brief Set width */
+			virtual void setWidth(int32_t p_value) override;
+			/** \brief Set height */
+			virtual void setHeight(int32_t p_value) override;
 
 		}; // class View
 
 	} // namespace ui
 
 } // namespace eve
-
-//=================================================================================================
-template<class TFrame>
-TFrame * eve::ui::View::addFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-{
-	EVE_ASSERT((std::is_base_of<eve::ui::Frame, TFrame>::value));
-
-	m_pFence->lock();
-
-	TFrame * ptr = new TFrame(p_x, p_y, p_width, p_height);
-	ptr->setParentNode(this);
-	ptr->setup();
-	ptr->init();
-	m_pVecFrame->push_back(ptr);
-
-	m_pFence->unlock();
-
-	return ptr;
-}
-
-//=================================================================================================
-template<class TFrame>
-TFrame * eve::ui::View::addFrame(const eve::vec2i & p_position, const eve::vec2i & p_size)
-{
-	EVE_ASSERT((std::is_base_of<eve::ui::Frame, TFrame>::value));
-
-	m_pFence->lock();
-
-	TFrame * ptr = new TFrame(p_position, p_size);
-	ptr->setParentNode(this);
-	ptr->setup();
-	ptr->init();
-	m_pVecFrame->push_back(ptr);
-
-	m_pFence->unlock();
-
-	return ptr;
-}
-
-
-
-//=================================================================================================
-template<class TDisplay>
-TDisplay * eve::ui::View::addDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-{
-	EVE_ASSERT((std::is_base_of<eve::ui::Display, TDisplay>::value));
-
-	m_pFence->lock();
-
-	TDisplay * ptr = new TDisplay(p_x, p_y, p_width, p_height);
-	ptr->setup();
-	ptr->init();
-	m_pVecDisplay->push_back(ptr);
-
-	m_pFence->unlock();
-
-	return ptr;
-}
-
-//=================================================================================================
-template<class TDisplay>
-TDisplay * eve::ui::View::addDisplay(const eve::vec2i & p_position, const eve::vec2i & p_size)
-{
-	EVE_ASSERT((std::is_base_of<eve::ui::Display, TDisplay>::value));
-
-	m_pFence->lock();
-
-	TDisplay * ptr = new TDisplay(p_position, p_size);
-	ptr->setup();
-	ptr->init();
-	m_pVecDisplay->push_back(ptr);
-
-	m_pFence->unlock();
-
-	return ptr;
-}
 
 #endif // __EVE_UI_VIEW_H__

@@ -32,7 +32,7 @@
 #include "eve/app/App.h"
 
 class Example final
-	: public eve::ui::View
+	: public eve::ui::Window
 {
 
 	EVE_DISABLE_COPY(Example);
@@ -62,7 +62,7 @@ public:
 void Example::setup(void)
 {
 	// Call parent class.
-	eve::ui::View::setup();
+	eve::ui::Window::setup();
 
 	m_format.x			= 50;
 	m_format.y			= 50;
@@ -73,7 +73,7 @@ void Example::setup(void)
 void Example::initThreadedData(void)
 {
 	// Call parent class.
-	eve::ui::View::initThreadedData();
+	eve::ui::Window::initThreadedData();
 
 }
 
@@ -81,7 +81,7 @@ void Example::releaseThreadedData(void)
 {
 
 	// Call parent class.
-	eve::ui::View::releaseThreadedData();
+	eve::ui::Window::releaseThreadedData();
 }
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
@@ -95,7 +95,7 @@ void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
 
 	if (p_args.key == eve::sys::key_Return)
 	{
-		Example * pView = EveApp->addView<Example>();
+		Example * pView = EveApp->addWindow<Example>();
 	}
 	else if (p_args.key == eve::sys::key_Escape)
 	{
@@ -115,7 +115,7 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_args)
 // Create entry point.
 void entry_point(void)
 {
-	EveApp->addView<Example>();
+	EveApp->addWindow<Example>();
 }
 
 // Launch application entry point method.

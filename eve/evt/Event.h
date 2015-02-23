@@ -666,6 +666,7 @@ namespace eve
 		{
 		public:
 			static eve::evt::TEvent<EventArgs>						appExit;				//!< Application exit event.
+			static eve::evt::TEvent<EventArgs>						appTerminate;			//!< Application terminate event.
 		};
 
 		/** \brief Enable application events dispatch. */
@@ -675,11 +676,14 @@ namespace eve
 
 		/** \brief Notify application exit event to all listeners.*/
 		void notify_application_exit(void);
+		/** \brief Notify application terminate event to all listeners.*/
+		void notify_application_terminate(void);
 
 		/**
 		* \brief Register listener class to application events.
 		* Listener class must provide application event handler methods using the following signatures:
 		*		void cb_evtApplicationExit(eve::evt::EventArgs & p_arg)
+		*		void cb_evtApplicationTerminate(eve::evt::EventArgs & p_arg)
 		*/
 		template<class ListenerClass>
 		void register_events_application(ListenerClass * p_pListener, int32_t p_prio = orderApp);
@@ -687,6 +691,7 @@ namespace eve
 		* \brief Unregister listener class to application events.
 		* Listener class must provide application event handler methods using the following signatures:
 		*		void cb_evtApplicationExit(eve::evt::EventArgs & p_arg)
+		*		void cb_evtApplicationTerminate(eve::evt::EventArgs & p_arg)
 		*/
 		template<class ListenerClass>
 		void unregister_events_application(ListenerClass * p_pListener, int32_t p_prio = orderApp);
@@ -891,14 +896,16 @@ void eve::evt::unregister_events_frame(ListenerClass * p_pListener, int32_t p_pr
 template<class ListenerClass>
 void eve::evt::register_events_application(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::add_listener(eve::evt::EvtApp::appExit, p_pListener, &ListenerClass::cb_evtApplicationExit, p_prio);
+	eve::evt::add_listener(eve::evt::EvtApp::appExit,		p_pListener, &ListenerClass::cb_evtApplicationExit, p_prio);
+	eve::evt::add_listener(eve::evt::EvtApp::appTerminate,	p_pListener, &ListenerClass::cb_evtApplicationTerminate, p_prio);
 }
 
 //=================================================================================================
 template<class ListenerClass>
 void eve::evt::unregister_events_application(ListenerClass * p_pListener, int32_t p_prio)
 {
-	eve::evt::remove_listener(eve::evt::EvtApp::appExit, p_pListener, &ListenerClass::cb_evtApplicationExit, p_prio);
+	eve::evt::remove_listener(eve::evt::EvtApp::appExit,	  p_pListener, &ListenerClass::cb_evtApplicationExit, p_prio);
+	eve::evt::remove_listener(eve::evt::EvtApp::appTerminate, p_pListener, &ListenerClass::cb_evtApplicationTerminate, p_prio);
 }
 
 #endif // __EVE_EVT_EVENT_H__

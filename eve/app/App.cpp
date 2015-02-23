@@ -84,7 +84,8 @@ eve::app::App::App(void)
 
 	// Members init
 	, m_bRunning(false)
-	, m_pVecViews(nullptr)
+	, m_bExitOnLastWindoClose(true)
+	, m_pVecWindows(nullptr)
 	, m_pFence(nullptr)
 {}
 
@@ -117,7 +118,7 @@ void eve::app::App::init(void)
 #endif
 
 	// View container.
-	m_pVecViews = new std::vector<eve::ui::View*>();
+	m_pVecWindows = new std::vector<eve::ui::Window*>();
 	// Fence.
 	m_pFence = EVE_CREATE_PTR(eve::thr::SpinLock);
 
@@ -135,15 +136,15 @@ void eve::app::App::release(void)
 	eve::evt::unregister_events_application(this);
 
 	// View container.
-	eve::ui::View * view = nullptr;
-	while (!m_pVecViews->empty())
+	eve::ui::Window * win = nullptr;
+	while (!m_pVecWindows->empty())
 	{
-		view = m_pVecViews->back();
-		m_pVecViews->pop_back();
+		win = m_pVecWindows->back();
+		m_pVecWindows->pop_back();
 
-		EVE_RELEASE_PTR(view);
+		EVE_RELEASE_PTR(win);
 	}
-	EVE_RELEASE_PTR_CPP(m_pVecViews);
+	EVE_RELEASE_PTR_CPP(m_pVecWindows);
 
 	// Fence.
 	EVE_RELEASE_PTR(m_pFence);
@@ -185,35 +186,17 @@ void eve::app::App::runApp(void)
 
 
 //=================================================================================================
-bool eve::app::App::removeView(eve::ui::View * p_pView)
+bool eve::app::App::releaseWindow(eve::ui::Window * p_pWindow)
 {
 	m_pFence->lock();
 
-	std::vector<eve::ui::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
-	bool breturn = (itr != m_pVecViews->end());
+	std::vector<eve::ui::Window*>::iterator itr = std::find(m_pVecWindows->begin(), m_pVecWindows->end(), p_pWindow);
+	bool breturn = (itr != m_pVecWindows->end());
 	if (breturn)
 	{
-		eve::ui::View * view = (*itr);
-		m_pVecViews->erase(itr);
-	}
-	
-	m_pFence->unlock();
-
-	return breturn;
-}
-
-//=================================================================================================
-bool eve::app::App::releaseView(eve::ui::View * p_pView)
-{
-	m_pFence->lock();
-
-	std::vector<eve::ui::View*>::iterator itr = std::find(m_pVecViews->begin(), m_pVecViews->end(), p_pView);
-	bool breturn = (itr != m_pVecViews->end());
-	if (breturn)
-	{
-		eve::ui::View * view = (*itr);
-		m_pVecViews->erase(itr);
-		EVE_RELEASE_PTR(view);
+		eve::ui::Window * win = (*itr);
+		m_pVecWindows->erase(itr);
+		EVE_RELEASE_PTR(win);
 	}
 
 	m_pFence->unlock();
@@ -226,6 +209,29 @@ bool eve::app::App::releaseView(eve::ui::View * p_pView)
 //=================================================================================================
 void eve::app::App::cb_evtApplicationExit(eve::evt::EventArgs & p_arg)
 {
+	// Last window close application.
+	if (m_bExitOnLastWindoClose && m_pVecWindows->size() < 2)
+	{
+		m_p_semaphore->unlock();
+		m_bRunning = false;
+	}
+}
+
+//=================================================================================================
+void eve::app::App::cb_evtApplicationTerminate(eve::evt::EventArgs & p_arg)
+{
 	m_p_semaphore->unlock();
 	m_bRunning = false;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================
+void eve::app::App::setExitOnLastWindowClose(bool p_state)
+{
+	m_bExitOnLastWindoClose = p_state;
 }

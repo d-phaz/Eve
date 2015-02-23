@@ -348,7 +348,7 @@ void eve::ui::Widget::oglDrawTextured(void)
 
 
 //=================================================================================================
-bool eve::ui::Widget::inside(int32_t p_x, int32_t p_y)
+bool eve::ui::Widget::testHit(int32_t p_x, int32_t p_y)
 {
 	bool bret = (p_x >= m_x) && (p_x <= m_x + m_width) &&
 				(p_y >= m_y) && (p_y <= m_y + m_height);
@@ -356,9 +356,9 @@ bool eve::ui::Widget::inside(int32_t p_x, int32_t p_y)
 }
 
 //=================================================================================================
-bool eve::ui::Widget::inside(const eve::vec2i & p_position)
+bool eve::ui::Widget::testHit(const eve::vec2i & p_position)
 {
-	return this->inside(p_position.x, p_position.y);
+	return this->testHit(p_position.x, p_position.y);
 }
 
 

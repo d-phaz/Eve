@@ -30,8 +30,8 @@
 */
 
 #pragma once
-#ifndef __EVE_UI_DISPLAY_H__
-#define __EVE_UI_DISPLAY_H__
+#ifndef __EVE_UI_OUTPUT_H__
+#define __EVE_UI_OUTPUT_H__
 
 #ifndef __EVE_UI_LAYER_H__
 #include "eve/ui/Layer.h"
@@ -43,13 +43,13 @@ namespace eve
 	namespace ui
 	{
 		/** 
-		* \class eve::ui::Display
+		* \class eve::ui::Output
 		*
-		* \brief UI display. Usually used as an output window.
+		* \brief UI output window.
 		*
 		* \note extends eve::ui::Layer.
 		*/
-		class Display
+		class Output
 			: public eve::ui::Layer
 		{
 
@@ -64,14 +64,14 @@ namespace eve
 			//				METHOD				//
 			//////////////////////////////////////
 
-			EVE_DISABLE_COPY(Display);
-			EVE_PUBLIC_DESTRUCTOR(Display);
+			EVE_DISABLE_COPY(Output);
+			EVE_PUBLIC_DESTRUCTOR(Output);
 
 		public:
 			/** \brief Class constructor. */
-			explicit Display(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+			explicit Output(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 			/** \brief Class constructor. */
-			explicit Display(const eve::vec2i & p_position, const eve::vec2i & p_size);
+			explicit Output(const eve::vec2i & p_position, const eve::vec2i & p_size);
 
 
 		public:
@@ -103,10 +103,10 @@ namespace eve
 			/** \brief Mouse motion (button pressed) event handler. (pure virtual) */
 			virtual void cb_evtMotion(eve::evt::MouseEventArgs & p_args) override;
 
-		}; // class Display
+		}; // class Output
 
 	} // namespace ui
 
 } // namespace eve
 
-#endif // __EVE_UI_DISPLAY_H__
+#endif // __EVE_UI_OUTPUT_H__

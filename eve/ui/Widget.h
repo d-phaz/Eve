@@ -175,11 +175,11 @@ namespace eve
 			virtual void oglDrawTextured(void);
 
 
-		protected:
+		public:
 			/** \brief Test position is inside widget. */
-			bool inside(int32_t p_x, int32_t p_y);
+			bool testHit(int32_t p_x, int32_t p_y);
 			/** \brief Test position is inside widget. */
-			bool inside(const eve::vec2i & p_position);
+			bool testHit(const eve::vec2i & p_position);
 
 
 		public:

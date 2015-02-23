@@ -698,17 +698,20 @@ void eve::evt::notify_frame(int64_t p_frame)
 
 //=================================================================================================
 eve::evt::TEvent<eve::evt::EventArgs>					eve::evt::EvtApp::appExit;
+eve::evt::TEvent<eve::evt::EventArgs>					eve::evt::EvtApp::appTerminate;
 
 //=================================================================================================
 void eve::evt::enable_events_application(void)
 {
 	eve::evt::EvtApp::appExit.enable();
+	eve::evt::EvtApp::appTerminate.enable();
 }
 
 //=================================================================================================
 void eve::evt::disable_events_application(void)
 {
 	eve::evt::EvtApp::appExit.disable();
+	eve::evt::EvtApp::appTerminate.disable();
 }
 
 
@@ -718,4 +721,11 @@ void eve::evt::notify_application_exit(void)
 {
 	eve::evt::EventArgs args;
 	eve::evt::notify_event(eve::evt::EvtApp::appExit, args);
+}
+
+//=================================================================================================
+void eve::evt::notify_application_terminate(void)
+{
+	eve::evt::EventArgs args;
+	eve::evt::notify_event(eve::evt::EvtApp::appTerminate, args);
 }

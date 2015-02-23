@@ -34,17 +34,15 @@
 
 #include "eve/scene/Scene.h"
 
-static eve::scene::Scene * m_pScene = nullptr;
-
-class ExampleDisplay final
-	: public eve::ui::Display
+class ExampleOutput final
+	: public eve::ui::Output
 {
-	EVE_DISABLE_COPY(ExampleDisplay);
-	EVE_PUBLIC_DESTRUCTOR(ExampleDisplay);
+	EVE_DISABLE_COPY(ExampleOutput);
+	EVE_PUBLIC_DESTRUCTOR(ExampleOutput);
 
 public:
 	/** \brief class constructor. */
-	explicit ExampleDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+	explicit ExampleOutput(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
 
 private:
 	/** \brief Alloc and init threaded data. (pure virtual) */
@@ -54,75 +52,107 @@ private:
 
 };
 
-ExampleDisplay::ExampleDisplay(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-	: eve::ui::Display(p_x, p_y, p_width, p_height)
+ExampleOutput::ExampleOutput(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	: eve::ui::Output(p_x, p_y, p_width, p_height)
 {}
 
-void ExampleDisplay::initThreadedData(void)
+void ExampleOutput::initThreadedData(void)
 {
 	// Call parent class.
-	eve::ui::Display::initThreadedData();
-
-	this->registerRenderer(m_pScene);
+	eve::ui::Output::initThreadedData();
 }
 
-void ExampleDisplay::releaseThreadedData(void)
+void ExampleOutput::releaseThreadedData(void)
+{	
+	// Call parent class.
+	eve::ui::Output::releaseThreadedData();
+}
+
+
+
+class ExampleView final
+	: public eve::ui::View
 {
-	this->unregisterRenderer(m_pScene);
+
+public:
+	eve::scene::Scene * m_pScene;
+
+
+	EVE_DISABLE_COPY(ExampleView);
+	EVE_PUBLIC_DESTRUCTOR(ExampleView);
+
+public:
+	/** \brief class constructor. */
+	explicit ExampleView(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
+
+private:
+	/** \brief Alloc and init threaded data. (pure virtual) */
+	virtual void initThreadedData(void) override;
+	/** \brief Release and delete threaded data. (pure virtual) */
+	virtual void releaseThreadedData(void) override;
+
+public:
+	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
+	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
+	virtual void cb_evtTextInput(eve::evt::TextEventArgs & p_args) override;
+
+};
+
+ExampleView::ExampleView(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	: eve::ui::View(p_x, p_y, p_width, p_height)
+{}
+
+void ExampleView::initThreadedData(void)
+{
+	// Call parent class.
+	eve::ui::View::initThreadedData();
 	
-	// Call parent class.
-	eve::ui::Display::releaseThreadedData();
-}
-
-
-
-class ExampleFrame final
-	: public eve::ui::Frame
-{
-	EVE_DISABLE_COPY(ExampleFrame);
-	EVE_PUBLIC_DESTRUCTOR(ExampleFrame);
-
-public:
-	/** \brief class constructor. */
-	explicit ExampleFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height);
-
-private:
-	/** \brief Alloc and init threaded data. (pure virtual) */
-	virtual void initThreadedData(void) override;
-	/** \brief Release and delete threaded data. (pure virtual) */
-	virtual void releaseThreadedData(void) override;
-
-};
-
-ExampleFrame::ExampleFrame(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
-	: eve::ui::Frame(p_x, p_y, p_width, p_height)
-{}
-
-void ExampleFrame::initThreadedData(void)
-{
-	// Call parent class.
-	eve::ui::Frame::initThreadedData();
-
+	// Register new RenderGL.
+	m_pScene = EVE_CREATE_PTR(eve::scene::Scene);
 	this->registerRenderer(m_pScene);
 }
 
-void ExampleFrame::releaseThreadedData(void)
+void ExampleView::releaseThreadedData(void)
 {
-	this->unregisterRenderer(m_pScene);
+	this->releaseRenderer(m_pScene);
 
 	// Call parent class.
-	eve::ui::Frame::releaseThreadedData();
+	eve::ui::View::releaseThreadedData();
+}
+
+void ExampleView::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+{
+	// Propagate to scene.
+}
+
+void ExampleView::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
+{
+	EVE_LOG_INFO("Pressed key: %d ctrl: %d   alt: %d   shift: %d"
+				, p_args.key
+				, eve::sys::modifier_crtl(p_args.modifier)
+				, eve::sys::modifier_alt(p_args.modifier)
+				, eve::sys::modifier_shift(p_args.modifier));
+
+	if (p_args.key == eve::sys::key_Return)
+	{
+		std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
+		m_pScene->load(path);
+	}
+}
+
+void ExampleView::cb_evtTextInput(eve::evt::TextEventArgs & p_args)
+{
+	// Propagate to scene.
 }
 
 
 
 
 class Example final
-	: public eve::ui::View
+	: public eve::ui::Window
 {
-
 private:
-	//eve::scene::Scene * m_pScene;
+	ExampleView * view;
 
 
 	EVE_DISABLE_COPY(Example);
@@ -142,22 +172,16 @@ private:
 	/** \brief Release and delete threaded data. (pure virtual) */
 	virtual void releaseThreadedData(void) override;
 
-public:
-	virtual void cb_evtMouseDown(eve::evt::MouseEventArgs & p_args) override;
-	virtual void cb_evtKeyDown(eve::evt::KeyEventArgs & p_args) override;
-	virtual void cb_evtTextInput(eve::evt::TextEventArgs & p_args) override;
-	virtual void cb_evtWindowClose(eve::evt::EventArgs & p_arg) override;
-
 };
 
 Example::Example(void)
-	: eve::ui::View()
+	: eve::ui::Window()
 {}
 
 void Example::setup(void)
 {
 	// Call parent class.
-	eve::ui::View::setup();
+	eve::ui::Window::setup();
 
 	m_format.x		= 50;
 	m_format.y		= 50;
@@ -168,66 +192,15 @@ void Example::setup(void)
 void Example::initThreadedData(void)
 {
 	// Call parent class.
-	eve::ui::View::initThreadedData();
-
-	// Register new RenderGL.
-	m_pScene = EVE_CREATE_PTR(eve::scene::Scene);
-	this->registerRenderer(m_pScene);
-
-	//for (size_t i = 0; i < 6; i++)
-	//{
-	//	ExampleDisplay * test = this->addDisplay<ExampleDisplay>(50, 50, 800, 600);
-	//}
+	eve::ui::Window::initThreadedData();
 	
-	//ExampleFrame * test = this->addFrame<ExampleFrame>(0, 0, 400, 300);
+	view = this->addView<ExampleView>(0, 0, 800, 600);
 }
 
 void Example::releaseThreadedData(void)
 {
-	this->releaseRenderer(m_pScene);
-
 	// Call parent class.
-	eve::ui::View::releaseThreadedData();
-}
-
-void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
-{
-	//m_pWindow->toggleFullScreen();
-	//m_pRender->setSize(m_pWindow->getWidth(), m_pWindow->getHeight());
-}
-
-void Example::cb_evtKeyDown(eve::evt::KeyEventArgs & p_args)
-{
-	EVE_LOG_INFO("Pressed key: %d ctrl: %d   alt: %d   shift: %d"
-				, p_args.key
-				, eve::sys::modifier_crtl(p_args.modifier)
-				, eve::sys::modifier_alt(p_args.modifier)
-				, eve::sys::modifier_shift(p_args.modifier));
-
-	if (p_args.key == eve::sys::key_Escape
-	 || p_args.key == eve::sys::key_Q && eve::sys::modifier_crtl(p_args.modifier))
-	{
-		eve::evt::notify_application_exit();
-	}
-	else if (p_args.key == eve::sys::key_Return)
-	{
-		std::wstring path(EVE_TXT("C:\\Users\\aleister_doe\\Desktop\\import\\untitled_spot.dae"));
-		m_pScene->load(path);
-	}
-
-}
-
-void Example::cb_evtTextInput(eve::evt::TextEventArgs & p_args)
-{
-	wchar_t txt[2];
-	txt[0] = p_args.text;
-	txt[1] = EVE_TXT('\0');
-	EVE_LOG_INFO("Pressed key: %s", txt);
-}
-
-void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
-{
-	eve::evt::notify_application_exit();
+	eve::ui::Window::releaseThreadedData();
 }
 
 
@@ -235,7 +208,7 @@ void Example::cb_evtWindowClose(eve::evt::EventArgs & p_arg)
 // Create entry point.
 void entry_point(void)
 {
-	EveApp->addView<Example>();
+	EveApp->addWindow<Example>();
 }
 
 // Launch application entry point method.

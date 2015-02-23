@@ -76,6 +76,8 @@ namespace eve
 			mutable eve::math::TVec3<T>			m_translation;					//!< Specifies translation.
 			mutable eve::math::TVec3<T>			m_scale;						//!< Specifies scale.
 
+			mutable eve::math::TVec3<T>			m_pivot;						//!< Specifies pivot point, default to object center as vec3(0, 0, 0).
+
 			mutable eve::math::TMatrix44<T>		m_matrixRotation;				//!< Specifies rotation matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixTranslation;			//!< Specifies translation matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixScale;					//!< Specifies scale matrix.
@@ -267,6 +269,7 @@ eve::math::TTransform<T>::TTransform(void)
 	, m_rotation(eve::math::TVec3<T>::zero())
 	, m_translation(eve::math::TVec3<T>::zero())
 	, m_scale(eve::math::TVec3<T>::one())
+	, m_pivot(eve::math::TVec3<T>::zero())
 
 	, m_matrixRotation(eve::math::TMatrix44<T>::identity())
 	, m_matrixTranslation(eve::math::TMatrix44<T>::identity())
@@ -284,6 +287,7 @@ eve::math::TTransform<T>::TTransform(const eve::math::TTransform<T> & p_parent)
 	, m_rotation(p_parent.m_rotation)
 	, m_translation(p_parent.m_translation)
 	, m_scale(p_parent.m_scale)
+	, m_pivot(p_parent.m_pivot)
 
 	, m_matrixRotation(p_parent.m_matrixRotation)
 	, m_matrixTranslation(p_parent.m_matrixTranslation)

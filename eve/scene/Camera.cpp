@@ -101,7 +101,7 @@ bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pSce
 	const aiNode * pNode = pRoot->FindNode(m_name.c_str());
 
 	// Test scene node.
-	bool ret = pNode != NULL; 
+	bool ret = (pNode != NULL); 
 	EVE_ASSERT(ret);
 
 	if (ret)
@@ -131,34 +131,23 @@ bool eve::scene::Camera::init(const aiCamera * p_pCamera, const aiScene * p_pSce
 		// Correct Up Axis if needed.
 		if (p_upAxis == eve::Axis_Z)
 		{
-			//matrix.fromZupToYup();
+			matrix.fromZupToYup();
 		}
-		
-		//// Invert matrix to retrieve camera view coordinates.
-		//matrix.invert();
 
-		//// Extract camera data from model view matrix.
-		//eve::math::TMatrix44<float>::get_look_at(matrix, m_eyePoint, m_target, m_worldUp);
+		// Decompose matrix without scale component.
+		eve::math::TVec3<float> tra;
+		eve::math::TQuaternion<float> rot;
+		eve::math::decompose_matrix44(matrix, tra, rot);
 
-		//// Compute camera matrix required data.
-		//m_viewDirection		= (m_target - m_eyePoint).normalized();
-		//m_orientation		= eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-m_viewDirection, m_worldUp)).normalized();
-		//m_centerOfInterest  = m_eyePoint.distance(m_target);	
-
-		// Invert matrix to retrieve camera view coordinates.
-		matrix.invert();
-
-		// Extract camera data from model view matrix.
-		eve::math::TVec3<float> target, worldUp;
-		eve::math::TMatrix44<float>::get_look_at(matrix, m_translation, target, worldUp);
-
-		eve::math::TVec3<float>		  viewDirection = (target - m_translation).normalized();
-		eve::math::TQuaternion<float> orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-viewDirection, worldUp)).normalized();
+		// Grab translation.
+		m_translation.x = tra.x;
+		m_translation.y = tra.y;
+		m_translation.z = tra.z;
 
 		// Grab rotation.
-		m_rotation.x = orientation.getPitch();
-		m_rotation.y = orientation.getYaw();
-		m_rotation.z = orientation.getRoll();
+		m_rotation.x = rot.getPitch();
+		m_rotation.y = rot.getYaw();
+		m_rotation.z = rot.getRoll();
 
 		// Members init.
 		this->init();
@@ -242,6 +231,7 @@ void eve::scene::Camera::cb_evtSceneObject(eve::scene::EventArgsSceneObject & p_
 		case SceneObjectEventType_SetTranslationX:		this->setTranslationX(p_args.value);		break;
 		case SceneObjectEventType_SetTranslationY:		this->setTranslationY(p_args.value);		break;
 		case SceneObjectEventType_SetTranslationZ:		this->setTranslationZ(p_args.value);		break;
+
 	 
 	 	default: EVE_ASSERT_FAILURE; break;
 	}

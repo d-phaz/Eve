@@ -212,12 +212,18 @@ namespace eve
 			void				getRows(eve::math::TVec4<T> *r0, eve::math::TVec4<T> *r1, eve::math::TVec4<T> *r2, eve::math::TVec4<T> *r3) const;
 			void				setRows(const eve::math::TVec4<T> &r0, const eve::math::TVec4<T> &r1, const eve::math::TVec4<T> &r2, const eve::math::TVec4<T> &r3);
 
-			/** \brief Get Right axis. */
+			/** \brief Get right axis. */
 			eve::math::TVec3<T> getRight(void) const;
+			/** \brief Set right axis. */
+			void				setRight(const eve::math::TVec3<T> & p_vec);
 			/** \brief Get world up axis. */
 			eve::math::TVec3<T> getUp(void) const;
+			/** \brief Set world up axis. */
+			void				setUp(const eve::math::TVec3<T> & p_vec);
 			/** \brief Get direction axis. */
 			eve::math::TVec3<T> getDirection(void) const;
+			/** \brief Set direction axis. */
+			void				setDirection(const eve::math::TVec3<T> & p_vec);
 
 			// returns a sub-matrix starting at row, col
 			TMatrix22<T>		subMatrix22(int32_t row, int32_t col) const;
@@ -385,12 +391,26 @@ namespace eve
 									  , eve::math::TVec3<T> const & up);
 
 
+			/** \brief Extract frustum settings of a symmetric perspective projection matrix. Return false if matrix is not a perspective matrix, where parameter values are undefined. */
+			static bool get_frustum(const eve::math::TMatrix44<T> & mat, T & left, T & right, T & bottom, T & top, T & zNear, T & zFar);
 			/** \brief Create a frustum matrix. */
 			static TMatrix44<T> frustum(T left, T right, T bottom, T top, T nearVal, T farVal);
+
+
+			/** 
+			* \brief Extract the frustum settings of a symmetric perspective projection matrix.
+			* Return false if matrix is not a perspective matrix, where parameter values are undefined.
+			* If matrix is not a symmetric perspective matrix then the shear will be lost.
+			* Asymmetric matrices occur when stereo, power walls, caves and reality center display are used.
+			* In these configuration one should use the get_frustum method instead.
+			*/
+			static bool get_perspective(const eve::math::TMatrix44<T> & mat, T & fovy, T & aspectRatio, T & zNear, T & zFar);
 			/** \brief Creates a perspective matrix. */
 			static TMatrix44<T> perspective(T fovy, T aspect, T zNear, T zFar);
 
 
+			/** \brief Extract orthographic settings of a matrix. */
+			static bool get_ortho(const eve::math::TMatrix44<T> & mat, T & left, T & right, T & bottom, T & top, T & zNear, T & zFar);
 			/** \brief Creates a matrix for an orthographic parallel viewing volume. */
 			static TMatrix44<T> ortho(T left, T right, T bottom, T top, T zNear, T zFar);
 			/** \brief Creates a matrix for projecting two-dimensional coordinates onto the screen. */
@@ -416,7 +436,6 @@ namespace eve
 									 , const eve::math::TMatrix44<T> & model
 									 , const eve::math::TMatrix44<T> & proj
 									 , const eve::math::TVec4<U> & viewport);
-
 
 	} // namespace math
 
@@ -961,6 +980,15 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getRight(void) con
 
 //=================================================================================================
 template<typename T>
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setRight(const eve::math::TVec3<T> & p_vec)
+{
+	m[0] = p_vec.x;
+	m[4] = p_vec.y;
+	m[8] = p_vec.z;
+}
+
+//=================================================================================================
+template<typename T>
 EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getUp(void) const
 {
 	return eve::math::TVec3<T>(m[1], m[5], m[9]);
@@ -968,9 +996,27 @@ EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getUp(void) const
 
 //=================================================================================================
 template<typename T>
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setUp(const eve::math::TVec3<T> & p_vec)
+{
+	m[1] = p_vec.x;
+	m[5] = p_vec.y;
+	m[9] = p_vec.z;
+}
+
+//=================================================================================================
+template<typename T>
 EVE_FORCE_INLINE eve::math::TVec3<T> eve::math::TMatrix44<T>::getDirection(void) const
 {
 	return eve::math::TVec3<T>(m[2], m[6], m[10]);
+}
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE void eve::math::TMatrix44<T>::setDirection(const eve::math::TVec3<T> & p_vec)
+{
+	m[ 2] = p_vec.x;
+	m[ 6] = p_vec.y;
+	m[10] = p_vec.z;
 }
 
 
@@ -1603,11 +1649,11 @@ EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::alignZAxisWith
 {
     // Ensure that the target direction is non-zero.
     if( targetDir.lengthSquared() == 0 )
-		targetDir = eve::math::TVec3<T>::zAxis();
+		targetDir = eve::math::TVec3<T>::view_direction();
 
     // Ensure that the up direction is non-zero.
     if( upDir.lengthSquared() == 0 )
-		upDir = eve::math::TVec3<T>::yAxis();
+		upDir = eve::math::TVec3<T>::world_up();
 
     // Check for degeneracies.  If the upDir and targetDir are parallel 
     // or opposite, then compute a new, arbitrary up direction that is
@@ -1691,11 +1737,11 @@ EVE_FORCE_INLINE void eve::math::TMatrix44<T>::get_look_at(const eve::math::TMat
 {
 	eve::math::TMatrix44<T> inv = mat.inverted();
 
-	eye = inv * eve::math::TVec3<T>::zero();
-	up = eve::math::TMatrix44<T>::transform3x3(mat, eve::math::TVec3<T>::world_up());
-	center = eve::math::TMatrix44<T>::transform3x3(mat, eve::math::TVec3<T>::view_direction());
+	eye		= inv * eve::math::TVec3<T>::zero();
+	up		= eve::math::TMatrix44<T>::transform3x3(mat, eve::math::TVec3<T>::world_up());
+	center	= eve::math::TMatrix44<T>::transform3x3(mat, eve::math::TVec3<T>::view_direction());
 	center.normalize();
-	center = eye + center*lookDistance;
+	center	= eye + center * lookDistance;
 }
 
 //=================================================================================================
@@ -1731,12 +1777,39 @@ EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::look_at(eve::m
 	return Result;
 }
 
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE bool eve::math::TMatrix44<T>::get_frustum(const eve::math::TMatrix44<T> & mat, T & left, T & right, T & bottom, T & top, T & zNear, T & zFar)
+{
+	bool ret = true;
+
+	if (mat.m[0][3] != static_cast<T>(0.0) || mat.m[1][3] != static_cast<T>(0.0) || mat.m[2][3] != static_cast<T>(-1.0) || mat.m[3][3] != static_cast<T>(0.0))
+	{
+		ret = false;
+	}
+	else
+	{
+		zNear	= mat.m[14] / (mat.m[10] - static_cast<T>(1.0));
+		zFar	= mat.m[14] / (static_cast<T>(1.0) + mat.m[10]);
+
+		left	= zNear * (mat.m[8] - static_cast<T>(1.0)) / mat.m[0];
+		right	= zNear * (static_cast<T>(1.0) + mat.m[8]) / mat.m[0];
+
+		top		= zNear * (static_cast<T>(1.0) + mat.m[9]) / mat.m[5];
+		bottom	= zNear * (mat.m[9] - static_cast<T>(1.0)) / mat.m[5];
+	}
+
+	return ret;
+}
+
 //=================================================================================================
 template<typename T>
 EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::frustum(T left, T right, T bottom, T top, T nearVal, T farVal)
 {
 	eve::math::TMatrix44<T> Result;
-	Result.setToIdentity();
+	Result.setToNull();
 
 	Result.m[ 0] =  (static_cast<T>(2.0) * nearVal) / (right - left);
 	Result.m[ 5] =  (static_cast<T>(2.0) * nearVal) / (top - bottom);
@@ -1747,6 +1820,29 @@ EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::frustum(T left
 	Result.m[14] = -(static_cast<T>(2.0) * farVal * nearVal) / (farVal - nearVal);
 
 	return Result;
+}
+
+
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE bool eve::math::TMatrix44<T>::get_perspective(const eve::math::TMatrix44<T> & mat, T & fovy, T & aspectRatio, T & zNear, T & zFar)
+{
+	bool ret = false;
+
+	T right		= static_cast<T>(0.0);
+	T left		= static_cast<T>(0.0);
+	T top		= static_cast<T>(0.0);
+	T bottom	= static_cast<T>(0.0);
+
+	if (get_frustum(left, right, bottom, top, zNear, zFar))
+	{
+		fovy		= eve::math::toDegrees((eve::math::atan(top / zNear) - eve::math::atan(bottom / zNear)));
+		aspectRatio = (right - left) / (top - bottom);
+		ret = true;
+	}
+
+	return ret;
 }
 
 //=================================================================================================
@@ -1766,6 +1862,33 @@ EVE_FORCE_INLINE eve::math::TMatrix44<T> eve::math::TMatrix44<T>::perspective(T 
 	Result.m[14] = -(static_cast<T>(2.0) * zFar * zNear) / (zFar - zNear);
 
 	return Result;
+}
+
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE bool eve::math::TMatrix44<T>::get_ortho(const eve::math::TMatrix44<T> & mat, T & left, T & right, T & bottom, T & top, T & zNear, T & zFar)
+{
+	bool ret = true;
+
+	// Test matrix.
+	if (mat.m[3] != static_cast<T>(0.0) || mat[7] != static_cast<T>(0.0) || mat[11] != static_cast<T>(0.0) || mat[15] != static_cast<T>(1.0))
+	{
+		ret = false;
+	}
+	else
+	{
+		zNear	=  (mat.m[14] + static_cast<T>(1.0)) / mat.m[10];
+		zFar	=  (mat.m[14] - static_cast<T>(1.0)) / mat.m[10];
+
+		left	= -(static_cast<T>(1.0) + mat.m[12]) / mat.m[0];
+		right	=  (static_cast<T>(1.0) - mat.m[12]) / mat.m[0];
+
+		bottom	= -(static_cast<T>(1.0) + mat.m[13]) / mat.m[5];
+		top		=  (static_cast<T>(1.0) - mat.m[13]) / mat.m[5];
+	}
+
+	return ret;
 }
 
 //=================================================================================================

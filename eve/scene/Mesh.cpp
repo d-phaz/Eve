@@ -241,26 +241,32 @@ bool eve::scene::Mesh::init(const aiMesh * p_pMesh, const aiScene * p_pScene, ev
 										 , mat.a2, mat.b2, mat.c2, mat.d2
 										 , mat.a3, mat.b3, mat.c3, mat.d3
 										 , mat.a4, mat.b4, mat.c4, mat.d4);
-		
+
 		// Correct Up Axis if needed.
 		if (p_upAxis == eve::Axis_Z)
 		{
-			//matrix.fromZupToYup();
+			matrix.fromZupToYup();
 		}
-		// Invert matrix to retrieve camera view coordinates.
-		matrix.invert();
 
-		// Extract camera data from model view matrix.
-		eve::math::TVec3<float> target, worldUp;
-		eve::math::TMatrix44<float>::get_look_at(matrix, m_translation, target, worldUp);
+		// Decompose matrix.
+ 		eve::math::TVec3<float> tra, sca;
+ 		eve::math::TQuaternion<float> rot, so;
+		eve::math::decompose_matrix44(matrix, tra, rot, sca, so);
 
-		eve::math::TVec3<float>		  viewDirection = (target - m_translation).normalized();
-		eve::math::TQuaternion<float> orientation = eve::math::TQuaternion<float>(eve::math::TMatrix44<float>::alignZAxisWithTarget(-viewDirection, worldUp)).normalized();
+		// Grab translation.
+		m_translation.x = tra.x;
+		m_translation.y = tra.y;
+		m_translation.z = tra.z;
 
 		// Grab rotation.
-		m_rotation.x = orientation.getPitch();
-		m_rotation.y = orientation.getYaw();
-		m_rotation.z = orientation.getRoll();
+		m_rotation.x = rot.getPitch();
+		m_rotation.y = rot.getYaw();
+		m_rotation.z = rot.getRoll();
+
+		// Grab scale.
+		m_scale.x = sca.x;
+		m_scale.y = sca.y;
+		m_scale.z = sca.z;
 
 
 		/////////////////////////////////////////

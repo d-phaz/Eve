@@ -44,9 +44,14 @@ eve::ogl::FormatVaoStaged::FormatVaoStaged(void)
 	, perVertexNumDiffuse(0)
 	, perVertexNumNormal(0)
 	, positions()
+	, isPositionDynamic(false)
 	, diffuses()
+	, isDiffuseDynamic(false)
 	, normals()
+	, isNormalDynamic(false)
 	, indices()
+	, isIndiceDynamic(false)
+	, primitiveType(GL_TRIANGLES)
 {}
 
 //=================================================================================================
@@ -64,9 +69,14 @@ eve::ogl::FormatVaoStaged::FormatVaoStaged(const eve::ogl::FormatVaoStaged & p_o
 	, perVertexNumDiffuse(p_other.perVertexNumDiffuse)
 	, perVertexNumNormal(p_other.perVertexNumNormal)
 	, positions(p_other.positions)
+	, isPositionDynamic(p_other.isPositionDynamic)
 	, diffuses(p_other.diffuses)
+	, isDiffuseDynamic(p_other.isDiffuseDynamic)
 	, normals(p_other.normals)
+	, isNormalDynamic(p_other.isNormalDynamic)
 	, indices(p_other.indices)
+	, isIndiceDynamic(p_other.isIndiceDynamic)
+	, primitiveType(p_other.primitiveType)
 {}
 
 //=================================================================================================
@@ -83,6 +93,11 @@ const eve::ogl::FormatVaoStaged & eve::ogl::FormatVaoStaged::operator = (const e
 		this->diffuses				= p_other.diffuses;
 		this->normals				= p_other.normals;
 		this->indices				= p_other.indices;
+		this->primitiveType			= p_other.primitiveType;
+		this->isPositionDynamic		= p_other.isPositionDynamic;
+		this->isDiffuseDynamic		= p_other.isDiffuseDynamic;
+		this->isNormalDynamic		= p_other.isNormalDynamic;
+		this->isIndiceDynamic		= p_other.isIndiceDynamic;
 	}
 	return *this;
 }
@@ -98,6 +113,8 @@ eve::ogl::VaoStaged::VaoStaged(void)
 	
 	, m_arrayBufferId(nullptr)
 	, m_elementBufferId(0)
+
+	, m_primitiveType(GL_TRIANGLES)
 	
 	, m_numVertices(0)
 	, m_numIndices(0)
@@ -109,15 +126,22 @@ eve::ogl::VaoStaged::VaoStaged(void)
 	, m_pPositionsData(nullptr)
 	, m_pPositions()
 	, m_bPositionsUpdate(false)
+	, m_bPositionDynamic(false)
+
 	, m_pDiffusesData(nullptr)
 	, m_pDiffuses()
 	, m_bDiffusesUpdate(false)
+	, m_bDiffuseDynamic(false)
+
 	, m_pNormalsData(nullptr)
 	, m_pNormals()
 	, m_bNormalsUpdate(false)
+	, m_bNormalDynamic(false)
+
 	, m_pIndicesData(nullptr)
 	, m_pIndices()
 	, m_bIndicesUpdate(false)
+	, m_bIndiceDynamic(false)
 
 	, m_positionStride(0)
 	, m_positionSize(0)
@@ -146,6 +170,13 @@ void eve::ogl::VaoStaged::setAttributes(eve::ogl::Format * p_format)
 	this->m_pDiffuses				= format->diffuses;
 	this->m_pNormals				= format->normals;
 	this->m_pIndices				= format->indices;
+
+	this->m_primitiveType			= format->primitiveType;
+
+	this->m_bPositionDynamic		= format->isPositionDynamic;
+	this->m_bDiffuseDynamic			= format->isDiffuseDynamic;
+	this->m_bNormalDynamic			= format->isNormalDynamic;
+	this->m_bIndiceDynamic			= format->isIndiceDynamic;
 
 	EVE_ASSERT(m_numVertices != 0);
 	EVE_ASSERT(m_numIndices != 0);
@@ -185,28 +216,28 @@ void eve::ogl::VaoStaged::release(void)
 //=================================================================================================
 void eve::ogl::VaoStaged::oglInit(void)
 {
-	glGenBuffers(1, &m_elementBufferId);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indicesSize, m_pIndices.get(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	EVE_OGL_CHECK_ERROR;
-
-
 	glGenBuffers(3, m_arrayBufferId);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId[Vao_Stage_Position]);
-	glBufferData(GL_ARRAY_BUFFER, m_positionSize, m_pPositions.get(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_positionSize, m_pPositions.get(), m_bPositionDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	EVE_OGL_CHECK_ERROR;
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId[Vao_Stage_Diffuse]);
-	glBufferData(GL_ARRAY_BUFFER, m_diffuseSize, m_pDiffuses.get(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_diffuseSize, m_pDiffuses.get(), m_bDiffuseDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	EVE_OGL_CHECK_ERROR;
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId[Vao_Stage_Normal]);
-	glBufferData(GL_ARRAY_BUFFER, m_normalSize, m_pNormals.get(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_normalSize, m_pNormals.get(), m_bNormalDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	EVE_OGL_CHECK_ERROR;
+
+
+	glGenBuffers(1, &m_elementBufferId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indicesSize, m_pIndices.get(), m_bIndiceDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	EVE_OGL_CHECK_ERROR;
 
 
@@ -314,7 +345,7 @@ void eve::ogl::VaoStaged::draw(void)
 	glBindVertexArray(m_id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
 
-	glDrawElementsInstancedBaseVertex(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, NULL, 1, 0);
+	glDrawElementsInstancedBaseVertex(m_primitiveType, m_numIndices, GL_UNSIGNED_INT, NULL, 1, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);

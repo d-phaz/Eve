@@ -53,8 +53,8 @@
 #include "eve/sys/win32/Notification.h"
 #endif
 
-#ifndef __EVE_UI_VIEW_H__
-#include "eve/ui/View.h"
+#ifndef __EVE_UI_WINDOW_H__
+#include "eve/ui/Window.h"
 #endif
 
 #ifndef __EVE_THREADING_SPIN_LOCK_H__
@@ -90,15 +90,16 @@ namespace eve
 			//////////////////////////////////////
 
 		protected:
-			static eve::app::App *				m_p_instance;		//!< Class unique instance.
-			static eve::time::Timer *			m_p_timer;			//!< Application timer, launched at startup.
-			static eve::thr::Semaphore *		m_p_semaphore;		//!< Application main run loop semaphore.
+			static eve::app::App *				m_p_instance;				//!< Class unique instance.
+			static eve::time::Timer *			m_p_timer;					//!< Application timer, launched at startup.
+			static eve::thr::Semaphore *		m_p_semaphore;				//!< Application main run loop semaphore.
 
-			bool								m_bRunning;			//!< Application main loop running state.
+			bool								m_bRunning;					//!< Application main loop running state.
+			bool								m_bExitOnLastWindoClose;	//!< Specifies application exit on last window close, default to true.
 		
 		protected:
-			std::vector<eve::ui::View*> *		m_pVecViews;		//!< Application view(s) container.
-			eve::thr::SpinLock *				m_pFence;			//!< Application view(s) container protection fence.
+			std::vector<eve::ui::Window*> *		m_pVecWindows;				//!< Application interface window(s) container.
+			eve::thr::SpinLock *				m_pFence;					//!< Application interface window(s) container protection fence.
 
 
 			//////////////////////////////////////
@@ -141,34 +142,35 @@ namespace eve
 
 		public:
 			/** 
-			* \brief Add view to application.
-			* View is created and returned as a TView pointer.
-			* App takes ownership of newly created view.
-			* Template class TView must inherit eve::ui::View.
+			* \brief Add interface window to application.
+			* Window is created and returned as a TWindow pointer.
+			* App takes ownership of newly created window.
+			* Template class TWindow must inherit eve::ui::Window.
 			* Inheritance is tested in DEBUG mode, not in RELEASE mode.
 			*/
-			template<class TView>
-			TView * addView(void);
-			/** 
-			* \brief Release ownership of target view.
-			* Return true if target view was contained.
-			*/
-			bool removeView(eve::ui::View * p_pView);
+			template<class TWindow>
+			TWindow * addWindow(void);
 			/**
-			* \brief Remove and release target view.
-			* Return true if target view was contained.
+			* \brief Remove and release target window.
+			* Return true if target window was contained.
 			*/
-			bool releaseView(eve::ui::View * p_pView);
+			bool releaseWindow(eve::ui::Window * p_pWindow);
 
 
 		public:
 			/** \brief Application exit event handler. */
 			void cb_evtApplicationExit(eve::evt::EventArgs & p_arg);
+			/** \brief Application terminate event handler. */
+			void cb_evtApplicationTerminate(eve::evt::EventArgs & p_arg);
 
 
 			///////////////////////////////////////////////////////////////////////////////////////
 			//		GET / SET
 			///////////////////////////////////////////////////////////////////////////////////////
+
+		public:
+			/** \brief Set whether application will terminate on last window close or not (default is true). */
+			void setExitOnLastWindowClose(bool p_state);
 
 		public:
 			/** \brief Get elapsed time since application startup in milliseconds. */
@@ -207,22 +209,22 @@ eve::app::App * eve::app::create_class(void)
 
 
 //=================================================================================================
-template<class TView>
-TView * eve::app::App::addView(void)
+template<class TWindow>
+TWindow * eve::app::App::addWindow(void)
 {
-	EVE_ASSERT( (std::is_base_of<eve::ui::View, TView>::value) );
+	EVE_ASSERT((std::is_base_of<eve::ui::Window, TWindow>::value));
 
-	TView * view = new TView();
-	view->setup();
-	view->init();
+	TWindow * win = new TWindow();
+	win->setup();
+	win->init();
 
 	m_pFence->lock();
-	m_pVecViews->push_back(view);
+	m_pVecWindows->push_back(win);
 	m_pFence->unlock();
 
-	view->start();
+	win->start();
 
-	return view;
+	return win;
 }
 
 
@@ -251,13 +253,23 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \brief Convenience macro to create application entry point and launch application.
 */
 #define EVE_APPLICATION_CUSTOM(ENTRY_POINT, APP)														\
-	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 	\
+	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) try	\
 	{																									\
 		eve::app::App *	pApp = eve::app::create_class<APP>();											\
 		(void)(&ENTRY_POINT)();																			\
 		pApp->runApp();																					\
 		eve::app::App::release_instance();																\
 		return 0;																						\
+	}																									\
+	catch (const std::exception & e)																	\
+	{																									\
+		EVE_LOG_ERROR("Top level exception: %s", eve::str::to_wstring(e.what()).c_str());				\
+		return 1;																						\
+	}																									\
+	catch (...)																							\
+	{																									\
+		EVE_LOG_ERROR("Unknown top level exception");													\
+		return 1;																						\
 	}
 
 #elif defined(EVE_OS_DARWIN)
@@ -265,14 +277,24 @@ inline int64_t eve::app::App::get_elapsed_time(void) { EVE_ASSERT(m_p_timer); re
 * \def EVE_APPLICATION_CUSTOM
 * \brief Convenience macro to create application entry point and launch application.
 */
-#define EVE_APPLICATION_CUSTOM(ENTRY_POINT, APP)							\
-	int main(int argc, char * const argv[]) 								\
-	{																		\
-		eve::app::App *	pApp = eve::app::create_class<APP>(); \				\
-		(void)(&ENTRY_POINT)();												\
-		pApp->runApp();														\
-		eve::app::App::release_instance();									\
-		return 0;															\
+#define EVE_APPLICATION_CUSTOM(ENTRY_POINT, APP)														\
+	int main(int argc, char * const argv[]) try															\
+	{																									\
+		eve::app::App *	pApp = eve::app::create_class<APP>(); \											\
+		(void)(&ENTRY_POINT)();																			\
+		pApp->runApp();																					\
+		eve::app::App::release_instance();																\
+		return 0;																						\
+	}																									\
+	catch (const std::exception & e)																	\
+	{																									\
+		EVE_LOG_ERROR("Top level exception: %s", eve::str::to_wstring(e.what()).c_str());				\
+		return 1;																						\
+	}																									\
+	catch (...)																							\
+	{																									\
+		EVE_LOG_ERROR("Unknown top level exception");													\
+		return 1;																						\
 	}
 
 #endif

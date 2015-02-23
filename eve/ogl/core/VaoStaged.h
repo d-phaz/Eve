@@ -62,9 +62,15 @@ namespace eve
 			GLsizei						perVertexNumNormal;			//<! Specifies per vertex normals values amount (should be 3).
 
 			std::shared_ptr<float>		positions;					//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
+			bool						isPositionDynamic;			//!< Specifies position buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 			std::shared_ptr<float>		diffuses;					//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
+			bool						isDiffuseDynamic;			//!< Specifies diffuse buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 			std::shared_ptr<float>		normals;					//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
+			bool						isNormalDynamic;			//!< Specifies normal buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 			std::shared_ptr<GLuint>		indices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
+			bool						isIndiceDynamic;			//!< Specifies indice buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
+
+			GLenum						primitiveType;				//!< Specifies OpenGL drawn primitive type (GL_TRIANGLES, GL_LINES, ...), default is GL_TRIANGLES.
 
 		public:
 			/** \brief Class constructor. */
@@ -112,6 +118,8 @@ namespace eve
 			GLuint *					m_arrayBufferId;			//<! Specifies OpenGL array buffers (position, diffuse, normal) IDs.
 			GLuint						m_elementBufferId;			//<! Specifies OpenGL element buffer (indices) ID.
 
+			GLenum						m_primitiveType;			//!< Specifies OpenGL drawn primitive type (GL_TRIANGLES, GL_LINES, ...), default is GL_TRIANGLES.
+			
 		private:
 			GLint						m_numVertices;				//<! Specifies number of vertices.
 			GLint						m_numIndices;				//<! Specifies number of indices.
@@ -123,18 +131,22 @@ namespace eve
 			float *						m_pPositionsData;			//!< Specifies position device buffer data address.
 			std::shared_ptr<float>		m_pPositions;				//!< Specifies a pointer to position data in memory (used as std::shared_ptr).
 			bool						m_bPositionsUpdate;			//!< Specifies whether or not positions must be updated.
+			bool						m_bPositionDynamic;			//!< Specifies position buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 
 			float *						m_pDiffusesData;			//!< Specifies diffuse device buffer data address.
 			std::shared_ptr<float>		m_pDiffuses;				//!< Specifies a pointer to diffuse data in memory (used as std::shared_ptr).
 			bool						m_bDiffusesUpdate;			//!< Specifies whether or not diffuses must be updated.
+			bool						m_bDiffuseDynamic;			//!< Specifies diffuse buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 
 			float *						m_pNormalsData;				//!< Specifies normal device buffer data address.
 			std::shared_ptr<float>		m_pNormals;					//!< Specifies a pointer to normal data in memory (used as std::shared_ptr).
 			bool						m_bNormalsUpdate;			//!< Specifies whether or not normals must be updated.
+			bool						m_bNormalDynamic;			//!< Specifies normal buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 
 			GLuint *					m_pIndicesData;				//!< Specifies indices device buffer data address.
 			std::shared_ptr<GLuint>		m_pIndices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
 			bool						m_bIndicesUpdate;			//!< Specifies whether or not indices must be updated.
+			bool						m_bIndiceDynamic;			//!< Specifies indice buffer dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
 
 		private:
 			GLsizei						m_positionStride;			//<! Specifies position array stride  (m_perVertexNumPosition * sizeof(float)).

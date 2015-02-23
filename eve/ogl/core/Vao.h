@@ -64,6 +64,9 @@ namespace eve
 			std::shared_ptr<float>		vertices;					//!< Specifies a pointer to vertices data in memory (used as std::shared_ptr).
 			std::shared_ptr<GLuint>		indices;					//!< Specifies a pointer to indices data in memory (used as std::shared_ptr).
 
+			GLenum						primitiveType;				//!< Specifies OpenGL drawn primitive type (GL_TRIANGLES, GL_LINES, ...), default is GL_TRIANGLES.
+			bool						isDynamic;					//!< Specifies dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
+
 		public:
 			/** \brief Class constructor. */
 			FormatVao(void);
@@ -102,6 +105,9 @@ namespace eve
 			GLuint						m_arrayBufferId;			//<! Specifies OpenGL array buffer (vertices) ID.
 			GLuint						m_elementBufferId;			//<! Specifies OpenGL element buffer (indices) ID.
 
+			GLenum						m_primitiveType;			//!< Specifies OpenGL drawn primitive type (GL_TRIANGLES, GL_LINES, ...), default is GL_TRIANGLES.
+			bool						m_isDynamic;				//!< Specifies dynamic drawing activation. Dynamic drawing is used when data are updated at each frame (driver hint), default is false.
+			
 		private:
 			GLint						m_numVertices;				//<! Specifies number of vertices.
 			GLint						m_numIndices;				//<! Specifies number of indices.

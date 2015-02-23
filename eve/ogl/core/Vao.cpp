@@ -45,6 +45,8 @@ eve::ogl::FormatVao::FormatVao(void)
 	, perVertexNumNormal(0)
 	, vertices()
 	, indices()
+	, primitiveType(GL_TRIANGLES)
+	, isDynamic(false)
 {}
 
 //=================================================================================================
@@ -63,6 +65,8 @@ eve::ogl::FormatVao::FormatVao(const eve::ogl::FormatVao & p_other)
 	, perVertexNumNormal(p_other.perVertexNumNormal)
 	, vertices(p_other.vertices)
 	, indices(p_other.indices)
+	, primitiveType(p_other.primitiveType)
+	, isDynamic(p_other.isDynamic)
 {}
 
 //=================================================================================================
@@ -77,6 +81,8 @@ const eve::ogl::FormatVao & eve::ogl::FormatVao::operator = (const eve::ogl::For
 		this->perVertexNumNormal	= p_other.perVertexNumNormal;
 		this->vertices				= p_other.vertices;
 		this->indices				= p_other.indices;
+		this->primitiveType			= p_other.primitiveType;
+		this->isDynamic				= p_other.isDynamic;
 	}
 	return *this;
 }
@@ -91,20 +97,27 @@ eve::ogl::Vao::Vao(void)
 	, m_id(0)
 	, m_arrayBufferId(0)
 	, m_elementBufferId(0)
+	, m_primitiveType(GL_TRIANGLES)
+	, m_isDynamic(false)
+
 	, m_numVertices(0)
 	, m_numIndices(0)
+
 	, m_perVertexNumPosition(0)
 	, m_perVertexNumDiffuse(0)
 	, m_perVertexNumNormal(0)
+
 	, m_pVerticesData(nullptr)
 	, m_pVertices()
 	, m_bUpdateVertices(false)
 	, m_pIndicesData(nullptr)
 	, m_pIndices()
 	, m_bUpdateIndices(false)
+
 	, m_offsetPosition(0)
 	, m_offsetDiffuse(0)
 	, m_offsetNormals(0)
+
 	, m_verticesStrideUnit(0)
 	, m_verticesStride(0)
 	, m_verticesSize(0)
@@ -125,6 +138,8 @@ void eve::ogl::Vao::setAttributes(eve::ogl::Format * p_format)
 	this->m_perVertexNumNormal		= format->perVertexNumNormal;
 	this->m_pVertices				= format->vertices;
 	this->m_pIndices				= format->indices;
+	this->m_primitiveType			= format->primitiveType;
+	this->m_isDynamic				= format->isDynamic;
 
 	EVE_ASSERT(m_numVertices != 0);
 	EVE_ASSERT(m_numIndices != 0);
@@ -159,17 +174,17 @@ void eve::ogl::Vao::release(void)
 //=================================================================================================
 void eve::ogl::Vao::oglInit(void)
 {
+	glGenBuffers(1, &m_arrayBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
+	glBufferData(GL_ARRAY_BUFFER, m_verticesSize, m_pVertices.get(), m_isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	EVE_OGL_CHECK_ERROR;
+
+
 	glGenBuffers(1, &m_elementBufferId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indicesSize, m_pIndices.get(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	EVE_OGL_CHECK_ERROR;
-
-
-	glGenBuffers(1, &m_arrayBufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, m_arrayBufferId);
-	glBufferData(GL_ARRAY_BUFFER, m_verticesSize, m_pVertices.get(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	EVE_OGL_CHECK_ERROR;
 
 
@@ -269,7 +284,7 @@ void eve::ogl::Vao::draw(void)
 	glBindVertexArray(m_id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferId);
 
-	glDrawElementsInstancedBaseVertex(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, NULL, 1, 0);
+	glDrawElementsInstancedBaseVertex(m_primitiveType, m_numIndices, GL_UNSIGNED_INT, NULL, 1, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -280,7 +295,7 @@ void eve::ogl::Vao::draw(void)
 // 	glBindVertexArray(m_id);
 // 	glBindVertexBuffer(0, m_arrayBufferId, 0, m_verticesStride);
 // 
-// 	glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0, 1, 0, 0);
+// 	glDrawElementsInstancedBaseVertexBaseInstance(m_primitiveType, m_numIndices, GL_UNSIGNED_INT, 0, 1, 0, 0);
 // 	
 // 	//glBindVertexArray(0);
 // 	EVE_OGL_CHECK_ERROR;

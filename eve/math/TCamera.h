@@ -618,6 +618,10 @@ EVE_FORCE_INLINE void eve::math::TCamera<T>::calibrate(const eve::math::TMatrix4
 
 	m_matrixModelViewProjection = m_matrixProjection * m_matrixModelViewInverse;
 
+	// Decompose projection matrix.
+	eve::math::TMatrix44<T>::get_perspective(m_matrixProjection, m_fov, m_aspectRatio, m_nearClip, m_farClip);
+
+	// Decompose model view matrix.
 	eve::math::TQuaternion<T> rot;
 	eve::math::decompose_matrix44(m_matrixModelView, m_translation, rot);
 	m_rotation.set(rot.toVec3());
@@ -821,7 +825,7 @@ template <typename T> EVE_FORCE_INLINE const T eve::math::TCamera<T>::getDisplay
 template <typename T>
 EVE_FORCE_INLINE void eve::math::TCamera<T>::setDisplaySize(T p_width, T p_height, bool p_bUpdateAspectRatio)
 {
-	m_cam_view_width		= p_width;
+	m_cam_view_width	= p_width;
 	m_cam_view_height	= p_height;
 
 	if (p_bUpdateAspectRatio) 

@@ -30,18 +30,18 @@
 */
 
 // Main class header
-#include "eve/ui/Display.h"
+#include "eve/ui/Output.h"
 
 
 //=================================================================================================
-eve::ui::Display::Display(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+eve::ui::Output::Output(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
 	// Inheritance.
 	: eve::ui::Layer(p_x, p_y, p_width, p_height)
 	// Members init.
 {}
 
 //=================================================================================================
-eve::ui::Display::Display(const eve::vec2i & p_position, const eve::vec2i & p_size)
+eve::ui::Output::Output(const eve::vec2i & p_position, const eve::vec2i & p_size)
 	// Inheritance.
 	: eve::ui::Layer(p_position, p_size)
 	// Members init.
@@ -50,7 +50,7 @@ eve::ui::Display::Display(const eve::vec2i & p_position, const eve::vec2i & p_si
 
 
 //=================================================================================================
-void eve::ui::Display::setup(void)
+void eve::ui::Output::setup(void)
 {
 	// Call parent class.
 	eve::ui::Layer::setup();
@@ -61,7 +61,7 @@ void eve::ui::Display::setup(void)
 
 
 //=================================================================================================
-void eve::ui::Display::init(void)
+void eve::ui::Output::init(void)
 {
 	// Call parent class.
 	eve::ui::Layer::init();
@@ -69,7 +69,7 @@ void eve::ui::Display::init(void)
 }
 
 //=================================================================================================
-void eve::ui::Display::release(void)
+void eve::ui::Output::release(void)
 {
 
 	// Call parent class.
@@ -79,7 +79,7 @@ void eve::ui::Display::release(void)
 
 
 //=================================================================================================
-void eve::ui::Display::initThreadedData(void)
+void eve::ui::Output::initThreadedData(void)
 {
 	// Call parent class.
 	eve::ui::Layer::initThreadedData();
@@ -87,7 +87,7 @@ void eve::ui::Display::initThreadedData(void)
 }
 
 //=================================================================================================
-void eve::ui::Display::releaseThreadedData(void)
+void eve::ui::Output::releaseThreadedData(void)
 {
 	
 	// Call parent class.
@@ -97,12 +97,12 @@ void eve::ui::Display::releaseThreadedData(void)
 
 
 //=================================================================================================
-void eve::ui::Display::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
+void eve::ui::Output::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 {
 	switch (p_args.button)
 	{
 	case eve::sys::btn_Right:
-		// Display position + size parameters.
+		// Output position + size parameters.
 		break;
 
 	case eve::sys::btn_Left:
@@ -112,13 +112,13 @@ void eve::ui::Display::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
 }
 
 //=================================================================================================
-void eve::ui::Display::cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
+void eve::ui::Output::cb_evtMouseUp(eve::evt::MouseEventArgs & p_args)
 {
 
 }
 
 //=================================================================================================
-void eve::ui::Display::cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
+void eve::ui::Output::cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
 {
 	if (p_args.button == eve::sys::btn_Left)
 	{
@@ -127,7 +127,7 @@ void eve::ui::Display::cb_evtMouseDoubleClick(eve::evt::MouseEventArgs & p_args)
 }
 
 //=================================================================================================
-void eve::ui::Display::cb_evtMotion(eve::evt::MouseEventArgs & p_args)
+void eve::ui::Output::cb_evtMotion(eve::evt::MouseEventArgs & p_args)
 {
 
 }

@@ -106,7 +106,7 @@ namespace eve
 
 		public:
 			/**
-			* \brief Register a renderer pointer at the front of the container.
+			* \brief Register a renderer pointer at the front of the container, so internal UI one is drawn over render as HUD.
 			* Node takes ownership of registered renderer, dealloc and delete it in release() method.
 			* Return false if renderer is already registered.
 			*/

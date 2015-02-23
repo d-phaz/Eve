@@ -32,15 +32,23 @@
 // Main class header
 #include "eve/ui/View.h"
 
+#ifndef __EVE_UI_RENDERER_H__
+#include "eve/ui/Renderer.h"
+#endif
+
 
 //=================================================================================================
-eve::ui::View::View(void)
-	// Inheritance
-	: eve::sys::View()
+eve::ui::View::View(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height)
+	// Inheritance.
+	: eve::ui::Layer(p_x, p_y, p_width, p_height)
+	// Members init.
+{}
 
-	// Members init
-	, m_pVecFrame(nullptr)
-	, m_pVecDisplay(nullptr)
+//=================================================================================================
+eve::ui::View::View(const eve::vec2i & p_position, const eve::vec2i & p_size)
+	// Inheritance.
+	: eve::ui::Layer(p_position, p_size)
+	// Members init.
 {}
 
 
@@ -48,17 +56,10 @@ eve::ui::View::View(void)
 //=================================================================================================
 void eve::ui::View::setup(void)
 {
-// 	uint32_t border		= eve::sys::Window::get_border_thickness();
-// 	uint32_t titleBar	= eve::sys::Window::get_title_bar_height();
-// 	uint32_t width		= eve::sys::get_work_area_width() - (border * 2);
-// 	uint32_t height		= eve::sys::get_work_area_height() - (titleBar + (border * 2));
-// 
-// 	m_format.x			= border;
-// 	m_format.y			= titleBar + border;
-// 	m_format.width		= width;
-// 	m_format.height		= height;
+	// Call parent class.
+	eve::ui::Layer::setup();
 
-	m_format.windowType = eve::sys::WindowType_App;
+	m_format.windowType = eve::sys::WindowType_Child;
 }
 
 
@@ -66,41 +67,17 @@ void eve::ui::View::setup(void)
 //=================================================================================================
 void eve::ui::View::init(void)
 {
-	// Containers.
-	m_pVecFrame		= new std::vector<eve::ui::Frame*>();
-	m_pVecDisplay	= new std::vector<eve::ui::Display*>();
-
 	// Call parent class
-	eve::sys::View::init();
+	eve::ui::Layer::init();
+
 }
 
 //=================================================================================================
 void eve::ui::View::release(void)
-{
-	// Display container.
-	eve::ui::Display * dis = nullptr;
-	while (!m_pVecDisplay->empty())
-	{
-		dis = m_pVecDisplay->back();
-		m_pVecDisplay->pop_back();
-
-		EVE_RELEASE_PTR(dis);
-	}
-	EVE_RELEASE_PTR_CPP(m_pVecDisplay);
-
-	// Frame container.
-	eve::ui::Frame * frame = nullptr;
-	while (!m_pVecFrame->empty())
-	{
-		frame = m_pVecFrame->back();
-		m_pVecFrame->pop_back();
-
-		EVE_RELEASE_PTR(frame);
-	}
-	EVE_RELEASE_PTR_CPP(m_pVecFrame);
+{	
 
 	// Call parent class
-	eve::sys::View::release();
+	eve::ui::Layer::release();
 }
 
 
@@ -109,115 +86,95 @@ void eve::ui::View::release(void)
 void eve::ui::View::initThreadedData(void)
 {
 	// Call parent class.
-	eve::sys::View::initThreadedData();
+	eve::ui::Layer::initThreadedData();
+
 }
 
 //=================================================================================================
 void eve::ui::View::releaseThreadedData(void)
 {
+	
 	// Call parent class.
-	eve::sys::View::releaseThreadedData();
+	eve::ui::Layer::releaseThreadedData();
 }
 
 
 
 //=================================================================================================
-bool eve::ui::View::removeFrame(eve::ui::Frame * p_pFrame)
+void eve::ui::View::inflate(int32_t p_width, int32_t p_height)
 {
-	m_pFence->lock();
-
-	std::vector<eve::ui::Frame*>::iterator itr = std::find(m_pVecFrame->begin(), m_pVecFrame->end(), p_pFrame);
-	bool breturn = (itr != m_pVecFrame->end());
-	if (breturn)
-	{
-		m_pVecFrame->erase(itr);
-	}
-
-	m_pFence->unlock();
-
-	return breturn;
+	m_pWindow->setSize(m_pWindow->getWidth() + p_width, m_pWindow->getHeight() + p_height);
+	m_width  += p_width;
+	m_height += p_height;
 }
 
 //=================================================================================================
-bool eve::ui::View::releaseFrame(eve::ui::Frame * p_pFrame)
+void eve::ui::View::inflateX(int32_t p_value)
 {
-	m_pFence->lock();
+	m_pWindow->setWidth(m_pWindow->getWidth() + p_value);
+	m_width += p_value;
+}
 
-	std::vector<eve::ui::Frame*>::iterator itr = std::find(m_pVecFrame->begin(), m_pVecFrame->end(), p_pFrame);
-	bool breturn = (itr != m_pVecFrame->end());
-	if (breturn)
-	{
-		eve::ui::Frame * ptr = (*itr);
-		m_pVecFrame->erase(itr);
-		EVE_RELEASE_PTR(ptr);
-	}
-
-	m_pFence->unlock();
-
-	return breturn;
+//=================================================================================================
+void eve::ui::View::inflateY(int32_t p_value)
+{
+	m_pWindow->setHeight(m_pWindow->getHeight() + p_value);
+	m_height += p_value;
 }
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//		GET / SET
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 //=================================================================================================
-bool eve::ui::View::removeDisplay(eve::ui::Display * p_pDisplay)
+void eve::ui::View::setPosition(int32_t p_x, int32_t p_y)
 {
-	m_pFence->lock();
-
-	std::vector<eve::ui::Display*>::iterator itr = std::find(m_pVecDisplay->begin(), m_pVecDisplay->end(), p_pDisplay);
-	bool breturn = (itr != m_pVecDisplay->end());
-	if (breturn)
-	{
-		m_pVecDisplay->erase(itr);
-	}
-
-	m_pFence->unlock();
-
-	return breturn;
+	m_pWindow->setPosition(p_x, p_y);
+	m_x = p_x;
+	m_y = p_y;
 }
 
 //=================================================================================================
-bool eve::ui::View::releaseDisplay(eve::ui::Display * p_pDisplay)
+void eve::ui::View::setPositionX(int32_t p_value)
 {
-	m_pFence->lock();
+	m_pWindow->setPositionX(p_value);
+	m_x = p_value;
+}
 
-	std::vector<eve::ui::Display*>::iterator itr = std::find(m_pVecDisplay->begin(), m_pVecDisplay->end(), p_pDisplay);
-	bool breturn = (itr != m_pVecDisplay->end());
-	if (breturn)
-	{
-		eve::ui::Display * ptr = (*itr);
-		m_pVecDisplay->erase(itr);
-		EVE_RELEASE_PTR(ptr);
-	}
-
-	m_pFence->unlock();
-
-	return breturn;
+//=================================================================================================
+void eve::ui::View::setPositionY(int32_t p_value)
+{
+	m_pWindow->setPositionY(p_value);
+	m_y = p_value;
 }
 
 
 
 //=================================================================================================
-void eve::ui::View::cb_evtWindowResize(eve::evt::ResizeEventArgs & p_arg)
+void eve::ui::View::setSize(int32_t p_width, int32_t p_height)
 {
-	int32_t w(m_format.width);
-	int32_t h(m_format.height);
+	m_pWindow->setSize(p_width, p_height);
 
-	int32_t deportX(p_arg.width - w);
-	int32_t deportY(p_arg.height - h);
+	// Call parent class.
+	eve::ui::Widget::setSize(p_width, p_height);
+}
 
-	float ratioX = 0.0f;
-	float ratioY = 0.0f;
+//=================================================================================================
+void eve::ui::View::setWidth(int32_t p_value)
+{
+	m_pWindow->setWidth(p_value);
 
-	for (auto && itr : (*m_pVecFrame))
-	{
-		ratioX = static_cast<float>(itr->getWidth())  / static_cast<float>(w);
-		ratioY = static_cast<float>(itr->getHeight()) / static_cast<float>(h);
+	// Call parent class.
+	eve::ui::Widget::setWidth(p_value);
+}
 
-		itr->inflate(static_cast<int32_t>(static_cast<float>(deportX)* ratioX)
-			       , static_cast<int32_t>(static_cast<float>(deportY) * ratioY));
-	}
+//=================================================================================================
+void eve::ui::View::setHeight(int32_t p_value)
+{
+	m_pWindow->setHeight(p_value);
 
-	m_format.width  = p_arg.width;
-	m_format.height = p_arg.height;
+	// Call parent class.
+	eve::ui::Widget::setHeight(p_value);
 }

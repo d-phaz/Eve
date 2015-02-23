@@ -364,7 +364,7 @@ void RenderGL::cb_display(void)
 
 
 class Example final
-	: public eve::ui::View
+	: public eve::ui::Window
 {
 
 private:
@@ -400,7 +400,7 @@ public:
 void Example::setup(void)
 {
 	// Call parent class.
-	eve::ui::View::setup();
+	eve::ui::Window::setup();
 
 	m_format.x			= 50;
 	m_format.y			= 50;
@@ -411,7 +411,7 @@ void Example::setup(void)
 void Example::initThreadedData(void)
 {
 	// Call parent class.
-	eve::ui::View::initThreadedData();
+	eve::ui::Window::initThreadedData();
 
 	m_velocityTranslate = 100.0f;
 	m_dataSwapper = dataSwapper::get_instance();
@@ -430,7 +430,7 @@ void Example::initThreadedData(void)
 void Example::releaseThreadedData(void)
 {
 	// Call parent class.
-	eve::ui::View::releaseThreadedData();
+	eve::ui::Window::releaseThreadedData();
 }
 
 void Example::cb_evtMouseDown(eve::evt::MouseEventArgs & p_args)
@@ -572,7 +572,7 @@ void Application::runApp(void)
 // Create entry point.
 void entry_point(void)
 {
-	EveApp->addView<Example>();
+	EveApp->addWindow<Example>();
 }
 
 // Launch application entry point method.
