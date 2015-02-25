@@ -45,23 +45,21 @@
 #include "eve/math/core/Math.h"
 #endif
 
-#ifndef __EVE_MATH_CORE_TVECTOR_H__
-#include "eve/math/core/TVector.h"
-#endif
-
-#ifndef __EVE_MATH_CORE_TMATRIX_22_H__
-#include "eve/math/core/TMatrix22.h"
-#endif
-
-#ifndef __EVE_MATH_CORE_TMATRIX_33_H__
-#include "eve/math/core/TMatrix33.h"
-#endif
-
 
 namespace eve
 {
 	namespace math
 	{
+		template<typename T> class TVec2;
+		template<typename T> class TVec3;
+		template<typename T> class TVec4;
+
+		template<typename T> class TMatrix22;
+		template<typename T> class TMatrix33;
+		template<typename T> class TMatrix44;
+
+		template<typename T> class TQuaternion;
+
 		/**
 		* \class eve::math::TMatrix44
 		*
@@ -109,12 +107,12 @@ namespace eve
 					T m03, m13, m23, m33;
 				};
 
-				struct {
-					eve::math::TVec4<T> right;
-					eve::math::TVec4<T> up; 
-					eve::math::TVec4<T> direction;
-					eve::math::TVec4<T> position;
-				};
+// 				struct {
+// 					eve::math::TVec4<T> right;
+// 					eve::math::TVec4<T> up; 
+// 					eve::math::TVec4<T> direction;
+// 					eve::math::TVec4<T> position;
+// 				};
 			};
 
 
@@ -134,16 +132,16 @@ namespace eve
 			TMatrix44(T d0, T d1, T d2, T d3, T d4, T d5, T d6, T d7, T d8, T d9, T d10, T d11, T d12, T d13, T d14, T d15, bool srcIsRowMajor = false);
 
 			// Creates matrix with column vectors vx, vy, vz and vw
-			TMatrix44(const eve::math::TVec3<T> &vx, const eve::math::TVec3<T> &vy, const eve::math::TVec3<T> &vz);
-			TMatrix44(const eve::math::TVec4<T> &vx, const eve::math::TVec4<T> &vy, const eve::math::TVec4<T> &vz, const eve::math::TVec4<T> &vw = eve::math::TVec4<T>(0, 0, 0, 1));
+			TMatrix44(const eve::math::TVec3<T> & vx, const eve::math::TVec3<T> & vy, const eve::math::TVec3<T> & vz);
+			TMatrix44(const eve::math::TVec4<T> & vx, const eve::math::TVec4<T> & vy, const eve::math::TVec4<T> & vz, const eve::math::TVec4<T> & vw);
 
 			template< typename FromT >
-			TMatrix44(const TMatrix44<FromT>& src);
+			TMatrix44(const TMatrix44<FromT> & src);
 
-			TMatrix44(const TMatrix22<T>& src);
-			TMatrix44(const TMatrix33<T>& src);
-
-			TMatrix44(const TMatrix44<T>& src);
+			TMatrix44(const TMatrix22<T> & src);
+			TMatrix44(const TMatrix33<T> & src);
+										 
+			TMatrix44(const TMatrix44<T> & src);
 
 
 			// Accesses
@@ -287,7 +285,7 @@ namespace eve
 			// returns the translation values from the last column
 			eve::math::TVec3<T>	getTranslate(void) const { return eve::math::TVec3<T>(m03, m13, m23); }
 			// sets the translation values in the last column
-			void				setTranslate(T x, T y, T z)				   { m03 = x; m13 = y; m23 = z; }
+			void				setTranslate(T x, T y, T z)				   { m03 = x;   m13 = y;   m23 = z;   }
 			void				setTranslate(const eve::math::TVec3<T>& v) { m03 = v.x; m13 = v.y; m23 = v.z; }
 			void				setTranslate(const eve::math::TVec4<T>& v) { setTranslate(v.xyz()); }
 
@@ -295,6 +293,11 @@ namespace eve
 			void				translate(const eve::math::TVec3<T> &tr) { *this *= createTranslation(tr); }
 			void				translate(const eve::math::TVec4<T> &tr) { *this *= createTranslation(tr); }
 
+			/** 
+			* \brief Get the matrix rotation as a Quaternion. 
+			* \note This function assumes a non - scaled matrix and will return incorrect results for scaled matrices.
+			*/
+			eve::math::TQuaternion<T> getRotate(void) const;
 			// multiplies the current matrix by the rotation matrix derived using axis and radians
 			void				rotate(const eve::math::TVec3<T> &axis, T radians) { *this *= createRotation(axis, radians); }
 			void				rotate(const eve::math::TVec4<T> &axis, T radians) { *this *= createRotation(axis, radians); }
@@ -305,7 +308,7 @@ namespace eve
 			void				rotate(const eve::math::TVec3<T> &from, const eve::math::TVec3<T> &to, const eve::math::TVec3<T> &worldUp) { *this *= createRotation(from, to, worldUp); }
 			void				rotate(const eve::math::TVec4<T> &from, const eve::math::TVec4<T> &to, const eve::math::TVec4<T> &worldUp) { *this *= createRotation(from, to, worldUp); }
 
-			// returns the scale values
+			/** \brief Get the matrix scale as a Vec3. */
 			EVE_FORCE_INLINE eve::math::TVec3<T>	getScale(void) const 
 			{ 
 				eve::math::TVec3<T> x_vec(m00, m01, m02);
@@ -440,6 +443,22 @@ namespace eve
 	} // namespace math
 
 } // namespace eve
+
+#ifndef __EVE_MATH_CORE_TVECTOR_H__
+#include "eve/math/core/TVector.h"
+#endif
+
+#ifndef __EVE_MATH_CORE_TMATRIX_22_H__
+#include "eve/math/core/TMatrix22.h"
+#endif
+
+#ifndef __EVE_MATH_CORE_TMATRIX_33_H__
+#include "eve/math/core/TMatrix33.h"
+#endif
+
+#ifndef __EVE_MATH_CORE_TQUATERNION_H__
+#include "eve/math/core/TQuaternion.h"
+#endif
 
 
 //=================================================================================================
@@ -1408,7 +1427,7 @@ EVE_FORCE_INLINE eve::math::TVec4<T> eve::math::TMatrix44<T>::transformVec(const
 
 
 //=================================================================================================
-template< typename T >
+template<typename T>
 EVE_FORCE_INLINE void eve::math::TMatrix44<T>::orthonormalInvert()
 {
 	// transpose upper 3x3 (R->R^t)
@@ -1421,6 +1440,70 @@ EVE_FORCE_INLINE void eve::math::TMatrix44<T>::orthonormalInvert()
 	at(0,3) = newT.x;
 	at(1,3) = newT.y;
 	at(2,3) = newT.z;
+}
+
+
+
+//=================================================================================================
+template<typename T>
+EVE_FORCE_INLINE eve::math::TQuaternion<T> eve::math::TMatrix44<T>::getRotate(void) const
+{
+	// David Spillings implementation Mk 1
+	eve::math::TQuaternion<T> q;
+
+	T s;
+	T tq[4];
+	int32_t i;
+	int32_t j;
+
+	// Use tq to store the largest trace
+	tq[0] = static_cast<T>(1) + m[0] + m[5] + m[10];
+	tq[1] = static_cast<T>(1) + m[0] - m[5] - m[10];
+	tq[2] = static_cast<T>(1) - m[0] + m[5] - m[10];
+	tq[3] = static_cast<T>(1) - m[0] - m[5] + m[10];
+
+	// Find the maximum (could also use stacked if's later)
+	j = 0;
+	for (i = 1; i<4; i++) j = (tq[i] > tq[j]) ? i : j;
+
+	// check the diagonal
+	if (j == 0)
+	{
+		/* perform instant calculation */
+		q.w	  = tq[0];
+		q.v.x = m[ 6] - m[ 9];
+		q.v.y = m[ 8] - m[ 2];
+		q.v.z = m[ 1] - m[ 4];
+	}
+	else if (j == 1)
+	{
+		q.w   = m[ 6] - m[ 9];
+		q.v.x = tq[1];
+		q.v.y = m[ 1] + m[ 4];
+		q.v.z = m[ 8] + m[ 2];
+	}
+	else if (j == 2)
+	{
+		q.w   = m[ 8] - m[ 2];
+		q.v.x = m[ 1] + m[ 4];
+		q.v.y = tq[2];
+		q.v.z = m[ 6] + m[ 9];
+	}
+	else /* if (j==3) */
+	{
+		q.w   = m[ 1] - m[ 4];
+		q.v.x = m[ 8] + m[ 2];
+		q.v.y = m[ 6] + m[ 9];
+		q.v.z = tq[3];
+	}
+
+	s = eve::math::sqrt(static_cast<T>(0.25) / tq[j]);
+	q.w		*= s;
+	q.v.x	*= s;
+	q.v.y	*= s;
+	q.v.z	*= s;
+
+	return q;
 }
 
 

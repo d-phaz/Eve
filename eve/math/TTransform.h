@@ -76,10 +76,9 @@ namespace eve
 			mutable eve::math::TVec3<T>			m_translation;					//!< Specifies translation.
 			mutable eve::math::TVec3<T>			m_scale;						//!< Specifies scale.
 
-			mutable eve::math::TVec3<T>			m_pivot;						//!< Specifies pivot point, default to object center as vec3(0, 0, 0).
+			mutable eve::math::TVec3<T>			m_pivot;						//!< Specifies pivot point (rotation origin), default to vec3(0, 0, 0).
 
 			mutable eve::math::TMatrix44<T>		m_matrixRotation;				//!< Specifies rotation matrix.
-			mutable eve::math::TMatrix44<T>		m_matrixTranslation;			//!< Specifies translation matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixScale;					//!< Specifies scale matrix.
 			mutable eve::math::TMatrix44<T>		m_matrixModelView;				//!< Specifies model view matrix.
 
@@ -135,6 +134,19 @@ namespace eve
 
 
 		public:
+			/** \brief Rotate object using pivot point as origin (radians). */
+			void rotatePivot(const eve::math::TVec3<T> & p_rotation);
+			/** \brief Rotate object using pivot point as origin (radians). */
+			void rotatePivot(T p_x, T p_y, T p_z);
+			/** \brief Rotate object using pivot point as origin on X-axis (radians). */
+			void rotatePivotX(T p_rotationX);
+			/** \brief Rotate object using pivot point as origin on Y-axis (radians). */
+			void rotatePivotY(T p_rotationY);
+			/** \brief Rotate object using pivot point as origin on Z-axis (radians). */
+			void rotatePivotZ(T p_rotationZ);
+
+
+		public:
 			/** \brief Translate object. */
 			void translate(const eve::math::TVec3<T> & p_translation);
 			/** \brief Translate object. */
@@ -186,6 +198,15 @@ namespace eve
 			void setRotationY(T p_value);
 			/** \brief Set rotation on Z-axis (radians). */
 			void setRotationZ(T p_value);
+
+
+		public:
+			/** \brief Get pivot point (rotation origin) position in 3D view. */
+			const eve::math::TVec3<T> & getPivot(void) const;
+			/** \brief Set pivot point (rotation origin) position in 3D view. */
+			void setPivot(const eve::math::TVec3<T> & p_value);
+			/** \brief Set pivot point (rotation origin) position in 3D view. */
+			void setPivot(T p_x, T p_y, T p_z);
 
 
 		public:
@@ -269,10 +290,10 @@ eve::math::TTransform<T>::TTransform(void)
 	, m_rotation(eve::math::TVec3<T>::zero())
 	, m_translation(eve::math::TVec3<T>::zero())
 	, m_scale(eve::math::TVec3<T>::one())
+
 	, m_pivot(eve::math::TVec3<T>::zero())
 
 	, m_matrixRotation(eve::math::TMatrix44<T>::identity())
-	, m_matrixTranslation(eve::math::TMatrix44<T>::identity())
 	, m_matrixScale(eve::math::TMatrix44<T>::identity())
 	, m_matrixModelView(eve::math::TMatrix44<T>::identity())
 {}
@@ -287,13 +308,15 @@ eve::math::TTransform<T>::TTransform(const eve::math::TTransform<T> & p_parent)
 	, m_rotation(p_parent.m_rotation)
 	, m_translation(p_parent.m_translation)
 	, m_scale(p_parent.m_scale)
+
 	, m_pivot(p_parent.m_pivot)
 
 	, m_matrixRotation(p_parent.m_matrixRotation)
-	, m_matrixTranslation(p_parent.m_matrixTranslation)
 	, m_matrixScale(p_parent.m_matrixScale)
 	, m_matrixModelView(p_parent.m_matrixModelView)
-{}
+{
+	this->init();
+}
 
 
 
@@ -302,7 +325,6 @@ template <typename T>
 void eve::math::TTransform<T>::init(void)
 {
 	m_matrixRotation.set(		eve::math::TMatrix44<T>::createRotation(m_rotation));
-	m_matrixTranslation.set(	eve::math::TMatrix44<T>::createTranslation(m_translation));
 	m_matrixScale.set(			eve::math::TMatrix44<T>::createScale(m_scale));
 	this->updateMatrixModelView();
 }
@@ -328,7 +350,6 @@ EVE_FORCE_INLINE void eve::math::TTransform<T>::updateMatrixRotation(void)
 template <typename T>
 EVE_FORCE_INLINE void eve::math::TTransform<T>::updateMatrixTranslation(void)
 {
-	m_matrixTranslation.set(eve::math::TMatrix44<T>::createTranslation(m_translation));
 	this->updateMatrixModelView();
 }
 
@@ -390,6 +411,83 @@ EVE_FORCE_INLINE void eve::math::TTransform<T>::rotateZ(T p_rotationZ)
 {
 	m_rotation.z += p_rotationZ;
 	this->updateMatrixRotation();
+}
+
+
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::rotatePivot(const eve::math::TVec3<T> & p_rotation)
+{
+	eve::math::TMatrix44<T> matOrigin(m_matrixRotation);
+	matOrigin.setTranslate(m_pivot - m_translation);
+
+	eve::math::TMatrix44<T> matRot = eve::math::TMatrix44<T>::createRotation(p_rotation);
+	eve::math::TMatrix44<T> mat = matRot * matOrigin;
+
+	m_translation += mat.getTranslate() - (m_pivot - m_translation);
+
+	this->rotate(p_rotation);
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::rotatePivot(T p_x, T p_y, T p_z)
+{
+	eve::math::TMatrix44<T> matOrigin(m_matrixRotation);
+	matOrigin.setTranslate(m_pivot - m_translation);
+
+	eve::math::TMatrix44<T> matRot = eve::math::TMatrix44<T>::createRotation(eve::math::TVec3<T>(p_x, p_y, p_z));
+	eve::math::TMatrix44<T> mat = matRot * matOrigin;
+
+	m_translation += mat.getTranslate() - (m_pivot - m_translation);
+
+	this->rotate(p_x, p_y, p_z);
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::rotatePivotX(T p_rotationX)
+{
+	eve::math::TMatrix44<T> matOrigin(m_matrixRotation);
+	matOrigin.setTranslate(m_pivot - m_translation);
+
+	eve::math::TMatrix44<T> matRot = eve::math::TMatrix44<T>::createRotation(eve::math::TVec3<T>::xAxis(), p_rotationX);
+	eve::math::TMatrix44<T> mat = matRot * matOrigin;
+
+	m_translation += mat.getTranslate() - (m_pivot - m_translation);
+
+	this->rotateX(p_rotationX);
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::rotatePivotY(T p_rotationY)
+{
+	eve::math::TMatrix44<T> matOrigin(m_matrixRotation);
+	matOrigin.setTranslate(m_pivot - m_translation);
+
+	eve::math::TMatrix44<T> matRot = eve::math::TMatrix44<T>::createRotation(eve::math::TVec3<T>::yAxis(), p_rotationY);
+	eve::math::TMatrix44<T> mat = matRot * matOrigin;
+
+	m_translation += mat.getTranslate() - (m_pivot - m_translation);
+
+	this->rotateY(p_rotationY);
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::rotatePivotZ(T p_rotationZ)
+{
+	eve::math::TMatrix44<T> matOrigin(m_matrixRotation);
+	matOrigin.setTranslate(m_pivot - m_translation);
+
+	eve::math::TMatrix44<T> matRot = eve::math::TMatrix44<T>::createRotation(eve::math::TVec3<T>::zAxis(), p_rotationZ);
+	eve::math::TMatrix44<T> mat = matRot * matOrigin;
+
+	m_translation += mat.getTranslate() - (m_pivot - m_translation);
+
+	this->rotateZ(p_rotationZ);
 }
 
 
@@ -540,6 +638,27 @@ EVE_FORCE_INLINE void eve::math::TTransform<T>::setRotationZ(T p_value)
 {
 	m_rotation.z = p_value;
 	this->updateMatrixRotation();
+}
+
+
+
+//=================================================================================================
+template <typename T> EVE_FORCE_INLINE const eve::math::TVec3<T> & eve::math::TTransform<T>::getPivot(void) const { return m_pivot; }
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::setPivot(const eve::math::TVec3<T> & p_value)
+{
+	m_pivot = p_value;
+}
+
+//=================================================================================================
+template <typename T>
+EVE_FORCE_INLINE void eve::math::TTransform<T>::setPivot(T p_x, T p_y, T p_z)
+{
+	m_pivot.x = p_x;
+	m_pivot.y = p_y;
+	m_pivot.z = p_z;
 }
 
 
